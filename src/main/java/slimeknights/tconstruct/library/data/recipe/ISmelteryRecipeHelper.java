@@ -261,10 +261,10 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
       nuggetCasting(consumer, fluid, nugget, metalFolder + "nugget");
     }
     // plates are always optional, we don't ship them
-    tagCasting(consumer, fluid, FluidValues.INGOT, TinkerSmeltery.plateCast, "plates/" + metal, folder + metal + "/plate", true);
-    tagCasting(consumer, fluid, FluidValues.INGOT * 4, TinkerSmeltery.gearCast, "gears/" + metal, folder + metal + "/gear", true);
+    tagCasting(consumer, fluid, FluidValues.INGOT * 2 / 3, TinkerSmeltery.plateCast, "plates/" + metal, folder + metal + "/plate", true);
+    tagCasting(consumer, fluid, FluidValues.INGOT * 6, TinkerSmeltery.gearCast, "gears/" + metal, folder + metal + "/gear", true);
     tagCasting(consumer, fluid, FluidValues.NUGGET * 3, TinkerSmeltery.coinCast, "coins/" + metal, folder + metal + "/coin", true);
-    tagCasting(consumer, fluid, FluidValues.INGOT / 2, TinkerSmeltery.rodCast, "rods/" + metal, folder + metal + "/rod", true);
+    tagCasting(consumer, fluid, FluidValues.INGOT *3 / 4, TinkerSmeltery.rodCast, "rods/" + metal, folder + metal + "/rod", true);
     tagCasting(consumer, fluid, FluidValues.INGOT / 2, TinkerSmeltery.wireCast, "wires/" + metal, folder + metal + "/wire", true);
   }
 
@@ -280,10 +280,10 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
     // nugget and ingot
     tagCasting(consumer, fluid, FluidValues.NUGGET, TinkerSmeltery.nuggetCast, "nuggets/" + name, folder + name + "/nugget", !forceStandard);
     tagCasting(consumer, fluid, FluidValues.INGOT, TinkerSmeltery.ingotCast, "ingots/" + name, folder + name + "/ingot", !forceStandard);
-    tagCasting(consumer, fluid, FluidValues.INGOT, TinkerSmeltery.plateCast, "plates/" + name, folder + name + "/plate", true);
-    tagCasting(consumer, fluid, FluidValues.INGOT * 4, TinkerSmeltery.gearCast, "gears/" + name, folder + name + "/gear", true);
+    tagCasting(consumer, fluid, FluidValues.INGOT * 2 / 3, TinkerSmeltery.plateCast, "plates/" + name, folder + name + "/plate", true);
+    tagCasting(consumer, fluid, FluidValues.INGOT * 6, TinkerSmeltery.gearCast, "gears/" + name, folder + name + "/gear", true);
     tagCasting(consumer, fluid, FluidValues.NUGGET * 3, TinkerSmeltery.coinCast, "coins/" + name, folder + name + "/coin", true);
-    tagCasting(consumer, fluid, FluidValues.INGOT / 2, TinkerSmeltery.rodCast, "rods/" + name, folder + name + "/rod", true);
+    tagCasting(consumer, fluid, FluidValues.INGOT * 3 / 4, TinkerSmeltery.rodCast, "rods/" + name, folder + name + "/rod", true);
     tagCasting(consumer, fluid, FluidValues.INGOT / 2, TinkerSmeltery.wireCast, "wires/" + name, folder + name + "/wire", true);
     // block
     Consumer<FinishedRecipe> wrapped = forceStandard ? consumer : withCondition(consumer, tagCondition("storage_blocks/" + name));
