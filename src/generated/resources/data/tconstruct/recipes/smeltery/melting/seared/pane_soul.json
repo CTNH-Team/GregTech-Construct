@@ -2,7 +2,7 @@
   "type": "tconstruct:melting",
   "byproducts": [
     {
-      "amount": 36,
+      "amount": 50,
       "fluid": "tconstruct:liquid_soul"
     }
   ],
@@ -10,7 +10,7 @@
     "item": "tconstruct:seared_soul_glass_pane"
   },
   "result": {
-    "amount": 400,
+    "amount": 125,
     "fluid": "tconstruct:seared_stone"
   },
   "temperature": 600,

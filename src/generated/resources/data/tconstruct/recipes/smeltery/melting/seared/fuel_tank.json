@@ -2,7 +2,7 @@
   "type": "tconstruct:melting",
   "byproducts": [
     {
-      "amount": 144,
+      "amount": 200,
       "fluid": "tconstruct:glass"
     }
   ],
@@ -11,7 +11,7 @@
     "item": "tconstruct:seared_fuel_tank"
   },
   "result": {
-    "amount": 3200,
+    "amount": 1000,
     "fluid": "tconstruct:seared_stone"
   },
   "temperature": 600,

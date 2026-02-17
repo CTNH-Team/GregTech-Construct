@@ -9,9 +9,9 @@
     }
   ],
   "cast_consumed": true,
-  "cooling_time": 99,
+  "cooling_time": 79,
   "fluid": {
-    "amount": 800,
+    "amount": 500,
     "tag": "forge:magma"
   },
   "result": "tconstruct:scorched_stone"

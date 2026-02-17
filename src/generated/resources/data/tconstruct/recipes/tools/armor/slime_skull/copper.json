@@ -4,9 +4,9 @@
     "item": "tconstruct:drowned_head"
   },
   "cast_consumed": true,
-  "cooling_time": 237,
+  "cooling_time": 187,
   "fluid": {
-    "amount": 8000,
+    "amount": 5000,
     "tag": "tconstruct:ender_slime"
   },
   "result": {

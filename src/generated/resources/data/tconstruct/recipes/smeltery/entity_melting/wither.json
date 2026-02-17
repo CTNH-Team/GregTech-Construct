@@ -5,7 +5,7 @@
     "type": "minecraft:wither"
   },
   "result": {
-    "amount": 7,
+    "amount": 10,
     "fluid": "tconstruct:liquid_soul"
   }
 }

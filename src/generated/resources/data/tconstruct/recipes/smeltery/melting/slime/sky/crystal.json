@@ -4,7 +4,7 @@
     "item": "tconstruct:sky_slime_crystal"
   },
   "result": {
-    "amount": 400,
+    "amount": 250,
     "fluid": "tconstruct:sky_slime"
   },
   "temperature": 10,

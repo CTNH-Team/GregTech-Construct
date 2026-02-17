@@ -4,7 +4,7 @@
     "tag": "forge:slimeball/ender"
   },
   "result": {
-    "amount": 400,
+    "amount": 250,
     "fluid": "tconstruct:ender_slime"
   },
   "temperature": 70,

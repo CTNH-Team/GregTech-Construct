@@ -1,8 +1,8 @@
 {
   "type": "tconstruct:casting_basin",
-  "cooling_time": 160,
+  "cooling_time": 127,
   "fluid": {
-    "amount": 1600,
+    "amount": 1000,
     "tag": "tconstruct:clay"
   },
   "result": "minecraft:terracotta"

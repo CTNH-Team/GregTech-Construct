@@ -2,7 +2,7 @@
   "type": "tconstruct:melting",
   "byproducts": [
     {
-      "amount": 1600,
+      "amount": 500,
       "fluid": "tconstruct:scorched_stone"
     }
   ],
@@ -15,7 +15,7 @@
     }
   ],
   "result": {
-    "amount": 72,
+    "amount": 100,
     "fluid": "tconstruct:obsidian"
   },
   "temperature": 1000,

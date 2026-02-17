@@ -2,7 +2,7 @@
   "type": "tconstruct:melting",
   "byproducts": [
     {
-      "amount": 720,
+      "amount": 1000,
       "fluid": "tconstruct:glass"
     }
   ],
@@ -10,9 +10,9 @@
     "item": "minecraft:beacon"
   },
   "result": {
-    "amount": 432,
+    "amount": 600,
     "fluid": "tconstruct:obsidian"
   },
   "temperature": 1000,
-  "time": 115
+  "time": 135
 }

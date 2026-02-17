@@ -4,9 +4,9 @@
     "item": "tconstruct:obsidian_pane"
   },
   "cast_consumed": true,
-  "cooling_time": 107,
+  "cooling_time": 32,
   "fluid": {
-    "amount": 400,
+    "amount": 36,
     "tag": "tconstruct:emerald"
   },
   "result": "tconstruct:emerald_reinforcement"

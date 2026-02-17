@@ -4,9 +4,9 @@
     "item": "minecraft:blaze_powder"
   },
   "cast_consumed": true,
-  "cooling_time": 82,
+  "cooling_time": 65,
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "forge:ender"
   },
   "result": "minecraft:ender_eye"

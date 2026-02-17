@@ -4,7 +4,7 @@
     "tag": "forge:bottles/lingering"
   },
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "forge:potion"
   },
   "result": "minecraft:lingering_potion"

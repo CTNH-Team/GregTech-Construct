@@ -9,9 +9,9 @@
       "modid": "ceramics"
     }
   ],
-  "cooling_time": 95,
+  "cooling_time": 53,
   "fluid": {
-    "amount": 400,
+    "amount": 125,
     "tag": "tconstruct:porcelain"
   },
   "result": "ceramics:porcelain_brick"

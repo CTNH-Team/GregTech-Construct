@@ -5,7 +5,7 @@
     "type": "tconstruct:ender_slime"
   },
   "result": {
-    "amount": 40,
+    "amount": 25,
     "fluid": "tconstruct:ender_slime"
   }
 }

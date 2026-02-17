@@ -4,9 +4,9 @@
     "tag": "tconstruct:casts/single_use/ingot"
   },
   "cast_consumed": true,
-  "cooling_time": 80,
+  "cooling_time": 63,
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "tconstruct:clay"
   },
   "result": "minecraft:brick"

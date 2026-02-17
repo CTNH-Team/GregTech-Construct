@@ -1,7 +1,7 @@
 {
   "type": "mantle:fill_item",
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "forge:slime"
   },
   "input": {

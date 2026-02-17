@@ -4,9 +4,9 @@
     "item": "minecraft:honey_block"
   },
   "result": {
-    "amount": 1600,
+    "amount": 1000,
     "tag": "forge:honey"
   },
   "temperature": 1,
-  "time": 94
+  "time": 74
 }

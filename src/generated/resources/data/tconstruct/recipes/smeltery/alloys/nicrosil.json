@@ -35,7 +35,7 @@
             "tag": "forge:chromium"
           },
           {
-            "amount": 1600,
+            "amount": 144,
             "tag": "tconstruct:quartz"
           }
         ],
@@ -74,7 +74,7 @@
             "tag": "forge:tin"
           },
           {
-            "amount": 1600,
+            "amount": 144,
             "tag": "tconstruct:quartz"
           }
         ],
@@ -104,7 +104,7 @@
             "tag": "forge:iron"
           },
           {
-            "amount": 1600,
+            "amount": 144,
             "tag": "tconstruct:quartz"
           }
         ],
@@ -134,7 +134,7 @@
             "tag": "forge:iron"
           },
           {
-            "amount": 1600,
+            "amount": 144,
             "tag": "tconstruct:quartz"
           }
         ],

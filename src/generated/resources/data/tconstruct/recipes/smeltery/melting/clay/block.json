@@ -4,7 +4,7 @@
     "item": "minecraft:clay"
   },
   "result": {
-    "amount": 1600,
+    "amount": 500,
     "fluid": "tconstruct:clay"
   },
   "temperature": 450,

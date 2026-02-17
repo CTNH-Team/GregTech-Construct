@@ -17,9 +17,9 @@
     "item": "twilightforest:fiery_sword"
   },
   "result": {
-    "amount": 800,
+    "amount": 500,
     "fluid": "tconstruct:fiery_liquid",
-    "unit_size": 80
+    "unit_size": 50
   },
   "temperature": 1500,
   "time": 113

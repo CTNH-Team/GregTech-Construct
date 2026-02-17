@@ -4,7 +4,7 @@
     "item": "minecraft:slime_block"
   },
   "result": {
-    "amount": 3600,
+    "amount": 2250,
     "tag": "forge:slime"
   },
   "temperature": 50,

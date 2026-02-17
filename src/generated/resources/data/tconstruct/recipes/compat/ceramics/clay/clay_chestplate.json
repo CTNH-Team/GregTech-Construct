@@ -10,9 +10,9 @@
     "item": "ceramics:clay_chestplate"
   },
   "result": {
-    "amount": 3200,
+    "amount": 1000,
     "fluid": "tconstruct:clay",
-    "unit_size": 80
+    "unit_size": 25
   },
   "temperature": 450,
   "time": 144

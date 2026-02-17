@@ -10,7 +10,7 @@
     "item": "ceramics:unfired_porcelain_block"
   },
   "result": {
-    "amount": 1600,
+    "amount": 500,
     "fluid": "tconstruct:porcelain"
   },
   "temperature": 700,

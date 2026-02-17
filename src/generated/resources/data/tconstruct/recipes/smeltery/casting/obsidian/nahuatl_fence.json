@@ -4,9 +4,9 @@
     "tag": "minecraft:wooden_fences"
   },
   "cast_consumed": true,
-  "cooling_time": 33,
+  "cooling_time": 39,
   "fluid": {
-    "amount": 36,
+    "amount": 50,
     "tag": "tconstruct:obsidian"
   },
   "result": "tconstruct:nahuatl_fence"

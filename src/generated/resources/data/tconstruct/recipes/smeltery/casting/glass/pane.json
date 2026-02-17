@@ -1,8 +1,8 @@
 {
   "type": "tconstruct:casting_table",
-  "cooling_time": 29,
+  "cooling_time": 34,
   "fluid": {
-    "amount": 36,
+    "amount": 50,
     "tag": "tconstruct:glass"
   },
   "result": "tconstruct:clear_glass_pane"

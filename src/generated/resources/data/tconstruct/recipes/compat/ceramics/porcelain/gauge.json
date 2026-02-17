@@ -2,7 +2,7 @@
   "type": "tconstruct:melting",
   "byproducts": [
     {
-      "amount": 7,
+      "amount": 10,
       "fluid": "tconstruct:glass"
     }
   ],
@@ -16,7 +16,7 @@
     "item": "ceramics:porcelain_gauge"
   },
   "result": {
-    "amount": 400,
+    "amount": 125,
     "fluid": "tconstruct:porcelain"
   },
   "temperature": 700,

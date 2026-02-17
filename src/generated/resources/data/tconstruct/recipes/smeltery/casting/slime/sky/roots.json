@@ -4,9 +4,9 @@
     "item": "tconstruct:enderbark_roots"
   },
   "cast_consumed": true,
-  "cooling_time": 96,
+  "cooling_time": 76,
   "fluid": {
-    "amount": 1600,
+    "amount": 1000,
     "tag": "tconstruct:sky_slime"
   },
   "result": "tconstruct:sky_enderbark_roots"

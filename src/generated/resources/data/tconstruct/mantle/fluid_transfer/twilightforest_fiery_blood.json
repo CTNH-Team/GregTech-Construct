@@ -7,7 +7,7 @@
     }
   ],
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "fluid": "tconstruct:fiery_liquid"
   },
   "input": {

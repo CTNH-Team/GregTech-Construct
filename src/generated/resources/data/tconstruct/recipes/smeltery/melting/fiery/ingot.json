@@ -16,7 +16,7 @@
     "tag": "forge:ingots/fiery"
   },
   "result": {
-    "amount": 400,
+    "amount": 250,
     "fluid": "tconstruct:fiery_liquid"
   },
   "temperature": 1500,

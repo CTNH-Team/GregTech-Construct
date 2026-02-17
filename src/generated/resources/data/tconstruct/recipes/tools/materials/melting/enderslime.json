@@ -2,7 +2,7 @@
   "type": "tconstruct:material_melting",
   "input": "tconstruct:enderslime",
   "result": {
-    "amount": 400,
+    "amount": 250,
     "fluid": "tconstruct:ender_slime"
   },
   "temperature": 70

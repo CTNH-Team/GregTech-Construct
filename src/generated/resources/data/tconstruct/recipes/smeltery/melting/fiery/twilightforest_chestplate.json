@@ -17,9 +17,9 @@
     "item": "twilightforest:fiery_chestplate"
   },
   "result": {
-    "amount": 3200,
+    "amount": 2000,
     "fluid": "tconstruct:fiery_liquid",
-    "unit_size": 80
+    "unit_size": 50
   },
   "temperature": 1500,
   "time": 227

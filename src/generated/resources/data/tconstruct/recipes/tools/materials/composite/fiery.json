@@ -7,7 +7,7 @@
     }
   ],
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "tconstruct:fiery_liquid"
   },
   "input": "tconstruct:iron",

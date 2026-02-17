@@ -6,11 +6,11 @@
       "tag": "forge:iron"
     },
     {
-      "amount": 400,
+      "amount": 250,
       "tag": "tconstruct:sky_slime"
     },
     {
-      "amount": 400,
+      "amount": 125,
       "tag": "tconstruct:seared_stone"
     }
   ],

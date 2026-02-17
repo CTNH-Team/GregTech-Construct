@@ -5,7 +5,7 @@
     "type": "minecraft:silverfish"
   },
   "result": {
-    "amount": 80,
+    "amount": 25,
     "fluid": "tconstruct:seared_stone"
   }
 }

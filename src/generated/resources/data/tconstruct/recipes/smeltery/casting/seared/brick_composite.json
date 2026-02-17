@@ -4,9 +4,9 @@
     "item": "minecraft:flint"
   },
   "cast_consumed": true,
-  "cooling_time": 57,
+  "cooling_time": 32,
   "fluid": {
-    "amount": 200,
+    "amount": 62,
     "tag": "tconstruct:clay"
   },
   "result": "tconstruct:seared_brick"

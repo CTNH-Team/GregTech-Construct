@@ -2,7 +2,7 @@
   "type": "tconstruct:alloy",
   "inputs": [
     {
-      "amount": 400,
+      "amount": 250,
       "catalyst": true,
       "fluid": "minecraft:water"
     },
@@ -12,7 +12,7 @@
     }
   ],
   "result": {
-    "amount": 14,
+    "amount": 20,
     "fluid": "tconstruct:obsidian"
   },
   "temperature": 1000

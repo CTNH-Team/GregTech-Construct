@@ -4,14 +4,14 @@
     "item": "tconstruct:pattern"
   },
   "cast_consumed": true,
-  "cooling_time": 89,
+  "cooling_time": 50,
   "fluid": [
     {
-      "amount": 400,
+      "amount": 125,
       "tag": "tconstruct:seared_stone"
     },
     {
-      "amount": 400,
+      "amount": 125,
       "tag": "tconstruct:scorched_stone"
     }
   ],

@@ -1,7 +1,7 @@
 {
   "type": "tconstruct:material_fluid",
   "fluid": {
-    "amount": 36,
+    "amount": 50,
     "tag": "tconstruct:obsidian"
   },
   "input": "tconstruct:wood",

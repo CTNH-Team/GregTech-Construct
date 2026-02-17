@@ -2,7 +2,7 @@
   "type": "tconstruct:melting",
   "byproducts": [
     {
-      "amount": 2880,
+      "amount": 1800,
       "fluid": "tconstruct:ichor"
     }
   ],

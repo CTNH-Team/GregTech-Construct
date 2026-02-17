@@ -4,9 +4,9 @@
     "item": "tconstruct:enderman_head"
   },
   "result": {
-    "amount": 800,
+    "amount": 500,
     "tag": "forge:ender"
   },
   "temperature": 477,
-  "time": 116
+  "time": 91
 }

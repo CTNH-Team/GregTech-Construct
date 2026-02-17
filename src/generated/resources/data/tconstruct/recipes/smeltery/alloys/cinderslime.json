@@ -6,11 +6,11 @@
       "tag": "forge:gold"
     },
     {
-      "amount": 400,
+      "amount": 250,
       "tag": "tconstruct:ichor"
     },
     {
-      "amount": 400,
+      "amount": 125,
       "tag": "tconstruct:scorched_stone"
     }
   ],

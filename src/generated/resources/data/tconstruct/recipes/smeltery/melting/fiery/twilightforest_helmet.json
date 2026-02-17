@@ -17,9 +17,9 @@
     "item": "twilightforest:fiery_helmet"
   },
   "result": {
-    "amount": 2000,
+    "amount": 1250,
     "fluid": "tconstruct:fiery_liquid",
-    "unit_size": 80
+    "unit_size": 50
   },
   "temperature": 1500,
   "time": 179

@@ -5,7 +5,7 @@
     "type": "minecraft:strider"
   },
   "result": {
-    "amount": 80,
+    "amount": 50,
     "nbt": {
       "Potion": "minecraft:fire_resistance"
     },

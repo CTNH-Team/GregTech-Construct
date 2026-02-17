@@ -4,9 +4,9 @@
     "item": "minecraft:glowstone"
   },
   "cast_consumed": true,
-  "cooling_time": 178,
+  "cooling_time": 100,
   "fluid": {
-    "amount": 1600,
+    "amount": 500,
     "tag": "tconstruct:seared_stone"
   },
   "result": "tconstruct:seared_lamp"

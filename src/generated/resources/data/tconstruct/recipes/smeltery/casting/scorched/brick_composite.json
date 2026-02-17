@@ -4,9 +4,9 @@
     "item": "minecraft:flint"
   },
   "cast_consumed": true,
-  "cooling_time": 50,
+  "cooling_time": 39,
   "fluid": {
-    "amount": 200,
+    "amount": 125,
     "tag": "forge:magma"
   },
   "result": "tconstruct:scorched_brick"

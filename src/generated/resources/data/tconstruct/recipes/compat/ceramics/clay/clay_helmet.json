@@ -10,9 +10,9 @@
     "item": "ceramics:clay_helmet"
   },
   "result": {
-    "amount": 2000,
+    "amount": 625,
     "fluid": "tconstruct:clay",
-    "unit_size": 80
+    "unit_size": 25
   },
   "temperature": 450,
   "time": 108

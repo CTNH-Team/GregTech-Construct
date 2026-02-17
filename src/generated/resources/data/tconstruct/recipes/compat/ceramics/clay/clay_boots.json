@@ -10,9 +10,9 @@
     "item": "ceramics:clay_boots"
   },
   "result": {
-    "amount": 1600,
+    "amount": 500,
     "fluid": "tconstruct:clay",
-    "unit_size": 80
+    "unit_size": 25
   },
   "temperature": 450,
   "time": 96

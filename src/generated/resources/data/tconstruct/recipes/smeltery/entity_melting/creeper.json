@@ -5,7 +5,7 @@
     "type": "minecraft:creeper"
   },
   "result": {
-    "amount": 7,
+    "amount": 10,
     "fluid": "tconstruct:glass"
   }
 }

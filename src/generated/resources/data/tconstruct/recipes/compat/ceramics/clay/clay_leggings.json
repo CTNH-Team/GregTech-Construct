@@ -10,9 +10,9 @@
     "item": "ceramics:clay_leggings"
   },
   "result": {
-    "amount": 2800,
+    "amount": 875,
     "fluid": "tconstruct:clay",
-    "unit_size": 80
+    "unit_size": 25
   },
   "temperature": 450,
   "time": 132

@@ -2,7 +2,7 @@
   "type": "tconstruct:melting",
   "byproducts": [
     {
-      "amount": 1600,
+      "amount": 500,
       "fluid": "tconstruct:scorched_stone"
     }
   ],
@@ -10,7 +10,7 @@
     "item": "tconstruct:foundry_controller"
   },
   "result": {
-    "amount": 144,
+    "amount": 200,
     "fluid": "tconstruct:obsidian"
   },
   "temperature": 1000,

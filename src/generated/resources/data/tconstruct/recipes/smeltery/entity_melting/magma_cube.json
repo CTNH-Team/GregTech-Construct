@@ -5,7 +5,7 @@
     "type": "minecraft:magma_cube"
   },
   "result": {
-    "amount": 40,
+    "amount": 25,
     "tag": "forge:magma"
   }
 }

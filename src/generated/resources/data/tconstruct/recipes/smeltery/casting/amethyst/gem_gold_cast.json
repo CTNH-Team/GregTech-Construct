@@ -3,9 +3,9 @@
   "cast": {
     "tag": "tconstruct:casts/multi_use/gem"
   },
-  "cooling_time": 216,
+  "cooling_time": 65,
   "fluid": {
-    "amount": 1600,
+    "amount": 144,
     "tag": "tconstruct:amethyst"
   },
   "result": {

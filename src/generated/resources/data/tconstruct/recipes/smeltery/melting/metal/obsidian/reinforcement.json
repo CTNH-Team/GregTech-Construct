@@ -4,9 +4,9 @@
     "item": "tconstruct:obsidian_reinforcement"
   },
   "result": {
-    "amount": 144,
+    "amount": 200,
     "fluid": "tconstruct:obsidian"
   },
   "temperature": 1000,
-  "time": 66
+  "time": 78
 }

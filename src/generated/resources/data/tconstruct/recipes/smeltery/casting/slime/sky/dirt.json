@@ -4,9 +4,9 @@
     "item": "minecraft:dirt"
   },
   "cast_consumed": true,
-  "cooling_time": 68,
+  "cooling_time": 53,
   "fluid": {
-    "amount": 800,
+    "amount": 500,
     "tag": "tconstruct:sky_slime"
   },
   "result": "tconstruct:sky_slime_dirt"

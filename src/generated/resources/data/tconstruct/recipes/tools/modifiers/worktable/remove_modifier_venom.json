@@ -13,7 +13,7 @@
         },
         {
           "type": "mantle:fluid_container",
-          "amount": 400,
+          "amount": 250,
           "display": {
             "item": "tconstruct:venom_bottle"
           },

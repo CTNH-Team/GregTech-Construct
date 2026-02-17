@@ -2,7 +2,7 @@
   "type": "tconstruct:melting",
   "byproducts": [
     {
-      "amount": 432,
+      "amount": 600,
       "fluid": "tconstruct:glass"
     }
   ],
@@ -11,7 +11,7 @@
     "item": "tconstruct:seared_ingot_tank"
   },
   "result": {
-    "amount": 2400,
+    "amount": 750,
     "fluid": "tconstruct:seared_stone"
   },
   "temperature": 600,

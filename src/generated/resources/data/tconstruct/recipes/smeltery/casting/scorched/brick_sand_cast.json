@@ -4,9 +4,9 @@
     "tag": "tconstruct:casts/single_use/ingot"
   },
   "cast_consumed": true,
-  "cooling_time": 83,
+  "cooling_time": 47,
   "fluid": {
-    "amount": 400,
+    "amount": 125,
     "tag": "tconstruct:scorched_stone"
   },
   "result": "tconstruct:scorched_brick"
