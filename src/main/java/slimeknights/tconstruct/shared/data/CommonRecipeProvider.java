@@ -189,15 +189,15 @@ public class CommonRecipeProvider extends BaseRecipeProvider implements ICommonR
     // fix vanilla recipes not using tinkers glass
     String glassVanillaFolder = folder + "vanilla/";
     Consumer<FinishedRecipe> vanillaGlassConsumer = withCondition(consumer, ConfigEnabledCondition.GLASS_RECIPE_FIX);
-    ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.BEACON)
-                       .define('S', Items.NETHER_STAR)
-                       .define('G', Tags.Items.GLASS_COLORLESS)
-                       .define('O', Blocks.OBSIDIAN)
-                       .pattern("GGG")
-                       .pattern("GSG")
-                       .pattern("OOO")
-                       .unlockedBy("has_nether_star", has(Items.NETHER_STAR))
-                       .save(vanillaGlassConsumer, prefix(id(Blocks.BEACON), glassVanillaFolder));
+    //ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Blocks.BEACON)
+    //                   .define('S', Items.NETHER_STAR)
+    //                   .define('G', Tags.Items.GLASS_COLORLESS)
+    //                   .define('O', Blocks.OBSIDIAN)
+    //                   .pattern("GGG")
+    //                   .pattern("GSG")
+    //                   .pattern("OOO")
+    //                   .unlockedBy("has_nether_star", has(Items.NETHER_STAR))
+    //                   .save(vanillaGlassConsumer, prefix(id(Blocks.BEACON), glassVanillaFolder));
     ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, Blocks.DAYLIGHT_DETECTOR)
                        .define('Q', Items.QUARTZ)
                        .define('G', Tags.Items.GLASS_COLORLESS)
