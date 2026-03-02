@@ -6,7 +6,7 @@
   "cast_consumed": true,
   "cooling_time": 1,
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "forge:slime"
   },
   "result": "tconstruct:earth_slime_bottle"

@@ -9,9 +9,9 @@
     }
   ],
   "cast_consumed": true,
-  "cooling_time": 113,
+  "cooling_time": 90,
   "fluid": {
-    "amount": 800,
+    "amount": 500,
     "tag": "tconstruct:clay"
   },
   "result": "tconstruct:seared_cobble"

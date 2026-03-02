@@ -4,9 +4,9 @@
     "tag": "forge:glass/colorless"
   },
   "cast_consumed": true,
-  "cooling_time": 306,
+  "cooling_time": 92,
   "fluid": {
-    "amount": 3200,
+    "amount": 288,
     "tag": "tconstruct:amethyst"
   },
   "result": "tconstruct:clear_tinted_glass"

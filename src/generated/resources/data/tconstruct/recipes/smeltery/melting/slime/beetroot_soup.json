@@ -4,7 +4,7 @@
     "item": "minecraft:beetroot"
   },
   "result": {
-    "amount": 80,
+    "amount": 50,
     "tag": "forge:beetroot_soup"
   },
   "temperature": 100,

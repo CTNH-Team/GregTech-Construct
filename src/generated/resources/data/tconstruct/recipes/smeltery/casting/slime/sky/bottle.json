@@ -6,7 +6,7 @@
   "cast_consumed": true,
   "cooling_time": 1,
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "tconstruct:sky_slime"
   },
   "result": "tconstruct:sky_slime_bottle"

@@ -10,9 +10,9 @@
     "item": "minecraft:enchanting_table"
   },
   "result": {
-    "amount": 3200,
+    "amount": 288,
     "fluid": "tconstruct:diamond"
   },
   "temperature": 1450,
-  "time": 372
+  "time": 112
 }

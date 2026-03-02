@@ -4,7 +4,7 @@
     "tag": "forge:bottles/splash"
   },
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "forge:potion"
   },
   "result": "minecraft:splash_potion"

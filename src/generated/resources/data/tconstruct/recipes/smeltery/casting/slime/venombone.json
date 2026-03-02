@@ -4,9 +4,9 @@
     "tag": "forge:bones"
   },
   "cast_consumed": true,
-  "cooling_time": 48,
+  "cooling_time": 38,
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "tconstruct:venom"
   },
   "result": "tconstruct:venombone"

@@ -4,9 +4,9 @@
     "item": "tconstruct:enderbark_roots"
   },
   "cast_consumed": true,
-  "cooling_time": 190,
+  "cooling_time": 150,
   "fluid": {
-    "amount": 1600,
+    "amount": 1000,
     "tag": "tconstruct:ichor"
   },
   "result": "tconstruct:ichor_enderbark_roots"

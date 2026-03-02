@@ -5,9 +5,9 @@
     "tag": "minecraft:convertable_to_mud"
   },
   "cast_consumed": true,
-  "cooling_time": 47,
+  "cooling_time": 37,
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "fluid": "minecraft:water"
   },
   "result": "minecraft:mud"

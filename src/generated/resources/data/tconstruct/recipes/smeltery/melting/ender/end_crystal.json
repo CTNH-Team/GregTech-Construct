@@ -10,9 +10,9 @@
     "item": "minecraft:end_crystal"
   },
   "result": {
-    "amount": 400,
+    "amount": 250,
     "tag": "forge:ender"
   },
   "temperature": 477,
-  "time": 82
+  "time": 65
 }

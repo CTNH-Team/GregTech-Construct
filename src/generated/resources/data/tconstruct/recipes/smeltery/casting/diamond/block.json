@@ -1,8 +1,8 @@
 {
   "type": "tconstruct:casting_basin",
-  "cooling_time": 789,
+  "cooling_time": 237,
   "fluid": {
-    "amount": 14400,
+    "amount": 1296,
     "tag": "tconstruct:diamond"
   },
   "result": {

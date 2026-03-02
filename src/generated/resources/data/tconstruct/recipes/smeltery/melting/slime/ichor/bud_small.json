@@ -2,7 +2,7 @@
   "type": "tconstruct:ore_melting",
   "byproducts": [
     {
-      "amount": 320,
+      "amount": 200,
       "fluid": "tconstruct:ichor"
     }
   ],

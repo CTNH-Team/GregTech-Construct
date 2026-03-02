@@ -4,9 +4,9 @@
     "item": "minecraft:diamond_horse_armor"
   },
   "result": {
-    "amount": 11200,
+    "amount": 1008,
     "fluid": "tconstruct:diamond"
   },
   "temperature": 1450,
-  "time": 696
+  "time": 209
 }

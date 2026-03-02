@@ -21,7 +21,7 @@ public final class FluidValues {
 
   // gem
   /** Value of a gem such as diamond or emerald */
-  public static final int GEM = 1600;
+  public static final int GEM = 144;
   /** Value of a quarter gem */
   public static final int GEM_SHARD = GEM / 4;
   /** Value of a block of 9 gems, such as emerald or an ender pearl */
@@ -43,7 +43,7 @@ public final class FluidValues {
 
   // slime
   /** Value of a single slimeball, also used for clay, slime substitutes, and ender pearls */
-  public static final int SLIMEBALL = 400;
+  public static final int SLIMEBALL = 250;
   /** Value of a block worth 4 slime, see also congealed */
   public static final int SLIME_CONGEALED = SLIMEBALL * 4;
   /** Value of a block worth 9 slime */
@@ -57,13 +57,13 @@ public final class FluidValues {
 
   // soup
   /** Value of a single bowl of soup */
-  public static final int BOWL = 400;
+  public static final int BOWL = 250;
   /** Value of a single bottle of a potion */
-  public static final int BOTTLE = 400;
+  public static final int BOTTLE = 250;
   /** Minimum unit for a bottle or bowl */
   public static final int SIP = BOTTLE / 5;
 
   // tank capacities
   /** Capacity of a seared or scorched lantern */
-  public static final int LANTERN_CAPACITY = 90 ;
+  public static final int LANTERN_CAPACITY = 100 ;
 }

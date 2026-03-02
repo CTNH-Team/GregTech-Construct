@@ -5,7 +5,7 @@
     "type": "tconstruct:terracube"
   },
   "result": {
-    "amount": 40,
+    "amount": 25,
     "fluid": "tconstruct:clay"
   }
 }

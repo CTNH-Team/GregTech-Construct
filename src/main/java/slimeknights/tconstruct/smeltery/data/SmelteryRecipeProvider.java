@@ -2220,29 +2220,29 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
 
     // metal ores
     // copper has the brush for cost 1, so always keep that one around
-    metal(consumer, TinkerFluids.moltenCopper)./*ore(Byproduct.SMALL_GOLD   ).*/metal().dust().rodCasting().plateCasting().gearCasting().coin().sheetmetal().geore().oreberry().wire().common(SWORD, AXES, EXCAVATOR, HAMMER, FLAKES).common(ARMOR).toolCostMelting(1, "shovel", false);
+    metal(consumer, TinkerFluids.moltenCopper)./*ore(Byproduct.SMALL_GOLD   ).*/metal().dust().rod().plate().gear().coin().sheetmetal().geore().oreberry().wire().common(SWORD, AXES, EXCAVATOR, HAMMER, FLAKES).common(ARMOR).toolCostMelting(1, "shovel", false);
     // iron has both railcraft spikemaul and tools complement excavator at cost 11
-    metal(consumer, TinkerFluids.moltenIron  )./*ore(Byproduct.STEEL        ).*/metal().dust().rodCasting().plateCasting().gearCasting().coin().sheetmetal().geore().oreberry().minecraftTools().toolCostMelting(11, "tools_costing_11").common(HAMMER, FLAKES);
+    metal(consumer, TinkerFluids.moltenIron  )./*ore(Byproduct.STEEL        ).*/metal().dust().rod().plate().gear().coin().sheetmetal().geore().oreberry().minecraftTools().toolCostMelting(11, "tools_costing_11").common(HAMMER, FLAKES);
     metal(consumer, TinkerFluids.moltenCobalt).ore(Byproduct.SMALL_DIAMOND).metal().dust()
       .melting(1/9f, "raw_nugget", 1/2f, false);
-    metal(consumer, TinkerFluids.moltenSteel ).metal().dust().rodCasting().plateCasting().gearCasting().coin().sheetmetal().common(SHOVEL_PLUS, SWORD, AXES, MEKANISM_SHIELD, FLAKES).common(ARMOR_PLUS).wire()/*.rawOre(Byproduct.IRON)*/
+    metal(consumer, TinkerFluids.moltenSteel ).metal().dust().rod().plate().gear().coin().sheetmetal().common(SHOVEL_PLUS, SWORD, AXES, MEKANISM_SHIELD, FLAKES).common(ARMOR_PLUS).wire()/*.rawOre(Byproduct.IRON)*/
       .toolItemMelting(11, "railcraft", "spike_maul")
       .melting(1/9f, "raw_nugget", 1/2f, false);
     // gold ore does non-standard byproduct handling, as it wants sparse gold ore to have a different byproduct, hence moving byproducts so we don't have ores for the metal call
-    metal(consumer, TinkerFluids.moltenGold).metal().ore(Byproduct.COBALT).dust().rodCasting().plateCasting().gearCasting().coin().sheetmetal().geore().oreberry().minecraftTools("golden", true).common(EXCAVATOR, HAMMER, FLAKES).rawOre().singularOre(2).denseOre(6);
+    metal(consumer, TinkerFluids.moltenGold).metal().ore(Byproduct.COBALT).dust().rod().plate().gear().coin().sheetmetal().geore().oreberry().minecraftTools("golden", true).common(EXCAVATOR, HAMMER, FLAKES).rawOre().singularOre(2).denseOre(6);
     // gem ores
     // diamond has both railcraft spikemaul and tools complement excavator at cost 11
-    molten(consumer, TinkerFluids.moltenDiamond).ore(Byproduct.DEBRIS ).largeGem().dust().gearCasting().geore().minecraftTools("diamond", true).toolCostMelting(11, "tools_costing_11").common(HAMMER);
-    molten(consumer, TinkerFluids.moltenEmerald).ore(Byproduct.DIAMOND).largeGem().dust().gearCasting().geore();
-    molten(consumer, TinkerFluids.moltenQuartz ).ore(Byproduct.IRON   ).smallGem().dust().gearCasting().geore();
+    molten(consumer, TinkerFluids.moltenDiamond).ore(Byproduct.DEBRIS ).largeGem().dust().gear().geore().minecraftTools("diamond", true).toolCostMelting(11, "tools_costing_11").common(HAMMER);
+    molten(consumer, TinkerFluids.moltenEmerald).ore(Byproduct.DIAMOND).largeGem().dust().gear().geore();
+    molten(consumer, TinkerFluids.moltenQuartz ).ore(Byproduct.IRON   ).smallGem().dust().gear().geore();
     molten(consumer, TinkerFluids.moltenAmethyst).smallGem();
 
     // standard alloys
-    metal(consumer, TinkerFluids.moltenNetherite).metal().dust().plateCasting().gearCasting().coin(); // handles tools elsewhere due to byproducts
+    metal(consumer, TinkerFluids.moltenNetherite).metal().dust().plate().gear().coin(); // handles tools elsewhere due to byproducts
     // tier 3
     metal(consumer, TinkerFluids.moltenSlimesteel    ).metal();
     metal(consumer, TinkerFluids.moltenAmethystBronze).metal().dust();
-    metal(consumer, TinkerFluids.moltenRoseGold      ).metal().dust().rodCasting().plateCasting().coin().gearCasting();
+    metal(consumer, TinkerFluids.moltenRoseGold      ).metal().dust().rod().plate().coin().gear();
     metal(consumer, TinkerFluids.moltenPigIron       ).metal();
     // tier 4
     metal(consumer, TinkerFluids.moltenManyullyn  ).metal();
@@ -2262,37 +2262,37 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
       .melting(1/9f, "raw_nugget", 1/2f, false);
 
     // compat ores
-    metal(consumer, TinkerFluids.moltenTin     ).ore(Byproduct.NICKEL, Byproduct.COPPER).optional().metal().dust().oreberry().rodCasting().plateCasting().gearCasting().coin().common(TOOLS_COMPLEMENT).common(ARMOR).common(FLAKES);
-    //metal(consumer, TinkerFluids.moltenAluminum).ore(Byproduct.IRON                    ).optional().metal().dust().oreberry().plateCasting().gearCasting().coin().sheetmetal().wire().rodCasting().common(FLAKES);
-    metal(consumer, TinkerFluids.moltenLead    ).ore(Byproduct.SILVER, Byproduct.GOLD  ).optional().metal().dust().oreberry().rodCasting().plateCasting().gearCasting().coin().common(TOOLS_COMPLEMENT).common(ARMOR).common(FLAKES).sheetmetal().wire();
-    metal(consumer, TinkerFluids.moltenSilver  ).ore(Byproduct.LEAD, Byproduct.GOLD    ).optional().metal().dust().oreberry().rodCasting().plateCasting().gearCasting().coin().common(TOOLS_COMPLEMENT).common(ARMOR).common(FLAKES).sheetmetal();
-    metal(consumer, TinkerFluids.moltenNickel  ).ore(/*Byproduct.PLATINUM, */Byproduct.IRON).optional().metal().dust().oreberry().rodCasting().plateCasting().gearCasting().coin().common(TOOLS_COMPLEMENT).common(ARMOR).sheetmetal();
-    metal(consumer, TinkerFluids.moltenZinc    ).ore(Byproduct.TIN, Byproduct.COPPER   ).optional().metal().dust().oreberry().rodCasting().plateCasting().gearCasting().geore().common(FLAKES);
+    metal(consumer, TinkerFluids.moltenTin     ).ore(Byproduct.NICKEL, Byproduct.COPPER).optional().metal().dust().oreberry().rod().plate().gear().coin().common(TOOLS_COMPLEMENT).common(ARMOR).common(FLAKES);
+    //metal(consumer, TinkerFluids.moltenAluminum).ore(Byproduct.IRON                    ).optional().metal().dust().oreberry().plate().gear().coin().sheetmetal().wire().rod().common(FLAKES);
+    metal(consumer, TinkerFluids.moltenLead    ).ore(Byproduct.SILVER, Byproduct.GOLD  ).optional().metal().dust().oreberry().rod().plate().gear().coin().common(TOOLS_COMPLEMENT).common(ARMOR).common(FLAKES).sheetmetal().wire();
+    metal(consumer, TinkerFluids.moltenSilver  ).ore(Byproduct.LEAD, Byproduct.GOLD    ).optional().metal().dust().oreberry().rod().plate().gear().coin().common(TOOLS_COMPLEMENT).common(ARMOR).common(FLAKES).sheetmetal();
+    metal(consumer, TinkerFluids.moltenNickel  ).ore(/*Byproduct.PLATINUM, */Byproduct.IRON).optional().metal().dust().oreberry().rod().plate().gear().coin().common(TOOLS_COMPLEMENT).common(ARMOR).sheetmetal();
+    metal(consumer, TinkerFluids.moltenZinc    ).ore(Byproduct.TIN, Byproduct.COPPER   ).optional().metal().dust().oreberry().rod().plate().gear().geore().common(FLAKES);
     //metal(consumer, TinkerFluids.moltenPlatinum).ore(Byproduct.GOLD                    ).optional().metal().dust();
     //metal(consumer, TinkerFluids.moltenTungsten).ore(Byproduct.PLATINUM, Byproduct.GOLD).optional().metal().dust();
     //metal(consumer, TinkerFluids.moltenChromium).ore(Byproduct.ALUMINUM, Byproduct.IRON).optional().metal().dust().common(FLAKES);
     metal(consumer, TinkerFluids.moltenCadmium ).ore(Byproduct.LEAD, Byproduct.COPPER  ).optional().metal().dust().common(FLAKES);
     //metal(consumer, TinkerFluids.moltenOsmium  ).ore(Byproduct.IRON                    ).optional().metal().dust().oreberry().common(TOOLS).common(MEKANISM_ARMOR);
-    //metal(consumer, TinkerFluids.moltenUranium ).ore(Byproduct.LEAD, Byproduct.COPPER  ).optional().metal().dust().oreberry().plateCasting().gearCasting().coin().sheetmetal();
+    //metal(consumer, TinkerFluids.moltenUranium ).ore(Byproduct.LEAD, Byproduct.COPPER  ).optional().metal().dust().oreberry().plate().gear().coin().sheetmetal();
     // compat alloys
-    metal(consumer, TinkerFluids.moltenBronze    ).optional().metal().dust().rodCasting().plateCasting().gearCasting().coin().common(TOOLS_COMPLEMENT).common(MEKANISM_ARMOR).common(FLAKES)/*.rawOre(Byproduct.COPPER)*/;
-    metal(consumer, TinkerFluids.moltenBrass     ).optional().metal().dust().rodCasting().plateCasting().gearCasting().common(FLAKES).rawOre(Byproduct.ZINC, Byproduct.COPPER);
-    metal(consumer, TinkerFluids.moltenElectrum  ).optional().metal().dust().rodCasting().plateCasting().gearCasting().rawOre(Byproduct.SILVER, Byproduct.GOLD).coin().common(TOOLS_COMPLEMENT).common(ARMOR).sheetmetal().wire().common(FLAKES);
-    metal(consumer, TinkerFluids.moltenInvar     ).optional().metal().dust().rodCasting().plateCasting().gearCasting().coin().common(TOOLS_COMPLEMENT).common(ARMOR);
-    metal(consumer, TinkerFluids.moltenConstantan).optional().metal().dust().rodCasting().plateCasting().gearCasting().coin().common(TOOLS_COMPLEMENT).common(ARMOR).sheetmetal();
-    metal(consumer, TinkerFluids.moltenPewter    ).optional().metal().dust().rodCasting().common(FLAKES)/*.rawOre(Byproduct.TIN, Byproduct.LEAD, Byproduct.IRON)*/;
-    metal(consumer, TinkerFluids.moltenNicrosil  ).optional().metal().dust().rodCasting().common(FLAKES)/*.rawOre(Byproduct.CHROMIUM)*/;
-    metal(consumer, TinkerFluids.moltenDuralumin ).optional().metal().dust().rodCasting().common(FLAKES)/*.rawOre(Byproduct.ALUMINUM, Byproduct.COPPER)*/;
-    metal(consumer, TinkerFluids.moltenBendalloy ).optional().metal().dust().rodCasting().common(FLAKES)/*.rawOre(Byproduct.CADMIUM)*/;
+    metal(consumer, TinkerFluids.moltenBronze    ).optional().metal().dust().rod().plate().gear().coin().common(TOOLS_COMPLEMENT).common(MEKANISM_ARMOR).common(FLAKES)/*.rawOre(Byproduct.COPPER)*/;
+    metal(consumer, TinkerFluids.moltenBrass     ).optional().metal().dust().rod().plate().gear().common(FLAKES).rawOre(Byproduct.ZINC, Byproduct.COPPER);
+    metal(consumer, TinkerFluids.moltenElectrum  ).optional().metal().dust().rod().plate().gear().rawOre(Byproduct.SILVER, Byproduct.GOLD).coin().common(TOOLS_COMPLEMENT).common(ARMOR).sheetmetal().wire().common(FLAKES);
+    metal(consumer, TinkerFluids.moltenInvar     ).optional().metal().dust().rod().plate().gear().coin().common(TOOLS_COMPLEMENT).common(ARMOR);
+    metal(consumer, TinkerFluids.moltenConstantan).optional().metal().dust().rod().plate().gear().coin().common(TOOLS_COMPLEMENT).common(ARMOR).sheetmetal();
+    metal(consumer, TinkerFluids.moltenPewter    ).optional().metal().dust().rod().common(FLAKES)/*.rawOre(Byproduct.TIN, Byproduct.LEAD, Byproduct.IRON)*/;
+    metal(consumer, TinkerFluids.moltenNicrosil  ).optional().metal().dust().rod().common(FLAKES)/*.rawOre(Byproduct.CHROMIUM)*/;
+    metal(consumer, TinkerFluids.moltenDuralumin ).optional().metal().dust().rod().common(FLAKES)/*.rawOre(Byproduct.ALUMINUM, Byproduct.COPPER)*/;
+    metal(consumer, TinkerFluids.moltenBendalloy ).optional().metal().dust().rod().common(FLAKES)/*.rawOre(Byproduct.CADMIUM)*/;
     // specialty alloys
-    metal(consumer, TinkerFluids.moltenEnderium).optional().metal().dust().plateCasting().gearCasting().coin();
-    metal(consumer, TinkerFluids.moltenLumium  ).optional().metal().dust().plateCasting().gearCasting().coin();
-    metal(consumer, TinkerFluids.moltenSignalum).optional().metal().dust().plateCasting().gearCasting().coin();
+    metal(consumer, TinkerFluids.moltenEnderium).optional().metal().dust().plate().gear().coin();
+    metal(consumer, TinkerFluids.moltenLumium  ).optional().metal().dust().plate().gear().coin();
+    metal(consumer, TinkerFluids.moltenSignalum).optional().metal().dust().plate().gear().coin();
     metal(consumer, TinkerFluids.moltenRefinedObsidian ).optional().metal().common(TOOLS).common(MEKANISM_ARMOR);
     metal(consumer, TinkerFluids.moltenRefinedGlowstone).optional().metal().common(TOOLS).common(MEKANISM_ARMOR);
     // embers provides their own fluid. so we just have to add the recipes
     TagKey<Fluid> dawnstone = getFluidTag(COMMON, "molten_dawnstone");
-    metal(withCondition(consumer, new TagFilledCondition<>(dawnstone)), "dawnstone", dawnstone).temperature(900).optional().metal().plateCasting();
+    metal(withCondition(consumer, new TagFilledCondition<>(dawnstone)), "dawnstone", dawnstone).temperature(900).optional().metal().plate();
     // twilight forest
     CommonRecipe tfLeggings = new ToolItemMelting(7, tf, "leggings");
     CommonRecipe tfShovel = new ToolItemMelting(1, tf, "shovel");

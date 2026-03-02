@@ -8,7 +8,7 @@
           "functions": [
             {
               "fluid": {
-                "amount": 90,
+                "amount": 100,
                 "fluid": "tconstruct:blazing_blood"
               },
               "function": "mantle:set_fluid"

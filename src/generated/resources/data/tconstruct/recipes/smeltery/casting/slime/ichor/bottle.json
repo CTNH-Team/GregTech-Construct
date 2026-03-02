@@ -6,7 +6,7 @@
   "cast_consumed": true,
   "cooling_time": 1,
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "tconstruct:ichor"
   },
   "result": "tconstruct:ichor_slime_bottle"

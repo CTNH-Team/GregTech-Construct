@@ -4,9 +4,9 @@
     "item": "tconstruct:earth_slime_sapling"
   },
   "result": {
-    "amount": 400,
+    "amount": 250,
     "tag": "forge:slime"
   },
   "temperature": 50,
-  "time": 51
+  "time": 41
 }

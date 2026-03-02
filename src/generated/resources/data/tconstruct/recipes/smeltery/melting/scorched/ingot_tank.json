@@ -2,7 +2,7 @@
   "type": "tconstruct:melting",
   "byproducts": [
     {
-      "amount": 4800,
+      "amount": 432,
       "fluid": "tconstruct:quartz"
     }
   ],

@@ -6,7 +6,7 @@
   "cast_consumed": true,
   "cooling_time": 1,
   "fluid": {
-    "amount": 800,
+    "amount": 500,
     "tag": "mantle:water"
   },
   "result": {

@@ -5,7 +5,7 @@
     "type": "minecraft:frog"
   },
   "result": {
-    "amount": 80,
+    "amount": 50,
     "nbt": {
       "Potion": "minecraft:leaping"
     },

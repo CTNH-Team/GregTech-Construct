@@ -1,0 +1,18 @@
+{
+  "type": "tconstruct:melting",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:rods/gold"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:rods/gold"
+  },
+  "result": {
+    "amount": 72,
+    "tag": "forge:gold"
+  },
+  "temperature": 700,
+  "time": 43
+}

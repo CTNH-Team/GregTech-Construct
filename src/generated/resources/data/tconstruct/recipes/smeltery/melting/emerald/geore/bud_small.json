@@ -2,7 +2,7 @@
   "type": "tconstruct:ore_melting",
   "byproducts": [
     {
-      "amount": 1600,
+      "amount": 144,
       "fluid": "tconstruct:diamond",
       "rate": "gem"
     }
@@ -18,7 +18,7 @@
   },
   "rate": "gem",
   "result": {
-    "amount": 1600,
+    "amount": 144,
     "fluid": "tconstruct:emerald"
   },
   "temperature": 934,

@@ -1,0 +1,18 @@
+{
+  "type": "tconstruct:melting",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:rods/bendalloy"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:rods/bendalloy"
+  },
+  "result": {
+    "amount": 72,
+    "tag": "forge:bendalloy"
+  },
+  "temperature": 100,
+  "time": 25
+}

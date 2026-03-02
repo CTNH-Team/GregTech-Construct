@@ -1,0 +1,18 @@
+{
+  "type": "tconstruct:melting",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:rods/iron"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:rods/iron"
+  },
+  "result": {
+    "amount": 72,
+    "tag": "forge:iron"
+  },
+  "temperature": 800,
+  "time": 45
+}

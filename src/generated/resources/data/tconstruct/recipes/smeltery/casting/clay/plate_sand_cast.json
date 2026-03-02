@@ -10,9 +10,9 @@
       "tag": "forge:plates/brick"
     }
   ],
-  "cooling_time": 80,
+  "cooling_time": 63,
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "tconstruct:clay"
   },
   "result": {

@@ -3,15 +3,15 @@
   "units": [
     {
       "key": "gui.tconstruct.fluid.block",
-      "needed": 3600
+      "needed": 2250
     },
     {
       "key": "gui.tconstruct.fluid.slimeball",
-      "needed": 400
+      "needed": 250
     },
     {
       "key": "gui.mantle.fluid.drop",
-      "needed": 80
+      "needed": 50
     }
   ]
 }

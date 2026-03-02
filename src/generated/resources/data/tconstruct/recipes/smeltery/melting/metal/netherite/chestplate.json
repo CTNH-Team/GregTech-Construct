@@ -2,9 +2,9 @@
   "type": "tconstruct:damagable_melting",
   "byproducts": [
     {
-      "amount": 12800,
+      "amount": 1152,
       "fluid": "tconstruct:diamond",
-      "unit_size": 400
+      "unit_size": 36
     }
   ],
   "ingredient": {

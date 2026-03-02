@@ -4,9 +4,9 @@
     "item": "tconstruct:enderbark_roots"
   },
   "cast_consumed": true,
-  "cooling_time": 103,
+  "cooling_time": 81,
   "fluid": {
-    "amount": 1600,
+    "amount": 1000,
     "tag": "forge:slime"
   },
   "result": "tconstruct:earth_enderbark_roots"

@@ -4,7 +4,7 @@
     "item": "minecraft:glass_bottle"
   },
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "forge:potion"
   },
   "result": "minecraft:potion"

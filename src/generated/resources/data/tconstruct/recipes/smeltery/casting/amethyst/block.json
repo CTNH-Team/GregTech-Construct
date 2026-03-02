@@ -1,8 +1,8 @@
 {
   "type": "tconstruct:casting_basin",
-  "cooling_time": 432,
+  "cooling_time": 130,
   "fluid": {
-    "amount": 6400,
+    "amount": 576,
     "tag": "tconstruct:amethyst"
   },
   "result": {

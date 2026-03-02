@@ -4,7 +4,7 @@
     "item": "minecraft:magma_cream"
   },
   "result": {
-    "amount": 400,
+    "amount": 250,
     "tag": "forge:magma"
   },
   "temperature": 300,

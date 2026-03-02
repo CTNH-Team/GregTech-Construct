@@ -1,0 +1,18 @@
+{
+  "type": "tconstruct:melting",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:rods/electrum"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:rods/electrum"
+  },
+  "result": {
+    "amount": 72,
+    "tag": "forge:electrum"
+  },
+  "temperature": 760,
+  "time": 44
+}

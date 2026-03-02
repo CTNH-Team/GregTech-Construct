@@ -7,11 +7,11 @@
     },
     {
       "key": "gui.mantle.fluid.bottle",
-      "needed": 400
+      "needed": 250
     },
     {
       "key": "gui.mantle.fluid.drop",
-      "needed": 80
+      "needed": 50
     }
   ]
 }

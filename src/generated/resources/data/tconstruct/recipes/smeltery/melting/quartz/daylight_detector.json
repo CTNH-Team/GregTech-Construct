@@ -10,9 +10,9 @@
     "item": "minecraft:daylight_detector"
   },
   "result": {
-    "amount": 4800,
+    "amount": 432,
     "fluid": "tconstruct:quartz"
   },
   "temperature": 637,
-  "time": 316
+  "time": 95
 }

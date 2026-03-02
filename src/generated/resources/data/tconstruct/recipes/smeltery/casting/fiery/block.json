@@ -10,9 +10,9 @@
       "tag": "forge:storage_blocks/fiery"
     }
   ],
-  "cooling_time": 401,
+  "cooling_time": 317,
   "fluid": {
-    "amount": 3600,
+    "amount": 2250,
     "tag": "tconstruct:fiery_liquid"
   },
   "result": {

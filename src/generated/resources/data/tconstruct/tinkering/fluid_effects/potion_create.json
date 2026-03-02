@@ -52,7 +52,7 @@
     }
   ],
   "fluid": {
-    "amount": 80,
+    "amount": 50,
     "fluid": "create:potion"
   },
   "hidden": true

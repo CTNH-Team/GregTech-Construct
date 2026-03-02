@@ -4,9 +4,9 @@
     "item": "minecraft:dirt"
   },
   "cast_consumed": true,
-  "cooling_time": 134,
+  "cooling_time": 106,
   "fluid": {
-    "amount": 800,
+    "amount": 500,
     "tag": "tconstruct:ichor"
   },
   "result": "tconstruct:ichor_slime_dirt"

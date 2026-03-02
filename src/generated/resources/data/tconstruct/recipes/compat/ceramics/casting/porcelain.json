@@ -6,9 +6,9 @@
       "modid": "ceramics"
     }
   ],
-  "cooling_time": 190,
+  "cooling_time": 150,
   "fluid": {
-    "amount": 1600,
+    "amount": 1000,
     "tag": "tconstruct:porcelain"
   },
   "result": "ceramics:white_porcelain"

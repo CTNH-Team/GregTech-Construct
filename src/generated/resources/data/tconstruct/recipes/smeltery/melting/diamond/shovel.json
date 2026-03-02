@@ -4,9 +4,9 @@
     "tag": "tconstruct:melting/diamond/tools_costing_1"
   },
   "result": {
-    "amount": 1600,
+    "amount": 144,
     "fluid": "tconstruct:diamond",
-    "unit_size": 400
+    "unit_size": 36
   },
   "temperature": 1450,
   "time": 79

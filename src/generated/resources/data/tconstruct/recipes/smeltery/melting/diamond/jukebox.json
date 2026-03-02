@@ -4,9 +4,9 @@
     "item": "minecraft:jukebox"
   },
   "result": {
-    "amount": 1600,
+    "amount": 144,
     "fluid": "tconstruct:diamond"
   },
   "temperature": 1450,
-  "time": 263
+  "time": 79
 }

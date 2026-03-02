@@ -6,7 +6,7 @@
   "cast_consumed": true,
   "cooling_time": 2400,
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "forge:milk"
   },
   "result": "tconstruct:cheese_ingot"

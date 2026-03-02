@@ -10,9 +10,9 @@
     "item": "minecraft:spyglass"
   },
   "result": {
-    "amount": 1600,
+    "amount": 144,
     "fluid": "tconstruct:amethyst"
   },
   "temperature": 950,
-  "time": 216
+  "time": 65
 }

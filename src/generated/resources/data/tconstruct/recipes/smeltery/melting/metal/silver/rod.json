@@ -1,0 +1,18 @@
+{
+  "type": "tconstruct:melting",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:rods/silver"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:rods/silver"
+  },
+  "result": {
+    "amount": 72,
+    "tag": "forge:silver"
+  },
+  "temperature": 790,
+  "time": 45
+}

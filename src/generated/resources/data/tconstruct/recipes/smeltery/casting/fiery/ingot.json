@@ -10,9 +10,9 @@
       "tag": "forge:ingots/fiery"
     }
   ],
-  "cooling_time": 134,
+  "cooling_time": 106,
   "fluid": {
-    "amount": 400,
+    "amount": 250,
     "tag": "tconstruct:fiery_liquid"
   },
   "result": {

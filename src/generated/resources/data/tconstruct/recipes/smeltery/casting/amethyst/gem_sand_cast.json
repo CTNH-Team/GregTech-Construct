@@ -4,9 +4,9 @@
     "tag": "tconstruct:casts/single_use/gem"
   },
   "cast_consumed": true,
-  "cooling_time": 216,
+  "cooling_time": 65,
   "fluid": {
-    "amount": 1600,
+    "amount": 144,
     "tag": "tconstruct:amethyst"
   },
   "result": {

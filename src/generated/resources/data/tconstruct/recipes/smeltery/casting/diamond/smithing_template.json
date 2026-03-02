@@ -8,9 +8,9 @@
       "tag": "minecraft:trim_templates"
     }
   ],
-  "cooling_time": 588,
+  "cooling_time": 176,
   "fluid": {
-    "amount": 8000,
+    "amount": 720,
     "tag": "tconstruct:diamond"
   }
 }

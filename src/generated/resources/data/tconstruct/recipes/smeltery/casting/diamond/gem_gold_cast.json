@@ -3,9 +3,9 @@
   "cast": {
     "tag": "tconstruct:casts/multi_use/gem"
   },
-  "cooling_time": 263,
+  "cooling_time": 79,
   "fluid": {
-    "amount": 1600,
+    "amount": 144,
     "tag": "tconstruct:diamond"
   },
   "result": {

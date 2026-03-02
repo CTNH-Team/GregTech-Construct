@@ -2,7 +2,7 @@
   "type": "tconstruct:ore_melting",
   "byproducts": [
     {
-      "amount": 4800,
+      "amount": 432,
       "fluid": "tconstruct:quartz"
     }
   ],
@@ -11,7 +11,7 @@
   },
   "rate": "gem",
   "result": {
-    "amount": 4800,
+    "amount": 432,
     "fluid": "tconstruct:amethyst"
   },
   "temperature": 950,

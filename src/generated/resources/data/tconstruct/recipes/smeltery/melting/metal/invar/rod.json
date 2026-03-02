@@ -1,0 +1,18 @@
+{
+  "type": "tconstruct:melting",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:rods/invar"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:rods/invar"
+  },
+  "result": {
+    "amount": 72,
+    "tag": "forge:invar"
+  },
+  "temperature": 900,
+  "time": 47
+}
