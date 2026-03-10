@@ -28,9 +28,9 @@ dependencies {
     modCompileOnly("curse.maven:balm-531761:5999476")
     modCompileOnly("curse.maven:crafting-tweaks-233071:5623639")
 
-    modImplementation("dev.latvian.mods:kubejs-forge:${kubejs_version}")
-    modImplementation("dev.latvian.mods:rhino-forge:${rhino_version}")
-    modImplementation("dev.architectury:architectury-forge:${architectury_version}")
+    //modImplementation("dev.latvian.mods:kubejs-forge:${kubejs_version}")
+    //modImplementation("dev.latvian.mods:rhino-forge:${rhino_version}")
+    //modImplementation("dev.architectury:architectury-forge:${architectury_version}")
 
     //deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
 
