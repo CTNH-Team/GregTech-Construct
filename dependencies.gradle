@@ -32,6 +32,10 @@ dependencies {
     //modImplementation("dev.latvian.mods:rhino-forge:${rhino_version}")
     //modImplementation("dev.architectury:architectury-forge:${architectury_version}")
 
+    modImplementation("curse.maven:curios-309927:6418456")
+    modImplementation("curse.maven:patchouli-306770:6164575")
+    modImplementation("curse.maven:botania-225643:6366547")
+
     //deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'

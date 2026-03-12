@@ -81,7 +81,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
     tag(TinkerTags.Materials.COMPATABILITY_METALS).addOptional(
       // tier 2
       MaterialIds.silver, MaterialIds.lead, MaterialIds.aluminum,
-      MaterialIds.osmium, MaterialIds.ironwood,
+      MaterialIds.osmium, MaterialIds.ironwood, MaterialIds.manaSteel,
       // tier 3
       MaterialIds.steeleaf,
       // tier 4
@@ -172,7 +172,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
       MaterialIds.hepatizon, MaterialIds.queensSlime, MaterialIds.knightmetal
     ).addOptional(
       // tier 2
-      MaterialIds.aluminum,
+      MaterialIds.aluminum, MaterialIds.manaSteel,
       // tier 3
       MaterialIds.necronium, MaterialIds.constantan, MaterialIds.platedSlimewood
     );

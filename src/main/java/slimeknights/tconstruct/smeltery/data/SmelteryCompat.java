@@ -60,7 +60,10 @@ public enum SmelteryCompat {
   BENDALLOY(TinkerFluids.moltenBendalloy, CompatType.ALLOY),
   // twilight
   STEELEAF(TinkerFluids.moltenSteeleaf, CompatType.NONE,  MaterialIds.steeleaf),
-  FIERY   (TinkerFluids.fieryLiquid,    CompatType.ALLOY, MaterialIds.fiery),;
+  FIERY   (TinkerFluids.fieryLiquid,    CompatType.ALLOY, MaterialIds.fiery),
+  // botania
+    MANASTEEL(TinkerFluids.moltenManaSteel, CompatType.NONE,  MaterialIds.manaSteel)
+    ;
 
   @Getter
   private final String name = this.name().toLowerCase(Locale.US);

@@ -91,231 +91,231 @@ import java.util.function.Supplier;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TConstruct {
 
-  public static final String MOD_ID = "tconstruct";
-  public static final Logger LOG = LogManager.getLogger(MOD_ID);
-  public static final Random RANDOM = new Random();
+    public static final String MOD_ID = "tconstruct";
+    public static final Logger LOG = LogManager.getLogger(MOD_ID);
+    public static final Random RANDOM = new Random();
 
-  /* Instance of this mod, used for grabbing prototype fields */
-  public static TConstruct instance;
+    /* Instance of this mod, used for grabbing prototype fields */
+    public static TConstruct instance;
 
-  public TConstruct() {
-    instance = this;
+    public TConstruct() {
+        instance = this;
 
-    Config.init();
-    TinkerItemDisplays.init();
-    MaterialRegistry.init();
+        Config.init();
+        TinkerItemDisplays.init();
+        MaterialRegistry.init();
 
-    // initialize modules, done this way rather than with annotations to give us control over the order
-    MinecraftForge.EVENT_BUS.addListener(TConstruct::missingMappings);
-    IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-    // base
-    bus.register(new TinkerCommons());
-    bus.register(new TinkerMaterials());
-    bus.register(new TinkerEffects());
-    bus.register(new TinkerGadgets());
-    bus.register(new TinkerAttributes());
-    // world
-    bus.register(new TinkerWorld());
-    bus.register(new TinkerStructures());
-    // tools
-    bus.register(new TinkerTables());
-    bus.register(new TinkerModifiers());
-    bus.register(new TinkerToolParts());
-    bus.register(new TinkerTools());
-    // smeltery
-    bus.register(new TinkerSmeltery());
-    bus.register(new TinkerFluids());
+        // initialize modules, done this way rather than with annotations to give us control over the order
+        MinecraftForge.EVENT_BUS.addListener(TConstruct::missingMappings);
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        // base
+        bus.register(new TinkerCommons());
+        bus.register(new TinkerMaterials());
+        bus.register(new TinkerEffects());
+        bus.register(new TinkerGadgets());
+        bus.register(new TinkerAttributes());
+        // world
+        bus.register(new TinkerWorld());
+        bus.register(new TinkerStructures());
+        // tools
+        bus.register(new TinkerTables());
+        bus.register(new TinkerModifiers());
+        bus.register(new TinkerToolParts());
+        bus.register(new TinkerTools());
+        // smeltery
+        bus.register(new TinkerSmeltery());
+        bus.register(new TinkerFluids());
 
-    // init deferred registers
-    TinkerModule.initRegisters();
-    TinkerNetwork.setup();
-    TinkerTags.init();
-    // init client logic
-    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> TinkerClient::onConstruct);
+        // init deferred registers
+        TinkerModule.initRegisters();
+        TinkerNetwork.setup();
+        TinkerTags.init();
+        // init client logic
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> TinkerClient::onConstruct);
 
-    // compat
-    ModList modList = ModList.get();
-    if (modList.isLoaded("immersiveengineering")) {
-      bus.register(new ImmersiveEngineeringPlugin());
+        // compat
+        ModList modList = ModList.get();
+        if (modList.isLoaded("immersiveengineering")) {
+            bus.register(new ImmersiveEngineeringPlugin());
+        }
+        if (modList.isLoaded("jsonthings")) {
+            JsonThingsPlugin.onConstruct();
+        }
+        if (modList.isLoaded("diet")) {
+            DietPlugin.onConstruct();
+        }
+        if (modList.isLoaded("craftingtweaks")) {
+            CraftingTweaksPlugin.onConstruct();
+        }
+        if (modList.isLoaded("dummmmmmy")) {
+            bus.register(new DummmmmmyPlugin());
+        }
     }
-    if (modList.isLoaded("jsonthings")) {
-      JsonThingsPlugin.onConstruct();
+
+    @SubscribeEvent
+    static void commonSetup(final FMLCommonSetupEvent event) {
+        ToolDefinitionLoader.init();
+        StationSlotLayoutLoader.init();
     }
-    if (modList.isLoaded("diet")) {
-      DietPlugin.onConstruct();
+
+    @SubscribeEvent
+    static void gatherData(final GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
+        PackOutput packOutput = generator.getPackOutput();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        CompletableFuture<Provider> lookupProvider = event.getLookupProvider();
+        boolean server = event.includeServer();
+
+        // its sometimes cleaner to splitup different registry sets to their own classes, combine them here into a single provider
+        RegistrySetBuilder registrySetBuilder = new RegistrySetBuilder();
+        DamageTypeProvider.register(registrySetBuilder);
+        WorldgenProvider.register(registrySetBuilder);
+        TrimMaterialProvider.register(registrySetBuilder);
+        DatapackBuiltinEntriesProvider datapackRegistryProvider = new DatapackBuiltinEntriesProvider(packOutput, lookupProvider, registrySetBuilder, Set.of(MOD_ID));
+        generator.addProvider(server, datapackRegistryProvider);
+
+        // tags
+        BlockTagProvider blockTags = new BlockTagProvider(packOutput, lookupProvider, existingFileHelper);
+        generator.addProvider(server, blockTags);
+        generator.addProvider(server, new ItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
+        generator.addProvider(server, new FluidTagProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(server, new EntityTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(server, new BlockEntityTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(server, new BiomeTagProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(server, new EnchantmentTagProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(server, new MenuTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(server, new PotionTagProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(server, new DamageTypeTagProvider(packOutput, datapackRegistryProvider.getRegistryProvider(), existingFileHelper));
+
+        // other datagen
+        generator.addProvider(server, new TConstructLootTableProvider(packOutput));
+        generator.addProvider(server, new AdvancementsProvider(packOutput));
+        generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
+        generator.addProvider(server, new LootTableInjectionProvider(packOutput));
+        generator.addProvider(server, new ConfigurationDataProvider(packOutput));
     }
-    if (modList.isLoaded("craftingtweaks")) {
-      CraftingTweaksPlugin.onConstruct();
+
+    /** Handles missing mappings of all types */
+    private static void missingMappings(MissingMappingsEvent event) {
+        RegistrationHelper.handleMissingMappings(event, MOD_ID, Registries.BLOCK, name -> switch (name) {
+            // silky jewel removal
+            case "silky_jewel_block" -> Blocks.EMERALD_BLOCK;
+            // piglin heads are vanilla
+            case "piglin_head" -> Blocks.PIGLIN_HEAD;
+            case "piglin_wall_head" -> Blocks.PIGLIN_WALL_HEAD;
+            default -> null;
+        });
+        RegistrationHelper.handleMissingMappings(event, MOD_ID, Registries.ITEM, name -> switch (name) {
+            // silky jewel removal
+            case "silky_jewel" -> Items.EMERALD;
+            case "silky_jewel_block" -> Items.EMERALD_BLOCK;
+            // piglin heads are vanilla
+            case "piglin_head" -> Items.PIGLIN_HEAD;
+            // round plate rename
+            case "round_plate" -> TinkerToolParts.adzeHead.get();
+            case "round_plate_cast" -> TinkerSmeltery.adzeHeadCast.get();
+            case "round_plate_sand_cast" -> TinkerSmeltery.adzeHeadCast.getSand();
+            case "round_plate_red_sand_cast" -> TinkerSmeltery.adzeHeadCast.getRedSand();
+            default -> null;
+        });
     }
-    if (modList.isLoaded("dummmmmmy")) {
-      bus.register(new DummmmmmyPlugin());
+
+    /* Utils */
+
+    /**
+     * Gets a resource location for Tinkers
+     * @param name  Resource path
+     * @return  Location for tinkers
+     */
+    public static ResourceLocation getResource(String name) {
+        return new ResourceLocation(MOD_ID, name);
     }
-  }
 
-  @SubscribeEvent
-  static void commonSetup(final FMLCommonSetupEvent event) {
-    ToolDefinitionLoader.init();
-    StationSlotLayoutLoader.init();
-  }
-
-  @SubscribeEvent
-  static void gatherData(final GatherDataEvent event) {
-    DataGenerator generator = event.getGenerator();
-    PackOutput packOutput = generator.getPackOutput();
-    ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-    CompletableFuture<Provider> lookupProvider = event.getLookupProvider();
-    boolean server = event.includeServer();
-
-    // its sometimes cleaner to splitup different registry sets to their own classes, combine them here into a single provider
-    RegistrySetBuilder registrySetBuilder = new RegistrySetBuilder();
-    DamageTypeProvider.register(registrySetBuilder);
-    WorldgenProvider.register(registrySetBuilder);
-    TrimMaterialProvider.register(registrySetBuilder);
-    DatapackBuiltinEntriesProvider datapackRegistryProvider = new DatapackBuiltinEntriesProvider(packOutput, lookupProvider, registrySetBuilder, Set.of(MOD_ID));
-    generator.addProvider(server, datapackRegistryProvider);
-
-    // tags
-    BlockTagProvider blockTags = new BlockTagProvider(packOutput, lookupProvider, existingFileHelper);
-    generator.addProvider(server, blockTags);
-    generator.addProvider(server, new ItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
-    generator.addProvider(server, new FluidTagProvider(packOutput, lookupProvider, existingFileHelper));
-    generator.addProvider(server, new EntityTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
-    generator.addProvider(server, new BlockEntityTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
-    generator.addProvider(server, new BiomeTagProvider(packOutput, lookupProvider, existingFileHelper));
-    generator.addProvider(server, new EnchantmentTagProvider(packOutput, lookupProvider, existingFileHelper));
-    generator.addProvider(server, new MenuTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
-    generator.addProvider(server, new PotionTagProvider(packOutput, lookupProvider, existingFileHelper));
-    generator.addProvider(server, new DamageTypeTagProvider(packOutput, datapackRegistryProvider.getRegistryProvider(), existingFileHelper));
-
-    // other datagen
-    generator.addProvider(server, new TConstructLootTableProvider(packOutput));
-    generator.addProvider(server, new AdvancementsProvider(packOutput));
-    generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
-    generator.addProvider(server, new LootTableInjectionProvider(packOutput));
-    generator.addProvider(server, new ConfigurationDataProvider(packOutput));
-  }
-
-  /** Handles missing mappings of all types */
-  private static void missingMappings(MissingMappingsEvent event) {
-    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registries.BLOCK, name -> switch (name) {
-      // silky jewel removal
-      case "silky_jewel_block" -> Blocks.EMERALD_BLOCK;
-      // piglin heads are vanilla
-      case "piglin_head" -> Blocks.PIGLIN_HEAD;
-      case "piglin_wall_head" -> Blocks.PIGLIN_WALL_HEAD;
-      default -> null;
-    });
-    RegistrationHelper.handleMissingMappings(event, MOD_ID, Registries.ITEM, name -> switch (name) {
-      // silky jewel removal
-      case "silky_jewel" -> Items.EMERALD;
-      case "silky_jewel_block" -> Items.EMERALD_BLOCK;
-      // piglin heads are vanilla
-      case "piglin_head" -> Items.PIGLIN_HEAD;
-      // round plate rename
-      case "round_plate" -> TinkerToolParts.adzeHead.get();
-      case "round_plate_cast" -> TinkerSmeltery.adzeHeadCast.get();
-      case "round_plate_sand_cast" -> TinkerSmeltery.adzeHeadCast.getSand();
-      case "round_plate_red_sand_cast" -> TinkerSmeltery.adzeHeadCast.getRedSand();
-      default -> null;
-    });
-  }
-
-  /* Utils */
-
-  /**
-   * Gets a resource location for Tinkers
-   * @param name  Resource path
-   * @return  Location for tinkers
-   */
-  public static ResourceLocation getResource(String name) {
-    return new ResourceLocation(MOD_ID, name);
-  }
-
-  /**
-   * Gets a data key for the capability, mainly used for modifier markers
-   * @param name  Resource path
-   * @return  Location for tinkers
-   */
-  public static <T> TinkerDataKey<T> createKey(String name) {
-    return TinkerDataKey.of(getResource(name));
-  }
-
-  /**
-   * Gets a data key for the capability, mainly used for modifier markers
-   * @param name         Resource path
-   * @param constructor  Constructor for compute if absent
-   * @return  Location for tinkers
-   */
-  public static <T> ComputableDataKey<T> createKey(String name, Supplier<T> constructor) {
-    return ComputableDataKey.of(getResource(name), constructor);
-  }
-
-  /**
-   * Returns the given Resource prefixed with tinkers resource location. Use this function instead of hardcoding
-   * resource locations.
-   */
-  public static String resourceString(String res) {
-    return String.format("%s:%s", MOD_ID, res);
-  }
-
-  /**
-   * Prefixes the given unlocalized name with tinkers prefix. Use this when passing unlocalized names for a uniform
-   * namespace.
-   */
-  public static String prefix(String name) {
-    return MOD_ID + "." + name.toLowerCase(Locale.US);
-  }
-
-  /** Makes a Tinker's description ID */
-  public static String makeDescriptionId(String type, String name) {
-    return type + "." + MOD_ID + "." + name;
-  }
-
-  /**
-   * Makes a translation key for the given name
-   * @param base  Base name, such as "block" or "gui"
-   * @param name  Object name
-   * @return  Translation key
-   */
-  public static String makeTranslationKey(String base, String name) {
-    return Util.makeTranslationKey(base, getResource(name));
-  }
-
-  /**
-   * Makes a translation text component for the given name
-   * @param base  Base name, such as "block" or "gui"
-   * @param name  Object name
-   * @return  Translation key
-   */
-  public static MutableComponent makeTranslation(String base, String name) {
-    return Component.translatable(makeTranslationKey(base, name));
-  }
-
-  /**
-   * Makes a translation text component for the given name
-   * @param base       Base name, such as "block" or "gui"
-   * @param name       Object name
-   * @param arguments  Additional arguments to the translation
-   * @return  Translation key
-   */
-  public static MutableComponent makeTranslation(String base, String name, Object... arguments) {
-    return Component.translatable(makeTranslationKey(base, name), arguments);
-  }
-
-  /**
-   * This function is called in the constructor in some internal classes that are a common target for addons to wrongly extend.
-   * These classes will cause issues if blindly used by the addon, and are typically trivial for the addon to implement
-   * the parts they need if they just put in some effort understanding the code they are copying.
-   *
-   * As a reminder for addon devs, anything that is not in the library package can and will change arbitrarily. If you need to use a feature outside library, request it on our github.
-   * @param self  Class to validate
-   */
-  public static void sealTinkersClass(Object self, String base, String solution) {
-    // note for future maintainers: this does not use Java 9's sealed classes as unless you use modules those are restricted to the same package.
-    // Dumb restriction but not like we can change it.
-    String name = self.getClass().getName();
-    if (!name.startsWith("slimeknights.tconstruct.")) {
-      throw new IllegalStateException(base + " being extended from invalid package " + name + ". " + solution);
+    /**
+     * Gets a data key for the capability, mainly used for modifier markers
+     * @param name  Resource path
+     * @return  Location for tinkers
+     */
+    public static <T> TinkerDataKey<T> createKey(String name) {
+        return TinkerDataKey.of(getResource(name));
     }
-  }
+
+    /**
+     * Gets a data key for the capability, mainly used for modifier markers
+     * @param name         Resource path
+     * @param constructor  Constructor for compute if absent
+     * @return  Location for tinkers
+     */
+    public static <T> ComputableDataKey<T> createKey(String name, Supplier<T> constructor) {
+        return ComputableDataKey.of(getResource(name), constructor);
+    }
+
+    /**
+     * Returns the given Resource prefixed with tinkers resource location. Use this function instead of hardcoding
+     * resource locations.
+     */
+    public static String resourceString(String res) {
+        return String.format("%s:%s", MOD_ID, res);
+    }
+
+    /**
+     * Prefixes the given unlocalized name with tinkers prefix. Use this when passing unlocalized names for a uniform
+     * namespace.
+     */
+    public static String prefix(String name) {
+        return MOD_ID + "." + name.toLowerCase(Locale.US);
+    }
+
+    /** Makes a Tinker's description ID */
+    public static String makeDescriptionId(String type, String name) {
+        return type + "." + MOD_ID + "." + name;
+    }
+
+    /**
+     * Makes a translation key for the given name
+     * @param base  Base name, such as "block" or "gui"
+     * @param name  Object name
+     * @return  Translation key
+     */
+    public static String makeTranslationKey(String base, String name) {
+        return Util.makeTranslationKey(base, getResource(name));
+    }
+
+    /**
+     * Makes a translation text component for the given name
+     * @param base  Base name, such as "block" or "gui"
+     * @param name  Object name
+     * @return  Translation key
+     */
+    public static MutableComponent makeTranslation(String base, String name) {
+        return Component.translatable(makeTranslationKey(base, name));
+    }
+
+    /**
+     * Makes a translation text component for the given name
+     * @param base       Base name, such as "block" or "gui"
+     * @param name       Object name
+     * @param arguments  Additional arguments to the translation
+     * @return  Translation key
+     */
+    public static MutableComponent makeTranslation(String base, String name, Object... arguments) {
+        return Component.translatable(makeTranslationKey(base, name), arguments);
+    }
+
+    /**
+     * This function is called in the constructor in some internal classes that are a common target for addons to wrongly extend.
+     * These classes will cause issues if blindly used by the addon, and are typically trivial for the addon to implement
+     * the parts they need if they just put in some effort understanding the code they are copying.
+     *
+     * As a reminder for addon devs, anything that is not in the library package can and will change arbitrarily. If you need to use a feature outside library, request it on our github.
+     * @param self  Class to validate
+     */
+    public static void sealTinkersClass(Object self, String base, String solution) {
+        // note for future maintainers: this does not use Java 9's sealed classes as unless you use modules those are restricted to the same package.
+        // Dumb restriction but not like we can change it.
+        String name = self.getClass().getName();
+        if (!name.startsWith("slimeknights.tconstruct.")) {
+            throw new IllegalStateException(base + " being extended from invalid package " + name + ". " + solution);
+        }
+    }
 }
