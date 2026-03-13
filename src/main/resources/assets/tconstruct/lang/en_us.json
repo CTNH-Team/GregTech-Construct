@@ -951,11 +951,6 @@
 
   "_comment": "Twilight Forest Alloys",
 
-  "block.tconstruct.mana_steel": "Molten Manasteel",
-  "fluid.tconstruct.mana_steel": "Molten Manasteel",
-  "fluid.tconstruct.flowing_mana_steel": "Flowing Molten Manasteel",
-  "item.tconstruct.mana_steel_bucket": "Molten Manasteel Bucket",
-
   "block.tconstruct.steeleaf": "Molten Steeleaf",
   "fluid.tconstruct.steeleaf": "Molten Steeleaf",
   "fluid.tconstruct.flowing_steeleaf": "Flowing Molten Steeleaf",
@@ -968,6 +963,12 @@
   "item.tconstruct.fiery_liquid_bucket": "Fiery Liquid Bucket",
   "fluid.tconstruct.fiery_liquid.fluid_effect": "You might think this is a fantastic deal, so many extra ingots! But remember, fiery is really hard to get.",
 
+  "_comment": "Botina Alloys",
+
+  "block.tconstruct.manasteel": "Molten Manasteel",
+  "fluid.tconstruct.manasteel": "Molten Manasteel",
+  "fluid.tconstruct.flowing_manasteel": "Flowing Molten Manasteel",
+  "item.tconstruct.manasteel_bucket": "Molten Manasteel Bucket",
 
   "_comment": "Fluid effect contents",
   "fluid_effect.tconstruct.separator": "%s and %s",
@@ -2203,8 +2204,8 @@
   "material.tconstruct.ironwood.encyclopedia": "When losing 1 durability, tool loses 1 extra durability (bypassing modifiers) to share durability with a random tool in the hotbar or offhand. Target gains 1 barkskin plus 1 per level.",
   "material.tconstruct.ironwood.armor": "When losing 1 durability, tool loses 1 extra durability (bypassing modifiers) to share durability with a random equipped armor. Target gains 1 barkskin plus 1 per level.",
 
-  "material.tconstruct.mana_steel": "Mana Steel",
-  "material.tconstruct.mana_steel.flavor": "Magic, isn't it amazing?",
+  "material.tconstruct.manasteel": "Mana Steel",
+  "material.tconstruct.manasteel.flavor": "Magic, isn't it amazing?",
 
   "__comment": "Tier 3 Integration Materials",
   "material.tconstruct.steel": "Steel",

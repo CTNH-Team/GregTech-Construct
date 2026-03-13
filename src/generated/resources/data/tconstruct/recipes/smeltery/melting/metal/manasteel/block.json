@@ -3,16 +3,16 @@
   "conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/mana_steel"
+      "tag": "forge:storage_blocks/manasteel"
     }
   ],
   "ingredient": {
-    "tag": "forge:ingots/mana_steel"
+    "tag": "forge:storage_blocks/manasteel"
   },
   "result": {
-    "amount": 144,
-    "tag": "forge:mana_steel"
+    "amount": 1296,
+    "tag": "forge:manasteel"
   },
   "temperature": 800,
-  "time": 60
+  "time": 180
 }

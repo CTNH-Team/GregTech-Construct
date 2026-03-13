@@ -121,7 +121,7 @@ public final class MaterialIds {
   public static final MaterialId steeleaf = id("steeleaf");
   public static final MaterialId fiery = id("fiery");
   //botania
-  public static final MaterialId manaSteel = id("mana_steel");
+  public static final MaterialId manaSteel = id("manasteel");
 
   // plate
   public static final MaterialId gold = id("gold");

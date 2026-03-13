@@ -9,7 +9,7 @@
   "ingredient": {
     "tag": "forge:nuggets/mana_steel"
   },
-  "material": "tconstruct:mana_steel",
+  "material": "tconstruct:manasteel",
   "needed": 9,
   "value": 1
 }

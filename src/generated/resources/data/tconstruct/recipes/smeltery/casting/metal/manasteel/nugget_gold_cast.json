@@ -1,21 +1,20 @@
 {
   "type": "tconstruct:casting_table",
   "cast": {
-    "tag": "tconstruct:casts/single_use/nugget"
+    "tag": "tconstruct:casts/multi_use/nugget"
   },
-  "cast_consumed": true,
   "conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/mana_steel"
+      "tag": "forge:nuggets/manasteel"
     }
   ],
   "cooling_time": 20,
   "fluid": {
     "amount": 16,
-    "tag": "forge:mana_steel"
+    "tag": "forge:manasteel"
   },
   "result": {
-    "tag": "forge:nuggets/mana_steel"
+    "tag": "forge:nuggets/manasteel"
   }
 }

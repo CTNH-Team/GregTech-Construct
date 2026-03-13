@@ -3,13 +3,17 @@
   "conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/mana_steel"
+      "tag": "forge:storage_blocks/mana_steel"
     }
   ],
   "ingredient": {
+    "tag": "forge:storage_blocks/mana_steel"
+  },
+  "leftover": {
+    "count": 1,
     "tag": "forge:ingots/mana_steel"
   },
-  "material": "tconstruct:mana_steel",
+  "material": "tconstruct:manasteel",
   "needed": 1,
-  "value": 1
+  "value": 9
 }

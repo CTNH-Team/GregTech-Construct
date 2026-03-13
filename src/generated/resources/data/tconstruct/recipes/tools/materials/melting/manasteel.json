@@ -6,7 +6,7 @@
       "values": [
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/mana_steel"
+          "tag": "forge:ingots/manasteel"
         },
         {
           "type": "mantle:tag_filled",
@@ -15,10 +15,10 @@
       ]
     }
   ],
-  "input": "tconstruct:mana_steel",
+  "input": "tconstruct:manasteel",
   "result": {
     "amount": 144,
-    "tag": "forge:mana_steel"
+    "tag": "forge:manasteel"
   },
   "temperature": 800
 }
