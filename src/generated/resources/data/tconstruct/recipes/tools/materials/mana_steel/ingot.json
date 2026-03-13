@@ -1,0 +1,15 @@
+{
+  "type": "tconstruct:material",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/mana_steel"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:ingots/mana_steel"
+  },
+  "material": "tconstruct:mana_steel",
+  "needed": 1,
+  "value": 1
+}

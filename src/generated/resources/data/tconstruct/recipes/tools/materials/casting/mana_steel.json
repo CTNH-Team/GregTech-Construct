@@ -1,0 +1,24 @@
+{
+  "type": "tconstruct:material_fluid",
+  "conditions": [
+    {
+      "type": "forge:or",
+      "values": [
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/mana_steel"
+        },
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/manasteel"
+        }
+      ]
+    }
+  ],
+  "fluid": {
+    "amount": 144,
+    "tag": "forge:mana_steel"
+  },
+  "output": "tconstruct:mana_steel",
+  "temperature": 800
+}

@@ -1,0 +1,18 @@
+{
+  "type": "tconstruct:melting",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/mana_steel"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:ingots/mana_steel"
+  },
+  "result": {
+    "amount": 144,
+    "tag": "forge:mana_steel"
+  },
+  "temperature": 800,
+  "time": 60
+}

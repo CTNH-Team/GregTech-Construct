@@ -185,7 +185,7 @@ public final class TinkerFluids extends TinkerModule {
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenUranium  = FLUIDS.registerMetal("uranium").type(hot("uranium").temperature(1130).lightLevel(15)).block(createBurning(MapColor.TERRACOTTA_GREEN, 15, 10, 5f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenChromium = FLUIDS.registerMetal("chromium").type(hot("chromium").temperature(1200).lightLevel(13)).block(createBurning(MapColor.COLOR_CYAN, 13, 10, 5f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenCadmium  = FLUIDS.registerMetal("cadmium").type(hot("cadmium").temperature(594).lightLevel(10)).block(createBurning(MapColor.COLOR_BROWN, 10, 10, 5f)).bucket().commonTag().flowing();
-    public static final FlowingFluidObject<ForgeFlowingFluid> moltenManaSteel = FLUIDS.registerMetal("manasteel").type(hot("manasteel").temperature(1100).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
+    public static final FlowingFluidObject<ForgeFlowingFluid> moltenManaSteel = FLUIDS.registerMetal("mana_steel").type(hot("mana_steel").temperature(1100).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
 
     // compat alloys
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenBronze     = FLUIDS.registerMetal("bronze").type(hot("bronze").temperature(1000).lightLevel(10)).block(createBurning(MapColor.TERRACOTTA_ORANGE, 10, 10, 6f)).bucket().commonTag().flowing();

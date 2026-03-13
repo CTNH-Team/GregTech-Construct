@@ -301,7 +301,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         compatMeltingCasting(consumer, MaterialIds.silver,   TinkerFluids.moltenSilver,   folder);
         compatMeltingCasting(consumer, MaterialIds.lead,     TinkerFluids.moltenLead,     folder);
         compatMeltingCasting(consumer, MaterialIds.aluminum, TinkerFluids.moltenAluminum, folder);
-        compatMeltingCasting(consumer, MaterialIds.manaSteel, TinkerFluids.moltenManaSteel, folder);
+        compatMeltingCasting(consumer, MaterialIds.manaSteel, TinkerFluids.moltenManaSteel, "manasteel", folder);
         whitestoneCasting(consumer, TinkerFluids.moltenAluminum, folder);
         whitestoneCasting(consumer, TinkerFluids.moltenTin,      folder);
         whitestoneCasting(consumer, TinkerFluids.moltenZinc,     folder);

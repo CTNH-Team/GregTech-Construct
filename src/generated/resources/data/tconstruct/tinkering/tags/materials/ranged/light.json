@@ -13,6 +13,10 @@
       "required": false
     },
     {
+      "id": "tconstruct:mana_steel",
+      "required": false
+    },
+    {
       "id": "tconstruct:necronium",
       "required": false
     },

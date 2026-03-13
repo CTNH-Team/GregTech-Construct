@@ -951,6 +951,11 @@
 
   "_comment": "Twilight Forest Alloys",
 
+  "block.tconstruct.mana_steel": "Molten Manasteel",
+  "fluid.tconstruct.mana_steel": "Molten Manasteel",
+  "fluid.tconstruct.flowing_mana_steel": "Flowing Molten Manasteel",
+  "item.tconstruct.mana_steel_bucket": "Molten Manasteel Bucket",
+
   "block.tconstruct.steeleaf": "Molten Steeleaf",
   "fluid.tconstruct.steeleaf": "Molten Steeleaf",
   "fluid.tconstruct.flowing_steeleaf": "Flowing Molten Steeleaf",
@@ -2198,6 +2203,8 @@
   "material.tconstruct.ironwood.encyclopedia": "When losing 1 durability, tool loses 1 extra durability (bypassing modifiers) to share durability with a random tool in the hotbar or offhand. Target gains 1 barkskin plus 1 per level.",
   "material.tconstruct.ironwood.armor": "When losing 1 durability, tool loses 1 extra durability (bypassing modifiers) to share durability with a random equipped armor. Target gains 1 barkskin plus 1 per level.",
 
+  "material.tconstruct.mana_steel": "Mana Steel",
+  "material.tconstruct.mana_steel.flavor": "Magic, isn't it amazing?",
 
   "__comment": "Tier 3 Integration Materials",
   "material.tconstruct.steel": "Steel",
@@ -2320,6 +2327,8 @@
   "modifier.tconstruct.overslime": "Overslime",
   "modifier.tconstruct.overslime.flavor": "Slimy!",
   "modifier.tconstruct.overslime.description": "Tool consumes overslime instead of durability, until it runs out! Not friendly towards tools lacking slime",
+
+  "modifier.tconstruct.mana_fix": "Mana Fix",
 
   "_comment": "Tool or harvest",
   "modifier.tconstruct.experienced": "Experienced",

@@ -124,7 +124,7 @@ public class MaterialDataProvider extends AbstractMaterialDataProvider {
         addCompatMetalMaterial(MaterialIds.aluminum, 2, ORDER_COMPAT + ORDER_RANGED);
         // ironwood works in a part builder even though its ingots
         addCompatMaterial(MaterialIds.ironwood, 2, ORDER_COMPAT + ORDER_GENERAL, true, "ingots/ironwood");
-        addCompatMetalMaterial(MaterialIds.manaSteel, 2, ORDER_COMPAT + ORDER_HARVEST + ORDER_WEAPON);
+        addCompatMetalMaterial(MaterialIds.manaSteel, 2, ORDER_COMPAT + ORDER_HARVEST + ORDER_WEAPON, "manasteel");
         // treated wood comes from treated wood or creosote oil
         addMaterial(MaterialIds.treatedWood, 2, ORDER_COMPAT + ORDER_GENERAL, true, false,
                 new OrCondition(ConfigEnabledCondition.FORCE_INTEGRATION_MATERIALS, tagExistsCondition("treated_wood"), new TagFilledCondition<>(FluidTags.create(commonResource("creosote")))));

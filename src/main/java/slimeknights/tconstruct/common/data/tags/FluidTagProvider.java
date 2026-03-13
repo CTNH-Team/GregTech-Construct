@@ -85,6 +85,7 @@ public class FluidTagProvider extends FluidTagsProvider {
     fluidTag(TinkerFluids.moltenUranium);
     fluidTag(TinkerFluids.moltenChromium);
     fluidTag(TinkerFluids.moltenCadmium);
+    fluidTag(TinkerFluids.moltenManaSteel);
     // compat alloys
     fluidTag(TinkerFluids.moltenBronze);
     fluidTag(TinkerFluids.moltenBrass);

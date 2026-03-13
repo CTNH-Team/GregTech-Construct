@@ -130,11 +130,10 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(510, 6.5f, IRON, 2f),
                 HandleMaterialStats.multipliers().durability(1.15f).attackSpeed(0.95f).build(),
                 StatlessMaterialStats.BINDING);
-        addMaterialStats(MaterialIds.iron,
-                new HeadMaterialStats(350, 7f, IRON, 3f),
-                HandleMaterialStats.multipliers().durability(1.1f).attackSpeed(1.1f).attackDamage(1.2f).build(),
+        addMaterialStats(MaterialIds.manaSteel,
+                new HeadMaterialStats(400, 6.5f, IRON, 2.5f),
+                HandleMaterialStats.multipliers().durability(1.05f).miningSpeed(1.05f).attackDamage(1.1f).build(),
                 StatlessMaterialStats.BINDING);
-
 
         // tier 3
         // vanilla diamond: 1561, 8f, DIAMOND, 3f

@@ -53,8 +53,6 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     addTraits(MaterialIds.gold, PlatingMaterialStats.SHIELD.getId(), ModifierIds.magicProtection);
 
     // tier 2
-    addDefaultTraits(MaterialIds.iron, ModifierIds.manafix);
-      addDefaultTraits(MaterialIds.iron, TinkerModifiers.manafix);
     addDefaultTraits(MaterialIds.iron, TinkerModifiers.magnetic);
     addTraits(MaterialIds.iron, ARMOR, ModifierIds.projectileProtection);
     addDefaultTraits(MaterialIds.copper, TinkerModifiers.dwarven);
@@ -153,6 +151,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     addTraits(MaterialIds.silver, ARMOR, ModifierIds.consecrated);
     addDefaultTraits(MaterialIds.treatedWood, ModifierIds.preserved);
     addDefaultTraits(MaterialIds.ironwood, ModifierIds.deciduous);
+    addDefaultTraits(MaterialIds.manaSteel, ModifierIds.manafix);
     // tier 3 - mod compat
     addDefaultTraits(MaterialIds.bronze, ModifierIds.maintained);
     addDefaultTraits(MaterialIds.constantan, ModifierIds.temperate);
