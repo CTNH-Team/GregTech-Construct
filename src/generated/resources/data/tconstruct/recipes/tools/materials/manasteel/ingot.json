@@ -3,11 +3,11 @@
   "conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/mana_steel"
+      "tag": "forge:ingots/manasteel"
     }
   ],
   "ingredient": {
-    "tag": "forge:ingots/mana_steel"
+    "tag": "forge:ingots/manasteel"
   },
   "material": "tconstruct:manasteel",
   "needed": 1,

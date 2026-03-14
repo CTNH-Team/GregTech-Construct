@@ -969,6 +969,10 @@
   "fluid.tconstruct.manasteel": "Molten Manasteel",
   "fluid.tconstruct.flowing_manasteel": "Flowing Molten Manasteel",
   "item.tconstruct.manasteel_bucket": "Molten Manasteel Bucket",
+  "block.tconstruct.terrasteel": "Molten Terrasteel",
+  "fluid.tconstruct.terrasteel": "Molten Terrasteel",
+  "fluid.tconstruct.flowing_terrasteel": "Flowing Molten Terrasteel",
+  "item.tconstruct.terrasteel_bucket": "Molten Terrasteel Bucket",
 
   "_comment": "Fluid effect contents",
   "fluid_effect.tconstruct.separator": "%s and %s",
@@ -2206,6 +2210,8 @@
 
   "material.tconstruct.manasteel": "Mana Steel",
   "material.tconstruct.manasteel.flavor": "Magic, isn't it amazing?",
+  "material.tconstruct.terrasteel": "Terra Steel",
+  "material.tconstruct.terra.flavor": "Magic, isn't it amazing?",
 
   "__comment": "Tier 3 Integration Materials",
   "material.tconstruct.steel": "Steel",

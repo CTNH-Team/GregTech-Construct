@@ -3,15 +3,15 @@
   "conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/terra_steel"
+      "tag": "forge:storage_blocks/terrasteel"
     }
   ],
   "ingredient": {
-    "tag": "forge:storage_blocks/terra_steel"
+    "tag": "forge:storage_blocks/terrasteel"
   },
   "leftover": {
     "count": 1,
-    "tag": "forge:ingots/terra_steel"
+    "tag": "forge:ingots/terrasteel"
   },
   "material": "tconstruct:terrasteel",
   "needed": 1,

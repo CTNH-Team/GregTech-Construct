@@ -287,7 +287,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .setTools(ingredientFromTags(TinkerTags.Items.MELEE_WEAPON, TinkerTags.Items.HARVEST))
                 .save(consumer, prefix(TinkerModifiers.magnetic, upgradeFolder));
         ModifierRecipeBuilder.modifier(TinkerModifiers.manafix)
-                .addInput(BotaniaBlocks.manasteelBlock)
+                .addInput(BotaniaBlocks.spawnerClaw)
                 .setMaxLevel(5)
                 .setSlots(SlotType.UPGRADE, 1)
                 .setTools(ingredientFromTags(TinkerTags.Items.MODIFIABLE))

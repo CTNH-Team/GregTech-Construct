@@ -149,6 +149,8 @@
     "soulbound":     "#009295",
     "tank":          "#3f3f3f",
     "zoom":          "#DE923A",
+    "manafix":       "#0000CD",
+    "terrarecover":       "#3CB371",
 
 
     "__compat__": null,

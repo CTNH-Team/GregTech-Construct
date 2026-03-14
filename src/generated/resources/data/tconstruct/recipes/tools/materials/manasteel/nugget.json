@@ -3,11 +3,11 @@
   "conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/mana_steel"
+      "tag": "forge:nuggets/manasteel"
     }
   ],
   "ingredient": {
-    "tag": "forge:nuggets/mana_steel"
+    "tag": "forge:nuggets/manasteel"
   },
   "material": "tconstruct:manasteel",
   "needed": 9,

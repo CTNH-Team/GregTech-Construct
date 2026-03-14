@@ -3,11 +3,11 @@
   "conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/terra_steel"
+      "tag": "forge:nuggets/terrasteel"
     }
   ],
   "ingredient": {
-    "tag": "forge:nuggets/terra_steel"
+    "tag": "forge:nuggets/terrasteel"
   },
   "material": "tconstruct:terrasteel",
   "needed": 9,

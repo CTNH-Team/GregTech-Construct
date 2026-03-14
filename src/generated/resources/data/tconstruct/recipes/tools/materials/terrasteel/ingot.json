@@ -3,11 +3,11 @@
   "conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/terra_steel"
+      "tag": "forge:ingots/terrasteel"
     }
   ],
   "ingredient": {
-    "tag": "forge:ingots/terra_steel"
+    "tag": "forge:ingots/terrasteel"
   },
   "material": "tconstruct:terrasteel",
   "needed": 1,

@@ -966,10 +966,14 @@
 
   "_comment": "Botina Alloys",
 
-  "block.tconstruct.manasteel": "Molten Manasteel",
-  "fluid.tconstruct.manasteel": "Molten Manasteel",
-  "fluid.tconstruct.flowing_manasteel": "Flowing Molten Manasteel",
-  "item.tconstruct.manasteel_bucket": "Molten Manasteel Bucket",
+  "block.tconstruct.manasteel": "熔融魔力钢",
+  "fluid.tconstruct.manasteel": "熔融魔力钢",
+  "fluid.tconstruct.flowing_manasteel": "流动的熔融魔力钢",
+  "item.tconstruct.manasteel_bucket": "魔力钢桶",
+  "block.tconstruct.terrasteel": "熔融泰拉钢",
+  "fluid.tconstruct.terrasteel": "熔融泰拉钢",
+  "fluid.tconstruct.flowing_terrasteel": "流动的熔融泰拉钢",
+  "item.tconstruct.terrasteel_bucket": "泰拉钢桶",
   
   "_comment": "Fluid effect contents",
   "fluid_effect.tconstruct.separator": "%s；%s",
@@ -2206,6 +2210,8 @@
 
   "material.tconstruct.manasteel": "魔力钢",
   "material.tconstruct.manasteel.flavor": "魔力，神奇吧?",
+  "material.tconstruct.terrasteel": "泰拉钢",
+  "material.tconstruct.terra.flavor": "魔力，神奇吧?",
 
   "__comment": "Tier 3 Integration Materials",
   "material.tconstruct.steel": "钢",
