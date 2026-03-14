@@ -25,19 +25,19 @@ public class ManaFixModifier extends Modifier implements InventoryTickModifierHo
             return;
         }
         ToolStack toolStack = ToolStack.from(stack);
+        int repairAmount = modifier.getLevel();
+        
         if (toolStack.getDamage() > 0) {
-            if (ManaItemHandler.INSTANCE.requestManaExactForTool(stack, player, REPAIR_COST, false)) {
-                toolStack.setDamage(toolStack.getDamage() - 1);
+          if (ManaItemHandler.INSTANCE.requestManaExactForTool(stack, player, REPAIR_COST * repairAmount, false)) {
+                toolStack.setDamage(toolStack.getDamage() - repairAmount);
                 toolStack.updateStack(stack);
             }
         }
-
         else if (toolStack.isBroken()) {
             if (ManaItemHandler.INSTANCE.requestManaExactForTool(stack, player, BROKEN_COST, true)) {
                 toolStack.setDamage(0);
                 toolStack.updateStack(stack);
             }
-
         }
     }
 }
