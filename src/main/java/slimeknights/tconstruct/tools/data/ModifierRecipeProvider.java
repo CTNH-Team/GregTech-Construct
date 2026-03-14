@@ -76,6 +76,7 @@ import slimeknights.tconstruct.tools.recipe.ToggleInteractionWorktableRecipeBuil
 import slimeknights.tconstruct.world.TinkerHeadType;
 import slimeknights.tconstruct.world.TinkerWorld;
 import slimeknights.tconstruct.world.block.FoliageType;
+import vazkii.botania.common.block.BotaniaBlocks;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -286,7 +287,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .setTools(ingredientFromTags(TinkerTags.Items.MELEE_WEAPON, TinkerTags.Items.HARVEST))
                 .save(consumer, prefix(TinkerModifiers.magnetic, upgradeFolder));
         ModifierRecipeBuilder.modifier(TinkerModifiers.manafix)
-                .addInput(Items.APPLE)
+                .addInput(BotaniaBlocks.manasteelBlock)
                 .setMaxLevel(5)
                 .setSlots(SlotType.UPGRADE, 1)
                 .setTools(ingredientFromTags(TinkerTags.Items.MODIFIABLE))

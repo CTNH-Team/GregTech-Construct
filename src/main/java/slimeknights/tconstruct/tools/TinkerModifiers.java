@@ -375,6 +375,7 @@ public final class TinkerModifiers extends TinkerModule {
    */
   public static final StaticModifier<OverslimeModifier> overslime = MODIFIERS.register("overslime", OverslimeModifier::new);
     public static final StaticModifier<ManaFixModifier> manafix = MODIFIERS.register("manafix", ManaFixModifier::new);
+    public static final StaticModifier<TerraRecoverModifier> terrarecover = MODIFIERS.register("terrarecover", TerraRecoverModifier::new);
   public static final StaticModifier<MagneticModifier> magnetic = MODIFIERS.register("magnetic", MagneticModifier::new);
   public static final StaticModifier<FarsightedModifier> farsighted = MODIFIERS.register("farsighted", FarsightedModifier::new);
   public static final StaticModifier<NearsightedModifier> nearsighted = MODIFIERS.register("nearsighted", NearsightedModifier::new);

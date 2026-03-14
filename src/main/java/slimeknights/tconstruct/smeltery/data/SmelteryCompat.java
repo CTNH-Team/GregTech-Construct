@@ -62,7 +62,8 @@ public enum SmelteryCompat {
   STEELEAF(TinkerFluids.moltenSteeleaf, CompatType.NONE,  MaterialIds.steeleaf),
   FIERY   (TinkerFluids.fieryLiquid,    CompatType.ALLOY, MaterialIds.fiery),
   // botania
-    MANASTEEL(TinkerFluids.moltenManaSteel, CompatType.NONE,  MaterialIds.manaSteel)
+    MANASTEEL(TinkerFluids.moltenManaSteel, CompatType.NONE,  MaterialIds.manaSteel),
+    TERRASTEEL(TinkerFluids.moltenTerraSteel, CompatType.NONE,  MaterialIds.terraSteel)
     ;
 
   @Getter

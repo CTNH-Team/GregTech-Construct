@@ -1,0 +1,15 @@
+{
+  "type": "tconstruct:material",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:nuggets/terra_steel"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:nuggets/terra_steel"
+  },
+  "material": "tconstruct:terrasteel",
+  "needed": 9,
+  "value": 1
+}

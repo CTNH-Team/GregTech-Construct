@@ -27,6 +27,10 @@
     {
       "id": "tconstruct:plated_slimewood",
       "required": false
+    },
+    {
+      "id": "tconstruct:terrasteel",
+      "required": false
     }
   ]
 }

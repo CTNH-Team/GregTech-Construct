@@ -2329,7 +2329,13 @@
   "modifier.tconstruct.overslime.flavor": "Slimy!",
   "modifier.tconstruct.overslime.description": "Tool consumes overslime instead of durability, until it runs out! Not friendly towards tools lacking slime",
 
-  "modifier.tconstruct.mana_fix": "Mana Fix",
+  "material.tconstruct.manafix": "Mana Fix",
+  "material.tconstruct.manafix.flavor": "Manamechine! son!",
+  "material.tconstruct.manafix.description": "Use mana to repair damaged tools",
+
+  "material.tconstruct.terrarecover": "Terra Recover",
+  "material.tconstruct.terrarecover.flavor": "Magic stretcher",
+  "material.tconstruct.terrarecover.description": "Use mana to recover health",
 
   "_comment": "Tool or harvest",
   "modifier.tconstruct.experienced": "Experienced",

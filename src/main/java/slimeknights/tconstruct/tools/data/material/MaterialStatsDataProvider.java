@@ -203,6 +203,10 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(200, 8, DIAMOND, 3),
                 HandleMaterialStats.multipliers().durability(0.65f).attackSpeed(1.15f).miningSpeed(1.15f).build(),
                 StatlessMaterialStats.BINDING);
+        addMaterialStats(MaterialIds.terraSteel,
+                new HeadMaterialStats(750, 7.5f, DIAMOND, 3.5f),
+                HandleMaterialStats.multipliers().durability(1.35f).miningSpeed(1.2f).attackSpeed(1.2f).attackDamage(1.3f).build(),
+                StatlessMaterialStats.BINDING);
 
         // tier 4
         // vanilla netherite: 2031, 9f, NETHERITE, 4f
@@ -463,7 +467,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addArmorShieldStats(MaterialIds.lead,     PlatingMaterialStats.builder().durabilityFactor(12).armor(1, 3, 4, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
         addMaterialStats(MaterialIds.treatedWood, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.ironwood, StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.manaSteel, PlatingMaterialStats.builder().durabilityFactor(18).armor(2, 4, 5, 2).toughness(2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.manaSteel, PlatingMaterialStats.builder().durabilityFactor(20).armor(3, 5, 6, 3).toughness(2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
         // tier 3
         addMaterialStats(MaterialIds.nahuatl, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.ichorskin, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS);
@@ -482,6 +486,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addArmorShieldStats(MaterialIds.pewter,     PlatingMaterialStats.builder().durabilityFactor(16).armor(2, 5, 7, 2), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.electrum,   PlatingMaterialStats.builder().durabilityFactor(14).armor(1, 3, 4, 2), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.steeleaf,   PlatingMaterialStats.builder().durabilityFactor(10).armor(2, 5, 7, 2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.terraSteel, PlatingMaterialStats.builder().durabilityFactor(50).armor(3, 6, 8, 4).toughness(3).knockbackResistance(0.15f), StatlessMaterialStats.MAILLE);
         // tier 4
         addMaterialStats(MaterialIds.blazewood, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.blazingBone, StatlessMaterialStats.SHIELD_CORE);

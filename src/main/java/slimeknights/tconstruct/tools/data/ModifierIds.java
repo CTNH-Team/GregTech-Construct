@@ -180,7 +180,8 @@ public class ModifierIds {
     public static final ModifierId spiny = id("spiny");
     // traits - tier 2
     public static final ModifierId overgrowth = id("overgrowth");
-    public static final ModifierId manafix = id("mana_fix");
+    public static final ModifierId manafix = id("manafix");
+    public static final ModifierId terrarecover = id("terrarecover");
     public static final ModifierId searing = id("searing");
     public static final ModifierId scorching = id("scorching");
     public static final ModifierId scorchProtection = id("scorch_protection");

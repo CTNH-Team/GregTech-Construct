@@ -128,7 +128,13 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
         buildMaterial(MaterialIds.manaSteel)
                 .meleeHarvest().armor()
                 .fallbacks("metal").ranged()
-                .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63,0xFF160539).addARGB(102,0xFF14084f).addARGB(140,0xFF2e199f).addARGB(178,0xFF1f20b9).addARGB(216,0xFF3a63da).addARGB(255,0xFF67b9ee).build());
+                .colorMapper(GreyToColorMapping.builderFromBlack()
+                        .addARGB(63,0xFF160539)
+                        .addARGB(102,0xFF14084f)
+                        .addARGB(140,0xFF2e199f)
+                        .addARGB(178,0xFF1f20b9)
+                        .addARGB(216,0xFF3a63da)
+                        .addARGB(255,0xFF67b9ee).build());
         buildMaterial(MaterialIds.oxidizedIron)
                 .meleeHarvest().armor().ranged()
                 .fallbacks("metal").variant()
@@ -300,6 +306,16 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
                 .meleeHarvest().ranged().armor().arrowHead().statType(INGOT)
                 .fallbacks("metal_contrast", "metal", "contrast")
                 .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF1E3214).addARGB(102, 0xFF27401D).addARGB(140, 0xFF416230).addARGB(178, 0xFF52873A).addARGB(216, 0xFF6DA25E).addARGB(255, 0xFF83BF72).build());
+        buildMaterial(MaterialIds.terraSteel)
+                .meleeHarvest().armor()
+                .fallbacks("metal").ranged()
+                .colorMapper(GreyToColorMapping.builderFromBlack()
+                        .addARGB(63,0xFF001e11)
+                        .addARGB(102,0xFF043c1c)
+                        .addARGB(140,0xFF0c7227)
+                        .addARGB(178,0xFF2bb93b)
+                        .addARGB(216,0xFF6ae862)
+                        .addARGB(255,0xFFccffb5).build());
 
         // tier 4
         ResourceLocation baseTexture = getResource("generator/queens_slime");

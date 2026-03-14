@@ -1,0 +1,24 @@
+{
+  "type": "tconstruct:material_melting",
+  "conditions": [
+    {
+      "type": "forge:or",
+      "values": [
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/terrasteel"
+        },
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/terrasteel"
+        }
+      ]
+    }
+  ],
+  "input": "tconstruct:terrasteel",
+  "result": {
+    "amount": 144,
+    "tag": "forge:terrasteel"
+  },
+  "temperature": 1200
+}

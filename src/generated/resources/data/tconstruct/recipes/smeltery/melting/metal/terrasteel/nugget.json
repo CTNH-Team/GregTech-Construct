@@ -1,0 +1,18 @@
+{
+  "type": "tconstruct:melting",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:nuggets/terrasteel"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:nuggets/terrasteel"
+  },
+  "result": {
+    "amount": 16,
+    "tag": "forge:terrasteel"
+  },
+  "temperature": 1200,
+  "time": 24
+}

@@ -29,6 +29,10 @@
       "required": false
     },
     {
+      "id": "tconstruct:terrasteel",
+      "required": false
+    },
+    {
       "id": "tconstruct:fiery",
       "required": false
     },

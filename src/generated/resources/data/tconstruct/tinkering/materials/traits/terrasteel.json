@@ -1,0 +1,12 @@
+{
+  "default": [
+    {
+      "level": 1,
+      "name": "tconstruct:manafix"
+    },
+    {
+      "level": 1,
+      "name": "tconstruct:terrarecover"
+    }
+  ]
+}

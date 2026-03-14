@@ -129,6 +129,7 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
         buildRenderInfo(MaterialIds.electrum).color(0xFFEA65).fallbacks("metal");
         buildRenderInfo(MaterialIds.platedSlimewood).color(0xFFE170).fallbacks("slime_metal", "metal");
         buildRenderInfo(MaterialIds.steeleaf);
+        buildRenderInfo(MaterialIds.terraSteel).color(0xFF6ae862).fallbacks("metal");
 
         // tier 4 compat
         buildRenderInfo(MaterialIds.fiery).color(0x893D14).fallbacks("metal").luminosity(15);

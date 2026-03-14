@@ -2329,7 +2329,13 @@
   "modifier.tconstruct.overslime.flavor": "黏糊糊！",
   "modifier.tconstruct.overslime.description": "使用工具将优先消耗黏液覆层而非耐久度，但在黏液覆层耗尽时不起任何作用！对缺失黏液部件的工具不甚友好",
 
-  "modifier.tconstruct.mana_fix": "魔力修复",
+  "modifier.tconstruct.manafix": "魔力修复",
+  "modifier.tconstruct.manafix.flavor": "魔力机器！小子！",
+  "modifier.tconstruct.manafix.description": "消耗魔力修复破损的工具",
+
+  "modifier.tconstruct.terrarecover": "泰拉恢复",
+  "modifier.tconstruct.terrarecover.flavor": "魔法担架！",
+  "modifier.tconstruct.terrarecover.description": "用魔力恢复生命",
 
   "_comment": "Tool or harvest",
   "modifier.tconstruct.experienced": "阅历",
@@ -3981,6 +3987,11 @@
   "advancements.tconstruct.world.piggybackpack.title": "肩驮猪",
   "advancements.tconstruct.world.piggybackpack.description": "用肩驮架驮起一只猪",
   "advancements.tconstruct.world.ancient_tools.title": "考古学家",
-  "advancements.tconstruct.world.ancient_tools.description": "找到所有的远古工具"
+  "advancements.tconstruct.world.ancient_tools.description": "找到所有的远古工具",
+  "item.tconstruct.tank.fluid_id": "Fluid ID: %s",
+  "modifier.tconstruct.long_fall.resistance": "Fall Resistance",
+  "item.tconstruct.tank.fluid_id": "Fluid ID: %s",
+  "modifier.tconstruct.mana_fix": "Mana Fix",
+  "modifier.tconstruct.long_fall.resistance": "Fall Resistance"
 }
 

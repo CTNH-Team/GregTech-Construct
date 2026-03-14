@@ -3,7 +3,7 @@
   "allow_crystal": true,
   "inputs": [
     {
-      "item": "minecraft:apple"
+      "item": "botania:manasteel_block"
     }
   ],
   "level": {

@@ -83,8 +83,8 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
       MaterialIds.silver, MaterialIds.lead, MaterialIds.aluminum,
       MaterialIds.osmium, MaterialIds.ironwood, MaterialIds.manaSteel,
       // tier 3
-      MaterialIds.steeleaf,
-      // tier 4
+      MaterialIds.steeleaf, MaterialIds.terraSteel,
+            // tier 4
       MaterialIds.fiery
     ).addTag(TinkerTags.Materials.COMPATABILITY_BLOCKS);
     tag(TinkerTags.Materials.COMPATABILITY_BLOCKS).addTag(TinkerTags.Materials.COMPATABILITY_ALLOYS);
@@ -174,8 +174,8 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
       // tier 2
       MaterialIds.aluminum, MaterialIds.manaSteel,
       // tier 3
-      MaterialIds.necronium, MaterialIds.constantan, MaterialIds.platedSlimewood
-    );
+      MaterialIds.necronium, MaterialIds.constantan, MaterialIds.platedSlimewood, MaterialIds.terraSteel
+            );
     tag(TinkerTags.Materials.HEAVY).add(
       // tier 1
       MaterialIds.copper, MaterialIds.cactus,

@@ -151,7 +151,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     addTraits(MaterialIds.silver, ARMOR, ModifierIds.consecrated);
     addDefaultTraits(MaterialIds.treatedWood, ModifierIds.preserved);
     addDefaultTraits(MaterialIds.ironwood, ModifierIds.deciduous);
-    addDefaultTraits(MaterialIds.manaSteel, ModifierIds.manafix);
+    addDefaultTraits(MaterialIds.manaSteel, TinkerModifiers.manafix);
     // tier 3 - mod compat
     addDefaultTraits(MaterialIds.bronze, ModifierIds.maintained);
     addDefaultTraits(MaterialIds.constantan, ModifierIds.temperate);
@@ -164,6 +164,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     addDefaultTraits(MaterialIds.platedSlimewood, TinkerModifiers.overworked, TinkerModifiers.overslime);
     addDefaultTraits(MaterialIds.steeleaf, ModifierIds.experienced);
     addTraits(MaterialIds.steeleaf, AMMO, ModifierIds.looting);
+      addDefaultTraits(MaterialIds.terraSteel, TinkerModifiers.manafix, TinkerModifiers.terrarecover);
     // tier 4 - mod compat
     addDefaultTraits(MaterialIds.fiery, TinkerModifiers.autosmelt);
     addTraits(MaterialIds.fiery, ARMOR, ModifierIds.temperedProtection);

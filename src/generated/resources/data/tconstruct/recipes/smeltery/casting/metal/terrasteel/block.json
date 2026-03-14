@@ -1,0 +1,17 @@
+{
+  "type": "tconstruct:casting_basin",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:storage_blocks/terrasteel"
+    }
+  ],
+  "cooling_time": 216,
+  "fluid": {
+    "amount": 1296,
+    "tag": "forge:terrasteel"
+  },
+  "result": {
+    "tag": "forge:storage_blocks/terrasteel"
+  }
+}

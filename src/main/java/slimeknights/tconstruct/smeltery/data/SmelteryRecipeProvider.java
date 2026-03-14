@@ -2299,6 +2299,7 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
     metal(consumer, TinkerFluids.moltenSteeleaf).optional().metal()
       .common(AXES, SWORD, tfShovel, tfHelmet, tfChestplate, tfLeggings, tfBoots);
     metal(consumer, TinkerFluids.moltenManaSteel).optional().metal();
+      metal(consumer, TinkerFluids.moltenTerraSteel).optional().metal();
     // fiery doesn't have a molten form, rather its composite the whole way
     fluid(consumer, "fiery", TinkerFluids.fieryLiquid).optional()
       .baseUnit(FluidValues.BOTTLE).damageUnit(FluidValues.SIP).unitByproducts(Byproduct.IRON)
