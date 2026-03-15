@@ -132,7 +132,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 StatlessMaterialStats.BINDING);
         addMaterialStats(MaterialIds.manaSteel,
                 new HeadMaterialStats(400, 6.5f, IRON, 2.5f),
-                HandleMaterialStats.multipliers().durability(1.05f).miningSpeed(1.05f).attackDamage(1.1f).build(),
+                HandleMaterialStats.multipliers().durability(1.15f).miningSpeed(1.05f).attackSpeed(1.05f).attackDamage(1.1f).build(),
                 StatlessMaterialStats.BINDING);
 
         // tier 3
@@ -310,6 +310,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.ironwood,
                 new LimbMaterialStats(512, 0.05f, 0.05f, -0.15f),
                 new GripMaterialStats(0.15f, -0.15f, 2f));
+        addMaterialStats(MaterialIds.manaSteel,
+                new LimbMaterialStats(350, 0.15f, 0.1f, 0.1f),
+                new GripMaterialStats(0.15f, 0.1f, 2.5f));
 
         // tier 3
         addMaterialStats(MaterialIds.slimesteel,
@@ -362,6 +365,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.steeleaf,
                 new LimbMaterialStats(200, 0, 0, 0.15f),
                 new GripMaterialStats(-0.35f, 0, 2.75f));
+        addMaterialStats(MaterialIds.terraSteel,
+                new LimbMaterialStats(750, 0.2f, 0.3f, 0.3f),
+                new GripMaterialStats(0.35f, 0.3f, 3.5f));
 
 
         // tier 4
