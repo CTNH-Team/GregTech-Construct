@@ -795,7 +795,6 @@ public final class TinkerModifiers extends TinkerModule {
       ModifierModule.LOADER.register(getResource("tipped"), TippedModule.LOADER);
       ModifierModule.LOADER.register(getResource("projectile_bounce"), ProjectileBounceModule.LOADER);
       // overslime
-//        ModifierModule.LOADER.register(getResource("manafix"), ManaFixModule1.LOADER);
       ModifierModule.LOADER.register(getResource("overgrowth"), OvergrowthModule.LOADER);
       ModifierModule.LOADER.register(getResource("overburn"), OverburnModule.INSTANCE.getLoader());
       ModifierModule.LOADER.register(getResource("overshield"), OvershieldModule.LOADER);
