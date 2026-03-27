@@ -259,6 +259,7 @@ import slimeknights.tconstruct.tools.modifiers.traits.skull.StrongBonesModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.skull.WildfireModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.skull.WitheredModifier;
 import slimeknights.tconstruct.tools.modifiers.upgrades.armor.SoulSpeedModifier;
+//import slimeknights.tconstruct.tools.modules.ManaFixModule;
 import slimeknights.tconstruct.tools.modifiers.Botania.*;
 import slimeknights.tconstruct.tools.modifiers.upgrades.general.MagneticModifier;
 import slimeknights.tconstruct.tools.modifiers.upgrades.melee.PiercingModifier;
@@ -337,591 +338,591 @@ import static slimeknights.tconstruct.TConstruct.getResource;
  */
 @SuppressWarnings("unused")
 public final class TinkerModifiers extends TinkerModule {
-    private static final ModifierDeferredRegister MODIFIERS = ModifierDeferredRegister.create(TConstruct.MOD_ID);
+  private static final ModifierDeferredRegister MODIFIERS = ModifierDeferredRegister.create(TConstruct.MOD_ID);
 
-    public TinkerModifiers() {
-        ModifierManager.INSTANCE.init();
-        DynamicModifier.init();
-        FluidEffectManager.INSTANCE.init();
-        MODIFIERS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        TinkerDataKeys.init();
-    }
+  public TinkerModifiers() {
+    ModifierManager.INSTANCE.init();
+    DynamicModifier.init();
+    FluidEffectManager.INSTANCE.init();
+    MODIFIERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+    TinkerDataKeys.init();
+  }
 
-    /*
-     * Items
-     */
-    public static final ItemObject<Item> silkyCloth = ITEMS.register("silky_cloth", ITEM_PROPS);
-    public static final ItemObject<Item> dragonScale = ITEMS.register("dragon_scale", () -> new DragonScaleItem(new Item.Properties().rarity(Rarity.RARE)));
-    // durability reinforcements
-    public static final ItemObject<Item> emeraldReinforcement = ITEMS.register("emerald_reinforcement", ITEM_PROPS);
-    public static final ItemObject<Item> slimesteelReinforcement = ITEMS.register("slimesteel_reinforcement", ITEM_PROPS);
-    // armor reinforcements
-    public static final ItemObject<Item> ironReinforcement = ITEMS.register("iron_reinforcement", ITEM_PROPS);
-    public static final ItemObject<Item> searedReinforcement = ITEMS.register("seared_reinforcement", ITEM_PROPS);
-    public static final ItemObject<Item> goldReinforcement = ITEMS.register("gold_reinforcement", ITEM_PROPS);
-    public static final ItemObject<Item> cobaltReinforcement = ITEMS.register("cobalt_reinforcement", ITEM_PROPS);
-    public static final ItemObject<Item> obsidianReinforcement = ITEMS.register("obsidian_reinforcement", ITEM_PROPS);
-    // special
-    public static final ItemObject<Item> modifierCrystal = ITEMS.register("modifier_crystal", () -> new ModifierCrystalItem(new Item.Properties().stacksTo(16)));
-    public static final ItemObject<CreativeSlotItem> creativeSlotItem = ITEMS.register("creative_slot", () -> new CreativeSlotItem(ITEM_PROPS));
+  /*
+   * Items
+   */
+  public static final ItemObject<Item> silkyCloth = ITEMS.register("silky_cloth", ITEM_PROPS);
+  public static final ItemObject<Item> dragonScale = ITEMS.register("dragon_scale", () -> new DragonScaleItem(new Item.Properties().rarity(Rarity.RARE)));
+  // durability reinforcements
+  public static final ItemObject<Item> emeraldReinforcement = ITEMS.register("emerald_reinforcement", ITEM_PROPS);
+  public static final ItemObject<Item> slimesteelReinforcement = ITEMS.register("slimesteel_reinforcement", ITEM_PROPS);
+  // armor reinforcements
+  public static final ItemObject<Item> ironReinforcement = ITEMS.register("iron_reinforcement", ITEM_PROPS);
+  public static final ItemObject<Item> searedReinforcement = ITEMS.register("seared_reinforcement", ITEM_PROPS);
+  public static final ItemObject<Item> goldReinforcement = ITEMS.register("gold_reinforcement", ITEM_PROPS);
+  public static final ItemObject<Item> cobaltReinforcement = ITEMS.register("cobalt_reinforcement", ITEM_PROPS);
+  public static final ItemObject<Item> obsidianReinforcement = ITEMS.register("obsidian_reinforcement", ITEM_PROPS);
+  // special
+  public static final ItemObject<Item> modifierCrystal = ITEMS.register("modifier_crystal", () -> new ModifierCrystalItem(new Item.Properties().stacksTo(16)));
+  public static final ItemObject<CreativeSlotItem> creativeSlotItem = ITEMS.register("creative_slot", () -> new CreativeSlotItem(ITEM_PROPS));
 
-    // entity
-    public static final RegistryObject<EntityType<FluidEffectProjectile>> fluidSpitEntity = ENTITIES.register("fluid_spit", () ->
-            EntityType.Builder.<FluidEffectProjectile>of(FluidEffectProjectile::new, MobCategory.MISC).sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10).setShouldReceiveVelocityUpdates(false));
+  // entity
+  public static final RegistryObject<EntityType<FluidEffectProjectile>> fluidSpitEntity = ENTITIES.register("fluid_spit", () ->
+    EntityType.Builder.<FluidEffectProjectile>of(FluidEffectProjectile::new, MobCategory.MISC).sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10).setShouldReceiveVelocityUpdates(false));
 
-    /*
-     * Modifiers
-     */
-    public static final StaticModifier<OverslimeModifier> overslime = MODIFIERS.register("overslime", OverslimeModifier::new);
+  /*
+   * Modifiers
+   */
+  public static final StaticModifier<OverslimeModifier> overslime = MODIFIERS.register("overslime", OverslimeModifier::new);
     public static final StaticModifier<ManaFixModifier> manafix = MODIFIERS.register("manafix", ManaFixModifier::new);
     public static final StaticModifier<TerraRecoverModifier> terrarecover = MODIFIERS.register("terrarecover", TerraRecoverModifier::new);
-    public static final StaticModifier<MagneticModifier> magnetic = MODIFIERS.register("magnetic", MagneticModifier::new);
-    public static final StaticModifier<FarsightedModifier> farsighted = MODIFIERS.register("farsighted", FarsightedModifier::new);
-    public static final StaticModifier<NearsightedModifier> nearsighted = MODIFIERS.register("nearsighted", NearsightedModifier::new);
+  public static final StaticModifier<MagneticModifier> magnetic = MODIFIERS.register("magnetic", MagneticModifier::new);
+  public static final StaticModifier<FarsightedModifier> farsighted = MODIFIERS.register("farsighted", FarsightedModifier::new);
+  public static final StaticModifier<NearsightedModifier> nearsighted = MODIFIERS.register("nearsighted", NearsightedModifier::new);
 
-    // weapon
-    public static final DynamicModifier knockback = MODIFIERS.registerDynamic("knockback");
-    public static final DynamicModifier padded = MODIFIERS.registerDynamic("padded");
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#fiery} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier fiery = MODIFIERS.registerDynamic("fiery");
-    public static final StaticModifier<SeveringModifier> severing = MODIFIERS.register("severing", SeveringModifier::new);
-    public static final StaticModifier<ReflectingModifier> reflecting = MODIFIERS.register("reflecting", ReflectingModifier::new);
+  // weapon
+  public static final DynamicModifier knockback = MODIFIERS.registerDynamic("knockback");
+  public static final DynamicModifier padded = MODIFIERS.registerDynamic("padded");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#fiery} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier fiery = MODIFIERS.registerDynamic("fiery");
+  public static final StaticModifier<SeveringModifier> severing = MODIFIERS.register("severing", SeveringModifier::new);
+  public static final StaticModifier<ReflectingModifier> reflecting = MODIFIERS.register("reflecting", ReflectingModifier::new);
 
-    // damage boost
-    @Deprecated(forRemoval = true)
-    public static final StaticModifier<PiercingModifier> piercing = MODIFIERS.register("piercing", PiercingModifier::new);
-    public static final StaticModifier<SweepingEdgeModifier> sweeping = MODIFIERS.register("sweeping_edge", SweepingEdgeModifier::new);
+  // damage boost
+  @Deprecated(forRemoval = true)
+  public static final StaticModifier<PiercingModifier> piercing = MODIFIERS.register("piercing", PiercingModifier::new);
+  public static final StaticModifier<SweepingEdgeModifier> sweeping = MODIFIERS.register("sweeping_edge", SweepingEdgeModifier::new);
 
-    // ranged
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#punch} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier punch = MODIFIERS.registerDynamic("punch");
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#arrowPierce} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier impaling = MODIFIERS.registerDynamic("impaling");
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#freezing} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier freezing = MODIFIERS.registerDynamic("freezing");
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#crystalshot} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier crystalshot = MODIFIERS.registerDynamic("crystalshot");
-    public static final StaticModifier<Modifier> multishot = MODIFIERS.register("multishot", Modifier::new);
-    public static final StaticModifier<SinistralModifier> sinistral = MODIFIERS.register("sinistral", SinistralModifier::new);
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#scope} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier scope = MODIFIERS.registerDynamic("scope");
+  // ranged
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#punch} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier punch = MODIFIERS.registerDynamic("punch");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#arrowPierce} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier impaling = MODIFIERS.registerDynamic("impaling");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#freezing} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier freezing = MODIFIERS.registerDynamic("freezing");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#crystalshot} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier crystalshot = MODIFIERS.registerDynamic("crystalshot");
+  public static final StaticModifier<Modifier> multishot = MODIFIERS.register("multishot", Modifier::new);
+  public static final StaticModifier<SinistralModifier> sinistral = MODIFIERS.register("sinistral", SinistralModifier::new);
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#scope} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier scope = MODIFIERS.registerDynamic("scope");
 
-    // armor
-    // general
-    public static final DynamicModifier golden = MODIFIERS.registerDynamic("golden");
-    public static final StaticModifier<EmbellishmentModifier> embellishment = MODIFIERS.register("embellishment", EmbellishmentModifier::new);
-    public static final StaticModifier<DyedModifier> dyed = MODIFIERS.register("dyed", DyedModifier::new);
-    public static final StaticModifier<TrimModifier> trim = MODIFIERS.register("trim", TrimModifier::new);
-    // counterattack
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#thorns} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier thorns = MODIFIERS.registerDynamic("thorns");
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#springy} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier springy = MODIFIERS.registerDynamic("springy");
-    // helmet
-    public static final DynamicModifier itemFrame = MODIFIERS.registerDynamic("item_frame");
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#zoom} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier zoom = MODIFIERS.registerDynamic("zoom");
-    public static final StaticModifier<SlurpingModifier> slurping = MODIFIERS.register("slurping", SlurpingModifier::new);
-    // chestplate
-    public static final DynamicModifier sleeves = MODIFIERS.registerDynamic("sleeves");
-    public static final StaticModifier<AmbidextrousModifier> ambidextrous = MODIFIERS.register("ambidextrous", AmbidextrousModifier::new);
-    // leggings
-    public static final DynamicModifier shieldStrap = MODIFIERS.registerDynamic("shield_strap");
-    public static final StaticModifier<WettingModifier> wetting = MODIFIERS.register("wetting", WettingModifier::new);
+  // armor
+  // general
+  public static final DynamicModifier golden = MODIFIERS.registerDynamic("golden");
+  public static final StaticModifier<EmbellishmentModifier> embellishment = MODIFIERS.register("embellishment", EmbellishmentModifier::new);
+  public static final StaticModifier<DyedModifier> dyed = MODIFIERS.register("dyed", DyedModifier::new);
+  public static final StaticModifier<TrimModifier> trim = MODIFIERS.register("trim", TrimModifier::new);
+  // counterattack
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#thorns} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier thorns = MODIFIERS.registerDynamic("thorns");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#springy} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier springy = MODIFIERS.registerDynamic("springy");
+  // helmet
+  public static final DynamicModifier itemFrame = MODIFIERS.registerDynamic("item_frame");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#zoom} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier zoom = MODIFIERS.registerDynamic("zoom");
+  public static final StaticModifier<SlurpingModifier> slurping = MODIFIERS.register("slurping", SlurpingModifier::new);
+  // chestplate
+  public static final DynamicModifier sleeves = MODIFIERS.registerDynamic("sleeves");
+  public static final StaticModifier<AmbidextrousModifier> ambidextrous = MODIFIERS.register("ambidextrous", AmbidextrousModifier::new);
+  // leggings
+  public static final DynamicModifier shieldStrap = MODIFIERS.registerDynamic("shield_strap");
+  public static final StaticModifier<WettingModifier> wetting = MODIFIERS.register("wetting", WettingModifier::new);
 
-    // boots
-    public static final StaticModifier<SoulSpeedModifier> soulspeed = MODIFIERS.register("soulspeed", SoulSpeedModifier::new);
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#doubleJump} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier doubleJump = MODIFIERS.registerDynamic("double_jump");
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#bouncy} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier bouncy = MODIFIERS.registerDynamic("bouncy");
-    public static final StaticModifier<FlamewakeModifier> flamewake = MODIFIERS.register("flamewake", FlamewakeModifier::new);
+  // boots
+  public static final StaticModifier<SoulSpeedModifier> soulspeed = MODIFIERS.register("soulspeed", SoulSpeedModifier::new);
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#doubleJump} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier doubleJump = MODIFIERS.registerDynamic("double_jump");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#bouncy} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier bouncy = MODIFIERS.registerDynamic("bouncy");
+  public static final StaticModifier<FlamewakeModifier> flamewake = MODIFIERS.register("flamewake", FlamewakeModifier::new);
 
-    // abilities
-    public static final DynamicModifier unbreakable = MODIFIERS.registerDynamic("unbreakable");
-    // weapon
-    public static final StaticModifier<DuelWieldingModifier> dualWielding = MODIFIERS.register("dual_wielding", DuelWieldingModifier::new);
-    // harvest
-    public static final DynamicModifier silky = MODIFIERS.registerDynamic("silky");
-    public static final StaticModifier<AutosmeltModifier> autosmelt = MODIFIERS.register("autosmelt", AutosmeltModifier::new);
-    public static final StaticModifier<Modifier> expanded = MODIFIERS.register("expanded", Modifier::new);
-    public static final StaticModifier<ExchangingModifier> exchanging = MODIFIERS.register("exchanging", ExchangingModifier::new);
+  // abilities
+  public static final DynamicModifier unbreakable = MODIFIERS.registerDynamic("unbreakable");
+  // weapon
+  public static final StaticModifier<DuelWieldingModifier> dualWielding = MODIFIERS.register("dual_wielding", DuelWieldingModifier::new);
+  // harvest
+  public static final DynamicModifier silky = MODIFIERS.registerDynamic("silky");
+  public static final StaticModifier<AutosmeltModifier> autosmelt = MODIFIERS.register("autosmelt", AutosmeltModifier::new);
+  public static final StaticModifier<Modifier> expanded = MODIFIERS.register("expanded", Modifier::new);
+  public static final StaticModifier<ExchangingModifier> exchanging = MODIFIERS.register("exchanging", ExchangingModifier::new);
 
-    public static final StaticModifier<Modifier> energyHandler = MODIFIERS.register("energy_handler", EnergyHandlerModifier::new);
-    // fluid abilities
-    public static final StaticModifier<Modifier> tankHandler = MODIFIERS.register("tank_handler", () -> ModuleHookMap.builder().addModule(new TankModule(ToolTankHelper.TANK_HELPER)).modifier().levelDisplay(ModifierLevelDisplay.NO_LEVELS).priority(300).build());
-    public static final DynamicModifier melting = MODIFIERS.registerDynamic("melting");
-    public static final StaticModifier<BucketingModifier> bucketing = MODIFIERS.register("bucketing", BucketingModifier::new);
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#spilling} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier spilling = MODIFIERS.registerDynamic("spilling");
-    public static final StaticModifier<SpittingModifier> spitting = MODIFIERS.register("spitting", SpittingModifier::new);
-    public static final StaticModifier<BurstingModifier> bursting = MODIFIERS.register("bursting", BurstingModifier::new);
-    public static final StaticModifier<SplashingModifier> splashing = MODIFIERS.register("splashing", SplashingModifier::new);
-
-    // right click abilities
-    public static final StaticModifier<FirestarterModifier> firestarter = MODIFIERS.register("firestarter", () -> new FirestarterModifier(Modifier.DEFAULT_PRIORITY));
-    public static final StaticModifier<SingleLevelModifier> fireprimer = MODIFIERS.register("fireprimer", SingleLevelModifier::new);
-    public static final StaticModifier<BlockingModifier> blocking = MODIFIERS.register("blocking", BlockingModifier::new);
-    public static final StaticModifier<ParryingModifier> parrying = MODIFIERS.register("parrying", ParryingModifier::new);
-    // slings
-    public static final StaticModifier<FlingingModifier> flinging = MODIFIERS.register("flinging", FlingingModifier::new);
-    public static final StaticModifier<SpringingModifier> springing = MODIFIERS.register("springing", SpringingModifier::new);
-    public static final StaticModifier<BonkingModifier> bonking = MODIFIERS.register("bonking", BonkingModifier::new);
-    public static final StaticModifier<WarpingModifier> warping = MODIFIERS.register("warping", WarpingModifier::new);
-
-
-    // internal abilities
-    public static final StaticModifier<ShearsAbilityModifier> shears = MODIFIERS.register("shears", () -> new ShearsAbilityModifier(0, 70));
-    public static final StaticModifier<SilkyShearsAbilityModifier> silkyShears = MODIFIERS.register("silky_shears", () -> new SilkyShearsAbilityModifier(0, 70));
-    public static final StaticModifier<SilkyShearsAbilityModifier> aoeSilkyShears = MODIFIERS.register("silky_aoe_shears", () -> new SilkyShearsAbilityModifier(1, 70));
-    public static final StaticModifier<HarvestAbilityModifier> harvest = MODIFIERS.register("harvest", () -> new HarvestAbilityModifier(70));
-    public static final StaticModifier<OffhandAttackModifier> offhandAttack = MODIFIERS.register("offhand_attack", OffhandAttackModifier::new);
-
-    // creative
-    public static final StaticModifier<CreativeSlotModifier> creativeSlot = MODIFIERS.register("creative_slot", CreativeSlotModifier::new);
-    public static final StaticModifier<StatOverrideModifier> statOverride = MODIFIERS.register("stat_override", StatOverrideModifier::new);
-
-    // traits - tier 1
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#jagged} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier jagged = MODIFIERS.registerDynamic("jagged");
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#stonebound} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier stonebound = MODIFIERS.registerDynamic("stonebound");
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#frostshield} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier frostshield = MODIFIERS.registerDynamic("frostshield");
-    // traits - tier 1 nether
-    public static final StaticModifier<NecroticModifier> necrotic = MODIFIERS.register("necrotic", NecroticModifier::new);
-    // traits - tier 1 nether
-    public static final StaticModifier<EnderferenceModifier> enderference = MODIFIERS.register("enderference", EnderferenceModifier::new);
-    // traits - tier 1 bindings
-    public static final StaticModifier<TannedModifier> tanned = MODIFIERS.register("tanned", TannedModifier::new);
-    public static final StaticModifier<SolarPoweredModifier> solarPowered = MODIFIERS.register("solar_powered", SolarPoweredModifier::new);
-    // traits - tier 2
-    public static final StaticModifier<DwarvenModifier> dwarven = MODIFIERS.register("dwarven", DwarvenModifier::new);
-    // traits - tier 3
-    public static final StaticModifier<LaceratingModifier> lacerating = MODIFIERS.register("lacerating", LaceratingModifier::new);
-    public static final StaticModifier<TastyModifier> tasty = MODIFIERS.register("tasty", TastyModifier::new);
-    public static final StaticModifier<MomentumModifier> momentum = MODIFIERS.register("momentum", MomentumModifier::new);
-    public static final StaticModifier<InsatiableModifier> insatiable = MODIFIERS.register("insatiable", InsatiableModifier::new);
-    public static final StaticModifier<ConductingModifier> conducting = MODIFIERS.register("conducting", ConductingModifier::new);
-    // traits - tier 5
-    public static final StaticModifier<EnderportingModifier> enderporting = MODIFIERS.register("enderporting", EnderportingModifier::new);
-
-    // traits - mod compat tier 2
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#stoneshield} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier stoneshield = MODIFIERS.registerDynamic("stoneshield");
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#holy} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier holy = MODIFIERS.registerDynamic("holy");
-    public static final StaticModifier<OlympicModifier> olympic = MODIFIERS.register("olympic", OlympicModifier::new);
-    // traits - mod compat tier 3
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#temperate} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier temperate = MODIFIERS.registerDynamic("temperate");
-    /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#invariant} */
-    @Deprecated(forRemoval = true)
-    public static final DynamicModifier invariant = MODIFIERS.registerDynamic("invariant");
-    public static final StaticModifier<DecayModifier> decay = MODIFIERS.register("decay", DecayModifier::new);
-    public static final StaticModifier<Modifier> overworked = MODIFIERS.register("overworked", Modifier::new);
-    // experienced is also an upgrade
-
-    // traits - slimeskull
-    public static final StaticModifier<SelfDestructiveModifier> selfDestructive = MODIFIERS.register("self_destructive", SelfDestructiveModifier::new);
-    public static final StaticModifier<EnderdodgingModifier> enderdodging = MODIFIERS.register("enderdodging", EnderdodgingModifier::new);
-    public static final StaticModifier<StrongBonesModifier> strongBones = MODIFIERS.register("strong_bones", StrongBonesModifier::new);
-    public static final StaticModifier<FrosttouchModifier> frosttouch = MODIFIERS.register("frosttouch", FrosttouchModifier::new);
-    public static final StaticModifier<WitheredModifier> withered = MODIFIERS.register("withered", WitheredModifier::new);
-    public static final StaticModifier<BoonOfSssssModifier> boonOfSssss = MODIFIERS.register("boon_of_sssss", BoonOfSssssModifier::new);
-    public static final StaticModifier<WildfireModifier> wildfire = MODIFIERS.register("wildfire", WildfireModifier::new);
-    public static final StaticModifier<PlagueModifier> plague = MODIFIERS.register("plague", PlagueModifier::new);
-    public static final StaticModifier<BreathtakingModifier> breathtaking = MODIFIERS.register("breathtaking", BreathtakingModifier::new);
-    public static final StaticModifier<FirebreathModifier> firebreath = MODIFIERS.register("firebreath", FirebreathModifier::new);
-    public static final StaticModifier<ChrysophiliteModifier> chrysophilite = MODIFIERS.register("chrysophilite", ChrysophiliteModifier::new);
-    public static final StaticModifier<GoldGuardModifier> goldGuard = MODIFIERS.register("gold_guard", GoldGuardModifier::new);
-    public static final StaticModifier<RevengeModifier> revenge = MODIFIERS.register("revenge", RevengeModifier::new);
+  public static final StaticModifier<Modifier> energyHandler = MODIFIERS.register("energy_handler", EnergyHandlerModifier::new);
+  // fluid abilities
+  public static final StaticModifier<Modifier> tankHandler = MODIFIERS.register("tank_handler", () -> ModuleHookMap.builder().addModule(new TankModule(ToolTankHelper.TANK_HELPER)).modifier().levelDisplay(ModifierLevelDisplay.NO_LEVELS).priority(300).build());
+  public static final DynamicModifier melting = MODIFIERS.registerDynamic("melting");
+  public static final StaticModifier<BucketingModifier> bucketing = MODIFIERS.register("bucketing", BucketingModifier::new);
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#spilling} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier spilling = MODIFIERS.registerDynamic("spilling");
+  public static final StaticModifier<SpittingModifier> spitting = MODIFIERS.register("spitting", SpittingModifier::new);
+  public static final StaticModifier<BurstingModifier> bursting = MODIFIERS.register("bursting", BurstingModifier::new);
+  public static final StaticModifier<SplashingModifier> splashing = MODIFIERS.register("splashing", SplashingModifier::new);
+  
+  // right click abilities
+  public static final StaticModifier<FirestarterModifier> firestarter = MODIFIERS.register("firestarter", () -> new FirestarterModifier(Modifier.DEFAULT_PRIORITY));
+  public static final StaticModifier<SingleLevelModifier> fireprimer = MODIFIERS.register("fireprimer", SingleLevelModifier::new);
+  public static final StaticModifier<BlockingModifier> blocking = MODIFIERS.register("blocking", BlockingModifier::new);
+  public static final StaticModifier<ParryingModifier> parrying = MODIFIERS.register("parrying", ParryingModifier::new);
+  // slings
+  public static final StaticModifier<FlingingModifier> flinging = MODIFIERS.register("flinging", FlingingModifier::new);
+  public static final StaticModifier<SpringingModifier> springing = MODIFIERS.register("springing", SpringingModifier::new);
+  public static final StaticModifier<BonkingModifier> bonking = MODIFIERS.register("bonking", BonkingModifier::new);
+  public static final StaticModifier<WarpingModifier> warping = MODIFIERS.register("warping", WarpingModifier::new);
 
 
-    /*
-     * Effects
-     */
-    /** @deprecated use {@link TinkerEffects#bleeding} */
-    @Deprecated(forRemoval = true)
-    public static final RegistryObject<BleedingEffect> bleeding = TinkerEffects.bleeding;
-    /** @deprecated use {@link TinkerEffects#magnetic} */
-    @Deprecated(forRemoval = true)
-    public static final RegistryObject<MagneticEffect> magneticEffect = TinkerEffects.magnetic;
-    /** @deprecated use {@link TinkerEffects#repulsive} */
-    @Deprecated(forRemoval = true)
-    public static final RegistryObject<RepulsiveEffect> repulsiveEffect = TinkerEffects.repulsive;
-    /** @deprecated use {@link TinkerEffects#enderference} */
-    @Deprecated(forRemoval = true)
-    public static final RegistryObject<TinkerEffect> enderferenceEffect = TinkerEffects.enderference;
-    /** @deprecated use {@link TinkerEffects#selfDestructing} */
-    @Deprecated(forRemoval = true)
-    public static final RegistryObject<TinkerEffect> selfDestructiveEffect = TinkerEffects.selfDestructing;
-    /** @deprecated use {@link TinkerEffects#pierce} */
-    @Deprecated(forRemoval = true)
-    public static final RegistryObject<TinkerEffect> pierceEffect = TinkerEffects.pierce;
-    // cooldown
-    public static final RegistryObject<TinkerEffect> teleportCooldownEffect = MOB_EFFECTS.register("teleport_cooldown", () -> new NoMilkEffect(MobEffectCategory.HARMFUL, 0xCC00FA, true));
-    public static final RegistryObject<TinkerEffect> fireballCooldownEffect = MOB_EFFECTS.register("fireball_cooldown", () -> new NoMilkEffect(MobEffectCategory.HARMFUL, 0xFC9600, true));
-    // internal
-    public static final RegistryObject<TinkerEffect> calcifiedEffect = MOB_EFFECTS.register("calcified", () -> new NoMilkEffect(MobEffectCategory.BENEFICIAL, -1, true));
-    // markers
-    public static final EnumObject<ToolType,TinkerEffect> momentumEffect = MOB_EFFECTS.registerEnum("momentum", ToolType.NO_MELEE, type -> new NoMilkEffect(MobEffectCategory.BENEFICIAL, 0x60496b, true));
-    public static final EnumObject<ToolType,TinkerEffect> insatiableEffect = MOB_EFFECTS.registerEnum("insatiable", new ToolType[] {ToolType.MELEE, ToolType.RANGED, ToolType.ARMOR}, type -> {
-        TinkerEffect effect = new NoMilkEffect(MobEffectCategory.BENEFICIAL, 0x9261cc, true);
-        if (type == ToolType.ARMOR) {
-            effect.addAttributeModifier(Attributes.ATTACK_DAMAGE, "cc6904f7-674a-4e6a-b992-4f3cb8edfef4", 1, AttributeModifier.Operation.ADDITION);
-        }
-        return effect;
-    });
+  // internal abilities
+  public static final StaticModifier<ShearsAbilityModifier> shears = MODIFIERS.register("shears", () -> new ShearsAbilityModifier(0, 70));
+  public static final StaticModifier<SilkyShearsAbilityModifier> silkyShears = MODIFIERS.register("silky_shears", () -> new SilkyShearsAbilityModifier(0, 70));
+  public static final StaticModifier<SilkyShearsAbilityModifier> aoeSilkyShears = MODIFIERS.register("silky_aoe_shears", () -> new SilkyShearsAbilityModifier(1, 70));
+  public static final StaticModifier<HarvestAbilityModifier> harvest = MODIFIERS.register("harvest", () -> new HarvestAbilityModifier(70));
+  public static final StaticModifier<OffhandAttackModifier> offhandAttack = MODIFIERS.register("offhand_attack", OffhandAttackModifier::new);
 
-    /*
-     * Recipes
-     */
-    public static final RegistryObject<RecipeSerializer<ModifierRecipe>> modifierSerializer = RECIPE_SERIALIZERS.register("modifier", () -> LoadableRecipeSerializer.of(ModifierRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<IncrementalModifierRecipe>> incrementalModifierSerializer = RECIPE_SERIALIZERS.register("incremental_modifier", () -> LoadableRecipeSerializer.of(IncrementalModifierRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<SwappableModifierRecipe>> swappableModifierSerializer = RECIPE_SERIALIZERS.register("swappable_modifier", () -> LoadableRecipeSerializer.of(SwappableModifierRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<MultilevelModifierRecipe>> multilevelModifierSerializer = RECIPE_SERIALIZERS.register("multilevel_modifier", () -> LoadableRecipeSerializer.of(MultilevelModifierRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<MultilevelIncrementalModifierRecipe>> multilevelIncrementalModifierSerializer = RECIPE_SERIALIZERS.register("multilevel_incremental_modifier", () -> LoadableRecipeSerializer.of(MultilevelIncrementalModifierRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<OverslimeModifierRecipe>> overslimeSerializer = RECIPE_SERIALIZERS.register("overslime_modifier", () -> LoadableRecipeSerializer.of(OverslimeModifierRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<OverslimeCraftingTableRecipe>> craftingOverslimeSerializer = RECIPE_SERIALIZERS.register("crafting_overslime_modifier", () -> LoadableRecipeSerializer.of(OverslimeCraftingTableRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<ModifierSalvage>> modifierSalvageSerializer = RECIPE_SERIALIZERS.register("modifier_salvage", () -> LoadableRecipeSerializer.of(ModifierSalvage.LOADER));
-    public static final RegistryObject<RecipeSerializer<ArmorDyeingRecipe>> armorDyeingSerializer = RECIPE_SERIALIZERS.register("armor_dyeing_modifier", () -> new SimpleRecipeSerializer<>(ArmorDyeingRecipe::new));
-    public static final RegistryObject<RecipeSerializer<ArmorTrimRecipe>> armorTrimSerializer = RECIPE_SERIALIZERS.register("armor_trim_modifier", () -> new SimpleRecipeSerializer<>(ArmorTrimRecipe::new));
-    public static final RegistryObject<RecipeSerializer<TippedToolTransformRecipe>> tippedToolTransformRecipeSerializer = RECIPE_SERIALIZERS.register("tipped_tool_transform", () -> LoadableRecipeSerializer.of(TippedToolTransformRecipe.LOADER));
-    // modifiers
-    public static final RegistryObject<RecipeSerializer<ModifierRepairTinkerStationRecipe>> modifierRepair = RECIPE_SERIALIZERS.register("modifier_repair", () -> LoadableRecipeSerializer.of(ModifierRepairTinkerStationRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<ModifierRepairCraftingRecipe>> craftingModifierRepair = RECIPE_SERIALIZERS.register("crafting_modifier_repair", () -> LoadableRecipeSerializer.of(ModifierRepairCraftingRecipe.LOADER));
-    /** @deprecated use {@link MaterialRepairModule} */
-    @SuppressWarnings("removal")
-    @Deprecated(forRemoval = true)
-    public static final RegistryObject<RecipeSerializer<ModifierMaterialRepairRecipe>> modifierMaterialRepair = RECIPE_SERIALIZERS.register("modifier_material_repair", () -> LoadableRecipeSerializer.deprecated(ModifierMaterialRepairRecipe.LOADER, "use the tconstruct:material_repair modifier module instead"));
-    /** @deprecated use {@link MaterialRepairModule} */
-    @SuppressWarnings("removal")
-    @Deprecated(forRemoval = true)
-    public static final RegistryObject<RecipeSerializer<ModifierMaterialRepairKitRecipe>> craftingModifierMaterialRepair = RECIPE_SERIALIZERS.register("crafting_modifier_material_repair", () -> LoadableRecipeSerializer.deprecated(ModifierMaterialRepairKitRecipe.LOADER, "use the tconstruct:material_repair modifier module instead"));
-    // worktable
-    public static final RegistryObject<RecipeSerializer<ModifierRemovalRecipe>> removeModifierSerializer = RECIPE_SERIALIZERS.register("remove_modifier", () -> LoadableRecipeSerializer.of(ModifierRemovalRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<ExtractModifierRecipe>> extractModifierSerializer = RECIPE_SERIALIZERS.register("extract_modifier", () -> LoadableRecipeSerializer.of(ExtractModifierRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<ModifierSortingRecipe>> modifierSortingSerializer = RECIPE_SERIALIZERS.register("modifier_sorting", () -> LoadableRecipeSerializer.of(ModifierSortingRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<ModifierSetWorktableRecipe>> modifierSetWorktableSerializer = RECIPE_SERIALIZERS.register("modifier_set_worktable", () -> LoadableRecipeSerializer.of(ModifierSetWorktableRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<EnchantmentConvertingRecipe>> enchantmentConvertingSerializer = RECIPE_SERIALIZERS.register("enchantment_converting", () -> LoadableRecipeSerializer.of(EnchantmentConvertingRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<ToggleInteractionWorktableRecipe>> toggleInteractionSerializer = RECIPE_SERIALIZERS.register("toggle_interaction", () -> LoadableRecipeSerializer.of(ToggleInteractionWorktableRecipe.LOADER));
+  // creative
+  public static final StaticModifier<CreativeSlotModifier> creativeSlot = MODIFIERS.register("creative_slot", CreativeSlotModifier::new);
+  public static final StaticModifier<StatOverrideModifier> statOverride = MODIFIERS.register("stat_override", StatOverrideModifier::new);
 
-    // severing
-    public static final RegistryObject<RecipeSerializer<SeveringRecipe>> severingSerializer = RECIPE_SERIALIZERS.register("severing", () -> LoadableRecipeSerializer.of(SeveringRecipe.LOADER));
-    public static final RegistryObject<RecipeSerializer<AgeableSeveringRecipe>> ageableSeveringSerializer = RECIPE_SERIALIZERS.register("ageable_severing", () -> LoadableRecipeSerializer.of(AgeableSeveringRecipe.LOADER));
-    // special severing
-    public static final RegistryObject<SimpleRecipeSerializer<PlayerBeheadingRecipe>> playerBeheadingSerializer = RECIPE_SERIALIZERS.register("player_beheading", () -> new SimpleRecipeSerializer<>(PlayerBeheadingRecipe::new));
-    public static final RegistryObject<SimpleRecipeSerializer<SnowGolemBeheadingRecipe>> snowGolemBeheadingSerializer = RECIPE_SERIALIZERS.register("snow_golem_beheading", () -> new SimpleRecipeSerializer<>(SnowGolemBeheadingRecipe::new));
-    public static final RegistryObject<SimpleRecipeSerializer<MooshroomDemushroomingRecipe>> mooshroomDemushroomingSerializer = RECIPE_SERIALIZERS.register("mooshroom_demushrooming", () -> new SimpleRecipeSerializer<>(MooshroomDemushroomingRecipe::new));
-    public static final RegistryObject<SimpleRecipeSerializer<SheepShearingRecipe>> sheepShearing = RECIPE_SERIALIZERS.register("sheep_shearing", () -> new SimpleRecipeSerializer<>(SheepShearingRecipe::new));
+  // traits - tier 1
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#jagged} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier jagged = MODIFIERS.registerDynamic("jagged");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#stonebound} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier stonebound = MODIFIERS.registerDynamic("stonebound");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#frostshield} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier frostshield = MODIFIERS.registerDynamic("frostshield");
+  // traits - tier 1 nether
+  public static final StaticModifier<NecroticModifier> necrotic = MODIFIERS.register("necrotic", NecroticModifier::new);
+  // traits - tier 1 nether
+  public static final StaticModifier<EnderferenceModifier> enderference = MODIFIERS.register("enderference", EnderferenceModifier::new);
+  // traits - tier 1 bindings
+  public static final StaticModifier<TannedModifier> tanned = MODIFIERS.register("tanned", TannedModifier::new);
+  public static final StaticModifier<SolarPoweredModifier> solarPowered = MODIFIERS.register("solar_powered", SolarPoweredModifier::new);
+  // traits - tier 2
+  public static final StaticModifier<DwarvenModifier> dwarven = MODIFIERS.register("dwarven", DwarvenModifier::new);
+  // traits - tier 3
+  public static final StaticModifier<LaceratingModifier> lacerating = MODIFIERS.register("lacerating", LaceratingModifier::new);
+  public static final StaticModifier<TastyModifier> tasty = MODIFIERS.register("tasty", TastyModifier::new);
+  public static final StaticModifier<MomentumModifier> momentum = MODIFIERS.register("momentum", MomentumModifier::new);
+  public static final StaticModifier<InsatiableModifier> insatiable = MODIFIERS.register("insatiable", InsatiableModifier::new);
+  public static final StaticModifier<ConductingModifier> conducting = MODIFIERS.register("conducting", ConductingModifier::new);
+  // traits - tier 5
+  public static final StaticModifier<EnderportingModifier> enderporting = MODIFIERS.register("enderporting", EnderportingModifier::new);
 
-    /**
-     * Loot
-     */
-    public static final RegistryObject<Codec<ModifierLootModifier>> modifierLootModifier = GLOBAL_LOOT_MODIFIERS.register("modifier_hook", () -> ModifierLootModifier.CODEC);
-    public static final RegistryObject<LootItemConditionType> hasModifierLootCondition = LOOT_CONDITIONS.register("has_modifier", () -> new LootItemConditionType(new HasModifierLootCondition.ConditionSerializer()));
-    public static final RegistryObject<LootItemFunctionType> modifierBonusFunction = LOOT_FUNCTIONS.register("modifier_bonus", () -> new LootItemFunctionType(new ModifierBonusLootFunction.Serializer()));
-    public static final RegistryObject<LootItemConditionType> chrysophiliteLootCondition = LOOT_CONDITIONS.register("has_chrysophilite", () -> new LootItemConditionType(ChrysophiliteLootCondition.SERIALIZER));
-    public static final RegistryObject<LootItemFunctionType> chrysophiliteBonusFunction = LOOT_FUNCTIONS.register("chrysophilite_bonus", () -> new LootItemFunctionType(ChrysophiliteBonusFunction.SERIALIZER));
+  // traits - mod compat tier 2
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#stoneshield} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier stoneshield = MODIFIERS.registerDynamic("stoneshield");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#holy} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier holy = MODIFIERS.registerDynamic("holy");
+  public static final StaticModifier<OlympicModifier> olympic = MODIFIERS.register("olympic", OlympicModifier::new);
+  // traits - mod compat tier 3
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#temperate} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier temperate = MODIFIERS.registerDynamic("temperate");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#invariant} */
+  @Deprecated(forRemoval = true)
+  public static final DynamicModifier invariant = MODIFIERS.registerDynamic("invariant");
+  public static final StaticModifier<DecayModifier> decay = MODIFIERS.register("decay", DecayModifier::new);
+  public static final StaticModifier<Modifier> overworked = MODIFIERS.register("overworked", Modifier::new);
+  // experienced is also an upgrade
 
-    /*
-     * Events
-     */
+  // traits - slimeskull
+  public static final StaticModifier<SelfDestructiveModifier> selfDestructive = MODIFIERS.register("self_destructive", SelfDestructiveModifier::new);
+  public static final StaticModifier<EnderdodgingModifier> enderdodging = MODIFIERS.register("enderdodging", EnderdodgingModifier::new);
+  public static final StaticModifier<StrongBonesModifier> strongBones = MODIFIERS.register("strong_bones", StrongBonesModifier::new);
+  public static final StaticModifier<FrosttouchModifier> frosttouch = MODIFIERS.register("frosttouch", FrosttouchModifier::new);
+  public static final StaticModifier<WitheredModifier> withered = MODIFIERS.register("withered", WitheredModifier::new);
+  public static final StaticModifier<BoonOfSssssModifier> boonOfSssss = MODIFIERS.register("boon_of_sssss", BoonOfSssssModifier::new);
+  public static final StaticModifier<WildfireModifier> wildfire = MODIFIERS.register("wildfire", WildfireModifier::new);
+  public static final StaticModifier<PlagueModifier> plague = MODIFIERS.register("plague", PlagueModifier::new);
+  public static final StaticModifier<BreathtakingModifier> breathtaking = MODIFIERS.register("breathtaking", BreathtakingModifier::new);
+  public static final StaticModifier<FirebreathModifier> firebreath = MODIFIERS.register("firebreath", FirebreathModifier::new);
+  public static final StaticModifier<ChrysophiliteModifier> chrysophilite = MODIFIERS.register("chrysophilite", ChrysophiliteModifier::new);
+  public static final StaticModifier<GoldGuardModifier> goldGuard = MODIFIERS.register("gold_guard", GoldGuardModifier::new);
+  public static final StaticModifier<RevengeModifier> revenge = MODIFIERS.register("revenge", RevengeModifier::new);
+  
 
-    @SubscribeEvent
-    void registerSerializers(RegisterEvent event) {
-        if (event.getRegistryKey() == Registries.RECIPE_SERIALIZER) {
-            // combinations
-            FluidEffect.BLOCK_EFFECTS.register(getResource("conditional"), ConditionalFluidEffect.Block.LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("conditional"), ConditionalFluidEffect.Entity.LOADER);
-            FluidEffect.BLOCK_EFFECTS.register(getResource("scaling"), ScalingFluidEffect.BLOCK_LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("scaling"), ScalingFluidEffect.ENTITY_LOADER);
-            FluidEffect.BLOCK_EFFECTS.register(getResource("alternatives"), AlternativesFluidEffect.BLOCK_LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("alternatives"), AlternativesFluidEffect.ENTITY_LOADER);
-            FluidEffect.BLOCK_EFFECTS.register(getResource("sequence"), SequenceFluidEffect.BLOCK_LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("sequence"), SequenceFluidEffect.ENTITY_LOADER);
-            FluidEffect.BLOCK_EFFECTS.register(getResource("offset"), OffsetBlockFluidEffect.LOADER);
-            // simple
-            FluidEffect.ENTITY_EFFECTS.register(getResource("calcified"), StrongBonesModifier.FLUID_EFFECT.getLoader());
-            FluidEffect.ENTITY_EFFECTS.register(getResource("extinguish"), FluidEffect.EXTINGUISH_FIRE.getLoader());
-            FluidEffect.ENTITY_EFFECTS.register(getResource("teleport"), RandomTeleportFluidEffect.LOADER);
-            FluidEffect.BLOCK_EFFECTS.register(getResource("weather"), FluidEffect.WEATHER.getLoader());
-            // potions
-            FluidEffect.ENTITY_EFFECTS.register(getResource("cure_effects"), CureEffectsFluidEffect.LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("remove_effect"), RemoveEffectFluidEffect.LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("mob_effect"), MobEffectFluidEffect.LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("potion"), PotionFluidEffect.LOADER);
-            // misc
-            FluidEffect.ENTITY_EFFECTS.register(getResource("damage"), DamageFluidEffect.LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("restore_hunger"), RestoreHungerFluidEffect.LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("fire"), FireFluidEffect.LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("freeze"), FreezeFluidEffect.LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("award_stat"), AwardStatFluidEffect.LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("add_breath"), AddBreathFluidEffect.LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("push_entity"), PushEntityFluidEffect.LOADER);
-            FluidEffect.ENTITY_EFFECTS.register(getResource("interact"), EntityInteractFluidEffect.INSTANCE.getLoader());
-            // block
-            FluidEffect.BLOCK_EFFECTS.register(getResource("place_block"), PlaceBlockFluidEffect.LOADER);
-            FluidEffect.BLOCK_EFFECTS.register(getResource("break_block"), BreakBlockFluidEffect.LOADER);
-            FluidEffect.BLOCK_EFFECTS.register(getResource("remove_block"), FluidEffect.REMOVE_BLOCK.getLoader());
-            FluidEffect.BLOCK_EFFECTS.register(getResource("mob_effect_cloud"), MobEffectCloudFluidEffect.LOADER);
-            FluidEffect.BLOCK_EFFECTS.register(getResource("potion_cloud"), PotionCloudFluidEffect.LOADER);
-            FluidEffect.BLOCK_EFFECTS.register(getResource("move_block"), MoveBlocksFluidEffect.LOADER);
-            FluidEffect.BLOCK_EFFECTS.register(getResource("interact"), BlockInteractFluidEffect.INSTANCE.getLoader());
-            FluidEffect.BLOCK_EFFECTS.register(getResource("melt_block"), MeltBlockFluidEffect.LOADER);
-            // shared
-            FluidEffect.registerGeneral(getResource("drop_item"), DropItemFluidEffect.LOADER);
-            FluidEffect.registerGeneral(getResource("explosion"), ExplosionFluidEffect.LOADER);
-            FluidEffect.registerGeneral(getResource("set_block"), SetBlockFluidEffect.LOADER);
-            FluidEffect.registerGeneral(getResource("area_mob_effect"), AreaMobEffectFluidEffect.LOADER);
-
-
-            // modifier names, sometimes I wonder if I have too many registries for tiny JSON pieces
-            ModifierLevelDisplay.LOADER.register(getResource("default"), ModifierLevelDisplay.DEFAULT.getLoader());
-            ModifierLevelDisplay.LOADER.register(getResource("single_level"), ModifierLevelDisplay.SINGLE_LEVEL.getLoader());
-            ModifierLevelDisplay.LOADER.register(getResource("no_levels"), ModifierLevelDisplay.NO_LEVELS.getLoader());
-            ModifierLevelDisplay.LOADER.register(getResource("pluses"), ModifierLevelDisplay.PLUSES.getLoader());
-            ModifierLevelDisplay.LOADER.register(getResource("unique"), UniqueForLevels.LOADER);
-
-            // modifier modules //
-            ModifierModule.LOADER.register(getResource("empty"), ModifierModule.EMPTY.getLoader());
-            // armor
-            ModifierModule.LOADER.register(getResource("max_armor_attribute"), MaxArmorAttributeModule.LOADER);
-            ModifierModule.LOADER.register(getResource("effect_immunity"), EffectImmunityModule.LOADER);
-            ModifierModule.LOADER.register(getResource("mob_disguise"), MobDisguiseModule.LOADER);
-            ModifierModule.LOADER.register(getResource("block_damage"), BlockDamageSourceModule.LOADER);
-            ModifierModule.LOADER.register(getResource("cover_ground"), CoverGroundWalkerModule.LOADER);
-            ModifierModule.LOADER.register(getResource("protection"), ProtectionModule.LOADER);
-            ModifierModule.LOADER.register(getResource("replace_fluid"), ReplaceBlockWalkerModule.LOADER);
-            ModifierModule.LOADER.register(getResource("tool_action_walk_transform"), ToolActionWalkerTransformModule.LOADER);
-            // behavior
-            ModifierModule.LOADER.register(getResource("attribute"), AttributeModule.LOADER);
-            ModifierModule.LOADER.register(getResource("reduce_tool_damage"), ReduceToolDamageModule.LOADER);
-            // TODO 1.21: rename to repair_factor?
-            ModifierModule.LOADER.register(getResource("repair"), RepairModule.LOADER);
-            ModifierModule.LOADER.register(getResource("material_repair"), MaterialRepairModule.LOADER);
-            ModifierModule.LOADER.register(getResource("show_offhand"), ShowOffhandModule.LOADER);
-            ModifierModule.LOADER.register(getResource("tool_actions"), ToolActionsModule.LOADER);
-            ModifierModule.LOADER.register(getResource("tool_action_transform"), ToolActionTransformModule.LOADER);
-            // build
-            ModifierModule.LOADER.register(getResource("conditional_stat"), ConditionalStatModule.LOADER);
-            ModifierModule.LOADER.register(getResource("modifier_slot"), ModifierSlotModule.LOADER);
-            ModifierModule.LOADER.register(getResource("rarity"), RarityModule.LOADER);
-            ModifierModule.LOADER.register(getResource("requirements"), ModifierRequirementsModule.LOADER);
-            ModifierModule.LOADER.register(getResource("swappable_slot"), SwappableSlotModule.LOADER);
-            ModifierModule.LOADER.register(getResource("swappable_bonus_slot"), SwappableSlotModule.BonusSlot.LOADER);
-            ModifierModule.LOADER.register(getResource("swappable_tool_traits"), SwappableToolTraitsModule.LOADER);
-            ModifierModule.LOADER.register(getResource("stat_boost"), StatBoostModule.LOADER);
-            ModifierModule.LOADER.register(getResource("stat_copy"), StatCopyModule.LOADER);
-            ModifierModule.LOADER.register(getResource("set_stat"), SetStatModule.LOADER);
-            ModifierModule.LOADER.register(getResource("trait"), ModifierTraitModule.LOADER);
-            ModifierModule.LOADER.register(getResource("volatile_flag"), VolatileFlagModule.LOADER);
-            ModifierModule.LOADER.register(getResource("volatile_int"), VolatileIntModule.LOADER);
-            // combat
-            ModifierModule.LOADER.register(getResource("conditional_melee_damage"), ConditionalMeleeDamageModule.LOADER);
-            ModifierModule.LOADER.register(getResource("conditional_power"), ConditionalPowerModule.LOADER);
-            ModifierModule.LOADER.register(getResource("knockback"), KnockbackModule.LOADER);
-            ModifierModule.LOADER.register(getResource("melee_attribute"), MeleeAttributeModule.LOADER);
-            ModifierModule.LOADER.register(getResource("mob_effect"), MobEffectModule.LOADER);
-            ModifierModule.LOADER.register(getResource("projectile_explosion"), ProjectileExplosionModule.LOADER);
-            ModifierModule.LOADER.register(getResource("sling_force"), SlingForceModule.LOADER);
-            // display
-            ModifierModule.LOADER.register(getResource("durability_color"), DurabilityBarColorModule.LOADER);
-            ModifierModule.LOADER.register(getResource("variant_name"), ModifierVariantNameModule.LOADER);
-            ModifierModule.LOADER.register(getResource("variant_color"), ModifierVariantColorModule.LOADER);
-            ModifierModule.LOADER.register(getResource("material_variant_color"), MaterialVariantColorModule.LOADER);
-            // enchantment
-            ModifierModule.LOADER.register(getResource("constant_enchantment"), EnchantmentModule.Constant.LOADER);
-            ModifierModule.LOADER.register(getResource("main_hand_harvest_enchantment"), EnchantmentModule.MainHandHarvest.LOADER);
-            ModifierModule.LOADER.register(getResource("armor_harvest_enchantment"), EnchantmentModule.ArmorHarvest.LOADER);
-            ModifierModule.LOADER.register(getResource("enchantment_ignoring_protection"), EnchantmentModule.Protection.LOADER);
-            ModifierModule.LOADER.register(getResource("weapon_looting"), LootingModule.Weapon.LOADER);
-            ModifierModule.LOADER.register(getResource("armor_looting"), LootingModule.Armor.LOADER);
-            // mining
-            ModifierModule.LOADER.register(getResource("conditional_mining_speed"), ConditionalMiningSpeedModule.LOADER);
-            // capacity
-            ModifierModule.LOADER.register(getResource("capacity_bar"), CapacityBarModule.LOADER);
-            ModifierModule.LOADER.register(getResource("durability_as_capacity"), DurabilityAsCapacityModule.LOADER);
-            ModifierModule.LOADER.register(getResource("durability_shield"), DurabilityShieldModule.LOADER);
-            ModifierModule.LOADER.register(getResource("loot_to_capacity"), LootToCapacityModule.LOADER);
-            ModifierModule.LOADER.register(getResource("damage_to_capacity"), DamageToCapacityModule.LOADER);
-            ModifierModule.LOADER.register(getResource("time_to_capacity"), TimeToCapacityModule.LOADER);
-            ModifierModule.LOADER.register(getResource("launch_capacity"), LaunchCapacityModule.LOADER);
-            ModifierModule.LOADER.register(getResource("mining_capacity"), MiningCapacityModule.LOADER);
-            // technical
-            ModifierModule.LOADER.register(getResource("armor_level"), ArmorLevelModule.LOADER);
-            ModifierModule.LOADER.register(getResource("max_armor_stat"), MaxArmorStatModule.LOADER);
-            ModifierModule.LOADER.register(getResource("armor_stat"), ArmorStatModule.LOADER);
-            ModifierModule.LOADER.register(getResource("inventory"), InventoryModule.LOADER);
-            ModifierModule.LOADER.register(getResource("inventory_menu"), InventoryMenuModule.LOADER);
-            ModifierModule.LOADER.register(getResource("inventory_slot_menu"), InventorySlotMenuModule.INSTANCE.getLoader());
-
-            // special
-            ModifierModule.LOADER.register(getResource("smelting"), SmeltingModule.LOADER);
-            ModifierModule.LOADER.register(getResource("melting"), MeltingModule.LOADER);
-            ModifierModule.LOADER.register(getResource("place_glow"), PlaceGlowModule.LOADER);
-            ModifierModule.LOADER.register(getResource("glow_walker"), GlowWalkerModule.LOADER);
-            ModifierModule.LOADER.register(getResource("campfire_extinguish"), ExtinguishCampfireModule.LOADER);
-            ModifierModule.LOADER.register(getResource("lightspeed_attribute"), LightspeedAttributeModule.LOADER);
-            ModifierModule.LOADER.register(getResource("zoom"), ZoomModule.LOADER);
-            ModifierModule.LOADER.register(getResource("brush"), BrushModule.LOADER);
-            ModifierModule.LOADER.register(getResource("fishing"), FishingModule.LOADER);
-            ModifierModule.LOADER.register(getResource("throwing"), ThrowingModule.LOADER);
-            ModifierModule.LOADER.register(getResource("damage_on_unequip"), DamageOnUnequipModule.LOADER);
-            ModifierModule.LOADER.register(getResource("damage_on_shoot"), DamageOnShootModule.LOADER);
-            ModifierModule.LOADER.register(getResource("share_durability"), ShareDurabilityModule.LOADER);
-            ModifierModule.LOADER.register(getResource("projectile_place_glow"), ProjectilePlaceGlowModule.LOADER);
-            ModifierModule.LOADER.register(getResource("craft_count"), CraftCountModule.LOADER);
-            ModifierModule.LOADER.register(getResource("tipped"), TippedModule.LOADER);
-            ModifierModule.LOADER.register(getResource("projectile_bounce"), ProjectileBounceModule.LOADER);
-            // overslime
-            ModifierModule.LOADER.register(getResource("overgrowth"), OvergrowthModule.LOADER);
-            ModifierModule.LOADER.register(getResource("overburn"), OverburnModule.INSTANCE.getLoader());
-            ModifierModule.LOADER.register(getResource("overshield"), OvershieldModule.LOADER);
-            // combat
-            ModifierModule.LOADER.register(getResource("fiery_attack"), FieryAttackModule.LOADER);
-            ModifierModule.LOADER.register(getResource("freezing_attack"), FreezingAttackModule.LOADER);
-            ModifierModule.LOADER.register(getResource("spilling"), SpillingModule.LOADER);
-            ModifierModule.LOADER.register(getResource("channeling"), ChannelingModule.LOADER);
-            ModifierModule.LOADER.register(getResource("smashing"), SmashingModule.LOADER);
-            // armor
-            ModifierModule.LOADER.register(getResource("enderclearance"), EnderclearanceModule.LOADER);
-            ModifierModule.LOADER.register(getResource("depth_protection"), DepthProtectionModule.LOADER);
-            ModifierModule.LOADER.register(getResource("flame_barrier"), FlameBarrierModule.LOADER);
-            ModifierModule.LOADER.register(getResource("kinetic"), KineticModule.LOADER);
-            ModifierModule.LOADER.register(getResource("recurrent_protection"), RecurrentProtectionModule.LOADER);
-            ModifierModule.LOADER.register(getResource("shield_strap"), ShieldStrapModule.LOADER);
-            ModifierModule.LOADER.register(getResource("tool_belt"), ToolBeltModule.LOADER);
-            ModifierModule.LOADER.register(getResource("minimap"), MinimapModule.LOADER);
-            ModifierModule.LOADER.register(getResource("sleeves"), SleevesModule.LOADER);
-            // counterattack
-            ModifierModule.LOADER.register(getResource("thorns"), ThornsModule.LOADER);
-            ModifierModule.LOADER.register(getResource("fiery_counter"), FieryCounterModule.LOADER);
-            ModifierModule.LOADER.register(getResource("freezing_counter"), FreezingCounterModule.LOADER);
-            ModifierModule.LOADER.register(getResource("knockback_counter"), KnockbackCounterModule.LOADER);
-            // ranged
-            ModifierModule.LOADER.register(getResource("restrict_projectile_angle"), RestrictAngleModule.LOADER);
-            ModifierModule.LOADER.register(getResource("bulk_quiver"), BulkQuiverModule.LOADER);
-            ModifierModule.LOADER.register(getResource("trick_quiver"), TrickQuiverModule.LOADER);
-            ModifierModule.LOADER.register(getResource("quiver_inventory"), QuiverInventoryModule.LOADER);
-            ModifierModule.LOADER.register(getResource("infinity"), InfinityModule.LOADER);
-            ModifierModule.LOADER.register(getResource("punch"), PunchModule.LOADER);
-            ModifierModule.LOADER.register(getResource("reverse_punch"), ReversePunchModule.LOADER);
-            ModifierModule.LOADER.register(getResource("arrow_pierce"), ArrowPierceModule.LOADER);
-            ModifierModule.LOADER.register(getResource("projectile_gravity"), ProjectileGravityModule.LOADER);
-            ModifierModule.LOADER.register(getResource("projectile_fuse"), ProjectileFuseModule.LOADER);
-            ModifierModule.LOADER.register(getResource("projectile_attract_mobs"), ProjectileAttractMobsModule.LOADER);
-            // compat
-            ModifierModule.LOADER.register(getResource("the_one_probe"), TheOneProbeModule.INSTANCE.getLoader());
-            ModifierModule.LOADER.register(getResource("headlight"), HeadlightModule.LOADER);
-
-            // modifier predicates
-            ModifierPredicate.LOADER.register(getResource("single"), SingleModifierPredicate.LOADER);
-            ModifierPredicate.LOADER.register(getResource("tag"), TagModifierPredicate.LOADER);
-            ModifierPredicate.LOADER.register(getResource("slot_type"), SlotTypeModifierPredicate.LOADER);
-
-
-            // variables
-            // block
-            BlockVariable.LOADER.register(getResource("constant"), BlockVariable.Constant.LOADER);
-            BlockVariable.LOADER.register(getResource("conditional"), ConditionalBlockVariable.LOADER);
-            BlockVariable.LOADER.register(getResource("blast_resistance"), BlockVariable.BLAST_RESISTANCE.getLoader());
-            BlockVariable.LOADER.register(getResource("hardness"), BlockVariable.HARDNESS.getLoader());
-            BlockVariable.LOADER.register(getResource("state_property"), StatePropertyVariable.LOADER);
-            // entity
-            EntityVariable.LOADER.register(getResource("constant"), EntityVariable.Constant.LOADER);
-            EntityVariable.LOADER.register(getResource("conditional"), ConditionalEntityVariable.LOADER);
-            EntityVariable.LOADER.register(getResource("health"), EntityVariable.HEALTH.getLoader());
-            EntityVariable.LOADER.register(getResource("height"), EntityVariable.HEIGHT.getLoader());
-            EntityVariable.LOADER.register(getResource("attribute"), AttributeEntityVariable.LOADER);
-            EntityVariable.LOADER.register(getResource("effect_level"), EntityEffectLevelVariable.LOADER);
-            EntityVariable.LOADER.register(getResource("light"), EntityLightVariable.LOADER);
-            EntityVariable.LOADER.register(getResource("equipment_count"), EquipmentCountEntityVariable.LOADER);
-            EntityVariable.LOADER.register(getResource("biome_temperature"), EntityVariable.BIOME_TEMPERATURE.getLoader());
-            EntityVariable.LOADER.register(getResource("water"), EntityVariable.WATER.getLoader());
-            // tool
-            ToolVariable.LOADER.register(getResource("constant"), ToolVariable.Constant.LOADER);
-            ToolVariable.register(getResource("tool_conditional"), ConditionalToolVariable.LOADER);
-            ToolVariable.register(getResource("tool_durability"), ToolVariable.CURRENT_DURABILITY.getLoader());
-            ToolVariable.register(getResource("tool_lost_durability"), ToolVariable.CURRENT_DAMAGE.getLoader());
-            ToolVariable.register(getResource("tool_stat"), ToolStatVariable.LOADER);
-            ToolVariable.register(getResource("stat_multiplier"), StatMultiplierVariable.LOADER);
-            ToolVariable.register(getResource("mod_data"), ModDataVariable.LOADER);
-            ToolVariable.register(getResource("modifier_level"), ModifierLevelVariable.LOADER);
-            // stat
-            ConditionalStatVariable.LOADER.register(getResource("constant"), ConditionalStatVariable.Constant.LOADER);
-            ConditionalStatVariable.register(getResource("entity"), EntityConditionalStatVariable.LOADER);
-            // melee
-            MeleeVariable.LOADER.register(getResource("constant"), MeleeVariable.Constant.LOADER);
-            MeleeVariable.LOADER.register(getResource("entity"), EntityMeleeVariable.LOADER);
-            // power
-            PowerVariable.LOADER.register(getResource("constant"), PowerVariable.Constant.LOADER);
-            PowerVariable.LOADER.register(getResource("entity"), EntityPowerVariable.LOADER);
-            PowerVariable.LOADER.register(getResource("persistent_data"), PersistentDataPowerVariable.LOADER);
-            // mining speed
-            MiningSpeedVariable.LOADER.register(getResource("constant"), MiningSpeedVariable.Constant.LOADER);
-            MiningSpeedVariable.LOADER.register(getResource("block"), BlockMiningSpeedVariable.LOADER);
-            MiningSpeedVariable.LOADER.register(getResource("block_light"), BlockLightVariable.LOADER);
-            MiningSpeedVariable.LOADER.register(getResource("biome_temperature"), BlockTemperatureVariable.LOADER);
-            // protection
-            ProtectionVariable.LOADER.register(getResource("constant"), ProtectionVariable.Constant.LOADER);
-            ProtectionVariable.LOADER.register(getResource("entity"), EntityProtectionVariable.LOADER);
-        }
+  /*
+   * Effects
+   */
+  /** @deprecated use {@link TinkerEffects#bleeding} */
+  @Deprecated(forRemoval = true)
+  public static final RegistryObject<BleedingEffect> bleeding = TinkerEffects.bleeding;
+  /** @deprecated use {@link TinkerEffects#magnetic} */
+  @Deprecated(forRemoval = true)
+  public static final RegistryObject<MagneticEffect> magneticEffect = TinkerEffects.magnetic;
+  /** @deprecated use {@link TinkerEffects#repulsive} */
+  @Deprecated(forRemoval = true)
+  public static final RegistryObject<RepulsiveEffect> repulsiveEffect = TinkerEffects.repulsive;
+  /** @deprecated use {@link TinkerEffects#enderference} */
+  @Deprecated(forRemoval = true)
+  public static final RegistryObject<TinkerEffect> enderferenceEffect = TinkerEffects.enderference;
+  /** @deprecated use {@link TinkerEffects#selfDestructing} */
+  @Deprecated(forRemoval = true)
+  public static final RegistryObject<TinkerEffect> selfDestructiveEffect = TinkerEffects.selfDestructing;
+  /** @deprecated use {@link TinkerEffects#pierce} */
+  @Deprecated(forRemoval = true)
+  public static final RegistryObject<TinkerEffect> pierceEffect = TinkerEffects.pierce;
+  // cooldown
+  public static final RegistryObject<TinkerEffect> teleportCooldownEffect = MOB_EFFECTS.register("teleport_cooldown", () -> new NoMilkEffect(MobEffectCategory.HARMFUL, 0xCC00FA, true));
+  public static final RegistryObject<TinkerEffect> fireballCooldownEffect = MOB_EFFECTS.register("fireball_cooldown", () -> new NoMilkEffect(MobEffectCategory.HARMFUL, 0xFC9600, true));
+  // internal
+  public static final RegistryObject<TinkerEffect> calcifiedEffect = MOB_EFFECTS.register("calcified", () -> new NoMilkEffect(MobEffectCategory.BENEFICIAL, -1, true));
+  // markers
+  public static final EnumObject<ToolType,TinkerEffect> momentumEffect = MOB_EFFECTS.registerEnum("momentum", ToolType.NO_MELEE, type -> new NoMilkEffect(MobEffectCategory.BENEFICIAL, 0x60496b, true));
+  public static final EnumObject<ToolType,TinkerEffect> insatiableEffect = MOB_EFFECTS.registerEnum("insatiable", new ToolType[] {ToolType.MELEE, ToolType.RANGED, ToolType.ARMOR}, type -> {
+    TinkerEffect effect = new NoMilkEffect(MobEffectCategory.BENEFICIAL, 0x9261cc, true);
+    if (type == ToolType.ARMOR) {
+      effect.addAttributeModifier(Attributes.ATTACK_DAMAGE, "cc6904f7-674a-4e6a-b992-4f3cb8edfef4", 1, AttributeModifier.Operation.ADDITION);
     }
+    return effect;
+  });
 
-    @SubscribeEvent
-    void commonSetup(final FMLCommonSetupEvent event) {
-        TinkerDataCapability.register();
-        PersistentDataCapability.register();
-        EntityModifierCapability.register();
-        // by default, we support modifying projectiles (arrows or fireworks mainly, but maybe other stuff). other entities may come in the future
-        EntityModifierCapability.registerEntityPredicate(entity -> entity instanceof Projectile);
-    }
+  /*
+   * Recipes
+   */
+  public static final RegistryObject<RecipeSerializer<ModifierRecipe>> modifierSerializer = RECIPE_SERIALIZERS.register("modifier", () -> LoadableRecipeSerializer.of(ModifierRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<IncrementalModifierRecipe>> incrementalModifierSerializer = RECIPE_SERIALIZERS.register("incremental_modifier", () -> LoadableRecipeSerializer.of(IncrementalModifierRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<SwappableModifierRecipe>> swappableModifierSerializer = RECIPE_SERIALIZERS.register("swappable_modifier", () -> LoadableRecipeSerializer.of(SwappableModifierRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<MultilevelModifierRecipe>> multilevelModifierSerializer = RECIPE_SERIALIZERS.register("multilevel_modifier", () -> LoadableRecipeSerializer.of(MultilevelModifierRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<MultilevelIncrementalModifierRecipe>> multilevelIncrementalModifierSerializer = RECIPE_SERIALIZERS.register("multilevel_incremental_modifier", () -> LoadableRecipeSerializer.of(MultilevelIncrementalModifierRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<OverslimeModifierRecipe>> overslimeSerializer = RECIPE_SERIALIZERS.register("overslime_modifier", () -> LoadableRecipeSerializer.of(OverslimeModifierRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<OverslimeCraftingTableRecipe>> craftingOverslimeSerializer = RECIPE_SERIALIZERS.register("crafting_overslime_modifier", () -> LoadableRecipeSerializer.of(OverslimeCraftingTableRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<ModifierSalvage>> modifierSalvageSerializer = RECIPE_SERIALIZERS.register("modifier_salvage", () -> LoadableRecipeSerializer.of(ModifierSalvage.LOADER));
+  public static final RegistryObject<RecipeSerializer<ArmorDyeingRecipe>> armorDyeingSerializer = RECIPE_SERIALIZERS.register("armor_dyeing_modifier", () -> new SimpleRecipeSerializer<>(ArmorDyeingRecipe::new));
+  public static final RegistryObject<RecipeSerializer<ArmorTrimRecipe>> armorTrimSerializer = RECIPE_SERIALIZERS.register("armor_trim_modifier", () -> new SimpleRecipeSerializer<>(ArmorTrimRecipe::new));
+  public static final RegistryObject<RecipeSerializer<TippedToolTransformRecipe>> tippedToolTransformRecipeSerializer = RECIPE_SERIALIZERS.register("tipped_tool_transform", () -> LoadableRecipeSerializer.of(TippedToolTransformRecipe.LOADER));
+  // modifiers
+  public static final RegistryObject<RecipeSerializer<ModifierRepairTinkerStationRecipe>> modifierRepair = RECIPE_SERIALIZERS.register("modifier_repair", () -> LoadableRecipeSerializer.of(ModifierRepairTinkerStationRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<ModifierRepairCraftingRecipe>> craftingModifierRepair = RECIPE_SERIALIZERS.register("crafting_modifier_repair", () -> LoadableRecipeSerializer.of(ModifierRepairCraftingRecipe.LOADER));
+  /** @deprecated use {@link MaterialRepairModule} */
+  @SuppressWarnings("removal")
+  @Deprecated(forRemoval = true)
+  public static final RegistryObject<RecipeSerializer<ModifierMaterialRepairRecipe>> modifierMaterialRepair = RECIPE_SERIALIZERS.register("modifier_material_repair", () -> LoadableRecipeSerializer.deprecated(ModifierMaterialRepairRecipe.LOADER, "use the tconstruct:material_repair modifier module instead"));
+  /** @deprecated use {@link MaterialRepairModule} */
+  @SuppressWarnings("removal")
+  @Deprecated(forRemoval = true)
+  public static final RegistryObject<RecipeSerializer<ModifierMaterialRepairKitRecipe>> craftingModifierMaterialRepair = RECIPE_SERIALIZERS.register("crafting_modifier_material_repair", () -> LoadableRecipeSerializer.deprecated(ModifierMaterialRepairKitRecipe.LOADER, "use the tconstruct:material_repair modifier module instead"));
+  // worktable
+  public static final RegistryObject<RecipeSerializer<ModifierRemovalRecipe>> removeModifierSerializer = RECIPE_SERIALIZERS.register("remove_modifier", () -> LoadableRecipeSerializer.of(ModifierRemovalRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<ExtractModifierRecipe>> extractModifierSerializer = RECIPE_SERIALIZERS.register("extract_modifier", () -> LoadableRecipeSerializer.of(ExtractModifierRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<ModifierSortingRecipe>> modifierSortingSerializer = RECIPE_SERIALIZERS.register("modifier_sorting", () -> LoadableRecipeSerializer.of(ModifierSortingRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<ModifierSetWorktableRecipe>> modifierSetWorktableSerializer = RECIPE_SERIALIZERS.register("modifier_set_worktable", () -> LoadableRecipeSerializer.of(ModifierSetWorktableRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<EnchantmentConvertingRecipe>> enchantmentConvertingSerializer = RECIPE_SERIALIZERS.register("enchantment_converting", () -> LoadableRecipeSerializer.of(EnchantmentConvertingRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<ToggleInteractionWorktableRecipe>> toggleInteractionSerializer = RECIPE_SERIALIZERS.register("toggle_interaction", () -> LoadableRecipeSerializer.of(ToggleInteractionWorktableRecipe.LOADER));
 
-    @SubscribeEvent
-    void gatherData(final GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput packOutput = generator.getPackOutput();
-        boolean server = event.includeServer();
-        generator.addProvider(server, new ModifierProvider(packOutput));
-        generator.addProvider(server, new ModifierRecipeProvider(packOutput));
-        generator.addProvider(server, new FluidEffectProvider(packOutput));
-        generator.addProvider(server, new ModifierTagProvider(packOutput, event.getExistingFileHelper()));
-        generator.addProvider(server, new EnchantmentToModifierProvider(packOutput));
-    }
+  // severing
+  public static final RegistryObject<RecipeSerializer<SeveringRecipe>> severingSerializer = RECIPE_SERIALIZERS.register("severing", () -> LoadableRecipeSerializer.of(SeveringRecipe.LOADER));
+  public static final RegistryObject<RecipeSerializer<AgeableSeveringRecipe>> ageableSeveringSerializer = RECIPE_SERIALIZERS.register("ageable_severing", () -> LoadableRecipeSerializer.of(AgeableSeveringRecipe.LOADER));
+  // special severing
+  public static final RegistryObject<SimpleRecipeSerializer<PlayerBeheadingRecipe>> playerBeheadingSerializer = RECIPE_SERIALIZERS.register("player_beheading", () -> new SimpleRecipeSerializer<>(PlayerBeheadingRecipe::new));
+  public static final RegistryObject<SimpleRecipeSerializer<SnowGolemBeheadingRecipe>> snowGolemBeheadingSerializer = RECIPE_SERIALIZERS.register("snow_golem_beheading", () -> new SimpleRecipeSerializer<>(SnowGolemBeheadingRecipe::new));
+  public static final RegistryObject<SimpleRecipeSerializer<MooshroomDemushroomingRecipe>> mooshroomDemushroomingSerializer = RECIPE_SERIALIZERS.register("mooshroom_demushrooming", () -> new SimpleRecipeSerializer<>(MooshroomDemushroomingRecipe::new));
+  public static final RegistryObject<SimpleRecipeSerializer<SheepShearingRecipe>> sheepShearing = RECIPE_SERIALIZERS.register("sheep_shearing", () -> new SimpleRecipeSerializer<>(SheepShearingRecipe::new));
 
-    /** Adds all relevant items to the creative tab, called by general */
-    public static void addTabItems(ItemDisplayParameters itemDisplayParameters, CreativeModeTab.Output output) {
-        output.accept(silkyCloth);
-        // dragon scale is handled by world
-        output.accept(emeraldReinforcement);
-        output.accept(slimesteelReinforcement);
-        output.accept(TinkerTables.pattern, TabVisibility.PARENT_TAB_ONLY); // extra listing of pattern, also in table as you need it for part builder usage
-        output.accept(ironReinforcement);
-        output.accept(searedReinforcement);
-        output.accept(goldReinforcement);
-        output.accept(cobaltReinforcement);
-        output.accept(obsidianReinforcement);
-        creativeSlotItem.get().addVariants(output::accept);
-        // modifier crystal is handled by tool parts tab
+  /**
+   * Loot
+   */
+  public static final RegistryObject<Codec<ModifierLootModifier>> modifierLootModifier = GLOBAL_LOOT_MODIFIERS.register("modifier_hook", () -> ModifierLootModifier.CODEC);
+  public static final RegistryObject<LootItemConditionType> hasModifierLootCondition = LOOT_CONDITIONS.register("has_modifier", () -> new LootItemConditionType(new HasModifierLootCondition.ConditionSerializer()));
+  public static final RegistryObject<LootItemFunctionType> modifierBonusFunction = LOOT_FUNCTIONS.register("modifier_bonus", () -> new LootItemFunctionType(new ModifierBonusLootFunction.Serializer()));
+  public static final RegistryObject<LootItemConditionType> chrysophiliteLootCondition = LOOT_CONDITIONS.register("has_chrysophilite", () -> new LootItemConditionType(ChrysophiliteLootCondition.SERIALIZER));
+  public static final RegistryObject<LootItemFunctionType> chrysophiliteBonusFunction = LOOT_FUNCTIONS.register("chrysophilite_bonus", () -> new LootItemFunctionType(ChrysophiliteBonusFunction.SERIALIZER));
+
+  /*
+   * Events
+   */
+
+  @SubscribeEvent
+  void registerSerializers(RegisterEvent event) {
+    if (event.getRegistryKey() == Registries.RECIPE_SERIALIZER) {
+      // combinations
+      FluidEffect.BLOCK_EFFECTS.register(getResource("conditional"), ConditionalFluidEffect.Block.LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("conditional"), ConditionalFluidEffect.Entity.LOADER);
+      FluidEffect.BLOCK_EFFECTS.register(getResource("scaling"), ScalingFluidEffect.BLOCK_LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("scaling"), ScalingFluidEffect.ENTITY_LOADER);
+      FluidEffect.BLOCK_EFFECTS.register(getResource("alternatives"), AlternativesFluidEffect.BLOCK_LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("alternatives"), AlternativesFluidEffect.ENTITY_LOADER);
+      FluidEffect.BLOCK_EFFECTS.register(getResource("sequence"), SequenceFluidEffect.BLOCK_LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("sequence"), SequenceFluidEffect.ENTITY_LOADER);
+      FluidEffect.BLOCK_EFFECTS.register(getResource("offset"), OffsetBlockFluidEffect.LOADER);
+      // simple
+      FluidEffect.ENTITY_EFFECTS.register(getResource("calcified"), StrongBonesModifier.FLUID_EFFECT.getLoader());
+      FluidEffect.ENTITY_EFFECTS.register(getResource("extinguish"), FluidEffect.EXTINGUISH_FIRE.getLoader());
+      FluidEffect.ENTITY_EFFECTS.register(getResource("teleport"), RandomTeleportFluidEffect.LOADER);
+      FluidEffect.BLOCK_EFFECTS.register(getResource("weather"), FluidEffect.WEATHER.getLoader());
+      // potions
+      FluidEffect.ENTITY_EFFECTS.register(getResource("cure_effects"), CureEffectsFluidEffect.LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("remove_effect"), RemoveEffectFluidEffect.LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("mob_effect"), MobEffectFluidEffect.LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("potion"), PotionFluidEffect.LOADER);
+      // misc
+      FluidEffect.ENTITY_EFFECTS.register(getResource("damage"), DamageFluidEffect.LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("restore_hunger"), RestoreHungerFluidEffect.LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("fire"), FireFluidEffect.LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("freeze"), FreezeFluidEffect.LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("award_stat"), AwardStatFluidEffect.LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("add_breath"), AddBreathFluidEffect.LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("push_entity"), PushEntityFluidEffect.LOADER);
+      FluidEffect.ENTITY_EFFECTS.register(getResource("interact"), EntityInteractFluidEffect.INSTANCE.getLoader());
+      // block
+      FluidEffect.BLOCK_EFFECTS.register(getResource("place_block"), PlaceBlockFluidEffect.LOADER);
+      FluidEffect.BLOCK_EFFECTS.register(getResource("break_block"), BreakBlockFluidEffect.LOADER);
+      FluidEffect.BLOCK_EFFECTS.register(getResource("remove_block"), FluidEffect.REMOVE_BLOCK.getLoader());
+      FluidEffect.BLOCK_EFFECTS.register(getResource("mob_effect_cloud"), MobEffectCloudFluidEffect.LOADER);
+      FluidEffect.BLOCK_EFFECTS.register(getResource("potion_cloud"), PotionCloudFluidEffect.LOADER);
+      FluidEffect.BLOCK_EFFECTS.register(getResource("move_block"), MoveBlocksFluidEffect.LOADER);
+      FluidEffect.BLOCK_EFFECTS.register(getResource("interact"), BlockInteractFluidEffect.INSTANCE.getLoader());
+      FluidEffect.BLOCK_EFFECTS.register(getResource("melt_block"), MeltBlockFluidEffect.LOADER);
+      // shared
+      FluidEffect.registerGeneral(getResource("drop_item"), DropItemFluidEffect.LOADER);
+      FluidEffect.registerGeneral(getResource("explosion"), ExplosionFluidEffect.LOADER);
+      FluidEffect.registerGeneral(getResource("set_block"), SetBlockFluidEffect.LOADER);
+      FluidEffect.registerGeneral(getResource("area_mob_effect"), AreaMobEffectFluidEffect.LOADER);
+
+
+      // modifier names, sometimes I wonder if I have too many registries for tiny JSON pieces
+      ModifierLevelDisplay.LOADER.register(getResource("default"), ModifierLevelDisplay.DEFAULT.getLoader());
+      ModifierLevelDisplay.LOADER.register(getResource("single_level"), ModifierLevelDisplay.SINGLE_LEVEL.getLoader());
+      ModifierLevelDisplay.LOADER.register(getResource("no_levels"), ModifierLevelDisplay.NO_LEVELS.getLoader());
+      ModifierLevelDisplay.LOADER.register(getResource("pluses"), ModifierLevelDisplay.PLUSES.getLoader());
+      ModifierLevelDisplay.LOADER.register(getResource("unique"), UniqueForLevels.LOADER);
+
+      // modifier modules //
+      ModifierModule.LOADER.register(getResource("empty"), ModifierModule.EMPTY.getLoader());
+      // armor
+      ModifierModule.LOADER.register(getResource("max_armor_attribute"), MaxArmorAttributeModule.LOADER);
+      ModifierModule.LOADER.register(getResource("effect_immunity"), EffectImmunityModule.LOADER);
+      ModifierModule.LOADER.register(getResource("mob_disguise"), MobDisguiseModule.LOADER);
+      ModifierModule.LOADER.register(getResource("block_damage"), BlockDamageSourceModule.LOADER);
+      ModifierModule.LOADER.register(getResource("cover_ground"), CoverGroundWalkerModule.LOADER);
+      ModifierModule.LOADER.register(getResource("protection"), ProtectionModule.LOADER);
+      ModifierModule.LOADER.register(getResource("replace_fluid"), ReplaceBlockWalkerModule.LOADER);
+      ModifierModule.LOADER.register(getResource("tool_action_walk_transform"), ToolActionWalkerTransformModule.LOADER);
+      // behavior
+      ModifierModule.LOADER.register(getResource("attribute"), AttributeModule.LOADER);
+      ModifierModule.LOADER.register(getResource("reduce_tool_damage"), ReduceToolDamageModule.LOADER);
+      // TODO 1.21: rename to repair_factor?
+      ModifierModule.LOADER.register(getResource("repair"), RepairModule.LOADER);
+      ModifierModule.LOADER.register(getResource("material_repair"), MaterialRepairModule.LOADER);
+      ModifierModule.LOADER.register(getResource("show_offhand"), ShowOffhandModule.LOADER);
+      ModifierModule.LOADER.register(getResource("tool_actions"), ToolActionsModule.LOADER);
+      ModifierModule.LOADER.register(getResource("tool_action_transform"), ToolActionTransformModule.LOADER);
+      // build
+      ModifierModule.LOADER.register(getResource("conditional_stat"), ConditionalStatModule.LOADER);
+      ModifierModule.LOADER.register(getResource("modifier_slot"), ModifierSlotModule.LOADER);
+      ModifierModule.LOADER.register(getResource("rarity"), RarityModule.LOADER);
+      ModifierModule.LOADER.register(getResource("requirements"), ModifierRequirementsModule.LOADER);
+      ModifierModule.LOADER.register(getResource("swappable_slot"), SwappableSlotModule.LOADER);
+      ModifierModule.LOADER.register(getResource("swappable_bonus_slot"), SwappableSlotModule.BonusSlot.LOADER);
+      ModifierModule.LOADER.register(getResource("swappable_tool_traits"), SwappableToolTraitsModule.LOADER);
+      ModifierModule.LOADER.register(getResource("stat_boost"), StatBoostModule.LOADER);
+      ModifierModule.LOADER.register(getResource("stat_copy"), StatCopyModule.LOADER);
+      ModifierModule.LOADER.register(getResource("set_stat"), SetStatModule.LOADER);
+      ModifierModule.LOADER.register(getResource("trait"), ModifierTraitModule.LOADER);
+      ModifierModule.LOADER.register(getResource("volatile_flag"), VolatileFlagModule.LOADER);
+      ModifierModule.LOADER.register(getResource("volatile_int"), VolatileIntModule.LOADER);
+      // combat
+      ModifierModule.LOADER.register(getResource("conditional_melee_damage"), ConditionalMeleeDamageModule.LOADER);
+      ModifierModule.LOADER.register(getResource("conditional_power"), ConditionalPowerModule.LOADER);
+      ModifierModule.LOADER.register(getResource("knockback"), KnockbackModule.LOADER);
+      ModifierModule.LOADER.register(getResource("melee_attribute"), MeleeAttributeModule.LOADER);
+      ModifierModule.LOADER.register(getResource("mob_effect"), MobEffectModule.LOADER);
+      ModifierModule.LOADER.register(getResource("projectile_explosion"), ProjectileExplosionModule.LOADER);
+      ModifierModule.LOADER.register(getResource("sling_force"), SlingForceModule.LOADER);
+      // display
+      ModifierModule.LOADER.register(getResource("durability_color"), DurabilityBarColorModule.LOADER);
+      ModifierModule.LOADER.register(getResource("variant_name"), ModifierVariantNameModule.LOADER);
+      ModifierModule.LOADER.register(getResource("variant_color"), ModifierVariantColorModule.LOADER);
+      ModifierModule.LOADER.register(getResource("material_variant_color"), MaterialVariantColorModule.LOADER);
+      // enchantment
+      ModifierModule.LOADER.register(getResource("constant_enchantment"), EnchantmentModule.Constant.LOADER);
+      ModifierModule.LOADER.register(getResource("main_hand_harvest_enchantment"), EnchantmentModule.MainHandHarvest.LOADER);
+      ModifierModule.LOADER.register(getResource("armor_harvest_enchantment"), EnchantmentModule.ArmorHarvest.LOADER);
+      ModifierModule.LOADER.register(getResource("enchantment_ignoring_protection"), EnchantmentModule.Protection.LOADER);
+      ModifierModule.LOADER.register(getResource("weapon_looting"), LootingModule.Weapon.LOADER);
+      ModifierModule.LOADER.register(getResource("armor_looting"), LootingModule.Armor.LOADER);
+      // mining
+      ModifierModule.LOADER.register(getResource("conditional_mining_speed"), ConditionalMiningSpeedModule.LOADER);
+      // capacity
+      ModifierModule.LOADER.register(getResource("capacity_bar"), CapacityBarModule.LOADER);
+      ModifierModule.LOADER.register(getResource("durability_as_capacity"), DurabilityAsCapacityModule.LOADER);
+      ModifierModule.LOADER.register(getResource("durability_shield"), DurabilityShieldModule.LOADER);
+      ModifierModule.LOADER.register(getResource("loot_to_capacity"), LootToCapacityModule.LOADER);
+      ModifierModule.LOADER.register(getResource("damage_to_capacity"), DamageToCapacityModule.LOADER);
+      ModifierModule.LOADER.register(getResource("time_to_capacity"), TimeToCapacityModule.LOADER);
+      ModifierModule.LOADER.register(getResource("launch_capacity"), LaunchCapacityModule.LOADER);
+      ModifierModule.LOADER.register(getResource("mining_capacity"), MiningCapacityModule.LOADER);
+      // technical
+      ModifierModule.LOADER.register(getResource("armor_level"), ArmorLevelModule.LOADER);
+      ModifierModule.LOADER.register(getResource("max_armor_stat"), MaxArmorStatModule.LOADER);
+      ModifierModule.LOADER.register(getResource("armor_stat"), ArmorStatModule.LOADER);
+      ModifierModule.LOADER.register(getResource("inventory"), InventoryModule.LOADER);
+      ModifierModule.LOADER.register(getResource("inventory_menu"), InventoryMenuModule.LOADER);
+      ModifierModule.LOADER.register(getResource("inventory_slot_menu"), InventorySlotMenuModule.INSTANCE.getLoader());
+
+      // special
+      ModifierModule.LOADER.register(getResource("smelting"), SmeltingModule.LOADER);
+      ModifierModule.LOADER.register(getResource("melting"), MeltingModule.LOADER);
+      ModifierModule.LOADER.register(getResource("place_glow"), PlaceGlowModule.LOADER);
+      ModifierModule.LOADER.register(getResource("glow_walker"), GlowWalkerModule.LOADER);
+      ModifierModule.LOADER.register(getResource("campfire_extinguish"), ExtinguishCampfireModule.LOADER);
+      ModifierModule.LOADER.register(getResource("lightspeed_attribute"), LightspeedAttributeModule.LOADER);
+      ModifierModule.LOADER.register(getResource("zoom"), ZoomModule.LOADER);
+      ModifierModule.LOADER.register(getResource("brush"), BrushModule.LOADER);
+      ModifierModule.LOADER.register(getResource("fishing"), FishingModule.LOADER);
+      ModifierModule.LOADER.register(getResource("throwing"), ThrowingModule.LOADER);
+      ModifierModule.LOADER.register(getResource("damage_on_unequip"), DamageOnUnequipModule.LOADER);
+      ModifierModule.LOADER.register(getResource("damage_on_shoot"), DamageOnShootModule.LOADER);
+      ModifierModule.LOADER.register(getResource("share_durability"), ShareDurabilityModule.LOADER);
+      ModifierModule.LOADER.register(getResource("projectile_place_glow"), ProjectilePlaceGlowModule.LOADER);
+      ModifierModule.LOADER.register(getResource("craft_count"), CraftCountModule.LOADER);
+      ModifierModule.LOADER.register(getResource("tipped"), TippedModule.LOADER);
+      ModifierModule.LOADER.register(getResource("projectile_bounce"), ProjectileBounceModule.LOADER);
+      // overslime
+      ModifierModule.LOADER.register(getResource("overgrowth"), OvergrowthModule.LOADER);
+      ModifierModule.LOADER.register(getResource("overburn"), OverburnModule.INSTANCE.getLoader());
+      ModifierModule.LOADER.register(getResource("overshield"), OvershieldModule.LOADER);
+      // combat
+      ModifierModule.LOADER.register(getResource("fiery_attack"), FieryAttackModule.LOADER);
+      ModifierModule.LOADER.register(getResource("freezing_attack"), FreezingAttackModule.LOADER);
+      ModifierModule.LOADER.register(getResource("spilling"), SpillingModule.LOADER);
+      ModifierModule.LOADER.register(getResource("channeling"), ChannelingModule.LOADER);
+      ModifierModule.LOADER.register(getResource("smashing"), SmashingModule.LOADER);
+      // armor
+      ModifierModule.LOADER.register(getResource("enderclearance"), EnderclearanceModule.LOADER);
+      ModifierModule.LOADER.register(getResource("depth_protection"), DepthProtectionModule.LOADER);
+      ModifierModule.LOADER.register(getResource("flame_barrier"), FlameBarrierModule.LOADER);
+      ModifierModule.LOADER.register(getResource("kinetic"), KineticModule.LOADER);
+      ModifierModule.LOADER.register(getResource("recurrent_protection"), RecurrentProtectionModule.LOADER);
+      ModifierModule.LOADER.register(getResource("shield_strap"), ShieldStrapModule.LOADER);
+      ModifierModule.LOADER.register(getResource("tool_belt"), ToolBeltModule.LOADER);
+      ModifierModule.LOADER.register(getResource("minimap"), MinimapModule.LOADER);
+      ModifierModule.LOADER.register(getResource("sleeves"), SleevesModule.LOADER);
+      // counterattack
+      ModifierModule.LOADER.register(getResource("thorns"), ThornsModule.LOADER);
+      ModifierModule.LOADER.register(getResource("fiery_counter"), FieryCounterModule.LOADER);
+      ModifierModule.LOADER.register(getResource("freezing_counter"), FreezingCounterModule.LOADER);
+      ModifierModule.LOADER.register(getResource("knockback_counter"), KnockbackCounterModule.LOADER);
+      // ranged
+      ModifierModule.LOADER.register(getResource("restrict_projectile_angle"), RestrictAngleModule.LOADER);
+      ModifierModule.LOADER.register(getResource("bulk_quiver"), BulkQuiverModule.LOADER);
+      ModifierModule.LOADER.register(getResource("trick_quiver"), TrickQuiverModule.LOADER);
+      ModifierModule.LOADER.register(getResource("quiver_inventory"), QuiverInventoryModule.LOADER);
+      ModifierModule.LOADER.register(getResource("infinity"), InfinityModule.LOADER);
+      ModifierModule.LOADER.register(getResource("punch"), PunchModule.LOADER);
+      ModifierModule.LOADER.register(getResource("reverse_punch"), ReversePunchModule.LOADER);
+      ModifierModule.LOADER.register(getResource("arrow_pierce"), ArrowPierceModule.LOADER);
+      ModifierModule.LOADER.register(getResource("projectile_gravity"), ProjectileGravityModule.LOADER);
+      ModifierModule.LOADER.register(getResource("projectile_fuse"), ProjectileFuseModule.LOADER);
+      ModifierModule.LOADER.register(getResource("projectile_attract_mobs"), ProjectileAttractMobsModule.LOADER);
+      // compat
+      ModifierModule.LOADER.register(getResource("the_one_probe"), TheOneProbeModule.INSTANCE.getLoader());
+      ModifierModule.LOADER.register(getResource("headlight"), HeadlightModule.LOADER);
+
+      // modifier predicates
+      ModifierPredicate.LOADER.register(getResource("single"), SingleModifierPredicate.LOADER);
+      ModifierPredicate.LOADER.register(getResource("tag"), TagModifierPredicate.LOADER);
+      ModifierPredicate.LOADER.register(getResource("slot_type"), SlotTypeModifierPredicate.LOADER);
+
+
+      // variables
+      // block
+      BlockVariable.LOADER.register(getResource("constant"), BlockVariable.Constant.LOADER);
+      BlockVariable.LOADER.register(getResource("conditional"), ConditionalBlockVariable.LOADER);
+      BlockVariable.LOADER.register(getResource("blast_resistance"), BlockVariable.BLAST_RESISTANCE.getLoader());
+      BlockVariable.LOADER.register(getResource("hardness"), BlockVariable.HARDNESS.getLoader());
+      BlockVariable.LOADER.register(getResource("state_property"), StatePropertyVariable.LOADER);
+      // entity
+      EntityVariable.LOADER.register(getResource("constant"), EntityVariable.Constant.LOADER);
+      EntityVariable.LOADER.register(getResource("conditional"), ConditionalEntityVariable.LOADER);
+      EntityVariable.LOADER.register(getResource("health"), EntityVariable.HEALTH.getLoader());
+      EntityVariable.LOADER.register(getResource("height"), EntityVariable.HEIGHT.getLoader());
+      EntityVariable.LOADER.register(getResource("attribute"), AttributeEntityVariable.LOADER);
+      EntityVariable.LOADER.register(getResource("effect_level"), EntityEffectLevelVariable.LOADER);
+      EntityVariable.LOADER.register(getResource("light"), EntityLightVariable.LOADER);
+      EntityVariable.LOADER.register(getResource("equipment_count"), EquipmentCountEntityVariable.LOADER);
+      EntityVariable.LOADER.register(getResource("biome_temperature"), EntityVariable.BIOME_TEMPERATURE.getLoader());
+      EntityVariable.LOADER.register(getResource("water"), EntityVariable.WATER.getLoader());
+      // tool
+      ToolVariable.LOADER.register(getResource("constant"), ToolVariable.Constant.LOADER);
+      ToolVariable.register(getResource("tool_conditional"), ConditionalToolVariable.LOADER);
+      ToolVariable.register(getResource("tool_durability"), ToolVariable.CURRENT_DURABILITY.getLoader());
+      ToolVariable.register(getResource("tool_lost_durability"), ToolVariable.CURRENT_DAMAGE.getLoader());
+      ToolVariable.register(getResource("tool_stat"), ToolStatVariable.LOADER);
+      ToolVariable.register(getResource("stat_multiplier"), StatMultiplierVariable.LOADER);
+      ToolVariable.register(getResource("mod_data"), ModDataVariable.LOADER);
+      ToolVariable.register(getResource("modifier_level"), ModifierLevelVariable.LOADER);
+      // stat
+      ConditionalStatVariable.LOADER.register(getResource("constant"), ConditionalStatVariable.Constant.LOADER);
+      ConditionalStatVariable.register(getResource("entity"), EntityConditionalStatVariable.LOADER);
+      // melee
+      MeleeVariable.LOADER.register(getResource("constant"), MeleeVariable.Constant.LOADER);
+      MeleeVariable.LOADER.register(getResource("entity"), EntityMeleeVariable.LOADER);
+      // power
+      PowerVariable.LOADER.register(getResource("constant"), PowerVariable.Constant.LOADER);
+      PowerVariable.LOADER.register(getResource("entity"), EntityPowerVariable.LOADER);
+      PowerVariable.LOADER.register(getResource("persistent_data"), PersistentDataPowerVariable.LOADER);
+      // mining speed
+      MiningSpeedVariable.LOADER.register(getResource("constant"), MiningSpeedVariable.Constant.LOADER);
+      MiningSpeedVariable.LOADER.register(getResource("block"), BlockMiningSpeedVariable.LOADER);
+      MiningSpeedVariable.LOADER.register(getResource("block_light"), BlockLightVariable.LOADER);
+      MiningSpeedVariable.LOADER.register(getResource("biome_temperature"), BlockTemperatureVariable.LOADER);
+      // protection
+      ProtectionVariable.LOADER.register(getResource("constant"), ProtectionVariable.Constant.LOADER);
+      ProtectionVariable.LOADER.register(getResource("entity"), EntityProtectionVariable.LOADER);
     }
+  }
+
+  @SubscribeEvent
+  void commonSetup(final FMLCommonSetupEvent event) {
+    TinkerDataCapability.register();
+    PersistentDataCapability.register();
+    EntityModifierCapability.register();
+    // by default, we support modifying projectiles (arrows or fireworks mainly, but maybe other stuff). other entities may come in the future
+    EntityModifierCapability.registerEntityPredicate(entity -> entity instanceof Projectile);
+  }
+
+  @SubscribeEvent
+  void gatherData(final GatherDataEvent event) {
+    DataGenerator generator = event.getGenerator();
+    PackOutput packOutput = generator.getPackOutput();
+    boolean server = event.includeServer();
+    generator.addProvider(server, new ModifierProvider(packOutput));
+    generator.addProvider(server, new ModifierRecipeProvider(packOutput));
+    generator.addProvider(server, new FluidEffectProvider(packOutput));
+    generator.addProvider(server, new ModifierTagProvider(packOutput, event.getExistingFileHelper()));
+    generator.addProvider(server, new EnchantmentToModifierProvider(packOutput));
+  }
+
+  /** Adds all relevant items to the creative tab, called by general */
+  public static void addTabItems(ItemDisplayParameters itemDisplayParameters, CreativeModeTab.Output output) {
+    output.accept(silkyCloth);
+    // dragon scale is handled by world
+    output.accept(emeraldReinforcement);
+    output.accept(slimesteelReinforcement);
+    output.accept(TinkerTables.pattern, TabVisibility.PARENT_TAB_ONLY); // extra listing of pattern, also in table as you need it for part builder usage
+    output.accept(ironReinforcement);
+    output.accept(searedReinforcement);
+    output.accept(goldReinforcement);
+    output.accept(cobaltReinforcement);
+    output.accept(obsidianReinforcement);
+    creativeSlotItem.get().addVariants(output::accept);
+    // modifier crystal is handled by tool parts tab
+  }
 }

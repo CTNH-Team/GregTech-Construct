@@ -6,12 +6,10 @@
       "item": "botania:spawner_claw"
     }
   ],
-  "level": {
-    "max": 5
-  },
+  "level": 1,
   "result": "tconstruct:manafix",
   "slots": {
-    "upgrades": 1
+    "abilities": 1
   },
   "tools": {
     "tag": "tconstruct:modifiable"
