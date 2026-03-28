@@ -118,7 +118,7 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
     this.tag(GENERAL_UPGRADES).add(
       ModifierIds.diamond, ModifierIds.emerald, ModifierIds.netherite,
       ModifierIds.reinforced, ModifierIds.overforced, ModifierIds.soulbound,
-      ModifierIds.experienced, TinkerModifiers.terrarecover.getId(), TinkerModifiers.magnetic.getId(), ModifierIds.scope, ModifierIds.zoom,
+      ModifierIds.experienced, TinkerModifiers.manafix.getId(), TinkerModifiers.terrarecover.getId(), TinkerModifiers.magnetic.getId(), ModifierIds.scope, ModifierIds.zoom,
       ModifierIds.tank, ModifierIds.smelting, TinkerModifiers.fireprimer.getId())
         .addOptional(ModifierIds.theOneProbe);
 
@@ -150,7 +150,7 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
     // abilities
     this.tag(GENERAL_ABILITIES).add(
       TinkerModifiers.expanded.getId(), ModifierIds.gilded, TinkerModifiers.unbreakable.getId(),
-      ModifierIds.luck, TinkerModifiers.melting.getId(), TinkerModifiers.manafix.getId());
+      ModifierIds.luck, TinkerModifiers.melting.getId());
     this.tag(MELEE_ABILITIES).add(
       TinkerModifiers.blocking.getId(), TinkerModifiers.parrying.getId(),
       TinkerModifiers.dualWielding.getId(), ModifierIds.spilling);
