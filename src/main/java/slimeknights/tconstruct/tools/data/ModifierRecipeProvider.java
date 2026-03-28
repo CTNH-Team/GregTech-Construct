@@ -288,8 +288,8 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .save(consumer, prefix(TinkerModifiers.magnetic, upgradeFolder));
         ModifierRecipeBuilder.modifier(TinkerModifiers.manafix)
                 .addInput(BotaniaBlocks.spawnerClaw)
-                .setMaxLevel(1)
-                .setSlots(SlotType.ABILITY, 1)
+                .setMaxLevel(5)
+                .setSlots(SlotType.UPGRADE, 1)
                 .setTools(ingredientFromTags(TinkerTags.Items.MODIFIABLE))
                 .save(consumer, prefix(TinkerModifiers.manafix, upgradeFolder));
         // armor has a max level of 1 per piece, so 4 total
