@@ -19,12 +19,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.TieredItem;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ClipContext;
@@ -42,12 +37,7 @@ import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.behavior.AttributesModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.behavior.EnchantmentModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.display.DurabilityDisplayModifierHook;
-import slimeknights.tconstruct.library.modifiers.hook.interaction.EntityInteractionModifierHook;
-import slimeknights.tconstruct.library.modifiers.hook.interaction.GeneralInteractionModifierHook;
-import slimeknights.tconstruct.library.modifiers.hook.interaction.InteractionSource;
-import slimeknights.tconstruct.library.modifiers.hook.interaction.InventoryTickModifierHook;
-import slimeknights.tconstruct.library.modifiers.hook.interaction.SlotStackModifierHook;
-import slimeknights.tconstruct.library.modifiers.hook.interaction.UsingToolModifierHook;
+import slimeknights.tconstruct.library.modifiers.hook.interaction.*;
 import slimeknights.tconstruct.library.modifiers.modules.build.RarityModule;
 import slimeknights.tconstruct.library.tools.IndestructibleItemEntity;
 import slimeknights.tconstruct.library.tools.capability.ToolCapabilityProvider;
@@ -55,11 +45,7 @@ import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
 import slimeknights.tconstruct.library.tools.definition.module.display.ToolNameHook;
 import slimeknights.tconstruct.library.tools.definition.module.mining.IsEffectiveToolHook;
 import slimeknights.tconstruct.library.tools.definition.module.mining.MiningSpeedToolHook;
-import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
-import slimeknights.tconstruct.library.tools.helper.ToolBuildHandler;
-import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
-import slimeknights.tconstruct.library.tools.helper.ToolHarvestLogic;
-import slimeknights.tconstruct.library.tools.helper.TooltipUtil;
+import slimeknights.tconstruct.library.tools.helper.*;
 import slimeknights.tconstruct.library.tools.nbt.IModDataView;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
@@ -601,4 +587,20 @@ public class ModifiableItem extends TieredItem implements IModifiableDisplay {
   public static BlockHitResult blockRayTrace(Level worldIn, Player player, ClipContext.Fluid fluidMode) {
     return Item.getPlayerPOVHitResult(worldIn, player, fluidMode);
   }
+  /* GT */
+
+    public boolean hasCraftingRemainingItem(ItemStack stack) {
+        return stack.getTag() == null || canBeDepleted() ;
+    }
+
+    public ItemStack getCraftingRemainingItem(ItemStack stack) {
+        if (!hasCraftingRemainingItem(stack)) {
+            return ItemStack.EMPTY;
+        }
+//        if (getDamage(stack)>=getMaxDamage(stack)) {
+//            return stack;
+//        }
+        setDamage(stack, getDamage(stack) + 2);
+        return stack;
+    }
 }
