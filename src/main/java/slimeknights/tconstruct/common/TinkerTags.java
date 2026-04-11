@@ -534,6 +534,14 @@ public class TinkerTags {
     /** Fluids in this tag won't show in JEI */
     public static final TagKey<Item> HIDDEN_IN_RECIPE_VIEWERS = hiddenFromRecipeViewers(Registries.ITEM);
 
+      /*
+       * GT Tool tags
+       */
+      public static final TagKey<Item> HAMMERS = common("tools/hammers");
+      public static final TagKey<Item> CRAFTING_HAMMERS = gtceu("tools/crafting_hammers");
+      public static final TagKey<Item> WIRE_CUTTERS = common("tools/wire_cutters");
+      public static final TagKey<Item> CRAFTING_WIRE_CUTTERS = gtceu("tools/crafting_wire_cutters");
+
     /** Makes a tag in the tinkers domain */
     private static TagKey<Item> local(String name) {
       return TagKey.create(Registries.ITEM, getResource(name));
@@ -543,6 +551,14 @@ public class TinkerTags {
     private static TagKey<Item> common(String name) {
       return TagKey.create(Registries.ITEM, commonResource(name));
     }
+
+      /** Makes a tag in the gtceu domain */
+      private static TagKey<Item> gtceu(String name) {
+          return TagKey.create(Registries.ITEM, gtceuResource(name));
+      }
+      public static ResourceLocation gtceuResource(String name) {
+          return new ResourceLocation("gtceu", name);
+      }
   }
 
   public static class Fluids {

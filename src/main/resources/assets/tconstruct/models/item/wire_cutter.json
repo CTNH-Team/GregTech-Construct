@@ -1,0 +1,25 @@
+{
+  "loader": "tconstruct:tool",
+  "parent": "tconstruct:item/base/axe",
+  "textures": {
+    "head":    "tconstruct:item/tool/pickaxe/head",
+    "handle":  "tconstruct:item/tool/pickaxe/handle",
+    "binding": "tconstruct:item/tool/pickaxe/binding"
+  },
+  "modifier_roots": [ "tconstruct:item/tool/pickaxe/modifiers/" ],
+  "parts": [
+    { "name": "head",    "index": 0 },
+    { "name": "handle",  "index": 1 },
+    { "name": "binding", "index": 2 }
+  ],
+  "overrides": [
+    {
+      "predicate": { "tconstruct:broken": 1 },
+      "model": "tconstruct:item/tool/pickaxe/broken"
+    },
+    {
+      "predicate": { "tconstruct:charging": 2 },
+      "model": "tconstruct:item/tool/pickaxe/blocking"
+    }
+  ]
+}
