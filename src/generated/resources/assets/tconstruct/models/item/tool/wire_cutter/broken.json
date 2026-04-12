@@ -3,8 +3,8 @@
   "parent": "tconstruct:item/base/axe",
   "textures": {
     "head": "tconstruct:item/tool/wire_cutter/head_broken",
-    "handle": "tconstruct:item/tool/wire_cutter/handle",
-    "binding": "tconstruct:item/tool/wire_cutter/binding"
+    "binding": "tconstruct:item/tool/wire_cutter/binding",
+    "handle": "tconstruct:item/tool/wire_cutter/handle"
   },
   "modifier_roots": [
     "tconstruct:item/tool/wire_cutter/modifiers/broken/",
@@ -16,11 +16,11 @@
       "index": 0
     },
     {
-      "name": "handle",
+      "name": "binding",
       "index": 1
     },
     {
-      "name": "binding",
+      "name": "handle",
       "index": 2
     }
   ]

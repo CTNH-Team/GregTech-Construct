@@ -396,6 +396,9 @@ public final class TinkerTools extends TinkerModule {
         acceptTool(output, scythe);
         acceptTool(output, cleaver);
 
+        // gt
+        acceptTool(output, wireCutter);
+
         // ranged tools
         acceptTool(output, crossbow);
         acceptTool(output, longbow);

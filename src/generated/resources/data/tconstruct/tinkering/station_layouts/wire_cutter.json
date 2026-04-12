@@ -10,17 +10,8 @@
       },
       "icon": "tconstruct:small_blade",
       "translation_key": "item.tconstruct.small_blade",
-      "x": 46,
-      "y": 24
-    },
-    {
-      "filter": {
-        "item": "tconstruct:tool_handle"
-      },
-      "icon": "tconstruct:tool_handle",
-      "translation_key": "item.tconstruct.tool_handle",
-      "x": 30,
-      "y": 56
+      "x": 54,
+      "y": 20
     },
     {
       "filter": {
@@ -28,10 +19,19 @@
       },
       "icon": "tconstruct:tool_binding",
       "translation_key": "item.tconstruct.tool_binding",
-      "x": 14,
-      "y": 40
+      "x": 38,
+      "y": 36
+    },
+    {
+      "filter": {
+        "item": "tconstruct:tough_handle"
+      },
+      "icon": "tconstruct:tough_handle",
+      "translation_key": "item.tconstruct.tough_handle",
+      "x": 18,
+      "y": 56
     }
   ],
-  "sortIndex": 12,
+  "sortIndex": 6,
   "translation_key": "item.tconstruct.wire_cutter"
 }

@@ -422,8 +422,8 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // parts
                 .module(PartStatsModule.parts()
                         .part(smallBlade)
-                        .part(toolHandle)
-                        .part(toolBinding).build())
+                        .part(toolBinding)
+                        .part(toughHandle).build())
                 .module(defaultThreeParts)
                 // stats
                 .module(new SetStatsModule(StatsNBT.builder()

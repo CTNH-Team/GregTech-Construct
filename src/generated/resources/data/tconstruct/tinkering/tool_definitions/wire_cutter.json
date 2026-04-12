@@ -4,8 +4,8 @@
       "type": "tconstruct:part_stats",
       "parts": [
         "tconstruct:small_blade",
-        "tconstruct:tool_handle",
-        "tconstruct:tool_binding"
+        "tconstruct:tool_binding",
+        "tconstruct:tough_handle"
       ],
       "primary_part": 0
     },
