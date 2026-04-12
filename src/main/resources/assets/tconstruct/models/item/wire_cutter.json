@@ -2,11 +2,11 @@
   "loader": "tconstruct:tool",
   "parent": "tconstruct:item/base/axe",
   "textures": {
-    "head":    "tconstruct:item/tool/pickaxe/head",
-    "handle":  "tconstruct:item/tool/pickaxe/handle",
-    "binding": "tconstruct:item/tool/pickaxe/binding"
+    "head":    "tconstruct:item/tool/wire_cutter/head",
+    "handle":  "tconstruct:item/tool/wire_cutter/handle",
+    "binding": "tconstruct:item/tool/wire_cutter/binding"
   },
-  "modifier_roots": [ "tconstruct:item/tool/pickaxe/modifiers/" ],
+  "modifier_roots": [ "tconstruct:item/tool/wire_cutter/modifiers/" ],
   "parts": [
     { "name": "head",    "index": 0 },
     { "name": "handle",  "index": 1 },
@@ -15,11 +15,11 @@
   "overrides": [
     {
       "predicate": { "tconstruct:broken": 1 },
-      "model": "tconstruct:item/tool/pickaxe/broken"
+      "model": "tconstruct:item/tool/wire_cutter/broken"
     },
     {
       "predicate": { "tconstruct:charging": 2 },
-      "model": "tconstruct:item/tool/pickaxe/blocking"
+      "model": "tconstruct:item/tool/wire_cutter/blocking"
     }
   ]
 }

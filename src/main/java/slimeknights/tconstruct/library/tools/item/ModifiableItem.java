@@ -600,6 +600,7 @@ public class ModifiableItem extends TieredItem implements IModifiableDisplay {
 //        if (getDamage(stack)>=getMaxDamage(stack)) {
 //            return stack;
 //        }
+        stack = stack.copy();
         setDamage(stack, getDamage(stack) + 2);
         return stack;
     }

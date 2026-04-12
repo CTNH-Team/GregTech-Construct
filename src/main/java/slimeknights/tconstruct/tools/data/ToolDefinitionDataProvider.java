@@ -431,7 +431,9 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                         .set(ToolStats.ATTACK_SPEED, 1.2f).build()))
                 .smallToolStartingSlots()
                 // traits
-                .module(ToolTraitsModule.builder().trait(TinkerModifiers.silkyShears).build())
+                .module(ToolTraitsModule.builder()
+                        .trait(TinkerModifiers.silkyShears)
+                        .trait(TinkerModifiers.shears).build())
                 // harvest
                 .module(ToolActionsModule.of(WIRE_CUTTER_DIG, WIRE_CUTTER_CONNECT))
                 .module(IsEffectiveModule.tag(CustomTags.MINEABLE_WITH_WIRE_CUTTER))
