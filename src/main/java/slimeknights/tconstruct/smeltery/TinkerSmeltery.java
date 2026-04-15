@@ -368,6 +368,7 @@ public final class TinkerSmeltery extends TinkerModule {
   public static final CastItemObject smallAxeHeadCast = ITEMS.registerCast(TinkerToolParts.smallAxeHead, ITEM_PROPS);
   public static final CastItemObject smallBladeCast = ITEMS.registerCast(TinkerToolParts.smallBlade, ITEM_PROPS);
   public static final CastItemObject adzeHeadCast = ITEMS.registerCast(TinkerToolParts.adzeHead, ITEM_PROPS);
+  public static final CastItemObject wrenchHeadCast = ITEMS.registerCast(TinkerToolParts.wrenchHead, ITEM_PROPS);
   // large tool heads
   public static final CastItemObject hammerHeadCast   = ITEMS.registerCast(TinkerToolParts.hammerHead, ITEM_PROPS);
   public static final CastItemObject broadBladeCast   = ITEMS.registerCast(TinkerToolParts.broadBlade, ITEM_PROPS);
@@ -391,7 +392,6 @@ public final class TinkerSmeltery extends TinkerModule {
   public static final CastItemObject mailleCast = ITEMS.registerCast(TinkerToolParts.maille, ITEM_PROPS);
   // dummy cast creation items
   public static final EnumObject<ArmorItem.Type,DummyMaterialItem> dummyPlating = ITEMS.registerEnum(ArmorItem.Type.values(), "plating_dummy", type -> new DummyMaterialItem(ITEM_PROPS));
-
 
   /*
    * Recipe
@@ -596,6 +596,7 @@ public final class TinkerSmeltery extends TinkerModule {
     accept(output, getter, smallAxeHeadCast);
     accept(output, getter, smallBladeCast);
     accept(output, getter, adzeHeadCast);
+    accept(output, getter, wrenchHeadCast);
     // large heads
     accept(output, getter, hammerHeadCast);
     accept(output, getter, broadAxeHeadCast);

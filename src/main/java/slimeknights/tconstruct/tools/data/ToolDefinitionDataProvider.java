@@ -443,7 +443,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
         define(ToolDefinitions.WRENCH)
                 // parts
                 .module(PartStatsModule.parts()
-                        .part(largePlate)
+                        .part(wrenchHead)
                         .part(toolBinding)
                         .part(toughHandle).build())
                 .module(defaultThreeParts)

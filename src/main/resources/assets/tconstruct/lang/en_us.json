@@ -322,6 +322,7 @@
   "pattern.tconstruct.adze_head": "Adze Head",
   "pattern.tconstruct.bow_limb": "Bow Limb",
   "pattern.tconstruct.arrow_head": "Arrow Head",
+  "pattern.tconstruct.wrench_head": "Wrench Head",
 
   "_comment": "Large Head Patterns",
 
@@ -373,6 +374,7 @@
   "item.tconstruct.bow_limb_cast": "Bow Limb Gold Cast",
   "item.tconstruct.bow_grip_cast": "Bow Grip Gold Cast",
   "item.tconstruct.adze_head_cast": "Adze Head Gold Cast",
+  "item.tconstruct.wrench_head_cast": "Wrench Head Gold Cast",
 
   "_comment": "Large Head Gold Casts",
 
@@ -424,6 +426,7 @@
   "item.tconstruct.bow_limb_sand_cast": "Bow Limb Sand Cast",
   "item.tconstruct.bow_grip_sand_cast": "Bow Grip Sand Cast",
   "item.tconstruct.adze_head_sand_cast": "Adze Head Sand Cast",
+  "item.tconstruct.wrench_head_sand_cast": "Wrench Head Sand Cast",
 
   "_comment": "Large Head Sand Casts",
 
@@ -474,6 +477,7 @@
   "item.tconstruct.bow_limb_red_sand_cast": "Bow Limb Red Sand Cast",
   "item.tconstruct.bow_grip_red_sand_cast": "Bow Grip Red Sand Cast",
   "item.tconstruct.adze_head_red_sand_cast": "Adze Head Red Sand Cast",
+  "item.tconstruct.pick_wrench_red_sand_cast": "Wrench Head Red Sand Cast",
 
   "_comment": "Large Head Red Sand Casts",
 
@@ -1198,6 +1202,7 @@
 
   "item.tconstruct.pick_head": "Pick Head",
   "item.tconstruct.hammer_head": "Hammer Head",
+  "item.tconstruct.wrench_head": "Wrench Head",
 
   "item.tconstruct.small_axe_head": "Small Axe Head",
   "item.tconstruct.broad_axe_head": "Broad Axe Head",
