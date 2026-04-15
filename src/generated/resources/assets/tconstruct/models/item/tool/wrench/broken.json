@@ -2,13 +2,13 @@
   "loader": "tconstruct:tool",
   "parent": "tconstruct:item/base/axe",
   "textures": {
-    "head": "tconstruct:item/tool/wire_cutter/head_broken",
-    "binding": "tconstruct:item/tool/wire_cutter/binding",
-    "handle": "tconstruct:item/tool/wire_cutter/handle"
+    "head": "tconstruct:item/tool/wrench/head_broken",
+    "binding": "tconstruct:item/tool/wrench/binding",
+    "handle": "tconstruct:item/tool/wrench/handle"
   },
   "modifier_roots": [
-    "tconstruct:item/tool/wire_cutter/modifiers/broken/",
-    "tconstruct:item/tool/wire_cutter/modifiers/"
+    "tconstruct:item/tool/wrench/modifiers/broken/",
+    "tconstruct:item/tool/wrench/modifiers/"
   ],
   "parts": [
     {

@@ -78,10 +78,7 @@ import slimeknights.tconstruct.library.tools.definition.module.weapon.SweepWeapo
 import slimeknights.tconstruct.library.tools.helper.ModifierLootingHandler;
 import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
 import slimeknights.tconstruct.library.tools.helper.ToolBuildHandler;
-import slimeknights.tconstruct.library.tools.item.IModifiable;
-import slimeknights.tconstruct.library.tools.item.ModifiableArrowItem;
-import slimeknights.tconstruct.library.tools.item.ModifiableItem;
-import slimeknights.tconstruct.library.tools.item.ModifiableShurikenItem;
+import slimeknights.tconstruct.library.tools.item.*;
 import slimeknights.tconstruct.library.tools.item.armor.ModifiableArmorItem;
 import slimeknights.tconstruct.library.tools.item.armor.MultilayerArmorItem;
 import slimeknights.tconstruct.library.tools.item.ranged.ModifiableBowItem;
@@ -160,7 +157,8 @@ public final class TinkerTools extends TinkerModule {
     public static final ItemObject<ModifiableItem> sword = ITEMS.register("sword", () -> new ModifiableSwordItem(UNSTACKABLE_PROPS, ToolDefinitions.SWORD));
     public static final ItemObject<ModifiableItem> cleaver = ITEMS.register("cleaver", () -> new ModifiableSwordItem(UNSTACKABLE_PROPS, ToolDefinitions.CLEAVER));
 
-    public static final ItemObject<ModifiableItem> wireCutter = ITEMS.register("wire_cutter", () -> new ModifiableItem(UNSTACKABLE_PROPS, ToolDefinitions.WIRE_CUTTER));
+    public static final ItemObject<ModifiableItem> wireCutter = ITEMS.register("wire_cutter", () -> new ModifiableGTToolItem(UNSTACKABLE_PROPS, ToolDefinitions.WIRE_CUTTER));
+    public static final ItemObject<ModifiableItem> wrench = ITEMS.register("wrench", () -> new ModifiableGTToolItem(UNSTACKABLE_PROPS, ToolDefinitions.WRENCH));
 
     public static final ItemObject<ModifiableCrossbowItem> crossbow = ITEMS.register("crossbow", () -> new ModifiableCrossbowItem(UNSTACKABLE_PROPS, ToolDefinitions.CROSSBOW));
     public static final ItemObject<ModifiableBowItem> longbow = ITEMS.register("longbow", () -> new ModifiableBowItem(UNSTACKABLE_PROPS, ToolDefinitions.LONGBOW, true));
@@ -398,6 +396,7 @@ public final class TinkerTools extends TinkerModule {
 
         // gt
         acceptTool(output, wireCutter);
+        acceptTool(output, wrench);
 
         // ranged tools
         acceptTool(output, crossbow);
