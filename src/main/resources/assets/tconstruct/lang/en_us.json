@@ -1130,6 +1130,9 @@
   "item.tconstruct.sword": "Sword",
   "item.tconstruct.cleaver": "Cleaver",
 
+  "item.tconstruct.wire_cutter": "Wire Cutter",
+  "item.tconstruct.wrench": "Wrench",
+
   "item.tconstruct.crossbow": "Crossbow",
   "item.tconstruct.longbow": "Longbow",
   "item.tconstruct.fishing_rod": "Fishing Rod",
@@ -1247,6 +1250,9 @@
   "item.tconstruct.dagger.description": "The Dagger is a light weapon, capable of quick strikes from either hand.",
   "item.tconstruct.sword.description": "The Sword is a universal weapon. Sweep attacks keep enemy hordes at bay.\nAlso good against cobwebs!",
   "item.tconstruct.cleaver.description": "The Cleaver is a weapon for a smeltery master. High range attacks keep cut through the toughest of foes.",
+
+  "item.tconstruct.wire_cutter.description": "The Wire cutter is used to cut or connect wires.\nAlso can be used as regular scissors.",
+  "item.tconstruct.wrench.description": "No more need to say.",
 
   "item.tconstruct.crossbow.description": "The Crossbow is a light ranged weapon, capable of quickly firing arrows and fireworks.",
   "item.tconstruct.longbow.description": "The Longbow is a broad ranged weapon, capable of firing arrows with precision over long distances.",

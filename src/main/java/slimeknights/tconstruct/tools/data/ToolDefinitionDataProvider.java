@@ -44,8 +44,7 @@ import slimeknights.tconstruct.tools.stats.*;
 
 import java.util.List;
 
-import static com.gregtechceu.gtceu.common.data.item.GTToolActions.WIRE_CUTTER_CONNECT;
-import static com.gregtechceu.gtceu.common.data.item.GTToolActions.WIRE_CUTTER_DIG;
+import static com.gregtechceu.gtceu.common.data.item.GTToolActions.*;
 import static slimeknights.tconstruct.tools.TinkerToolParts.*;
 
 public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvider {
@@ -417,7 +416,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(swordHarvest)
                 .module(new SweepWeaponAttack(2));
 
-        // pickaxes
+        // gt tools
         define(ToolDefinitions.WIRE_CUTTER)
                 // parts
                 .module(PartStatsModule.parts()
@@ -441,6 +440,25 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // faster tool name logic
                 .module(FixedMaterialToolName.FIRST);
 
+        define(ToolDefinitions.WRENCH)
+                // parts
+                .module(PartStatsModule.parts()
+                        .part(largePlate)
+                        .part(toolBinding)
+                        .part(toughHandle).build())
+                .module(defaultThreeParts)
+                // stats
+                .module(new SetStatsModule(StatsNBT.builder()
+                        .set(ToolStats.ATTACK_DAMAGE, 1f)
+                        .set(ToolStats.ATTACK_SPEED, 1.4f).build()))
+                .smallToolStartingSlots()
+                // traits
+                // harvest
+                .module(ToolActionsModule.of(WRENCH_CONFIGURE_ALL, WRENCH_CONFIGURE_ITEMS, WRENCH_CONFIGURE_FLUIDS, WRENCH_ROTATE, WRENCH_DIG, WRENCH_DISMANTLE, WRENCH_CONNECT))
+                .module(IsEffectiveModule.tag(CustomTags.MINEABLE_WITH_WRENCH))
+                .module(BoxAOEIterator.builder(0, 0, 0).addDepth(2).addHeight(1).direction(IBoxExpansion.PITCH).build())
+                // faster tool name logic
+                .module(FixedMaterialToolName.FIRST);
 
         // bows
         define(ToolDefinitions.CROSSBOW)
