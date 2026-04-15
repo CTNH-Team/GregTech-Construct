@@ -94,7 +94,10 @@ public final class TinkerToolParts extends TinkerModule {
   public static final EnumObject<ArmorItem.Type,ToolPartItem> plating = ITEMS.registerEnum(ArmorItem.Type.values(), "plating", type -> new ToolPartItem(ITEM_PROPS, PlatingMaterialStats.TYPES.get(type.ordinal()).getId()));
   public static final ItemObject<ToolPartItem> maille = ITEMS.register("maille", () -> new ToolPartItem(ITEM_PROPS, StatlessMaterialStats.MAILLE.getIdentifier()));
   public static final ItemObject<ToolPartItem> shieldCore = ITEMS.register("shield_core", () -> new ToolPartItem(ITEM_PROPS, StatlessMaterialStats.SHIELD_CORE.getIdentifier()));
-
+  //gtceu
+  //todo:剪线头一套
+  //todo:扳手头金质沙质铸模材质
+  public static final ItemObject<ToolPartItem> wrenchHead = ITEMS.register("wrench_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
   // block entities
   public static final RegistryObject<BlockEntityType<MaterialBlockEntity>> materialBlock = BLOCK_ENTITIES.register("material_block", MaterialBlockEntity::new, fakeStorageBlock);
 

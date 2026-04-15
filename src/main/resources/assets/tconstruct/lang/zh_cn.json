@@ -322,6 +322,7 @@
   "pattern.tconstruct.adze_head": "锛头",
   "pattern.tconstruct.bow_limb": "弓臂",
   "pattern.tconstruct.arrow_head": "箭头",
+  "pattern.tconstruct.wrench_head": "扳手头",
 
   "_comment": "Large Head Patterns",
 
@@ -373,6 +374,7 @@
   "item.tconstruct.bow_limb_cast": "弓臂金质铸模",
   "item.tconstruct.bow_grip_cast": "弓把金质铸模",
   "item.tconstruct.adze_head_cast": "锛头金质铸模",
+  "item.tconstruct.wrench_head_cast": "扳手头金质铸模",
 
   "_comment": "Large Head Gold Casts",
 
@@ -424,6 +426,7 @@
   "item.tconstruct.bow_limb_sand_cast": "弓臂沙子铸模",
   "item.tconstruct.bow_grip_sand_cast": "弓把沙子铸模",
   "item.tconstruct.adze_head_sand_cast": "锛头沙子铸模",
+  "item.tconstruct.wrench_head_sand_cast": "扳手头沙子铸模",
 
   "_comment": "Large Head Sand Casts",
 
@@ -474,6 +477,7 @@
   "item.tconstruct.bow_limb_red_sand_cast": "弓臂红沙铸模",
   "item.tconstruct.bow_grip_red_sand_cast": "弓把红沙铸模",
   "item.tconstruct.adze_head_red_sand_cast": "锛头红沙铸模",
+  "item.tconstruct.wrench_head_red_sand_cast": "扳手头红沙铸模",
 
   "_comment": "Large Head Red Sand Casts",
 
@@ -1199,6 +1203,7 @@
 
   "item.tconstruct.pick_head": "镐头",
   "item.tconstruct.hammer_head": "锤头",
+  "item.tconstruct.wrench_head": "扳手头",
 
   "item.tconstruct.small_axe_head": "小型斧刃",
   "item.tconstruct.broad_axe_head": "板斧刃",

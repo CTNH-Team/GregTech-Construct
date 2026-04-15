@@ -288,6 +288,18 @@
         ]
       },
       "trigger": "minecraft:inventory_changed"
+    },
+    "wrench_head": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:wrench_head_cast"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
   "display": {
@@ -332,6 +344,9 @@
     ],
     [
       "adze_head"
+    ],
+    [
+      "wrench_head"
     ],
     [
       "hammer_head"

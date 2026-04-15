@@ -148,7 +148,7 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
                 .build();
         defineModifiable(TinkerTools.wrench)
                 .sortIndex(SORT_HARVEST)
-                .addInputItem(TinkerToolParts.largePlate,  50, 24)
+                .addInputItem(TinkerToolParts.wrenchHead,  50, 24)
                 .addInputItem(TinkerToolParts.toolBinding, 34, 40)
                 .addInputItem(TinkerToolParts.toughHandle,  14, 60)
                 .build();

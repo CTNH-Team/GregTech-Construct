@@ -14,6 +14,7 @@ import slimeknights.mantle.registration.object.ItemObject;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.registration.CastItemObject;
 import slimeknights.tconstruct.library.tools.part.MaterialItem;
+import slimeknights.tconstruct.library.tools.part.ToolPartItem;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.tools.TinkerToolParts;
 import slimeknights.tconstruct.world.TinkerWorld;
@@ -67,7 +68,8 @@ public class TinkerItemModelProvider extends ItemModelProvider {
     });
     part(TinkerToolParts.maille);
     part(TinkerToolParts.shieldCore, "armor/plate/shield/core");
-
+    //gtceu
+    part(TinkerToolParts.wrenchHead, "wrench/head");
     // gauges
     generated(TinkerSmeltery.copperGauge, "block/smeltery/io/gauge");
     generated(TinkerSmeltery.obsidianGauge, "block/foundry/io/gauge");
@@ -91,6 +93,7 @@ public class TinkerItemModelProvider extends ItemModelProvider {
     cast(TinkerSmeltery.smallAxeHeadCast);
     cast(TinkerSmeltery.smallBladeCast);
     cast(TinkerSmeltery.adzeHeadCast);
+    cast(TinkerSmeltery.wrenchHeadCast);
     // large heads
     cast(TinkerSmeltery.hammerHeadCast);
     cast(TinkerSmeltery.broadBladeCast);
