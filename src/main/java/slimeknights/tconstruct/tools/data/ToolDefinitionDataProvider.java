@@ -420,7 +420,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
         define(ToolDefinitions.WIRE_CUTTER)
                 // parts
                 .module(PartStatsModule.parts()
-                        .part(smallBlade)
+                        .part(wireCutterHead)
                         .part(toolBinding)
                         .part(toughHandle).build())
                 .module(defaultThreeParts)

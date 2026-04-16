@@ -6,10 +6,10 @@
   "input_slots": [
     {
       "filter": {
-        "item": "tconstruct:small_blade"
+        "item": "tconstruct:wire_cutter_head"
       },
-      "icon": "tconstruct:small_blade",
-      "translation_key": "item.tconstruct.small_blade",
+      "icon": "tconstruct:wire_cutter_head",
+      "translation_key": "item.tconstruct.wire_cutter_head",
       "x": 54,
       "y": 20
     },
