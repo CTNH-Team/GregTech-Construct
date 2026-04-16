@@ -393,7 +393,8 @@ public class ItemTagProvider extends ItemTagsProvider {
                         TinkerToolParts.toolBinding.get(), TinkerToolParts.toughBinding.get(),
                         TinkerToolParts.toolHandle.get(), TinkerToolParts.toughHandle.get(),
                         TinkerToolParts.bowLimb.get(), TinkerToolParts.bowGrip.get(), TinkerToolParts.bowstring.get(),
-                        TinkerToolParts.maille.get(), TinkerToolParts.shieldCore.get(), TinkerToolParts.wrenchHead.get())
+                        TinkerToolParts.maille.get(), TinkerToolParts.shieldCore.get(),
+                        TinkerToolParts.wrenchHead.get(), TinkerToolParts.wireCutterHead.get())
                 .add(TinkerToolParts.plating.values().toArray(new Item[0]));
         // tag for the part chest items
         this.tag(TinkerTags.Items.CHEST_PARTS).addTag(TinkerTags.Items.TOOL_PARTS).add(TinkerSmeltery.dummyPlating.values().toArray(new Item[0]));

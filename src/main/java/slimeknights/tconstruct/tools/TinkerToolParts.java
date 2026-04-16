@@ -28,12 +28,7 @@ import slimeknights.tconstruct.tools.item.FakeIngotItem;
 import slimeknights.tconstruct.tools.item.FakeStorageBlockItem;
 import slimeknights.tconstruct.tools.item.ModifierCrystalItem;
 import slimeknights.tconstruct.tools.item.RepairKitItem;
-import slimeknights.tconstruct.tools.stats.GripMaterialStats;
-import slimeknights.tconstruct.tools.stats.HandleMaterialStats;
-import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
-import slimeknights.tconstruct.tools.stats.LimbMaterialStats;
-import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
-import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
+import slimeknights.tconstruct.tools.stats.*;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -95,9 +90,8 @@ public final class TinkerToolParts extends TinkerModule {
   public static final ItemObject<ToolPartItem> maille = ITEMS.register("maille", () -> new ToolPartItem(ITEM_PROPS, StatlessMaterialStats.MAILLE.getIdentifier()));
   public static final ItemObject<ToolPartItem> shieldCore = ITEMS.register("shield_core", () -> new ToolPartItem(ITEM_PROPS, StatlessMaterialStats.SHIELD_CORE.getIdentifier()));
   //gtceu
-  //todo:剪线头一套
-  //todo:扳手头金质沙质铸模材质
   public static final ItemObject<ToolPartItem> wrenchHead = ITEMS.register("wrench_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
+  public static final ItemObject<ToolPartItem> wireCutterHead = ITEMS.register("wire_cutter_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
   // block entities
   public static final RegistryObject<BlockEntityType<MaterialBlockEntity>> materialBlock = BLOCK_ENTITIES.register("material_block", MaterialBlockEntity::new, fakeStorageBlock);
 

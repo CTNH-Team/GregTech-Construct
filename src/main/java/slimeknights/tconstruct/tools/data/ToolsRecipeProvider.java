@@ -425,7 +425,10 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
         partRecipes(consumer, TinkerToolParts.broadBlade,   TinkerSmeltery.broadBladeCast,   8, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.bowLimb,      TinkerSmeltery.bowLimbCast,      2, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.bowGrip,      TinkerSmeltery.bowGripCast,      2, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.wrenchHead, TinkerSmeltery.wrenchHeadCast, 2, partFolder, castFolder);
+
+        partRecipes(consumer, TinkerToolParts.wrenchHead,     TinkerSmeltery.wrenchHeadCast,     2, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.wireCutterHead, TinkerSmeltery.wireCutterHeadCast, 2, partFolder, castFolder);
+
         // arrow patterns are just a reusable pattern for the part builder
         ItemCastingRecipeBuilder.tableRecipe(TinkerSmeltery.arrowCast)
                 .setFluidAndTime(TinkerFluids.moltenGold, FluidValues.INGOT)

@@ -142,7 +142,7 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
         //gt
         defineModifiable(TinkerTools.wireCutter)
                 .sortIndex(SORT_HARVEST)
-                .addInputItem(TinkerToolParts.smallBlade,  54, 20)
+                .addInputItem(TinkerToolParts.wireCutterHead,  54, 20)
                 .addInputItem(TinkerToolParts.toolBinding, 38, 36)
                 .addInputItem(TinkerToolParts.toughHandle,  18, 56)
                 .build();

@@ -3,7 +3,7 @@
     {
       "type": "tconstruct:part_stats",
       "parts": [
-        "tconstruct:small_blade",
+        "tconstruct:wire_cutter_head",
         "tconstruct:tool_binding",
         "tconstruct:tough_handle"
       ],
