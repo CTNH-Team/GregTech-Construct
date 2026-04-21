@@ -3,14 +3,14 @@
   "parent": "tconstruct:item/base/axe",
   "textures": {
     "head":    "tconstruct:item/tool/wrench/head",
-    "binding": "tconstruct:item/tool/wrench/binding",
-    "handle":  "tconstruct:item/tool/wrench/handle"
+    "handle":  "tconstruct:item/tool/wrench/handle",
+    "binding": "tconstruct:item/tool/wrench/binding"
   },
   "modifier_roots": [ "tconstruct:item/tool/wrench/modifiers/" ],
   "parts": [
     { "name": "head",    "index": 0 },
-    { "name": "binding", "index": 1 },
-    { "name": "handle",  "index": 2 }
+    { "name": "binding", "index": 2 },
+    { "name": "handle",  "index": 1 }
   ],
   "overrides": [
     {

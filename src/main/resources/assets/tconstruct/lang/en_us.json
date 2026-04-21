@@ -323,6 +323,8 @@
   "pattern.tconstruct.bow_limb": "Bow Limb",
   "pattern.tconstruct.arrow_head": "Arrow Head",
   "pattern.tconstruct.wrench_head": "Wrench Head",
+  "pattern.tconstruct.wire_cutter_head": "Cutter Head",
+  "pattern.tconstruct.file_head": "File Head",
 
   "_comment": "Large Head Patterns",
 
@@ -375,6 +377,8 @@
   "item.tconstruct.bow_grip_cast": "Bow Grip Gold Cast",
   "item.tconstruct.adze_head_cast": "Adze Head Gold Cast",
   "item.tconstruct.wrench_head_cast": "Wrench Head Gold Cast",
+  "item.tconstruct.wire_cutter_head_cast": "Cutter Head Gold Cast",
+  "item.tconstruct.file_head_cast": "File Head Gold Cast",
 
   "_comment": "Large Head Gold Casts",
 
@@ -427,6 +431,8 @@
   "item.tconstruct.bow_grip_sand_cast": "Bow Grip Sand Cast",
   "item.tconstruct.adze_head_sand_cast": "Adze Head Sand Cast",
   "item.tconstruct.wrench_head_sand_cast": "Wrench Head Sand Cast",
+  "item.tconstruct.wire_cutter_head_sand_cast": "Cutter Head Sand Cast",
+  "item.tconstruct.file_head_sand_cast": "File Head Sand Cast",
 
   "_comment": "Large Head Sand Casts",
 
@@ -477,7 +483,9 @@
   "item.tconstruct.bow_limb_red_sand_cast": "Bow Limb Red Sand Cast",
   "item.tconstruct.bow_grip_red_sand_cast": "Bow Grip Red Sand Cast",
   "item.tconstruct.adze_head_red_sand_cast": "Adze Head Red Sand Cast",
-  "item.tconstruct.pick_wrench_red_sand_cast": "Wrench Head Red Sand Cast",
+  "item.tconstruct.wrench_head_red_sand_cast": "Wrench Head Red Sand Cast",
+  "item.tconstruct.wire_cutter_head_red_sand_cast": "Cutter Head Red Sand Cast",
+  "item.tconstruct.file_head_red_sand_cast": "File Head Red Sand Cast",
 
   "_comment": "Large Head Red Sand Casts",
 
@@ -1134,8 +1142,9 @@
   "item.tconstruct.sword": "Sword",
   "item.tconstruct.cleaver": "Cleaver",
 
-  "item.tconstruct.wire_cutter": "Wire Cutter",
   "item.tconstruct.wrench": "Wrench",
+  "item.tconstruct.wire_cutter": "Wire Cutter",
+  "item.tconstruct.file": "File",
 
   "item.tconstruct.crossbow": "Crossbow",
   "item.tconstruct.longbow": "Longbow",
@@ -1203,6 +1212,8 @@
   "item.tconstruct.pick_head": "Pick Head",
   "item.tconstruct.hammer_head": "Hammer Head",
   "item.tconstruct.wrench_head": "Wrench Head",
+  "item.tconstruct.wire_cutter_head": "Cutter Head",
+  "item.tconstruct.file_head": "File Head",
 
   "item.tconstruct.small_axe_head": "Small Axe Head",
   "item.tconstruct.broad_axe_head": "Broad Axe Head",
@@ -1256,8 +1267,9 @@
   "item.tconstruct.sword.description": "The Sword is a universal weapon. Sweep attacks keep enemy hordes at bay.\nAlso good against cobwebs!",
   "item.tconstruct.cleaver.description": "The Cleaver is a weapon for a smeltery master. High range attacks keep cut through the toughest of foes.",
 
-  "item.tconstruct.wire_cutter.description": "The Wire cutter is used to cut or connect wires.\nAlso can be used as regular scissors.",
   "item.tconstruct.wrench.description": "No more need to say.",
+  "item.tconstruct.wire_cutter.description": "The Wire cutter is used to cut or connect wires.\nAlso can be used as regular scissors.",
+  "item.tconstruct.file.description": "File the ingot into a rod, or file the bolt into a screw.\nFeel like not as useful as a lathe...",
 
   "item.tconstruct.crossbow.description": "The Crossbow is a light ranged weapon, capable of quickly firing arrows and fireworks.",
   "item.tconstruct.longbow.description": "The Longbow is a broad ranged weapon, capable of firing arrows with precision over long distances.",
