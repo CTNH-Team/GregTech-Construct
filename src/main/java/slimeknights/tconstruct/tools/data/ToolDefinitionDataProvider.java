@@ -417,12 +417,32 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(new SweepWeaponAttack(2));
 
         // gt tools
+
+        define(ToolDefinitions.WRENCH)
+                // parts
+                .module(PartStatsModule.parts()
+                        .part(wrenchHead)
+                        .part(toughHandle)
+                        .part(toolBinding).build())
+                .module(defaultThreeParts)
+                // stats
+                .module(new SetStatsModule(StatsNBT.builder()
+                        .set(ToolStats.ATTACK_DAMAGE, 1f)
+                        .set(ToolStats.ATTACK_SPEED, 1.4f).build()))
+                .smallToolStartingSlots()
+                // traits
+                // harvest
+                .module(ToolActionsModule.of(WRENCH_CONFIGURE_ALL, WRENCH_CONFIGURE_ITEMS, WRENCH_CONFIGURE_FLUIDS, WRENCH_ROTATE, WRENCH_DIG, WRENCH_DISMANTLE, WRENCH_CONNECT))
+                .module(IsEffectiveModule.tag(CustomTags.MINEABLE_WITH_WRENCH))
+                .module(BoxAOEIterator.builder(0, 0, 0).addDepth(2).addHeight(1).direction(IBoxExpansion.PITCH).build())
+                // faster tool name logic
+                .module(FixedMaterialToolName.FIRST);
         define(ToolDefinitions.WIRE_CUTTER)
                 // parts
                 .module(PartStatsModule.parts()
                         .part(wireCutterHead)
-                        .part(toolBinding)
-                        .part(toughHandle).build())
+                        .part(toughHandle)
+                        .part(toolBinding).build())
                 .module(defaultThreeParts)
                 // stats
                 .module(new SetStatsModule(StatsNBT.builder()
@@ -440,23 +460,22 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // faster tool name logic
                 .module(FixedMaterialToolName.FIRST);
 
-        define(ToolDefinitions.WRENCH)
+        define(ToolDefinitions.FILE)
                 // parts
                 .module(PartStatsModule.parts()
-                        .part(wrenchHead)
-                        .part(toolBinding)
+                        .part(fileHead)
                         .part(toughHandle).build())
-                .module(defaultThreeParts)
+                .module(defaultTwoParts)
                 // stats
                 .module(new SetStatsModule(StatsNBT.builder()
                         .set(ToolStats.ATTACK_DAMAGE, 1f)
                         .set(ToolStats.ATTACK_SPEED, 1.4f).build()))
                 .smallToolStartingSlots()
                 // traits
+                .module(ToolTraitsModule.builder().trait(ModifierIds.stripping).build())
                 // harvest
-                .module(ToolActionsModule.of(WRENCH_CONFIGURE_ALL, WRENCH_CONFIGURE_ITEMS, WRENCH_CONFIGURE_FLUIDS, WRENCH_ROTATE, WRENCH_DIG, WRENCH_DISMANTLE, WRENCH_CONNECT))
-                .module(IsEffectiveModule.tag(CustomTags.MINEABLE_WITH_WRENCH))
-                .module(BoxAOEIterator.builder(0, 0, 0).addDepth(2).addHeight(1).direction(IBoxExpansion.PITCH).build())
+                .module(ToolActionsModule.of(ToolActions.SWORD_DIG))
+                .module(swordHarvest)
                 // faster tool name logic
                 .module(FixedMaterialToolName.FIRST);
 

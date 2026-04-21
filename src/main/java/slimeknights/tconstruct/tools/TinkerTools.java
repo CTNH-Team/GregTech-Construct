@@ -159,6 +159,7 @@ public final class TinkerTools extends TinkerModule {
 
     public static final ItemObject<ModifiableItem> wireCutter = ITEMS.register("wire_cutter", () -> new ModifiableGTToolItem(UNSTACKABLE_PROPS, ToolDefinitions.WIRE_CUTTER));
     public static final ItemObject<ModifiableItem> wrench = ITEMS.register("wrench", () -> new ModifiableGTToolItem(UNSTACKABLE_PROPS, ToolDefinitions.WRENCH));
+    public static final ItemObject<ModifiableItem> file = ITEMS.register("file", () -> new ModifiableGTToolItem(UNSTACKABLE_PROPS, ToolDefinitions.FILE));
 
     public static final ItemObject<ModifiableCrossbowItem> crossbow = ITEMS.register("crossbow", () -> new ModifiableCrossbowItem(UNSTACKABLE_PROPS, ToolDefinitions.CROSSBOW));
     public static final ItemObject<ModifiableBowItem> longbow = ITEMS.register("longbow", () -> new ModifiableBowItem(UNSTACKABLE_PROPS, ToolDefinitions.LONGBOW, true));
@@ -395,8 +396,9 @@ public final class TinkerTools extends TinkerModule {
         acceptTool(output, cleaver);
 
         // gt
-        acceptTool(output, wireCutter);
         acceptTool(output, wrench);
+        acceptTool(output, wireCutter);
+        acceptTool(output, file);
 
         // ranged tools
         acceptTool(output, crossbow);

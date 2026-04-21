@@ -28,8 +28,9 @@ public final class ToolDefinitions {
     public static final ToolDefinition SWORD = ToolDefinition.create(TinkerTools.sword);
     public static final ToolDefinition CLEAVER = ToolDefinition.create(TinkerTools.cleaver);
     // gts
-    public static final ToolDefinition WIRE_CUTTER = ToolDefinition.create(TinkerTools.wireCutter);
     public static final ToolDefinition WRENCH = ToolDefinition.create(TinkerTools.wrench);
+    public static final ToolDefinition WIRE_CUTTER = ToolDefinition.create(TinkerTools.wireCutter);
+    public static final ToolDefinition FILE = ToolDefinition.create(TinkerTools.file);
 
     // ranged
     public static final ToolDefinition CROSSBOW = ToolDefinition.create(TinkerTools.crossbow);

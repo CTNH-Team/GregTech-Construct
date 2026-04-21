@@ -1,0 +1,23 @@
+{
+  "loader": "tconstruct:tool",
+  "parent": "tconstruct:item/base/axe",
+  "textures": {
+    "head":    "tconstruct:item/tool/file/head",
+    "handle":  "tconstruct:item/tool/file/handle"
+  },
+  "modifier_roots": [ "tconstruct:item/tool/file/modifiers/" ],
+  "parts": [
+    { "name": "head",    "index": 0 },
+    { "name": "handle",  "index": 1 }
+  ],
+  "overrides": [
+    {
+      "predicate": { "tconstruct:broken": 1 },
+      "model": "tconstruct:item/tool/file/broken"
+    },
+    {
+      "predicate": { "tconstruct:charging": 2 },
+      "model": "tconstruct:item/tool/file/blocking"
+    }
+  ]
+}

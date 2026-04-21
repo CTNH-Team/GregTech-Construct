@@ -323,6 +323,8 @@
   "pattern.tconstruct.bow_limb": "弓臂",
   "pattern.tconstruct.arrow_head": "箭头",
   "pattern.tconstruct.wrench_head": "扳手头",
+  "pattern.tconstruct.wire_cutter_head": "剪刀头",
+  "pattern.tconstruct.file_head": "锉刀头",
 
   "_comment": "Large Head Patterns",
 
@@ -375,6 +377,8 @@
   "item.tconstruct.bow_grip_cast": "弓把金质铸模",
   "item.tconstruct.adze_head_cast": "锛头金质铸模",
   "item.tconstruct.wrench_head_cast": "扳手头金质铸模",
+  "item.tconstruct.wire_cutter_head_cast": "剪刀头金质铸模",
+  "item.tconstruct.file_head_cast": "锉刀头金质铸模",
 
   "_comment": "Large Head Gold Casts",
 
@@ -427,6 +431,8 @@
   "item.tconstruct.bow_grip_sand_cast": "弓把沙子铸模",
   "item.tconstruct.adze_head_sand_cast": "锛头沙子铸模",
   "item.tconstruct.wrench_head_sand_cast": "扳手头沙子铸模",
+  "item.tconstruct.wire_cutter_head_sand_cast": "剪刀头沙子铸模",
+  "item.tconstruct.file_head_sand_cast": "锉刀头沙子铸模",
 
   "_comment": "Large Head Sand Casts",
 
@@ -478,6 +484,8 @@
   "item.tconstruct.bow_grip_red_sand_cast": "弓把红沙铸模",
   "item.tconstruct.adze_head_red_sand_cast": "锛头红沙铸模",
   "item.tconstruct.wrench_head_red_sand_cast": "扳手头红沙铸模",
+  "item.tconstruct.wire_cutter_head_red_sand_cast": "剪刀头红沙铸模",
+  "item.tconstruct.file_head_red_sand_cast": "锉刀头红沙铸模",
 
   "_comment": "Large Head Red Sand Casts",
 
@@ -1135,8 +1143,9 @@
   "item.tconstruct.sword": "剑",
   "item.tconstruct.cleaver": "劈刀",
 
-  "item.tconstruct.wire_cutter": "剪线钳",
   "item.tconstruct.wrench": "扳手",
+  "item.tconstruct.wire_cutter": "剪线钳",
+  "item.tconstruct.file": "锉刀",
 
   "item.tconstruct.crossbow": "弩",
   "item.tconstruct.longbow": "长弓",
@@ -1257,8 +1266,9 @@
   "item.tconstruct.sword.description": "剑是一种泛用型武器，其横扫攻击能阻截成群结队的敌人。\n还能高效清理蜘蛛网！",
   "item.tconstruct.cleaver.description": "劈刀是冶炼术大师必备的武器。再棘手的敌人在高伤害范围攻击的劈刀面前也难以脱身。",
 
-  "item.tconstruct.wire_cutter.description": "剪线钳用来剪断或者连接导线。\n也能当普通的剪刀用。",
   "item.tconstruct.wrench.description": "无需多言。",
+  "item.tconstruct.wire_cutter.description": "剪线钳用来剪断或者连接导线。\n也能当普通的剪刀用。",
+  "item.tconstruct.file.description": "将锭锉成杆，或者将螺栓锉成螺钉。\n萨拉托加（\n感觉不如车床...",
 
   "item.tconstruct.crossbow.description": "弩是一种轻型远程武器，能快速发射箭或烟花。",
   "item.tconstruct.longbow.description": "长弓是一种宽型远程武器，能对极远的目标实施精确打击。",

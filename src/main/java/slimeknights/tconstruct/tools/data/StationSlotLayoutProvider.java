@@ -143,14 +143,19 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
         defineModifiable(TinkerTools.wireCutter)
                 .sortIndex(SORT_HARVEST)
                 .addInputItem(TinkerToolParts.wireCutterHead,  54, 20)
-                .addInputItem(TinkerToolParts.toolBinding, 38, 36)
                 .addInputItem(TinkerToolParts.toughHandle,  18, 56)
+                .addInputItem(TinkerToolParts.toolBinding, 38, 36)
                 .build();
         defineModifiable(TinkerTools.wrench)
                 .sortIndex(SORT_HARVEST)
                 .addInputItem(TinkerToolParts.wrenchHead,  50, 24)
-                .addInputItem(TinkerToolParts.toolBinding, 34, 40)
                 .addInputItem(TinkerToolParts.toughHandle,  14, 60)
+                .addInputItem(TinkerToolParts.toolBinding, 34, 40)
+                .build();
+        defineModifiable(TinkerTools.file)
+                .sortIndex(SORT_HARVEST)
+                .addInputItem(TinkerToolParts.fileHead,  42, 32)
+                .addInputItem(TinkerToolParts.toughHandle,  22, 52)
                 .build();
 
         defineModifiable(TinkerTools.crossbow)

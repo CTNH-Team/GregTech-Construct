@@ -3,8 +3,8 @@
   "parent": "tconstruct:item/base/axe",
   "textures": {
     "head": "tconstruct:item/tool/wrench/head_broken",
-    "binding": "tconstruct:item/tool/wrench/binding",
-    "handle": "tconstruct:item/tool/wrench/handle"
+    "handle": "tconstruct:item/tool/wrench/handle",
+    "binding": "tconstruct:item/tool/wrench/binding"
   },
   "modifier_roots": [
     "tconstruct:item/tool/wrench/modifiers/broken/",
@@ -17,11 +17,11 @@
     },
     {
       "name": "binding",
-      "index": 1
+      "index": 2
     },
     {
       "name": "handle",
-      "index": 2
+      "index": 1
     }
   ]
 }
