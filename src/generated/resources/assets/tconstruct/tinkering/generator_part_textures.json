@@ -746,6 +746,78 @@
       "stat_type": "tconstruct:handle"
     },
     {
+      "path": "tconstruct:item/tool/wrench/head",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/wrench/head_broken",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/wrench/handle",
+      "stat_type": "tconstruct:handle"
+    },
+    {
+      "path": "tconstruct:item/tool/wrench/binding",
+      "stat_type": "tconstruct:binding"
+    },
+    {
+      "path": "tconstruct:item/tool/wrench/head_part",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/wire_cutter/head",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/wire_cutter/head_broken",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/wire_cutter/handle",
+      "stat_type": "tconstruct:handle"
+    },
+    {
+      "path": "tconstruct:item/tool/wire_cutter/binding",
+      "stat_type": "tconstruct:binding"
+    },
+    {
+      "path": "tconstruct:item/tool/wire_cutter/head_part",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/file/head",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/file/head_broken",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/file/handle",
+      "stat_type": "tconstruct:handle"
+    },
+    {
+      "path": "tconstruct:item/tool/file/head_part",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/screwdriver/head",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/screwdriver/head_broken",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/screwdriver/handle",
+      "stat_type": "tconstruct:handle"
+    },
+    {
+      "path": "tconstruct:item/tool/screwdriver/head_part",
+      "stat_type": "tconstruct:head"
+    },
+    {
       "path": "tconstruct:item/tool/crossbow/limb",
       "stat_type": "tconstruct:limb"
     },

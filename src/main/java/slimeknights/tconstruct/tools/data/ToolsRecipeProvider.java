@@ -106,6 +106,7 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
         toolBuilding(consumer, TinkerTools.wireCutter, folder);
         toolBuilding(consumer, TinkerTools.wrench, folder);
         toolBuilding(consumer, TinkerTools.file, folder);
+        toolBuilding(consumer, TinkerTools.screwdriver, folder);
         // bow
         toolBuilding(consumer, TinkerTools.crossbow, folder);
         toolBuilding(consumer, TinkerTools.longbow, folder);
@@ -427,9 +428,10 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
         partRecipes(consumer, TinkerToolParts.bowLimb,      TinkerSmeltery.bowLimbCast,      2, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.bowGrip,      TinkerSmeltery.bowGripCast,      2, partFolder, castFolder);
 
-        partRecipes(consumer, TinkerToolParts.wrenchHead,     TinkerSmeltery.wrenchHeadCast,     2, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.wireCutterHead, TinkerSmeltery.wireCutterHeadCast, 2, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.fileHead,       TinkerSmeltery.fileHeadCast,       2, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.wrenchHead,      TinkerSmeltery.wrenchHeadCast,      2, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.wireCutterHead,  TinkerSmeltery.wireCutterHeadCast,  2, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.fileHead,        TinkerSmeltery.fileHeadCast,        2, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.screwdriverHead, TinkerSmeltery.screwdriverHeadCast, 1, partFolder, castFolder);
 
         // arrow patterns are just a reusable pattern for the part builder
         ItemCastingRecipeBuilder.tableRecipe(TinkerSmeltery.arrowCast)

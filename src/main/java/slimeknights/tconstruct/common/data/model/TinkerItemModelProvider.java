@@ -67,10 +67,11 @@ public class TinkerItemModelProvider extends ItemModelProvider {
         });
         part(TinkerToolParts.maille);
         part(TinkerToolParts.shieldCore, "armor/plate/shield/core");
-        //gtceu
+        //gt
         part(TinkerToolParts.wrenchHead, "wrench/head_part");
         part(TinkerToolParts.wireCutterHead, "wire_cutter/head_part");
         part(TinkerToolParts.fileHead, "file/head_part");
+        part(TinkerToolParts.screwdriverHead, "screwdriver/head_part");
         // gauges
         generated(TinkerSmeltery.copperGauge, "block/smeltery/io/gauge");
         generated(TinkerSmeltery.obsidianGauge, "block/foundry/io/gauge");
@@ -94,9 +95,11 @@ public class TinkerItemModelProvider extends ItemModelProvider {
         cast(TinkerSmeltery.smallAxeHeadCast);
         cast(TinkerSmeltery.smallBladeCast);
         cast(TinkerSmeltery.adzeHeadCast);
+        //gt
         cast(TinkerSmeltery.wrenchHeadCast);
         cast(TinkerSmeltery.wireCutterHeadCast);
         cast(TinkerSmeltery.fileHeadCast);
+        cast(TinkerSmeltery.screwdriverHeadCast);
         // large heads
         cast(TinkerSmeltery.hammerHeadCast);
         cast(TinkerSmeltery.broadBladeCast);

@@ -325,6 +325,7 @@
   "pattern.tconstruct.wrench_head": "Wrench Head",
   "pattern.tconstruct.wire_cutter_head": "Cutter Head",
   "pattern.tconstruct.file_head": "File Head",
+  "pattern.tconstruct.screwdriver_head": "Screwdriver Head",
 
   "_comment": "Large Head Patterns",
 
@@ -379,6 +380,7 @@
   "item.tconstruct.wrench_head_cast": "Wrench Head Gold Cast",
   "item.tconstruct.wire_cutter_head_cast": "Cutter Head Gold Cast",
   "item.tconstruct.file_head_cast": "File Head Gold Cast",
+  "item.tconstruct.screwdriver_head_cast": "Screwdriver Head Gold Cast",
 
   "_comment": "Large Head Gold Casts",
 
@@ -433,6 +435,7 @@
   "item.tconstruct.wrench_head_sand_cast": "Wrench Head Sand Cast",
   "item.tconstruct.wire_cutter_head_sand_cast": "Cutter Head Sand Cast",
   "item.tconstruct.file_head_sand_cast": "File Head Sand Cast",
+  "item.tconstruct.screwdriver_head_sand_cast": "Screwdriver Head Sand Cast",
 
   "_comment": "Large Head Sand Casts",
 
@@ -486,6 +489,7 @@
   "item.tconstruct.wrench_head_red_sand_cast": "Wrench Head Red Sand Cast",
   "item.tconstruct.wire_cutter_head_red_sand_cast": "Cutter Head Red Sand Cast",
   "item.tconstruct.file_head_red_sand_cast": "File Head Red Sand Cast",
+  "item.tconstruct.screwdriver_head_red_sand_cast": "Screwdriver Head Red Sand Cast",
 
   "_comment": "Large Head Red Sand Casts",
 
@@ -981,6 +985,7 @@
   "fluid.tconstruct.manasteel": "Molten Manasteel",
   "fluid.tconstruct.flowing_manasteel": "Flowing Molten Manasteel",
   "item.tconstruct.manasteel_bucket": "Molten Manasteel Bucket",
+
   "block.tconstruct.terrasteel": "Molten Terrasteel",
   "fluid.tconstruct.terrasteel": "Molten Terrasteel",
   "fluid.tconstruct.flowing_terrasteel": "Flowing Molten Terrasteel",
@@ -1145,6 +1150,7 @@
   "item.tconstruct.wrench": "Wrench",
   "item.tconstruct.wire_cutter": "Wire Cutter",
   "item.tconstruct.file": "File",
+  "item.tconstruct.screwdriver": "Screwdriver",
 
   "item.tconstruct.crossbow": "Crossbow",
   "item.tconstruct.longbow": "Longbow",
@@ -1214,6 +1220,7 @@
   "item.tconstruct.wrench_head": "Wrench Head",
   "item.tconstruct.wire_cutter_head": "Cutter Head",
   "item.tconstruct.file_head": "File Head",
+  "item.tconstruct.screwdriver_head": "Screwdriver Head",
 
   "item.tconstruct.small_axe_head": "Small Axe Head",
   "item.tconstruct.broad_axe_head": "Broad Axe Head",
@@ -1269,7 +1276,8 @@
 
   "item.tconstruct.wrench.description": "No more need to say.",
   "item.tconstruct.wire_cutter.description": "The Wire cutter is used to cut or connect wires.\nAlso can be used as regular scissors.",
-  "item.tconstruct.file.description": "File the ingot into a rod, or file the bolt into a screw.\nFeel like not as useful as a lathe...",
+  "item.tconstruct.file.description": "File the ingot into a rod, or file the bolt into a screw.\nAlso can file off tree bark...",
+  "item.tconstruct.screwdriver.description": "The screwdriver is used to tighten screws.\nOr adjust the machine.",
 
   "item.tconstruct.crossbow.description": "The Crossbow is a light ranged weapon, capable of quickly firing arrows and fireworks.",
   "item.tconstruct.longbow.description": "The Longbow is a broad ranged weapon, capable of firing arrows with precision over long distances.",
@@ -2233,8 +2241,12 @@
 
   "material.tconstruct.manasteel": "Mana Steel",
   "material.tconstruct.manasteel.flavor": "Magic, isn't it amazing?",
+  "material.tconstruct.manasteel.encyclopedia": "Each level can consume 200 Mana every game tick to repair 1 durability for the tool.",
+  "material.tconstruct.manasteel.armor": "Each level can consume 200 Mana every game tick to repair 1 durability for the armor.",
   "material.tconstruct.terrasteel": "Terra Steel",
-  "material.tconstruct.terra.flavor": "Magic, isn't it amazing?",
+  "material.tconstruct.terrasteel.flavor": "Magic, isn't it amazing?",
+  "material.tconstruct.terrasteel.encyclopedia": "When held in hand, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
+  "material.tconstruct.terrasteel.armor": "When worn, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
 
   "__comment": "Tier 3 Integration Materials",
   "material.tconstruct.steel": "Steel",
@@ -2357,14 +2369,6 @@
   "modifier.tconstruct.overslime": "Overslime",
   "modifier.tconstruct.overslime.flavor": "Slimy!",
   "modifier.tconstruct.overslime.description": "Tool consumes overslime instead of durability, until it runs out! Not friendly towards tools lacking slime",
-
-  "material.tconstruct.manafix": "Mana Fix",
-  "material.tconstruct.manafix.flavor": "Manamechine! son!",
-  "material.tconstruct.manafix.description": "Use mana to repair damaged tools",
-
-  "material.tconstruct.terrarecover": "Terra Recover",
-  "material.tconstruct.terrarecover.flavor": "Magic stretcher",
-  "material.tconstruct.terrarecover.description": "Use mana to recover health",
 
   "_comment": "Tool or harvest",
   "modifier.tconstruct.experienced": "Experienced",
@@ -3253,6 +3257,10 @@
   "modifier.tconstruct.barkskin": "Barkskin",
   "modifier.tconstruct.barkskin.flavor":  "Shed bark",
   "modifier.tconstruct.barkskin.description": "Tool uses barkskin instead of durability until it runs out",
+  "modifier.tconstruct.manafix": "Mana Fix",
+  "modifier.tconstruct.manafix.flavor": "Manamechine! son!",
+  "modifier.tconstruct.manafix.description": "Use mana to repair damaged tools",
+
 
 
   "__comment": "Tier 3 Mod Compat Traits",
@@ -3295,6 +3303,9 @@
   "modifier.tconstruct.overworked": "Overworked",
   "modifier.tconstruct.overworked.flavor": "Underpaid",
   "modifier.tconstruct.overworked.description": "Increases amount of overslime restored from all sources",
+  "modifier.tconstruct.terrarecover": "Terra Recover",
+  "modifier.tconstruct.terrarecover.flavor": "Magic stretcher",
+  "modifier.tconstruct.terrarecover.description": "Use mana to recover health",
 
   "_comment": "Slimeskull traits",
   "modifier.tconstruct.self_destructive": "Self Destructive",
