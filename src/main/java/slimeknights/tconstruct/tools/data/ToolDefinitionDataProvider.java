@@ -475,7 +475,26 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(ToolTraitsModule.builder().trait(ModifierIds.stripping).build())
                 // harvest
                 .module(ToolActionsModule.of(ToolActions.SWORD_DIG))
-                .module(swordHarvest)
+                .module(IsEffectiveModule.tag(TinkerTags.Blocks.MINABLE_WITH_SWORD))
+                // faster tool name logic
+                .module(FixedMaterialToolName.FIRST);
+
+        define(ToolDefinitions.SCREWDRIVER)
+                // parts
+                .module(PartStatsModule.parts()
+                        .part(screwdriverHead)
+                        .part(toughHandle).build())
+                .module(defaultTwoParts)
+                // stats
+                .module(new SetStatsModule(StatsNBT.builder()
+                        .set(ToolStats.ATTACK_DAMAGE, 2f)
+                        .set(ToolStats.ATTACK_SPEED, 1.2f).build()))
+                .smallToolStartingSlots()
+                // traits
+                .module(ToolTraitsModule.builder().trait(ModifierIds.pierce, 1).build())
+                // harvest
+                .module(ToolActionsModule.of(ToolActions.SWORD_DIG, SCREWDRIVER_CONFIGURE, INTERACT_WITH_COVER))
+                .module(IsEffectiveModule.tag(TinkerTags.Blocks.MINABLE_WITH_SWORD))
                 // faster tool name logic
                 .module(FixedMaterialToolName.FIRST);
 

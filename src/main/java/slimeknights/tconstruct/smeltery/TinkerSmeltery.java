@@ -325,9 +325,11 @@ public final class TinkerSmeltery extends TinkerModule {
     public static final CastItemObject smallAxeHeadCast = ITEMS.registerCast(TinkerToolParts.smallAxeHead, ITEM_PROPS);
     public static final CastItemObject smallBladeCast = ITEMS.registerCast(TinkerToolParts.smallBlade, ITEM_PROPS);
     public static final CastItemObject adzeHeadCast = ITEMS.registerCast(TinkerToolParts.adzeHead, ITEM_PROPS);
+    //gt
     public static final CastItemObject wrenchHeadCast = ITEMS.registerCast(TinkerToolParts.wrenchHead, ITEM_PROPS);
     public static final CastItemObject wireCutterHeadCast = ITEMS.registerCast(TinkerToolParts.wireCutterHead, ITEM_PROPS);
     public static final CastItemObject fileHeadCast = ITEMS.registerCast(TinkerToolParts.fileHead, ITEM_PROPS);
+    public static final CastItemObject screwdriverHeadCast = ITEMS.registerCast(TinkerToolParts.screwdriverHead, ITEM_PROPS);
     // large tool heads
     public static final CastItemObject hammerHeadCast   = ITEMS.registerCast(TinkerToolParts.hammerHead, ITEM_PROPS);
     public static final CastItemObject broadBladeCast   = ITEMS.registerCast(TinkerToolParts.broadBlade, ITEM_PROPS);

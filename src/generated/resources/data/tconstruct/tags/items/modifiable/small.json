@@ -10,6 +10,7 @@
     "tconstruct:wire_cutter",
     "tconstruct:wrench",
     "tconstruct:file",
+    "tconstruct:screwdriver",
     "tconstruct:flint_and_brick"
   ]
 }

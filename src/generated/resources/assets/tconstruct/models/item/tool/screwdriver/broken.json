@@ -1,0 +1,22 @@
+{
+  "loader": "tconstruct:tool",
+  "parent": "tconstruct:item/base/axe",
+  "textures": {
+    "head": "tconstruct:item/tool/screwdriver/head_broken",
+    "handle": "tconstruct:item/tool/screwdriver/handle"
+  },
+  "modifier_roots": [
+    "tconstruct:item/tool/screwdriver/modifiers/broken/",
+    "tconstruct:item/tool/screwdriver/modifiers/"
+  ],
+  "parts": [
+    {
+      "name": "head",
+      "index": 0
+    },
+    {
+      "name": "handle",
+      "index": 1
+    }
+  ]
+}

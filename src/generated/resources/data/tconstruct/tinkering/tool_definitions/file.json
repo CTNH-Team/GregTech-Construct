@@ -56,14 +56,6 @@
       "tag": "forge:mineable/sword"
     },
     {
-      "type": "tconstruct:mining_speed_modifier",
-      "blocks": [
-        "minecraft:cobweb"
-      ],
-      "modifier": 7.5,
-      "predicate_type": "mantle:set"
-    },
-    {
       "type": "tconstruct:fixed_material_name",
       "index": 0
     }
