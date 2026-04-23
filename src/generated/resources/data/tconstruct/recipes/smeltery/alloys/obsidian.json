@@ -7,12 +7,12 @@
       "fluid": "minecraft:water"
     },
     {
-      "amount": 100,
+      "amount": 1000,
       "fluid": "minecraft:lava"
     }
   ],
   "result": {
-    "amount": 14,
+    "amount": 144,
     "fluid": "tconstruct:obsidian"
   },
   "temperature": 1000

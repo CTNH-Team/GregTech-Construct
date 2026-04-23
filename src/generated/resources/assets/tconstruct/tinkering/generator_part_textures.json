@@ -818,6 +818,22 @@
       "stat_type": "tconstruct:head"
     },
     {
+      "path": "tconstruct:item/tool/mallet/head",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/mallet/head_broken",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/mallet/handle",
+      "stat_type": "tconstruct:handle"
+    },
+    {
+      "path": "tconstruct:item/tool/mallet/binding",
+      "stat_type": "tconstruct:binding"
+    },
+    {
       "path": "tconstruct:item/tool/crossbow/limb",
       "stat_type": "tconstruct:limb"
     },

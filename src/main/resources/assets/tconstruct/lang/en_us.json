@@ -1151,6 +1151,7 @@
   "item.tconstruct.wire_cutter": "Wire Cutter",
   "item.tconstruct.file": "File",
   "item.tconstruct.screwdriver": "Screwdriver",
+  "item.tconstruct.mallet": "Mallet",
 
   "item.tconstruct.crossbow": "Crossbow",
   "item.tconstruct.longbow": "Longbow",
@@ -1278,6 +1279,7 @@
   "item.tconstruct.wire_cutter.description": "The Wire cutter is used to cut or connect wires.\nAlso can be used as regular scissors.",
   "item.tconstruct.file.description": "File the ingot into a rod, or file the bolt into a screw.\nAlso can file off tree bark...",
   "item.tconstruct.screwdriver.description": "The screwdriver is used to tighten screws.\nOr adjust the machine.",
+  "item.tconstruct.mallet.description": "The ''gentle'' tapping of the mallet can cause the machine to stop working.\nOr adjust the machine.",
 
   "item.tconstruct.crossbow.description": "The Crossbow is a light ranged weapon, capable of quickly firing arrows and fireworks.",
   "item.tconstruct.longbow.description": "The Longbow is a broad ranged weapon, capable of firing arrows with precision over long distances.",

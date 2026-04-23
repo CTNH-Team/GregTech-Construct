@@ -1151,6 +1151,7 @@
   "item.tconstruct.wire_cutter": "剪线钳",
   "item.tconstruct.file": "锉刀",
   "item.tconstruct.screwdriver": "螺丝刀",
+  "item.tconstruct.mallet": "软锤",
 
   "item.tconstruct.crossbow": "弩",
   "item.tconstruct.longbow": "长弓",
@@ -1278,6 +1279,7 @@
   "item.tconstruct.wire_cutter.description": "剪线钳用来剪断或者连接导线。\n也能当普通的剪刀用。",
   "item.tconstruct.file.description": "萨拉托加（\n锉刀能将锭锉成杆，或者将螺栓锉成螺钉。\n也能锉掉树皮...",
   "item.tconstruct.screwdriver.description": "螺丝刀用来拧紧螺丝。\n或者调整机器。",
+  "item.tconstruct.mallet.description": "40（\n软锤“温柔”的敲击能使机器停工。\n或者调整机器。",
 
   "item.tconstruct.crossbow.description": "弩是一种轻型远程武器，能快速发射箭或烟花。",
   "item.tconstruct.longbow.description": "长弓是一种宽型远程武器，能对极远的目标实施精确打击。",
