@@ -8,6 +8,7 @@
     "tconstruct:file",
     "tconstruct:screwdriver",
     "tconstruct:mallet",
+    "tconstruct:saw",
     "tconstruct:war_pick"
   ]
 }

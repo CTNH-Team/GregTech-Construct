@@ -326,6 +326,7 @@
   "pattern.tconstruct.wire_cutter_head": "Cutter Head",
   "pattern.tconstruct.file_head": "File Head",
   "pattern.tconstruct.screwdriver_head": "Screwdriver Head",
+  "pattern.tconstruct.saw_blade": "Saw Blade",
 
   "_comment": "Large Head Patterns",
 
@@ -381,6 +382,7 @@
   "item.tconstruct.wire_cutter_head_cast": "Cutter Head Gold Cast",
   "item.tconstruct.file_head_cast": "File Head Gold Cast",
   "item.tconstruct.screwdriver_head_cast": "Screwdriver Head Gold Cast",
+  "item.tconstruct.saw_blade_cast": "Saw Blade Gold Cast",
 
   "_comment": "Large Head Gold Casts",
 
@@ -436,6 +438,7 @@
   "item.tconstruct.wire_cutter_head_sand_cast": "Cutter Head Sand Cast",
   "item.tconstruct.file_head_sand_cast": "File Head Sand Cast",
   "item.tconstruct.screwdriver_head_sand_cast": "Screwdriver Head Sand Cast",
+  "item.tconstruct.saw_blade_sand_cast": "Saw Blade Sand Cast",
 
   "_comment": "Large Head Sand Casts",
 
@@ -489,7 +492,8 @@
   "item.tconstruct.wrench_head_red_sand_cast": "Wrench Head Red Sand Cast",
   "item.tconstruct.wire_cutter_head_red_sand_cast": "Cutter Head Red Sand Cast",
   "item.tconstruct.file_head_red_sand_cast": "File Head Red Sand Cast",
-  "item.tconstruct.screwdriver_head_red_sand_cast": "Screwdriver Head Red Sand Cast",
+  "item.tconstruct.screwdriver_head_red_sand_cast": "Screwdriver Head Blade Red Sand Cast",
+  "item.tconstruct.saw_blade_red_sand_cast": "Saw Blade Red Sand Cast",
 
   "_comment": "Large Head Red Sand Casts",
 
@@ -1152,6 +1156,7 @@
   "item.tconstruct.file": "File",
   "item.tconstruct.screwdriver": "Screwdriver",
   "item.tconstruct.mallet": "Mallet",
+  "item.tconstruct.saw": "Saw",
 
   "item.tconstruct.crossbow": "Crossbow",
   "item.tconstruct.longbow": "Longbow",
@@ -1222,6 +1227,7 @@
   "item.tconstruct.wire_cutter_head": "Cutter Head",
   "item.tconstruct.file_head": "File Head",
   "item.tconstruct.screwdriver_head": "Screwdriver Head",
+  "item.tconstruct.saw_blade": "Saw Blade",
 
   "item.tconstruct.small_axe_head": "Small Axe Head",
   "item.tconstruct.broad_axe_head": "Broad Axe Head",
@@ -1280,6 +1286,7 @@
   "item.tconstruct.file.description": "File the ingot into a rod, or file the bolt into a screw.\nAlso can file off tree bark...",
   "item.tconstruct.screwdriver.description": "The screwdriver is used to tighten screws.\nOr adjust the machine.",
   "item.tconstruct.mallet.description": "The ''gentle'' tapping of the mallet can cause the machine to stop working.\nOr adjust the machine.",
+  "item.tconstruct.saw.description": "Thw saw can efficiently saw logs into wood plank.",
 
   "item.tconstruct.crossbow.description": "The Crossbow is a light ranged weapon, capable of quickly firing arrows and fireworks.",
   "item.tconstruct.longbow.description": "The Longbow is a broad ranged weapon, capable of firing arrows with precision over long distances.",
