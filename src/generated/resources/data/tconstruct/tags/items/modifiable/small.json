@@ -11,6 +11,7 @@
     "tconstruct:wrench",
     "tconstruct:file",
     "tconstruct:screwdriver",
+    "tconstruct:mallet",
     "tconstruct:flint_and_brick"
   ]
 }

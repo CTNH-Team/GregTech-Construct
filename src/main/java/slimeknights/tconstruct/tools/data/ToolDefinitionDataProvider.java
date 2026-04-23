@@ -427,8 +427,8 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(defaultThreeParts)
                 // stats
                 .module(new SetStatsModule(StatsNBT.builder()
-                        .set(ToolStats.ATTACK_DAMAGE, 1f)
-                        .set(ToolStats.ATTACK_SPEED, 1.4f).build()))
+                        .set(ToolStats.ATTACK_DAMAGE, 2f)
+                        .set(ToolStats.ATTACK_SPEED, 1.2f).build()))
                 .smallToolStartingSlots()
                 // traits
                 // harvest
@@ -446,8 +446,8 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(defaultThreeParts)
                 // stats
                 .module(new SetStatsModule(StatsNBT.builder()
-                        .set(ToolStats.ATTACK_DAMAGE, 3f)
-                        .set(ToolStats.ATTACK_SPEED, 1.2f).build()))
+                        .set(ToolStats.ATTACK_DAMAGE, 2f)
+                        .set(ToolStats.ATTACK_SPEED, 1.8f).build()))
                 .smallToolStartingSlots()
                 // traits
                 .module(ToolTraitsModule.builder()
@@ -469,13 +469,11 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // stats
                 .module(new SetStatsModule(StatsNBT.builder()
                         .set(ToolStats.ATTACK_DAMAGE, 1f)
-                        .set(ToolStats.ATTACK_SPEED, 1.4f).build()))
+                        .set(ToolStats.ATTACK_SPEED, 1.2f).build()))
                 .smallToolStartingSlots()
                 // traits
                 .module(ToolTraitsModule.builder().trait(ModifierIds.stripping).build())
                 // harvest
-                .module(ToolActionsModule.of(ToolActions.SWORD_DIG))
-                .module(IsEffectiveModule.tag(TinkerTags.Blocks.MINABLE_WITH_SWORD))
                 // faster tool name logic
                 .module(FixedMaterialToolName.FIRST);
 
@@ -488,13 +486,31 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // stats
                 .module(new SetStatsModule(StatsNBT.builder()
                         .set(ToolStats.ATTACK_DAMAGE, 2f)
-                        .set(ToolStats.ATTACK_SPEED, 1.2f).build()))
+                        .set(ToolStats.ATTACK_SPEED, 1.8f).build()))
                 .smallToolStartingSlots()
                 // traits
                 .module(ToolTraitsModule.builder().trait(ModifierIds.pierce, 1).build())
                 // harvest
-                .module(ToolActionsModule.of(ToolActions.SWORD_DIG, SCREWDRIVER_CONFIGURE, INTERACT_WITH_COVER))
-                .module(IsEffectiveModule.tag(TinkerTags.Blocks.MINABLE_WITH_SWORD))
+                .module(ToolActionsModule.of(SCREWDRIVER_CONFIGURE, INTERACT_WITH_COVER))
+                // faster tool name logic
+                .module(FixedMaterialToolName.FIRST);
+
+        define(ToolDefinitions.MALLET)
+                // parts
+                .module(PartStatsModule.parts()
+                        .part(hammerHead)
+                        .part(toolHandle)
+                        .part(toolBinding).build())
+                .module(defaultTwoParts)
+                // stats
+                .module(new SetStatsModule(StatsNBT.builder()
+                        .set(ToolStats.ATTACK_DAMAGE, 1f)
+                        .set(ToolStats.ATTACK_SPEED, 1.2f).build()))
+                .smallToolStartingSlots()
+                // traits
+                .module(ToolTraitsModule.builder().trait(TinkerModifiers.padded, 1).build())
+                // harvest
+                .module(ToolActionsModule.of(MALLET_PAUSE, MALLET_CONFIGURE))
                 // faster tool name logic
                 .module(FixedMaterialToolName.FIRST);
 

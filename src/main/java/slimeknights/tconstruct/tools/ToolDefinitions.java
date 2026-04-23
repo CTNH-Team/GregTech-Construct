@@ -32,6 +32,7 @@ public final class ToolDefinitions {
     public static final ToolDefinition WIRE_CUTTER = ToolDefinition.create(TinkerTools.wireCutter);
     public static final ToolDefinition FILE = ToolDefinition.create(TinkerTools.file);
     public static final ToolDefinition SCREWDRIVER = ToolDefinition.create(TinkerTools.screwdriver);
+    public static final ToolDefinition MALLET = ToolDefinition.create(TinkerTools.mallet);
 
     // ranged
     public static final ToolDefinition CROSSBOW = ToolDefinition.create(TinkerTools.crossbow);

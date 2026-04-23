@@ -25,7 +25,7 @@
       "type": "tconstruct:base_stats",
       "stats": {
         "tconstruct:attack_damage": 1.0,
-        "tconstruct:attack_speed": 1.4
+        "tconstruct:attack_speed": 1.2
       }
     },
     {
@@ -43,17 +43,6 @@
           "name": "tconstruct:stripping"
         }
       ]
-    },
-    {
-      "type": "tconstruct:tool_actions",
-      "tool_actions": [
-        "sword_dig"
-      ]
-    },
-    {
-      "type": "tconstruct:is_effective",
-      "predicate_type": "mantle:tag",
-      "tag": "forge:mineable/sword"
     },
     {
       "type": "tconstruct:fixed_material_name",

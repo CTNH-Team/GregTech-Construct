@@ -2,18 +2,9 @@ package slimeknights.tconstruct.smeltery.data;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
-import net.minecraft.data.recipes.SingleItemRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
+import net.minecraft.tags.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -30,12 +21,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.DifferenceIngredient;
-import net.minecraftforge.common.crafting.conditions.AndCondition;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.ItemExistsCondition;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
-import net.minecraftforge.common.crafting.conditions.OrCondition;
-import net.minecraftforge.common.crafting.conditions.TrueCondition;
+import net.minecraftforge.common.crafting.conditions.*;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import slimeknights.mantle.datagen.MantleTags;
@@ -61,9 +47,7 @@ import slimeknights.tconstruct.fluids.fluids.PotionFluidType;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
 import slimeknights.tconstruct.library.data.recipe.ISmelteryRecipeHelper;
 import slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder;
-import slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.CommonRecipe;
-import slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.MetalMelting;
-import slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.ToolItemMelting;
+import slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.*;
 import slimeknights.tconstruct.library.recipe.FluidValues;
 import slimeknights.tconstruct.library.recipe.alloying.AlloyRecipeBuilder;
 import slimeknights.tconstruct.library.recipe.casting.ItemCastingRecipeBuilder;
@@ -96,16 +80,6 @@ import java.util.function.Function;
 
 import static slimeknights.mantle.Mantle.COMMON;
 import static slimeknights.mantle.Mantle.commonResource;
-import static slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.ARMOR;
-import static slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.ARMOR_PLUS;
-import static slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.AXES;
-import static slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.BOOTS;
-import static slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.CHESTPLATE;
-import static slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.HELMET;
-import static slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.LEGGINGS_PLUS;
-import static slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.SHOVEL_PLUS;
-import static slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.SWORD;
-import static slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.TOOLS;
 
 @SuppressWarnings("removal")
 public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelteryRecipeHelper, ICommonRecipeHelper {
@@ -1869,9 +1843,9 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
     // obsidian: 1 lava = 1 obsidian, but require some water is present
     // water being a catalyst makes this friendlier in the nether as we just need 1 bottle instead of collecting a bunch
     // note this is not a progression break, as the same tier lets you make other alloys like amethyst bronze
-    AlloyRecipeBuilder.alloy(TinkerFluids.moltenObsidian, FluidValues.GLASS_BLOCK / 10)
+    AlloyRecipeBuilder.alloy(TinkerFluids.moltenObsidian, FluidValues.GLASS_BLOCK)
                       .addCatalyst(FluidIngredient.of(Fluids.WATER, FluidValues.BOTTLE))
-                      .addInput(Fluids.LAVA, FluidType.BUCKET_VOLUME / 10)
+                      .addInput(Fluids.LAVA, FluidType.BUCKET_VOLUME)
                       .save(consumer, prefix(TinkerFluids.moltenObsidian, folder));
 
     // tier 4
