@@ -514,6 +514,25 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // faster tool name logic
                 .module(FixedMaterialToolName.FIRST);
 
+        define(ToolDefinitions.SAW)
+                // parts
+                .module(PartStatsModule.parts()
+                        .part(sawBlade)
+                        .part(toolHandle)
+                        .part(toolBinding).build())
+                .module(defaultThreeParts)
+                // stats
+                .module(new SetStatsModule(StatsNBT.builder()
+                        .set(ToolStats.ATTACK_DAMAGE, 2f)
+                        .set(ToolStats.ATTACK_SPEED, 1.8f).build()))
+                .smallToolStartingSlots()
+                // traits
+                .module(ToolTraitsModule.builder().trait(ModifierIds.stripping).build())
+                // harvest
+                .module(ToolActionsModule.of(SAW_DIG))
+                // faster tool name logic
+                .module(FixedMaterialToolName.FIRST);
+
         // bows
         define(ToolDefinitions.CROSSBOW)
                 // parts

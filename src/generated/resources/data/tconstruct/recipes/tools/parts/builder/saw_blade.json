@@ -1,0 +1,16 @@
+{
+  "type": "tconstruct:part_builder",
+  "cost": 2,
+  "pattern": "tconstruct:saw_blade",
+  "pattern_item": [
+    {
+      "tag": "tconstruct:patterns/default"
+    },
+    {
+      "item": "tconstruct:saw_blade_cast"
+    }
+  ],
+  "result": {
+    "item": "tconstruct:saw_blade"
+  }
+}

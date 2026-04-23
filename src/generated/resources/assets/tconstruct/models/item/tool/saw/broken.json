@@ -1,0 +1,27 @@
+{
+  "loader": "tconstruct:tool",
+  "parent": "tconstruct:item/base/axe",
+  "textures": {
+    "head": "tconstruct:item/tool/saw/head_broken",
+    "handle": "tconstruct:item/tool/saw/handle",
+    "binding": "tconstruct:item/tool/saw/binding"
+  },
+  "modifier_roots": [
+    "tconstruct:item/tool/saw/modifiers/broken/",
+    "tconstruct:item/tool/saw/modifiers/"
+  ],
+  "parts": [
+    {
+      "name": "head",
+      "index": 0
+    },
+    {
+      "name": "binding",
+      "index": 2
+    },
+    {
+      "name": "handle",
+      "index": 1
+    }
+  ]
+}

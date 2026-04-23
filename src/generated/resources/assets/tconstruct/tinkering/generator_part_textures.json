@@ -834,6 +834,26 @@
       "stat_type": "tconstruct:binding"
     },
     {
+      "path": "tconstruct:item/tool/saw/head",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/saw/head_broken",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/saw/handle",
+      "stat_type": "tconstruct:handle"
+    },
+    {
+      "path": "tconstruct:item/tool/saw/binding",
+      "stat_type": "tconstruct:binding"
+    },
+    {
+      "path": "tconstruct:item/tool/saw/head_part",
+      "stat_type": "tconstruct:head"
+    },
+    {
       "path": "tconstruct:item/tool/crossbow/limb",
       "stat_type": "tconstruct:limb"
     },
