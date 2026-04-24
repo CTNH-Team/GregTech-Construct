@@ -11,7 +11,7 @@ import slimeknights.tconstruct.library.tools.definition.module.material.PartStat
 import slimeknights.tconstruct.library.tools.definition.module.mining.IsEffectiveModule;
 
 public final class ToolDefinitionFixture {
-  private static final ResourceLocation DEFINITION_ID = new ResourceLocation("test", "test_tool");
+  private static final ResourceLocation DEFINITION_ID = ResourceLocation.tryBuild("test", "test_tool");
 
   /** Standard tool definition for testing */
   private static final ToolDefinition STANDARD_TOOL_DEFINITION = new ToolDefinition(DEFINITION_ID);

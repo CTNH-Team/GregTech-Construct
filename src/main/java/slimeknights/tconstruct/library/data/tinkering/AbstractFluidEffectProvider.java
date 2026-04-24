@@ -87,7 +87,7 @@ public abstract class AbstractFluidEffectProvider extends GenericDataProvider {
 
   /** Creates a new fluid builder for the given mod ID */
   protected Builder addFluid(String name, FluidIngredient fluid) {
-    return addFluid(new ResourceLocation(modId, name), fluid);
+    return addFluid(ResourceLocation.tryBuild(modId, name), fluid);
   }
 
   /** Creates a builder for a fluid stack */

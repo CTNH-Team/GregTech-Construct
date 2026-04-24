@@ -36,7 +36,7 @@ public class TinkerSpriteSourceProvider extends SpriteSourceProvider {
   protected void addSources() {
     String paletteFolder = "trims/color_palettes/";
     String trimFolder = "trims/models/armor/";
-    ResourceLocation trimPalette = new ResourceLocation(paletteFolder + "trim_palette");
+    ResourceLocation trimPalette = ResourceLocation.tryParse(paletteFolder + "trim_palette");
     // map of material suffix to material paeltte for trims
     Map<String,ResourceLocation> materialMap = Arrays.stream(MaterialIds.TRIM_MATERIALS).collect(Collectors.toMap(id -> id.getNamespace() + "_" + id.getPath(), id -> id.withPrefix(paletteFolder)));
 
@@ -56,9 +56,9 @@ public class TinkerSpriteSourceProvider extends SpriteSourceProvider {
       blocks.addSource(new SingleFile(name, Optional.empty()));
     }
     // add armor trims in our materials
-    atlas(new ResourceLocation("armor_trims"))
+    atlas(ResourceLocation.tryParse("armor_trims"))
       .addSource(new PalettedPermutations(
-        Arrays.stream(TRIMS).flatMap(name -> Stream.of(new ResourceLocation(trimFolder + name), new ResourceLocation(trimFolder + name + "_leggings"))).toList(),
+        Arrays.stream(TRIMS).flatMap(name -> Stream.of(ResourceLocation.tryParse(trimFolder + name), ResourceLocation.tryParse(trimFolder + name + "_leggings"))).toList(),
         trimPalette, materialMap));
   }
 

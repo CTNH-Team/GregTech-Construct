@@ -31,7 +31,7 @@ public abstract class ToolItemTest extends BaseMcTest {
     TagFixture.init();
     if (tool == null) {
       tool = new ModifiableItem(new Item.Properties().stacksTo(1), ToolDefinitionFixture.getStandardToolDefinition());
-      ForgeRegistries.ITEMS.register(new ResourceLocation("test", "toolcore"), tool);
+      ForgeRegistries.ITEMS.register(ResourceLocation.tryBuild("test", "toolcore"), tool);
     }
     setupTierSorting();
     // ModifierStatsBuilder.disableFilter();

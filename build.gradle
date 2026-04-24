@@ -151,9 +151,6 @@ lombok {
     version = "1.18.38"
 }
 
-// 在 build.gradle 文件的末尾添加这段代码
-
-// 强制跳过测试编译和执行，解决 legacyforge 插件的测试依赖问题
 test {
     enabled = false
 }
@@ -162,7 +159,6 @@ tasks.withType(Test).all {
     enabled = false
 }
 
-// 确保构建时也不检查测试
 tasks.named('check') {
-    dependsOn = [] // 清空 check 任务的依赖
+    dependsOn = []
 }

@@ -244,7 +244,7 @@ public class SmelteryRecipeBuilder {
 
   /** Adds a recipe for melting a list of items. Never optional */
   private void minecraftArmorMelting(int cost, String prefix, String name) {
-    Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(prefix + '_' + name));
+    Item item = BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(prefix + '_' + name));
     if (item == Items.AIR) {
       throw new IllegalArgumentException("Unknown item name minecraft:" + name);
     }
@@ -438,13 +438,13 @@ public class SmelteryRecipeBuilder {
 
   /** Adds a recipe for melting a tool from the given mod */
   public SmelteryRecipeBuilder itemMelting(float scale, String domain, String path, boolean damagable) {
-    itemMelting(scale, domain + '_' + path, (float)Math.sqrt(scale), new ResourceLocation(domain, path), damagable);
+    itemMelting(scale, domain + '_' + path, (float)Math.sqrt(scale), ResourceLocation.tryBuild(domain, path), damagable);
     return this;
   }
 
   /** Adds a recipe for melting an metal item with the metal prefix in the name */
   public SmelteryRecipeBuilder metalMelting(float scale, String domain, String path, boolean damagable) {
-    itemMelting(scale, domain + '_' + path, (float)Math.sqrt(scale), new ResourceLocation(domain, name.getPath() + '_' + path), damagable);
+    itemMelting(scale, domain + '_' + path, (float)Math.sqrt(scale), ResourceLocation.tryBuild(domain, name.getPath() + '_' + path), damagable);
     return this;
   }
 
@@ -597,7 +597,7 @@ public class SmelteryRecipeBuilder {
   /** Adds recipes to melt oreberries */
   public SmelteryRecipeBuilder oreberry() {
     assert baseUnit == FluidValues.INGOT;
-    itemMelting(1/9f, "oreberry", 1 / 3f, new ResourceLocation("oreberriesreplanted", name.getPath() + "_oreberry"), false);
+    itemMelting(1/9f, "oreberry", 1 / 3f, ResourceLocation.tryBuild("oreberriesreplanted", name.getPath() + "_oreberry"), false);
     return this;
   }
 

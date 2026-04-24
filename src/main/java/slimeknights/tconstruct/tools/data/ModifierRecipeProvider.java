@@ -1817,7 +1817,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
 
         // compatability
         String theOneProbe = "theoneprobe";
-        ResourceLocation probe = new ResourceLocation(theOneProbe, "probe");
+        ResourceLocation probe = ResourceLocation.tryBuild(theOneProbe, "probe");
         Consumer<FinishedRecipe> topConsumer = withCondition(consumer, modLoaded(theOneProbe));
         ModifierRecipeBuilder.modifier(ModifierIds.theOneProbe)
                 .setTools(ingredientFromTags(TinkerTags.Items.HELMETS, TinkerTags.Items.HELD))

@@ -148,7 +148,7 @@ public class TinkerItemModelProvider extends ItemModelProvider {
 
     /** Generated item with a texture */
     private ItemModelBuilder generated(ResourceLocation item, String texture) {
-        return generated(item, new ResourceLocation(item.getNamespace(), texture));
+        return generated(item, ResourceLocation.tryBuild(item.getNamespace(), texture));
     }
 
     /** Generated item with a texture */

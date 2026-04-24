@@ -63,7 +63,7 @@ public class GTConstructFluid {
     if (fluidId == null) {
       throw new IllegalArgumentException("Unknown fluid: " + fluid);
     }
-    return TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), new ResourceLocation("forge", fluidId.getPath()));
+    return TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), ResourceLocation.tryBuild("forge", fluidId.getPath()));
   }
 
   public static String extractMaterialName(String path) {

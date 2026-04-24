@@ -383,7 +383,7 @@ public class TableRecipeProvider extends BaseRecipeProvider {
 
     // twilight forest
     String tfId = "twilightforest";
-    Function<String,ResourceLocation> tf = name -> new ResourceLocation(tfId, name);
+    Function<String,ResourceLocation> tf = name -> ResourceLocation.tryBuild(tfId, name);
     Consumer<FinishedRecipe> tfConsumer = withCondition(consumer, new ModLoadedCondition(tfId));
     // naga scale armor
     ResourceLocation nagaScale = tf.apply("naga_scale");

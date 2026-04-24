@@ -139,7 +139,7 @@ public class SlimeArmorLayer<T extends Slime, M extends HierarchicalModel<T>, A 
     path = ForgeHooksClient.getArmorTexture(entity, stack, path, EquipmentSlot.HEAD, type);
     ResourceLocation location = HumanoidArmorLayer.ARMOR_LOCATION_CACHE.get(path);
     if (location == null) {
-      location = new ResourceLocation(path);
+      location = ResourceLocation.tryParse(path);
       HumanoidArmorLayer.ARMOR_LOCATION_CACHE.put(path, location);
     }
 

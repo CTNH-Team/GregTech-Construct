@@ -16,7 +16,7 @@ import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
 import slimeknights.tconstruct.library.utils.TeleportHelper;
 
 public class ReturningEffect extends TinkerEffect {
-  private static final ResourceLocation KEY = new ResourceLocation("tconstruct:returning");
+  private static final ResourceLocation KEY = ResourceLocation.tryParse("tconstruct:returning");
   public ReturningEffect() {
     super(MobEffectCategory.NEUTRAL, 0xa92dff, true);
     MinecraftForge.EVENT_BUS.addListener(this::onEffectAdded);

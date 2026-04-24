@@ -27,10 +27,10 @@ public class BlockEntityTypeTagProvider extends IntrinsicHolderTagsProvider<Bloc
 
   /** Creates a RL for iron chests */
   private static void ironchest(IntrinsicTagAppender<BlockEntityType<?>> appender, String name) {
-    ResourceLocation chest = new ResourceLocation("ironchest", name + "_chest");
+    ResourceLocation chest = ResourceLocation.tryBuild("ironchest", name + "_chest");
     appender.addOptional(chest).addOptional(chest.withPrefix("trapped_"));
     if (!"dirt".equals(name)) {
-      appender.addOptional(new ResourceLocation("ironshulkerbox", name + "_shulker_box"));
+      appender.addOptional(ResourceLocation.tryBuild("ironshulkerbox", name + "_shulker_box"));
     }
   }
 
@@ -41,7 +41,7 @@ public class BlockEntityTypeTagProvider extends IntrinsicHolderTagsProvider<Bloc
       BlockEntityType.CHEST, BlockEntityType.TRAPPED_CHEST, BlockEntityType.BARREL, BlockEntityType.SHULKER_BOX,
       BlockEntityType.DISPENSER, BlockEntityType.DROPPER, BlockEntityType.HOPPER);
     // TODO 1.21: verify if BlockEntityType.CHISELED_BOOKSHELF has fixed the bug where setItem(ItemStack.EMPTY) doesn't work so it can be whitelisted.
-    sideInventories.addOptional(new ResourceLocation("immersiveengineering", "woodencrate"));
+    sideInventories.addOptional(ResourceLocation.tryBuild("immersiveengineering", "woodencrate"));
     ironchest(sideInventories, "iron");
     ironchest(sideInventories, "gold");
     ironchest(sideInventories, "diamond");

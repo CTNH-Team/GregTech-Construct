@@ -598,7 +598,7 @@ public abstract class CastingBlockEntity extends TableBlockEntity implements Wor
     tank.readFromTag(tags.getCompound(TAG_TANK));
     timer = tags.getInt(TAG_TIMER);
     if (tags.contains(TAG_RECIPE, CompoundTag.TAG_STRING)) {
-      ResourceLocation name = new ResourceLocation(tags.getString(TAG_RECIPE));
+      ResourceLocation name = ResourceLocation.tryParse(tags.getString(TAG_RECIPE));
       // if we have a level, fetch the recipe
       if (level != null) {
         loadRecipe(level, name);

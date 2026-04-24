@@ -102,24 +102,24 @@ public class WorldClientEvents extends ClientEventBase {
   static void clientSetup(FMLClientSetupEvent event) {
     // skull textures
     event.enqueueWork(() -> {
-      registerHeadModel(TinkerHeadType.BLAZE, MaterialIds.blazingBone, new ResourceLocation("textures/entity/blaze.png"));
+      registerHeadModel(TinkerHeadType.BLAZE, MaterialIds.blazingBone, ResourceLocation.tryParse("textures/entity/blaze.png"));
       registerHeadModel(TinkerHeadType.ENDERMAN, MaterialIds.enderPearl, TConstruct.getResource("textures/entity/skull/enderman.png"));
-      SlimeskullArmorModel.registerHeadModel(MaterialIds.glass, ModelLayers.CREEPER_HEAD, new ResourceLocation("textures/entity/creeper/creeper.png"));
+      SlimeskullArmorModel.registerHeadModel(MaterialIds.glass, ModelLayers.CREEPER_HEAD, ResourceLocation.tryParse("textures/entity/creeper/creeper.png"));
       // skeleton
-      SlimeskullArmorModel.registerHeadModel(MaterialIds.bone, ModelLayers.SKELETON_SKULL, new ResourceLocation("textures/entity/skeleton/skeleton.png"));
-      SlimeskullArmorModel.registerHeadModel(MaterialIds.necroticBone, ModelLayers.WITHER_SKELETON_SKULL, new ResourceLocation("textures/entity/skeleton/wither_skeleton.png"));
+      SlimeskullArmorModel.registerHeadModel(MaterialIds.bone, ModelLayers.SKELETON_SKULL, ResourceLocation.tryParse("textures/entity/skeleton/skeleton.png"));
+      SlimeskullArmorModel.registerHeadModel(MaterialIds.necroticBone, ModelLayers.WITHER_SKELETON_SKULL, ResourceLocation.tryParse("textures/entity/skeleton/wither_skeleton.png"));
       registerHeadModel(TinkerHeadType.STRAY, MaterialIds.venombone, TConstruct.getResource("textures/entity/skull/stray.png"));
       // zombies
-      SlimeskullArmorModel.registerHeadModel(MaterialIds.leather, ModelLayers.ZOMBIE_HEAD, new ResourceLocation("textures/entity/zombie/zombie.png"));
-      registerHeadModel(TinkerHeadType.HUSK, MaterialIds.iron, new ResourceLocation("textures/entity/zombie/husk.png"));
+      SlimeskullArmorModel.registerHeadModel(MaterialIds.leather, ModelLayers.ZOMBIE_HEAD, ResourceLocation.tryParse("textures/entity/zombie/zombie.png"));
+      registerHeadModel(TinkerHeadType.HUSK, MaterialIds.iron, ResourceLocation.tryParse("textures/entity/zombie/husk.png"));
       registerHeadModel(TinkerHeadType.DROWNED, MaterialIds.copper, TConstruct.getResource("textures/entity/skull/drowned.png"));
       // spider
-      registerHeadModel(TinkerHeadType.SPIDER, MaterialIds.string, new ResourceLocation("textures/entity/spider/spider.png"));
-      registerHeadModel(TinkerHeadType.CAVE_SPIDER, MaterialIds.darkthread, new ResourceLocation("textures/entity/spider/cave_spider.png"));
+      registerHeadModel(TinkerHeadType.SPIDER, MaterialIds.string, ResourceLocation.tryParse("textures/entity/spider/spider.png"));
+      registerHeadModel(TinkerHeadType.CAVE_SPIDER, MaterialIds.darkthread, ResourceLocation.tryParse("textures/entity/spider/cave_spider.png"));
       // piglins
-      SlimeskullArmorModel.registerHeadModel(MaterialIds.gold, ModelLayers.PIGLIN_HEAD, new ResourceLocation("textures/entity/piglin/piglin.png"));
-      registerHeadModel(TinkerHeadType.PIGLIN_BRUTE, MaterialIds.roseGold, new ResourceLocation("textures/entity/piglin/piglin_brute.png"));
-      registerHeadModel(TinkerHeadType.ZOMBIFIED_PIGLIN, MaterialIds.pigIron, new ResourceLocation("textures/entity/piglin/zombified_piglin.png"));
+      SlimeskullArmorModel.registerHeadModel(MaterialIds.gold, ModelLayers.PIGLIN_HEAD, ResourceLocation.tryParse("textures/entity/piglin/piglin.png"));
+      registerHeadModel(TinkerHeadType.PIGLIN_BRUTE, MaterialIds.roseGold, ResourceLocation.tryParse("textures/entity/piglin/piglin_brute.png"));
+      registerHeadModel(TinkerHeadType.ZOMBIFIED_PIGLIN, MaterialIds.pigIron, ResourceLocation.tryParse("textures/entity/piglin/zombified_piglin.png"));
     });
   }
 
