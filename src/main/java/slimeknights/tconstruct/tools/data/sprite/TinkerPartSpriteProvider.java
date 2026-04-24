@@ -133,6 +133,7 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
         buildTool("screwdriver").addBreakableHead("head").addHandle("handle").addHead("head_part");
         buildTool("mallet").addBreakableHead("head").addHandle("handle").addBinding("binding");
         buildTool("saw").addBreakableHead("head").addHandle("handle").addBinding("binding").addHead("head_part");
+        buildTool("crowbar").addBreakableHead("head").addBinding("binding").addBreakableHead("head2").addHead("head_part");
         // bow
         buildTool("crossbow")
                 .addLimb("limb").addGrip("body")

@@ -109,6 +109,7 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
         toolBuilding(consumer, TinkerTools.screwdriver, folder);
         toolBuilding(consumer, TinkerTools.mallet, folder);
         toolBuilding(consumer, TinkerTools.saw, folder);
+        toolBuilding(consumer, TinkerTools.crowbar, folder);
         // bow
         toolBuilding(consumer, TinkerTools.crossbow, folder);
         toolBuilding(consumer, TinkerTools.longbow, folder);
@@ -435,6 +436,7 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
         partRecipes(consumer, TinkerToolParts.fileHead,        TinkerSmeltery.fileHeadCast,        2, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.screwdriverHead, TinkerSmeltery.screwdriverHeadCast, 1, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.sawBlade,        TinkerSmeltery.sawBladeCast,        2, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.crowbarHead,     TinkerSmeltery.crowbarHeadCast,     2, partFolder, castFolder);
 
         // arrow patterns are just a reusable pattern for the part builder
         ItemCastingRecipeBuilder.tableRecipe(TinkerSmeltery.arrowCast)

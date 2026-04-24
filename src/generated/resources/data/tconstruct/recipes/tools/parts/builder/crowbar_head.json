@@ -1,0 +1,16 @@
+﻿{
+  "type": "tconstruct:part_builder",
+  "cost": 2,
+  "pattern": "tconstruct:crowbar_head",
+  "pattern_item": [
+    {
+      "tag": "tconstruct:patterns/default"
+    },
+    {
+      "item": "tconstruct:crowbar_head_cast"
+    }
+  ],
+  "result": {
+    "item": "tconstruct:crowbar_head"
+  }
+}

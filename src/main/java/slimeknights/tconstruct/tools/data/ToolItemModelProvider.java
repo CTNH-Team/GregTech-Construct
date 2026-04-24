@@ -48,6 +48,7 @@ public class ToolItemModelProvider extends AbstractToolItemModelProvider {
         tool(TinkerTools.screwdriver, toolBlocking, "head");
         tool(TinkerTools.mallet, toolBlocking, "head");
         tool(TinkerTools.saw, toolBlocking, "head");
+        tool(TinkerTools.crowbar, toolBlocking, "head");
         // scythe
         tool(TinkerTools.kama, toolBlocking, "head");
         tool(TinkerTools.scythe, toolBlocking, "head");

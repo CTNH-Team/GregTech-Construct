@@ -47,8 +47,8 @@ public class TinkerItemModelProvider extends ItemModelProvider {
         part(TinkerToolParts.bowGrip, "crossbow/body").offset(-2, -2);
         part(TinkerToolParts.bowstring);
         part(TinkerToolParts.arrowHead, "ammo/arrow_head").offset(-4, 3);
-        part(TinkerToolParts.arrowShaft, "ammo/arrow_shaft").offset(1, -1);;
-        part(TinkerToolParts.fletching, "ammo/arrow_feather").offset(4, -5);;
+        part(TinkerToolParts.arrowShaft, "ammo/arrow_shaft").offset(1, -1);
+        part(TinkerToolParts.fletching, "ammo/arrow_feather").offset(4, -5);
         // other
         part(TinkerToolParts.toolBinding);
         part(TinkerToolParts.toolHandle);
@@ -73,6 +73,7 @@ public class TinkerItemModelProvider extends ItemModelProvider {
         part(TinkerToolParts.fileHead, "file/head_part");
         part(TinkerToolParts.screwdriverHead, "screwdriver/head_part");
         part(TinkerToolParts.sawBlade, "saw/head_part");
+        part(TinkerToolParts.crowbarHead, "crowbar/head_part");
         // gauges
         generated(TinkerSmeltery.copperGauge, "block/smeltery/io/gauge");
         generated(TinkerSmeltery.obsidianGauge, "block/foundry/io/gauge");
@@ -102,6 +103,7 @@ public class TinkerItemModelProvider extends ItemModelProvider {
         cast(TinkerSmeltery.fileHeadCast);
         cast(TinkerSmeltery.screwdriverHeadCast);
         cast(TinkerSmeltery.sawBladeCast);
+        cast(TinkerSmeltery.crowbarHeadCast);
         // large heads
         cast(TinkerSmeltery.hammerHeadCast);
         cast(TinkerSmeltery.broadBladeCast);

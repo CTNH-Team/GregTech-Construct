@@ -13,6 +13,7 @@
     "tconstruct:screwdriver",
     "tconstruct:mallet",
     "tconstruct:saw",
+    "tconstruct:crowbar",
     "tconstruct:flint_and_brick"
   ]
 }
