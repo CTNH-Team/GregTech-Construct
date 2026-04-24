@@ -271,7 +271,7 @@ public class GenerateMeltingRecipesCommand {
           builder.setDamagable(10);
         }
         ResourceLocation id = Loadables.ITEM.getKey(result);
-        builder.save(consumer, new ResourceLocation("tinkers_generated", "melting/" + id.getNamespace() + '/' + id.getPath()));
+        builder.save(consumer, ResourceLocation.tryBuild("tinkers_generated", "melting/" + id.getNamespace() + '/' + id.getPath()));
       }
     }
 

@@ -44,7 +44,7 @@ public class GlobalLootModifiersProvider extends GlobalLootModifierProvider {
   @Override
   protected void start() {
     add("wither_bone", ReplaceItemLootModifier.builder(Ingredient.of(Items.BONE), ItemOutput.fromItem(TinkerMaterials.necroticBone))
-      .addCondition(LootTableIdCondition.builder(new ResourceLocation("entities/wither_skeleton")).build())
+      .addCondition(LootTableIdCondition.builder(ResourceLocation.tryParse("entities/wither_skeleton")).build())
       .addCondition(ConfigEnabledCondition.WITHER_BONE_DROP)
       .build());
 

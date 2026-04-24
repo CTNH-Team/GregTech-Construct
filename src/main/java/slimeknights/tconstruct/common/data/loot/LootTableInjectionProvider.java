@@ -179,7 +179,7 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
                                   .apply(ancientToolData3)
                                  .apply(setFluid)
                                   .build());
-    inject("fishing_treasure", new ResourceLocation("gameplay/fishing/treasure"))
+    inject("fishing_treasure", ResourceLocation.tryParse("gameplay/fishing/treasure"))
       .addToPool("main", LootItem.lootTableItem(TinkerTools.swasher.get())
                                  .setWeight(1) // all treasure from fishing is the same weight
                                  .apply(ancientToolData3)
@@ -200,7 +200,7 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
       .setWeight(1) // TF tends to use 1 for its weight
       .apply(ancientToolData3)
       .build();
-    inject("labyrinth_room", new ResourceLocation(tf, "chests/labyrinth_room"), tfLoaded)
+    inject("labyrinth_room", ResourceLocation.tryBuild(tf, "chests/labyrinth_room"), tfLoaded)
       .addToPool("pool1", minotaurAxe)
       .addToPool("pool2", minotaurAxe);
   }

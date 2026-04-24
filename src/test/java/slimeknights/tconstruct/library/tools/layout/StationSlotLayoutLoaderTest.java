@@ -30,7 +30,7 @@ class StationSlotLayoutLoaderTest extends BaseMcTest {
   @BeforeAll
   static void setup() {
     try {
-      CraftingHelper.register(new ResourceLocation("minecraft", "item"), VanillaIngredientSerializer.INSTANCE);
+      CraftingHelper.register(ResourceLocation.tryBuild("minecraft", "item"), VanillaIngredientSerializer.INSTANCE);
     } catch (Exception e) {
       // just need to ensure its registered
     }

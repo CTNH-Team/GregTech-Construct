@@ -25,7 +25,7 @@ public class MultilayerArmorItem extends ModifiableArmorItem {
 
   public MultilayerArmorItem(ArmorMaterial material, ArmorItem.Type slot, Properties properties, ToolDefinition toolDefinition) {
     super(material, slot, properties, toolDefinition);
-    this.name = new ResourceLocation(material.getName());
+    this.name = ResourceLocation.tryParse(material.getName());
   }
 
   @Nullable

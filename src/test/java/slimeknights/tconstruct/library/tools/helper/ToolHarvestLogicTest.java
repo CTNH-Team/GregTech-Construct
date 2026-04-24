@@ -32,7 +32,7 @@ class ToolHarvestLogicTest extends ToolItemTest {
     MaterialItemFixture.init();
     if (pickaxeTool == null) {
       pickaxeTool = new ModifiableItem(new Item.Properties().stacksTo(1), ToolDefinitionFixture.getStandardToolDefinition());
-      ForgeRegistries.ITEMS.register(new ResourceLocation("test", "pickaxe"), pickaxeTool);
+      ForgeRegistries.ITEMS.register(ResourceLocation.tryBuild("test", "pickaxe"), pickaxeTool);
     }
   }
 
@@ -78,7 +78,7 @@ class ToolHarvestLogicTest extends ToolItemTest {
   void calcSpeed_effective_withMiningModifier() {
     float modifier = 2f;
 
-    ToolDefinition definition = new ToolDefinition(new ResourceLocation("test", "mining_tool"));
+    ToolDefinition definition = new ToolDefinition(ResourceLocation.tryBuild("test", "mining_tool"));
     definition.setData(ToolDefinitionDataBuilder
                          .builder()
                          .module(new IsEffectiveModule(BlockPredicate.set(Blocks.COBBLESTONE), true))
@@ -90,7 +90,7 @@ class ToolHarvestLogicTest extends ToolItemTest {
                          .build());
 
     ModifiableItem toolWithMiningModifier = new ModifiableItem(new Item.Properties(), definition);
-    ForgeRegistries.ITEMS.register(new ResourceLocation("test", "tool_with_mining_modifier"), toolWithMiningModifier);
+    ForgeRegistries.ITEMS.register(ResourceLocation.tryBuild("test", "tool_with_mining_modifier"), toolWithMiningModifier);
     ItemStack tool = buildTestTool(toolWithMiningModifier);
 
     // boosted by correct block

@@ -146,7 +146,7 @@ public interface FluidEffect<C extends FluidEffectContext> extends IHaveLoader, 
       return loaderId;
     }
     Mantle.logger.error("Failed to get default description for unregistered fluid effect loader {}", loader);
-    return new ResourceLocation("missingno");
+    return ResourceLocation.tryParse("missingno");
   }
 
   /** Gets the string key for the given loader */

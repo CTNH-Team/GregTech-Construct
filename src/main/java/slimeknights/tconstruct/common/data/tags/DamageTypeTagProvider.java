@@ -100,14 +100,14 @@ public class DamageTypeTagProvider extends DamageTypeTagsProvider {
     addOptional(MAGIC_PROTECTION, tf, "haunt", "ominous_fire", "twilight_scepter");
     addOptional(PROJECTILE_PROTECTION, tf, "falling_ice");
     // anything "magic" is good against lich shields, so tag our magic fluids
-    tag(TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(tf, "breaks_lich_shields"))).add(FLUID_MAGIC.values());
+    tag(TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.tryBuild(tf, "breaks_lich_shields"))).add(FLUID_MAGIC.values());
   }
 
   /** Adds the given IDs from the given domain to the tag as optional entries. */
   private void addOptional(TagKey<DamageType> tag, String domain, String... names) {
     TagAppender<DamageType> appender = tag(tag);
     for (String name : names) {
-      appender.addOptional(new ResourceLocation(domain, name));
+      appender.addOptional(ResourceLocation.tryBuild(domain, name));
     }
   }
 }

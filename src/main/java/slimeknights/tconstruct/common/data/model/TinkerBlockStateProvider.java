@@ -90,7 +90,7 @@ public class TinkerBlockStateProvider extends BlockStateProvider {
     glassBlock(TinkerSmeltery.scorchedSoulGlass.get(), TinkerSmeltery.scorchedSoulGlassPane.get(), "foundry/soul_glass/",
                getResource("block/foundry/soul_glass"), getResource("block/foundry/glass_top"), -1, true, translucent);
     // obsidian pane
-    ResourceLocation obsidian = new ResourceLocation("block/obsidian");
+    ResourceLocation obsidian = ResourceLocation.tryParse("block/obsidian");
     paneBlock(TinkerCommons.obsidianPane.get(), "obsidian_pane/", obsidian, obsidian, false, -1, false, RenderType.solid());
 
     // shards

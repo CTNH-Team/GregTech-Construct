@@ -158,7 +158,7 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
                         .unlockedBy("has_item", has(TinkerSmeltery.grout)).save(c);
         ConditionalRecipe.builder()
                 .addCondition(new ModLoadedCondition("ceramics"))
-                .addRecipe(c -> fastGrout.accept(ConsumerWrapperBuilder.wrap(new ResourceLocation("ceramics", "kiln")).build(c)))
+                .addRecipe(c -> fastGrout.accept(ConsumerWrapperBuilder.wrap(ResourceLocation.tryBuild("ceramics", "kiln")).build(c)))
                 .addCondition(TrueCondition.INSTANCE)
                 .addRecipe(fastGrout)
                 .generateAdvancement()
@@ -606,7 +606,7 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
                         .unlockedBy("has_item", has(TinkerSmeltery.netherGrout)).save(c);
         ConditionalRecipe.builder()
                 .addCondition(new ModLoadedCondition("ceramics"))
-                .addRecipe(c -> fastGrout.accept(ConsumerWrapperBuilder.wrap(new ResourceLocation("ceramics", "kiln")).build(c)))
+                .addRecipe(c -> fastGrout.accept(ConsumerWrapperBuilder.wrap(ResourceLocation.tryBuild("ceramics", "kiln")).build(c)))
                 .addCondition(TrueCondition.INSTANCE)
                 .addRecipe(fastGrout)
                 .generateAdvancement()
@@ -1715,11 +1715,11 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
                 .addByproduct(TinkerFluids.moltenDiamond.result(FluidValues.GEM))
                 .save(consumer, location(metalFolder + "netherite/shovel"));
         // tools complement compat - excavators and hammers
-        MeltingRecipeBuilder.melting(ItemNameIngredient.from(new ResourceLocation("tools_complement", "netherite_excavator")), TinkerFluids.moltenNetherite, FluidValues.INGOT)
+        MeltingRecipeBuilder.melting(ItemNameIngredient.from(ResourceLocation.tryBuild("tools_complement", "netherite_excavator")), TinkerFluids.moltenNetherite, FluidValues.INGOT)
                 .setDamagable(netheriteSizes)
                 .addByproduct(TinkerFluids.moltenDiamond.result(FluidValues.GEM * 11))
                 .save(withCondition(consumer, new ItemExistsCondition("tools_complement", "netherite_excavator")), location(metalFolder + "netherite/excavator"));
-        MeltingRecipeBuilder.melting(ItemNameIngredient.from(new ResourceLocation("tools_complement", "netherite_hammer")), TinkerFluids.moltenNetherite, FluidValues.INGOT)
+        MeltingRecipeBuilder.melting(ItemNameIngredient.from(ResourceLocation.tryBuild("tools_complement", "netherite_hammer")), TinkerFluids.moltenNetherite, FluidValues.INGOT)
                 .setDamagable(netheriteSizes)
                 .addByproduct(TinkerFluids.moltenDiamond.result(FluidValues.GEM * 13))
                 .save(withCondition(consumer, new ItemExistsCondition("tools_complement", "netherite_hammer")), location(metalFolder + "netherite/hammer"));
@@ -2297,7 +2297,7 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
     private void addCompatRecipes(Consumer<FinishedRecipe> consumer) {
         String folder = "compat/";
         // create - cast andesite alloy
-        ItemOutput andesiteAlloy = ItemNameOutput.fromName(new ResourceLocation("create", "andesite_alloy"));
+        ItemOutput andesiteAlloy = ItemNameOutput.fromName(ResourceLocation.tryBuild("create", "andesite_alloy"));
         Consumer<FinishedRecipe> createConsumer = withCondition(consumer, new ModLoadedCondition("create"));
         ItemCastingRecipeBuilder.basinRecipe(andesiteAlloy)
                 .setCast(Blocks.ANDESITE, true)
@@ -2318,7 +2318,7 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
                 .save(withCondition(consumer, tagCondition(treatedWood), new TagFilledCondition<>(creosote)), location(folder + "treated_wood"));
 
         // farmers delight - cast dough with a small discount to make numbers work out nicer
-        ResourceLocation dough = new ResourceLocation("farmersdelight", "wheat_dough");
+        ResourceLocation dough = ResourceLocation.tryBuild("farmersdelight", "wheat_dough");
         ItemCastingRecipeBuilder.tableRecipe(ItemNameOutput.fromName(dough))
                 .setCast(Items.WHEAT, true)
                 .setFluid(MantleTags.Fluids.WATER, 250)
@@ -2338,10 +2338,10 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
         // ID helpers
         String ceramics = "ceramics";
         String ceramicsFolder = folder + ceramics + "/";
-        Function<String,ResourceLocation> ceramicsId = name -> new ResourceLocation(ceramics, name);
-        Function<String,Ingredient> ceramicsItem = name -> ItemNameIngredient.from(new ResourceLocation(ceramics, name));
-        Function<String,Ingredient> ceramicsTag = name -> Ingredient.of(ItemTags.create(new ResourceLocation(ceramics, name)));
-        Function<String,ItemOutput> ceramicsOutput = name -> ItemNameOutput.fromName(new ResourceLocation(ceramics, name));
+        Function<String,ResourceLocation> ceramicsId = name -> ResourceLocation.tryBuild(ceramics, name);
+        Function<String,Ingredient> ceramicsItem = name -> ItemNameIngredient.from(ResourceLocation.tryBuild(ceramics, name));
+        Function<String,Ingredient> ceramicsTag = name -> Ingredient.of(ItemTags.create(ResourceLocation.tryBuild(ceramics, name)));
+        Function<String,ItemOutput> ceramicsOutput = name -> ItemNameOutput.fromName(ResourceLocation.tryBuild(ceramics, name));
         Consumer<FinishedRecipe> ceramicsConsumer = withCondition(consumer, new ModLoadedCondition(ceramics));
 
         // fill clay and cracked clay buckets

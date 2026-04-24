@@ -35,7 +35,7 @@ public final class MaterialFixture {
   }
 
   private static Material material(String mat, boolean craftable, IMaterialStats... stats) {
-    Material material = new TestMaterial(new ResourceLocation("test", mat), craftable, false);
+    Material material = new TestMaterial(ResourceLocation.tryBuild("test", mat), craftable, false);
     ALL_MATERIALS_BUILDER.add(material);
     ALL_MATERIAL_FIXTURES_BUILDER.put(material, ImmutableList.copyOf(stats));
     return material;
