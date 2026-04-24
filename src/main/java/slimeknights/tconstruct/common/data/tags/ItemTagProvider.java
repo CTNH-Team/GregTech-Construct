@@ -273,6 +273,7 @@ public class ItemTagProvider extends ItemTagsProvider {
         addToolTags(TinkerTools.screwdriver, MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, CLUSTER_MAX_HARVESTABLES, SMALL_TOOLS, BONUS_SLOTS, SCREWDRIVERS, CRAFTING_SCREWDRIVERS);
         addToolTags(TinkerTools.mallet,      MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, CLUSTER_MAX_HARVESTABLES, SMALL_TOOLS, BONUS_SLOTS, MALLETS, CRAFTING_MALLETS);
         addToolTags(TinkerTools.saw,         MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, CLUSTER_MAX_HARVESTABLES, SMALL_TOOLS, BONUS_SLOTS, SAWS, CRAFTING_SAWS);
+        addToolTags(TinkerTools.crowbar,     MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, CLUSTER_MAX_HARVESTABLES, SMALL_TOOLS, BONUS_SLOTS, CROWBARS, CRAFTING_CROWBARS);
         // ranged
         addToolTags(TinkerTools.crossbow,    MULTIPART_TOOL, DURABILITY,  MELEE_WEAPON,  CROSSBOWS,    INTERACTABLE_LEFT,  SMALL_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_CROSSBOWS);
         addToolTags(TinkerTools.longbow,     MULTIPART_TOOL, DURABILITY,  MELEE_WEAPON,  LONGBOWS,     INTERACTABLE_LEFT,  BROAD_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_BOWS, BALLISTAS);
@@ -401,7 +402,7 @@ public class ItemTagProvider extends ItemTagsProvider {
 
                         TinkerToolParts.wrenchHead.get(), TinkerToolParts.wireCutterHead.get(),
                         TinkerToolParts.fileHead.get(), TinkerToolParts.screwdriverHead.get(),
-                        TinkerToolParts.sawBlade.get())
+                        TinkerToolParts.sawBlade.get(), TinkerToolParts.crowbarHead.get())
 
                 .add(TinkerToolParts.plating.values().toArray(new Item[0]));
         // tag for the part chest items

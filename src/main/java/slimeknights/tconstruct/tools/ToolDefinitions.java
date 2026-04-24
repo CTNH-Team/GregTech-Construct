@@ -34,6 +34,7 @@ public final class ToolDefinitions {
     public static final ToolDefinition SCREWDRIVER = ToolDefinition.create(TinkerTools.screwdriver);
     public static final ToolDefinition MALLET = ToolDefinition.create(TinkerTools.mallet);
     public static final ToolDefinition SAW = ToolDefinition.create(TinkerTools.saw);
+    public static final ToolDefinition CROWBAR = ToolDefinition.create(TinkerTools.crowbar);
 
     // ranged
     public static final ToolDefinition CROSSBOW = ToolDefinition.create(TinkerTools.crossbow);

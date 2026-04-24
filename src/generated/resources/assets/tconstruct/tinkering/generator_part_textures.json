@@ -854,6 +854,30 @@
       "stat_type": "tconstruct:head"
     },
     {
+      "path": "tconstruct:item/tool/crowbar/head",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/crowbar/head_broken",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/crowbar/binding",
+      "stat_type": "tconstruct:binding"
+    },
+    {
+      "path": "tconstruct:item/tool/crowbar/head2",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/crowbar/head2_broken",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/crowbar/head_part",
+      "stat_type": "tconstruct:head"
+    },
+    {
       "path": "tconstruct:item/tool/crossbow/limb",
       "stat_type": "tconstruct:limb"
     },

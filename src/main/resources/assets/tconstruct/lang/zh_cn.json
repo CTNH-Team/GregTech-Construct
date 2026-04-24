@@ -327,6 +327,7 @@
   "pattern.tconstruct.file_head": "锉刀头",
   "pattern.tconstruct.screwdriver_head": "螺丝刀头",
   "pattern.tconstruct.saw_blade": "锯片",
+  "pattern.tconstruct.crowbar_head": "撬棍头",
 
   "_comment": "Large Head Patterns",
 
@@ -383,6 +384,7 @@
   "item.tconstruct.file_head_cast": "锉刀头金质铸模",
   "item.tconstruct.screwdriver_head_cast": "螺丝刀头金质铸模",
   "item.tconstruct.saw_blade_cast": "锯片金质铸模",
+  "item.tconstruct.crowbar_head_cast": "撬棍头金质铸模",
 
   "_comment": "Large Head Gold Casts",
 
@@ -439,6 +441,7 @@
   "item.tconstruct.file_head_sand_cast": "锉刀头沙子铸模",
   "item.tconstruct.screwdriver_head_sand_cast": "螺丝刀头沙子铸模",
   "item.tconstruct.saw_blade_sand_cast": "锯片沙子铸模",
+  "item.tconstruct.crowbar_head_sand_cast": "撬棍头沙子铸模",
 
   "_comment": "Large Head Sand Casts",
 
@@ -494,6 +497,7 @@
   "item.tconstruct.file_head_red_sand_cast": "锉刀头红沙铸模",
   "item.tconstruct.screwdriver_head_red_sand_cast": "螺丝刀头红纱铸模",
   "item.tconstruct.saw_blade_red_sand_cast": "锯片红沙铸模",
+  "item.tconstruct.crowbar_head_red_sand_cast": "撬棍头红沙铸模",
 
   "_comment": "Large Head Red Sand Casts",
 
@@ -1157,6 +1161,7 @@
   "item.tconstruct.screwdriver": "螺丝刀",
   "item.tconstruct.mallet": "软锤",
   "item.tconstruct.saw": "锯子",
+  "item.tconstruct.crowbar": "撬棍",
 
   "item.tconstruct.crossbow": "弩",
   "item.tconstruct.longbow": "长弓",
@@ -1228,6 +1233,7 @@
   "item.tconstruct.file_head": "锉刀头",
   "item.tconstruct.screwdriver_head": "螺丝刀头",
   "item.tconstruct.saw_blade": "锯片",
+  "item.tconstruct.crowbar_head": "撬棍头",
 
   "item.tconstruct.small_axe_head": "小型斧刃",
   "item.tconstruct.broad_axe_head": "板斧刃",
@@ -1287,6 +1293,7 @@
   "item.tconstruct.screwdriver.description": "螺丝刀用来拧紧螺丝。\n或者调整机器。",
   "item.tconstruct.mallet.description": "40（\n软锤“温柔”的敲击能使机器停工。\n或者调整机器。",
   "item.tconstruct.saw.description": "锯子能够更高效的将原木锯成木板。",
+  "item.tconstruct.crowbar.description": "物理学圣剑。",
 
   "item.tconstruct.crossbow.description": "弩是一种轻型远程武器，能快速发射箭或烟花。",
   "item.tconstruct.longbow.description": "长弓是一种宽型远程武器，能对极远的目标实施精确打击。",

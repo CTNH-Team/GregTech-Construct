@@ -533,6 +533,27 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // faster tool name logic
                 .module(FixedMaterialToolName.FIRST);
 
+        define(ToolDefinitions.CROWBAR)
+                // parts
+                .module(PartStatsModule.parts()
+                        .part(crowbarHead)
+                        .part(toughBinding)
+                        .part(crowbarHead).build())
+                .module(defaultThreeParts)
+                // stats
+                .module(new SetStatsModule(StatsNBT.builder()
+                        .set(ToolStats.ATTACK_DAMAGE, 3f)
+                        .set(ToolStats.ATTACK_SPEED, 1.2f).build()))
+                .smallToolStartingSlots()
+                // traits
+                .module(ToolTraitsModule.builder().trait(ModifierIds.stripping).build())
+                // harvest
+                .module(ToolActionsModule.of(CROWBAR_DIG, CROWBAR_ROTATE, CROWBAR_REMOVE_COVER))
+                .module(IsEffectiveModule.tag(CustomTags.MINEABLE_WITH_CROWBAR))
+                .module(BoxAOEIterator.builder(0, 0, 0).addDepth(2).addHeight(1).direction(IBoxExpansion.PITCH).build())
+                // faster tool name logic
+                .module(FixedMaterialToolName.FIRST);
+
         // bows
         define(ToolDefinitions.CROSSBOW)
                 // parts

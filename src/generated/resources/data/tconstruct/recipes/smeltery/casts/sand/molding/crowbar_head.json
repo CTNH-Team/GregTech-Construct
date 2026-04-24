@@ -1,0 +1,11 @@
+﻿{
+  "type": "tconstruct:molding_table",
+  "material": {
+    "tag": "tconstruct:casts/sand"
+  },
+  "pattern": {
+    "type": "tconstruct:material",
+    "item": "tconstruct:crowbar_head"
+  },
+  "result": "tconstruct:crowbar_head_sand_cast"
+}

@@ -95,6 +95,7 @@ public final class TinkerToolParts extends TinkerModule {
     public static final ItemObject<ToolPartItem> fileHead = ITEMS.register("file_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
     public static final ItemObject<ToolPartItem> screwdriverHead = ITEMS.register("screwdriver_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
     public static final ItemObject<ToolPartItem> sawBlade = ITEMS.register("saw_blade", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
+    public static final ItemObject<ToolPartItem> crowbarHead = ITEMS.register("crowbar_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
     // block entities
     public static final RegistryObject<BlockEntityType<MaterialBlockEntity>> materialBlock = BLOCK_ENTITIES.register("material_block", MaterialBlockEntity::new, fakeStorageBlock);
 
@@ -127,6 +128,7 @@ public final class TinkerToolParts extends TinkerModule {
         accept(output, fileHead);
         accept(output, screwdriverHead);
         accept(output, sawBlade);
+        accept(output, crowbarHead);
         // ranged
         accept(output, bowLimb);
         accept(output, bowGrip);
