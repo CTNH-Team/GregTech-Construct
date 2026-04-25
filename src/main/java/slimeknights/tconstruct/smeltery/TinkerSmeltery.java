@@ -562,11 +562,13 @@ public final class TinkerSmeltery extends TinkerModule {
         accept(output, getter, smallBladeCast);
         accept(output, getter, adzeHeadCast);
         accept(output, getter, wrenchHeadCast);
-        accept(output, getter, fileHeadCast);
-        accept(output, getter, crowbarHeadCast);
-        accept(output, getter, sawBladeCast);
-        accept(output, getter, screwdriverHeadCast);
         accept(output, getter, wireCutterHeadCast);
+        accept(output, getter, fileHeadCast);
+        accept(output, getter, screwdriverHeadCast);
+        accept(output, getter, sawBladeCast);
+        accept(output, getter, crowbarHeadCast);
+        accept(output, getter, mortarHeadCast);
+        accept(output, getter, mortarBowlCast);
         // large heads
         accept(output, getter, hammerHeadCast);
         accept(output, getter, broadAxeHeadCast);

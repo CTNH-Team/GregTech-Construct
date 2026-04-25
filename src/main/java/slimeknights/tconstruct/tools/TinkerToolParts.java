@@ -91,14 +91,14 @@ public final class TinkerToolParts extends TinkerModule {
     public static final ItemObject<ToolPartItem> maille = ITEMS.register("maille", () -> new ToolPartItem(ITEM_PROPS, StatlessMaterialStats.MAILLE.getIdentifier()));
     public static final ItemObject<ToolPartItem> shieldCore = ITEMS.register("shield_core", () -> new ToolPartItem(ITEM_PROPS, StatlessMaterialStats.SHIELD_CORE.getIdentifier()));
     //gtceu
-    public static final ItemObject<ToolPartItem> wrenchHead = ITEMS.register("wrench_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
-    public static final ItemObject<ToolPartItem> wireCutterHead = ITEMS.register("wire_cutter_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
-    public static final ItemObject<ToolPartItem> fileHead = ITEMS.register("file_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
-    public static final ItemObject<ToolPartItem> screwdriverHead = ITEMS.register("screwdriver_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
-    public static final ItemObject<ToolPartItem> sawBlade = ITEMS.register("saw_blade", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
-    public static final ItemObject<ToolPartItem> crowbarHead = ITEMS.register("crowbar_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
-    public static final ItemObject<ToolPartItem> mortarHead = ITEMS.register("mortar_head", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
-    public static final ItemObject<ToolPartItem> mortarBowl = ITEMS.register("mortar_bowl", () -> new ToolPartItem(ITEM_PROPS, HeadMaterialStats.ID));
+    public static final ItemObject<MaterialTagToolPartItem> wrenchHead = ITEMS.register("wrench_head", () -> new MaterialTagToolPartItem(ITEM_PROPS, HeadMaterialStats.ID,TinkerTags.Materials.METALS));
+    public static final ItemObject<MaterialTagToolPartItem> wireCutterHead = ITEMS.register("wire_cutter_head", () -> new MaterialTagToolPartItem(ITEM_PROPS, HeadMaterialStats.ID,TinkerTags.Materials.METALS));
+    public static final ItemObject<MaterialTagToolPartItem> fileHead = ITEMS.register("file_head", () -> new MaterialTagToolPartItem(ITEM_PROPS, HeadMaterialStats.ID,TinkerTags.Materials.METALS));
+    public static final ItemObject<MaterialTagToolPartItem> screwdriverHead = ITEMS.register("screwdriver_head", () -> new MaterialTagToolPartItem(ITEM_PROPS, HeadMaterialStats.ID ,TinkerTags.Materials.METALS));
+    public static final ItemObject<MaterialTagToolPartItem> sawBlade = ITEMS.register("saw_blade", () -> new MaterialTagToolPartItem(ITEM_PROPS, HeadMaterialStats.ID,TinkerTags.Materials.METALS));
+    public static final ItemObject<MaterialTagToolPartItem> crowbarHead = ITEMS.register("crowbar_head", () -> new MaterialTagToolPartItem(ITEM_PROPS, HeadMaterialStats.ID,TinkerTags.Materials.METALS));
+    public static final ItemObject<MaterialTagToolPartItem> mortarHead = ITEMS.register("mortar_head", () -> new MaterialTagToolPartItem(ITEM_PROPS, HeadMaterialStats.ID, TinkerTags.Materials.HARD));
+    public static final ItemObject<MaterialTagToolPartItem> mortarBowl = ITEMS.register("mortar_bowl", () -> new MaterialTagToolPartItem(ITEM_PROPS, HeadMaterialStats.ID, TinkerTags.Materials.HARD));
     // block entities
     public static final RegistryObject<BlockEntityType<MaterialBlockEntity>> materialBlock = BLOCK_ENTITIES.register("material_block", MaterialBlockEntity::new, fakeStorageBlock);
 

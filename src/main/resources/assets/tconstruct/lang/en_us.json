@@ -328,6 +328,8 @@
   "pattern.tconstruct.screwdriver_head": "Screwdriver Head",
   "pattern.tconstruct.saw_blade": "Saw Blade",
   "pattern.tconstruct.crowbar_head": "Crowbar Head",
+  "pattern.tconstruct.mortar_head": "Grinding pestle",
+  "pattern.tconstruct.mortar_bowl": "Mortar",
 
   "_comment": "Large Head Patterns",
 
@@ -385,6 +387,8 @@
   "item.tconstruct.screwdriver_head_cast": "Screwdriver Head Gold Cast",
   "item.tconstruct.saw_blade_cast": "Saw Blade Gold Cast",
   "item.tconstruct.crowbar_head_cast": "Crowbar Head Gold Cast",
+  "item.tconstruct.mortar_head_cast": "Grinding pestle Gold Cast",
+  "item.tconstruct.mortar_bowl_cast": "Mortar Gold Cast",
 
   "_comment": "Large Head Gold Casts",
 
@@ -442,6 +446,8 @@
   "item.tconstruct.screwdriver_head_sand_cast": "Screwdriver Head Sand Cast",
   "item.tconstruct.saw_blade_sand_cast": "Saw Blade Sand Cast",
   "item.tconstruct.crowbar_head_sand_cast": "Crowbar Head Sand Cast",
+  "item.tconstruct.mortar_head_sand_cast": "Grinding pestle Sand Cast",
+  "item.tconstruct.mortar_bowl_sand_cast": "Mortar Sand Cast",
 
   "_comment": "Large Head Sand Casts",
 
@@ -498,6 +504,8 @@
   "item.tconstruct.screwdriver_head_red_sand_cast": "Screwdriver Head Blade Red Sand Cast",
   "item.tconstruct.saw_blade_red_sand_cast": "Saw Blade Red Sand Cast",
   "item.tconstruct.crowbar_head_red_sand_cast": "Crowbar Head Red Sand Cast",
+  "item.tconstruct.mortar_head_red_sand_cast": "Grinding pestle Red Sand Cast",
+  "item.tconstruct.mortar_bowl_red_sand_cast": "Mortar Red Sand Cast",
 
   "_comment": "Large Head Red Sand Casts",
 
@@ -1162,6 +1170,7 @@
   "item.tconstruct.mallet": "Mallet",
   "item.tconstruct.saw": "Saw",
   "item.tconstruct.crowbar": "Crowbar",
+  "item.tconstruct.mortar": "Mortar",
 
   "item.tconstruct.crossbow": "Crossbow",
   "item.tconstruct.longbow": "Longbow",
@@ -1234,6 +1243,8 @@
   "item.tconstruct.screwdriver_head": "Screwdriver Head",
   "item.tconstruct.saw_blade": "Saw Blade",
   "item.tconstruct.crowbar_head": "Crowbar Head",
+  "item.tconstruct.mortar_head": "Grinding pestle",
+  "item.tconstruct.mortar_bowl": "Mortar",
 
   "item.tconstruct.small_axe_head": "Small Axe Head",
   "item.tconstruct.broad_axe_head": "Broad Axe Head",
@@ -1294,6 +1305,7 @@
   "item.tconstruct.mallet.description": "The ''gentle'' tapping of the mallet can cause the machine to stop working.\nOr adjust the machine.",
   "item.tconstruct.saw.description": "Thw saw can efficiently saw logs into wood plank.",
   "item.tconstruct.crowbar.description": "Sword of Physics.",
+  "item.tconstruct.mortar.description": "Grind large solid items into powder.\nGrinding...",
 
   "item.tconstruct.crossbow.description": "The Crossbow is a light ranged weapon, capable of quickly firing arrows and fireworks.",
   "item.tconstruct.longbow.description": "The Longbow is a broad ranged weapon, capable of firing arrows with precision over long distances.",
