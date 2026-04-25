@@ -1,4 +1,4 @@
-{
+﻿{
   "loader": "tconstruct:tool",
   "parent": "tconstruct:item/base/axe",
   "textures": {

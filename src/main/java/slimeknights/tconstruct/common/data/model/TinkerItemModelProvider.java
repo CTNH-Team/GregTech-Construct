@@ -74,6 +74,8 @@ public class TinkerItemModelProvider extends ItemModelProvider {
         part(TinkerToolParts.screwdriverHead, "screwdriver/head_part");
         part(TinkerToolParts.sawBlade, "saw/head_part");
         part(TinkerToolParts.crowbarHead, "crowbar/head_part");
+        part(TinkerToolParts.mortarHead, "mortar/head_part");
+        part(TinkerToolParts.mortarBowl, "mortar/bowl_part");
         // gauges
         generated(TinkerSmeltery.copperGauge, "block/smeltery/io/gauge");
         generated(TinkerSmeltery.obsidianGauge, "block/foundry/io/gauge");
@@ -104,6 +106,8 @@ public class TinkerItemModelProvider extends ItemModelProvider {
         cast(TinkerSmeltery.screwdriverHeadCast);
         cast(TinkerSmeltery.sawBladeCast);
         cast(TinkerSmeltery.crowbarHeadCast);
+        cast(TinkerSmeltery.mortarHeadCast);
+        cast(TinkerSmeltery.mortarBowlCast);
         // large heads
         cast(TinkerSmeltery.hammerHeadCast);
         cast(TinkerSmeltery.broadBladeCast);

@@ -878,6 +878,26 @@
       "stat_type": "tconstruct:head"
     },
     {
+      "path": "tconstruct:item/tool/mortar/head",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/mortar/head_broken",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/mortar/bowl",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/mortar/head_part",
+      "stat_type": "tconstruct:head"
+    },
+    {
+      "path": "tconstruct:item/tool/mortar/bowl_part",
+      "stat_type": "tconstruct:head"
+    },
+    {
       "path": "tconstruct:item/tool/crossbow/limb",
       "stat_type": "tconstruct:limb"
     },

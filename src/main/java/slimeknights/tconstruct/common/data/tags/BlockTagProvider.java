@@ -44,13 +44,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static net.minecraft.tags.BlockTags.MINEABLE_WITH_AXE;
-import static net.minecraft.tags.BlockTags.MINEABLE_WITH_HOE;
-import static net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE;
-import static net.minecraft.tags.BlockTags.MINEABLE_WITH_SHOVEL;
-import static net.minecraft.tags.BlockTags.NEEDS_DIAMOND_TOOL;
-import static net.minecraft.tags.BlockTags.NEEDS_IRON_TOOL;
-import static net.minecraft.tags.BlockTags.NEEDS_STONE_TOOL;
+import static net.minecraft.tags.BlockTags.*;
 import static net.minecraftforge.common.Tags.Blocks.NEEDS_GOLD_TOOL;
 import static net.minecraftforge.common.Tags.Blocks.NEEDS_NETHERITE_TOOL;
 import static slimeknights.mantle.Mantle.commonResource;

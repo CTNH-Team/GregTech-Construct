@@ -178,6 +178,7 @@ public class ToolClientEvents extends ClientEventBase {
             TinkerItemProperties.registerToolProperties(TinkerTools.mallet);
             TinkerItemProperties.registerToolProperties(TinkerTools.saw);
             TinkerItemProperties.registerToolProperties(TinkerTools.crowbar);
+            TinkerItemProperties.registerToolProperties(TinkerTools.mortar);
             // bow
             TinkerItemProperties.registerCrossbowProperties(TinkerTools.crossbow);
             TinkerItemProperties.registerToolProperties(TinkerTools.longbow);
@@ -246,6 +247,7 @@ public class ToolClientEvents extends ClientEventBase {
         registerItemColors(colors, TinkerTools.mallet);
         registerItemColors(colors, TinkerTools.saw);
         registerItemColors(colors, TinkerTools.crowbar);
+        registerItemColors(colors, TinkerTools.mortar);
         // bow
         registerItemColors(colors, TinkerTools.crossbow);
         registerItemColors(colors, TinkerTools.longbow);

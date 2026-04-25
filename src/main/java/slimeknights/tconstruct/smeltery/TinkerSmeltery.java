@@ -332,6 +332,8 @@ public final class TinkerSmeltery extends TinkerModule {
     public static final CastItemObject screwdriverHeadCast = ITEMS.registerCast(TinkerToolParts.screwdriverHead, ITEM_PROPS);
     public static final CastItemObject sawBladeCast = ITEMS.registerCast(TinkerToolParts.sawBlade, ITEM_PROPS);
     public static final CastItemObject crowbarHeadCast = ITEMS.registerCast(TinkerToolParts.crowbarHead, ITEM_PROPS);
+    public static final CastItemObject mortarHeadCast = ITEMS.registerCast(TinkerToolParts.mortarHead, ITEM_PROPS);
+    public static final CastItemObject mortarBowlCast = ITEMS.registerCast(TinkerToolParts.mortarBowl, ITEM_PROPS);
     // large tool heads
     public static final CastItemObject hammerHeadCast   = ITEMS.registerCast(TinkerToolParts.hammerHead, ITEM_PROPS);
     public static final CastItemObject broadBladeCast   = ITEMS.registerCast(TinkerToolParts.broadBlade, ITEM_PROPS);
@@ -560,11 +562,6 @@ public final class TinkerSmeltery extends TinkerModule {
         accept(output, getter, smallBladeCast);
         accept(output, getter, adzeHeadCast);
         accept(output, getter, wrenchHeadCast);
-        accept(output, getter, fileHeadCast);
-        accept(output, getter, crowbarHeadCast);
-        accept(output, getter, sawBladeCast);
-        accept(output, getter, screwdriverHeadCast);
-        accept(output, getter, wireCutterHeadCast);
         // large heads
         accept(output, getter, hammerHeadCast);
         accept(output, getter, broadAxeHeadCast);

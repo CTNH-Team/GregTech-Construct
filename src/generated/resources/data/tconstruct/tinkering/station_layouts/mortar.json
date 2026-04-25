@@ -1,0 +1,28 @@
+{
+  "icon": {
+    "item": "tconstruct:mortar",
+    "nbt": "{Damage:0,tic_broken:0b,tic_display:1b,tic_materials:[\"tconstruct:ui_render#head\",\"tconstruct:ui_render#handle\",\"tconstruct:ui_render#extra\",\"tconstruct:ui_render#large\",\"tconstruct:ui_render#extra_large\"]}"
+  },
+  "input_slots": [
+    {
+      "filter": {
+        "item": "tconstruct:mortar_head"
+      },
+      "icon": "tconstruct:mortar_head",
+      "translation_key": "item.tconstruct.mortar_head",
+      "x": 32,
+      "y": 30
+    },
+    {
+      "filter": {
+        "item": "tconstruct:mortar_bowl"
+      },
+      "icon": "tconstruct:mortar_bowl",
+      "translation_key": "item.tconstruct.mortar_bowl",
+      "x": 32,
+      "y": 54
+    }
+  ],
+  "sortIndex": 6,
+  "translation_key": "item.tconstruct.mortar"
+}

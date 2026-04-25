@@ -1,4 +1,4 @@
-{
+﻿{
   "parent": "forge:item/default",
   "loader": "tconstruct:material",
   "textures": {

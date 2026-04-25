@@ -164,6 +164,7 @@ public final class TinkerTools extends TinkerModule {
     public static final ItemObject<ModifiableItem> mallet = ITEMS.register("mallet", () -> new ModifiableGTToolItem(UNSTACKABLE_PROPS, ToolDefinitions.MALLET));
     public static final ItemObject<ModifiableItem> saw = ITEMS.register("saw", () -> new ModifiableGTToolItem(UNSTACKABLE_PROPS, ToolDefinitions.SAW));
     public static final ItemObject<ModifiableItem> crowbar = ITEMS.register("crowbar", () -> new ModifiableGTToolItem(UNSTACKABLE_PROPS, ToolDefinitions.CROWBAR));
+    public static final ItemObject<ModifiableItem> mortar = ITEMS.register("mortar", () -> new ModifiableGTToolItem(UNSTACKABLE_PROPS, ToolDefinitions.MORTAR));
 
     public static final ItemObject<ModifiableCrossbowItem> crossbow = ITEMS.register("crossbow", () -> new ModifiableCrossbowItem(UNSTACKABLE_PROPS, ToolDefinitions.CROSSBOW));
     public static final ItemObject<ModifiableBowItem> longbow = ITEMS.register("longbow", () -> new ModifiableBowItem(UNSTACKABLE_PROPS, ToolDefinitions.LONGBOW, true));
@@ -407,6 +408,7 @@ public final class TinkerTools extends TinkerModule {
         acceptTool(output, mallet);
         acceptTool(output, saw);
         acceptTool(output, crowbar);
+        acceptTool(output, mortar);
 
         // ranged tools
         acceptTool(output, crossbow);

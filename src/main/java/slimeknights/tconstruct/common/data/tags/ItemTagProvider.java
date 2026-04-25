@@ -263,9 +263,9 @@ public class ItemTagProvider extends ItemTagsProvider {
         addToolTags(TinkerTools.kama,   MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_WEAPON,  INTERACTABLE_RIGHT, AOE, SMALL_TOOLS, BONUS_SLOTS, ItemTags.HOES);
         addToolTags(TinkerTools.scythe, MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, AOE, BROAD_TOOLS, BONUS_SLOTS, ItemTags.HOES);
         // sword
-        addToolTags(TinkerTools.dagger,  MULTIPART_TOOL, DURABILITY, HARVEST, MELEE_PRIMARY, INTERACTABLE_RIGHT, PARRY, SMALL_TOOLS, BONUS_SLOTS, ItemTags.SWORDS, UNSALVAGABLE);
+        addToolTags(TinkerTools.dagger,  MULTIPART_TOOL, DURABILITY, HARVEST, MELEE_PRIMARY, INTERACTABLE_RIGHT, PARRY, SMALL_TOOLS, BONUS_SLOTS, ItemTags.SWORDS, UNSALVAGABLE, KNIVES, CRAFTING_KNIVES);
         addToolTags(TinkerTools.sword,   MULTIPART_TOOL, DURABILITY, HARVEST, MELEE_PRIMARY, INTERACTABLE_RIGHT, SWORD, SMALL_TOOLS, BONUS_SLOTS, ItemTags.SWORDS, AOE);
-        addToolTags(TinkerTools.cleaver, MULTIPART_TOOL, DURABILITY, HARVEST, MELEE_PRIMARY, INTERACTABLE_RIGHT, SWORD, BROAD_TOOLS, BONUS_SLOTS, ItemTags.SWORDS, AOE);
+        addToolTags(TinkerTools.cleaver, MULTIPART_TOOL, DURABILITY, HARVEST, MELEE_PRIMARY, INTERACTABLE_RIGHT, SWORD, BROAD_TOOLS, BONUS_SLOTS, ItemTags.SWORDS, AOE, BUTCHERY_KNIVES);
         //gt
         addToolTags(TinkerTools.wireCutter,  MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, CLUSTER_MAX_HARVESTABLES, SMALL_TOOLS, BONUS_SLOTS, WIRE_CUTTERS, CRAFTING_WIRE_CUTTERS);
         addToolTags(TinkerTools.wrench,      MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, CLUSTER_MAX_HARVESTABLES, SMALL_TOOLS, BONUS_SLOTS, WRENCH, WRENCHES, CRAFTING_WRENCHES);
@@ -274,6 +274,7 @@ public class ItemTagProvider extends ItemTagsProvider {
         addToolTags(TinkerTools.mallet,      MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, CLUSTER_MAX_HARVESTABLES, SMALL_TOOLS, BONUS_SLOTS, MALLETS, CRAFTING_MALLETS);
         addToolTags(TinkerTools.saw,         MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, CLUSTER_MAX_HARVESTABLES, SMALL_TOOLS, BONUS_SLOTS, SAWS, CRAFTING_SAWS);
         addToolTags(TinkerTools.crowbar,     MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, CLUSTER_MAX_HARVESTABLES, SMALL_TOOLS, BONUS_SLOTS, CROWBARS, CRAFTING_CROWBARS);
+        addToolTags(TinkerTools.mortar,      MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, CLUSTER_MAX_HARVESTABLES, SMALL_TOOLS, BONUS_SLOTS, MORTARS, CRAFTING_MORTARS);
         // ranged
         addToolTags(TinkerTools.crossbow,    MULTIPART_TOOL, DURABILITY,  MELEE_WEAPON,  CROSSBOWS,    INTERACTABLE_LEFT,  SMALL_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_CROSSBOWS);
         addToolTags(TinkerTools.longbow,     MULTIPART_TOOL, DURABILITY,  MELEE_WEAPON,  LONGBOWS,     INTERACTABLE_LEFT,  BROAD_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_BOWS, BALLISTAS);
@@ -402,7 +403,8 @@ public class ItemTagProvider extends ItemTagsProvider {
 
                         TinkerToolParts.wrenchHead.get(), TinkerToolParts.wireCutterHead.get(),
                         TinkerToolParts.fileHead.get(), TinkerToolParts.screwdriverHead.get(),
-                        TinkerToolParts.sawBlade.get(), TinkerToolParts.crowbarHead.get())
+                        TinkerToolParts.sawBlade.get(), TinkerToolParts.crowbarHead.get(),
+                        TinkerToolParts.mortarHead.get(), TinkerToolParts.mortarBowl.get())
 
                 .add(TinkerToolParts.plating.values().toArray(new Item[0]));
         // tag for the part chest items
@@ -548,11 +550,6 @@ public class ItemTagProvider extends ItemTagsProvider {
         addCast.accept(TinkerSmeltery.smallBladeCast);
         addCast.accept(TinkerSmeltery.adzeHeadCast);
         addCast.accept(TinkerSmeltery.wrenchHeadCast);
-        addCast.accept(TinkerSmeltery.wireCutterHeadCast);
-        addCast.accept(TinkerSmeltery.fileHeadCast);
-        addCast.accept(TinkerSmeltery.screwdriverHeadCast);
-        addCast.accept(TinkerSmeltery.sawBladeCast);
-        addCast.accept(TinkerSmeltery.crowbarHeadCast);
         // large heads
         addCast.accept(TinkerSmeltery.hammerHeadCast);
         addCast.accept(TinkerSmeltery.broadAxeHeadCast);
