@@ -20,6 +20,7 @@ import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.tools.helper.ToolBuildHandler;
 import slimeknights.tconstruct.library.tools.part.IMaterialItem;
 import slimeknights.tconstruct.library.tools.part.IRepairKitItem;
+import slimeknights.tconstruct.library.tools.part.MaterialTagToolPartItem;
 import slimeknights.tconstruct.library.tools.part.ToolPartItem;
 import slimeknights.tconstruct.library.tools.part.block.MaterialBlock;
 import slimeknights.tconstruct.library.tools.part.block.MaterialBlockEntity;

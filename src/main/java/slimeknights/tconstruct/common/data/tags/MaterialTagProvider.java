@@ -90,6 +90,23 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
     tag(TinkerTags.Materials.COMPATABILITY_BLOCKS).addTag(TinkerTags.Materials.COMPATABILITY_ALLOYS);
     tag(TinkerTags.Materials.COMPATABILITY_ALLOYS).addOptional(MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter);
 
+    tag(TinkerTags.Materials.METALS).addOptional(
+      // tier 1
+      MaterialIds.copper,
+      // tier 2
+      MaterialIds.iron, MaterialIds.gold,
+      MaterialIds.osmium, MaterialIds.lead, MaterialIds.silver, MaterialIds.aluminum,
+      // tier 3
+      MaterialIds.slimesteel, MaterialIds.amethystBronze, MaterialIds.pigIron, MaterialIds.roseGold,
+      MaterialIds.cobalt, MaterialIds.steel,
+      MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter,
+      MaterialIds.manaSteel, MaterialIds.terraSteel,
+      // tier 4
+      MaterialIds.manyullyn, MaterialIds.hepatizon, MaterialIds.cinderslime, MaterialIds.queensSlime, MaterialIds.knightmetal,
+      MaterialIds.knightly,
+      MaterialIds.fiery,
+      MaterialIds.ironwood, MaterialIds.steeleaf
+    ).addOptional(MaterialIds.necronium);
     // material categories
     // melee harvest
     tag(TinkerTags.Materials.GENERAL).add(
