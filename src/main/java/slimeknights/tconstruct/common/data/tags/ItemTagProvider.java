@@ -548,6 +548,11 @@ public class ItemTagProvider extends ItemTagsProvider {
         addCast.accept(TinkerSmeltery.smallBladeCast);
         addCast.accept(TinkerSmeltery.adzeHeadCast);
         addCast.accept(TinkerSmeltery.wrenchHeadCast);
+        addCast.accept(TinkerSmeltery.wireCutterHeadCast);
+        addCast.accept(TinkerSmeltery.fileHeadCast);
+        addCast.accept(TinkerSmeltery.screwdriverHeadCast);
+        addCast.accept(TinkerSmeltery.sawBladeCast);
+        addCast.accept(TinkerSmeltery.crowbarHeadCast);
         // large heads
         addCast.accept(TinkerSmeltery.hammerHeadCast);
         addCast.accept(TinkerSmeltery.broadAxeHeadCast);
