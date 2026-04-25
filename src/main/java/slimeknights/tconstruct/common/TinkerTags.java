@@ -832,6 +832,9 @@ public class TinkerTags {
     /** Materials that are a slimeskull. Mostly used for a sort order in books rather than having gameplay function. */
     public static final TagKey<IMaterial> SLIMESKULL = local("slimeskull");
 
+    // metals
+    public static final TagKey<IMaterial> METALS = local("metals");
+
     @SuppressWarnings("SameParameterValue")  // may want more tags later
     private static TagKey<IMaterial> local(String name) {
       return MaterialManager.getTag(getResource(name));

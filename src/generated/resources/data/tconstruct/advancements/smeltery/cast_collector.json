@@ -85,6 +85,30 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "crowbar_head": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:crowbar_head_cast"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "file_head": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:file_head_cast"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "gem": {
       "conditions": {
         "items": [
@@ -217,6 +241,30 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "saw_blade": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:saw_blade_cast"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "screwdriver_head": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:screwdriver_head_cast"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "small_axe_head": {
       "conditions": {
         "items": [
@@ -289,6 +337,18 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "wire_cutter_head": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:wire_cutter_head_cast"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "wrench_head": {
       "conditions": {
         "items": [
@@ -347,6 +407,21 @@
     ],
     [
       "wrench_head"
+    ],
+    [
+      "file_head"
+    ],
+    [
+      "crowbar_head"
+    ],
+    [
+      "saw_blade"
+    ],
+    [
+      "screwdriver_head"
+    ],
+    [
+      "wire_cutter_head"
     ],
     [
       "hammer_head"
