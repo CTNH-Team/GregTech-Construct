@@ -834,9 +834,11 @@ public class TinkerTags {
         // metals
         /** Materials that are metals **/
         public static final TagKey<IMaterial> METALS = local("metals");
+        /** Metals except gold and rose gold **/
+        public static final TagKey<IMaterial> HARD_METALS = local("hard_metals");
 
         // hard material
-        /** Materials that are hard, like metals and stones **/
+        /** Materials that are hard, like most of the metals and stones **/
         public static final TagKey<IMaterial> HARD = local("hard");
 
         @SuppressWarnings("SameParameterValue")  // may want more tags later

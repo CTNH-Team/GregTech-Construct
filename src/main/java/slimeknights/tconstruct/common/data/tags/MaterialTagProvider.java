@@ -91,23 +91,28 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
         tag(TinkerTags.Materials.COMPATABILITY_ALLOYS).addOptional(
                 MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter);
 
-        tag(TinkerTags.Materials.METALS).addOptional(
+        tag(TinkerTags.Materials.METALS).addTag(TinkerTags.Materials.HARD_METALS).addOptional(
+                MaterialIds.gold, MaterialIds.roseGold
+        );
+
+        tag(TinkerTags.Materials.HARD_METALS).addOptional(
                 // tier 1
                 MaterialIds.copper,
                 // tier 2
-                MaterialIds.iron, MaterialIds.gold,
+                MaterialIds.iron,
                 MaterialIds.osmium, MaterialIds.lead, MaterialIds.silver, MaterialIds.aluminum,
                 // tier 3
-                MaterialIds.slimesteel, MaterialIds.amethystBronze, MaterialIds.pigIron, MaterialIds.roseGold,
+                MaterialIds.slimesteel, MaterialIds.amethystBronze, MaterialIds.pigIron,
                 MaterialIds.cobalt, MaterialIds.steel,
                 MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter,
                 MaterialIds.manaSteel, MaterialIds.terraSteel,
                 // tier 4
-                MaterialIds.manyullyn, MaterialIds.hepatizon, MaterialIds.cinderslime, MaterialIds.queensSlime, MaterialIds.knightmetal,
-                MaterialIds.knightly,
+                MaterialIds.manyullyn, MaterialIds.hepatizon,
+                MaterialIds.cinderslime, MaterialIds.queensSlime,
+                MaterialIds.knightmetal, MaterialIds.knightly,
                 MaterialIds.fiery,
                 MaterialIds.ironwood, MaterialIds.steeleaf
-        ).addOptional(MaterialIds.necronium);
+        );
 
         tag(TinkerTags.Materials.HARD).addOptional(
                 // tier 1
@@ -115,11 +120,11 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 2
                 MaterialIds.scorchedStone, MaterialIds.necroticBone, MaterialIds.venombone,
                 // tier 3
-                MaterialIds.obsidian,
+                MaterialIds.obsidian,MaterialIds.necronium,
                 // tier 4
                 MaterialIds.blazingBone
 
-        ).addTag(TinkerTags.Materials.METALS);
+        ).addTag(TinkerTags.Materials.HARD_METALS);
         // material categories
         // melee harvest
         tag(TinkerTags.Materials.GENERAL).add(

@@ -20,6 +20,8 @@
     "#tconstruct:casts/single_use/screwdriver_head",
     "#tconstruct:casts/single_use/saw_blade",
     "#tconstruct:casts/single_use/crowbar_head",
+    "#tconstruct:casts/single_use/mortar_head",
+    "#tconstruct:casts/single_use/mortar_bowl",
     "#tconstruct:casts/single_use/hammer_head",
     "#tconstruct:casts/single_use/broad_axe_head",
     "#tconstruct:casts/single_use/broad_blade",

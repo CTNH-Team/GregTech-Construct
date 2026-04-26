@@ -193,6 +193,30 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "mortar_bowl": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mortar_bowl_cast"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mortar_head": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mortar_head_cast"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "nugget": {
       "conditions": {
         "items": [
@@ -409,19 +433,25 @@
       "wrench_head"
     ],
     [
+      "wire_cutter_head"
+    ],
+    [
       "file_head"
-    ],
-    [
-      "crowbar_head"
-    ],
-    [
-      "saw_blade"
     ],
     [
       "screwdriver_head"
     ],
     [
-      "wire_cutter_head"
+      "saw_blade"
+    ],
+    [
+      "crowbar_head"
+    ],
+    [
+      "mortar_head"
+    ],
+    [
+      "mortar_bowl"
     ],
     [
       "hammer_head"

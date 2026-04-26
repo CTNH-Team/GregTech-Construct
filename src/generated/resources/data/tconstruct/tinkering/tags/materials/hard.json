@@ -1,0 +1,45 @@
+{
+  "values": [
+    {
+      "id": "tconstruct:rock",
+      "required": false
+    },
+    {
+      "id": "tconstruct:flint",
+      "required": false
+    },
+    {
+      "id": "tconstruct:bone",
+      "required": false
+    },
+    {
+      "id": "tconstruct:whitestone",
+      "required": false
+    },
+    {
+      "id": "tconstruct:scorched_stone",
+      "required": false
+    },
+    {
+      "id": "tconstruct:necrotic_bone",
+      "required": false
+    },
+    {
+      "id": "tconstruct:venombone",
+      "required": false
+    },
+    {
+      "id": "tconstruct:obsidian",
+      "required": false
+    },
+    {
+      "id": "tconstruct:necronium",
+      "required": false
+    },
+    {
+      "id": "tconstruct:blazing_bone",
+      "required": false
+    },
+    "#tconstruct:hard_metals"
+  ]
+}
