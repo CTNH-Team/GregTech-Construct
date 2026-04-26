@@ -150,15 +150,18 @@ tasks.withType(JavaCompile).configureEach {
 lombok {
     version = "1.18.38"
 }
-
-test {
-    enabled = false
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
 }
-
-tasks.withType(Test).all {
-    enabled = false
-}
-
-tasks.named('check') {
-    dependsOn = []
+sourceSets {
+    test {
+        java.srcDir 'src/test/java'
+        resources.srcDir 'src/test/resources'
+        compileClasspath += sourceSets.main.runtimeClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
 }
