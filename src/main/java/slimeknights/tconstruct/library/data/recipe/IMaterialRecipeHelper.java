@@ -6,8 +6,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.crafting.conditions.OrCondition;
+import net.minecraftforge.fluids.FluidStack;
 import slimeknights.mantle.recipe.data.IRecipeHelper;
 import slimeknights.mantle.recipe.helper.ItemOutput;
+import slimeknights.mantle.recipe.ingredient.FluidIngredient;
 import slimeknights.mantle.registration.object.FluidObject;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
@@ -96,6 +98,14 @@ public interface IMaterialRecipeHelper extends IRecipeHelper {
     MaterialFluidRecipeBuilder.material(material)
                               .setFluid(fluid.ingredient(fluidAmount))
                               .setTemperature(getTemperature(fluid))
+                              .save(consumer, location(folder + "casting/" + material.getLocation('_').getPath()));
+    materialMelting(consumer, material, fluid, fluidAmount, folder);
+  }
+
+  default void materialMeltingCasting(Consumer<FinishedRecipe> consumer, MaterialVariantId material, Fluid fluid, int fluidAmount, String folder) {
+    MaterialFluidRecipeBuilder.material(material)
+                              .setFluid(FluidIngredient.of(new FluidStack(fluid, fluidAmount)))
+                              .setTemperature(getTemperature(new FluidStack(fluid, fluidAmount)))
                               .save(consumer, location(folder + "casting/" + material.getLocation('_').getPath()));
     materialMelting(consumer, material, fluid, fluidAmount, folder);
   }
