@@ -8,6 +8,8 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,6 +17,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -35,6 +38,9 @@ import slimeknights.tconstruct.common.data.DamageTypeProvider;
 import slimeknights.tconstruct.common.data.loot.GlobalLootModifiersProvider;
 import slimeknights.tconstruct.common.data.loot.LootTableInjectionProvider;
 import slimeknights.tconstruct.common.data.loot.TConstructLootTableProvider;
+import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
+import slimeknights.tconstruct.data.pack.TiCDynamicResourcePack;
+import slimeknights.tconstruct.data.pack.TiCPackSource;
 import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
 import slimeknights.tconstruct.common.data.tags.BlockEntityTypeTagProvider;
 import slimeknights.tconstruct.common.data.tags.BlockTagProvider;
@@ -193,6 +199,28 @@ public class TConstruct {
         generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
         generator.addProvider(server, new LootTableInjectionProvider(packOutput));
         generator.addProvider(server, new ConfigurationDataProvider(packOutput));
+    }
+
+    @SubscribeEvent
+    static void registerPackFinders(AddPackFindersEvent event) {
+        if (event.getPackType() == PackType.CLIENT_RESOURCES) {
+            TiCDynamicResourcePack.clearClient();
+            event.addRepositorySource(new TiCPackSource(
+                "tconstruct:dynamic_assets",
+                event.getPackType(),
+                Pack.Position.BOTTOM,
+                TiCDynamicResourcePack::new
+            ));
+        } else if (event.getPackType() == PackType.SERVER_DATA) {
+            TiCDynamicDataPack.clearServer();
+            // TODO: Task 6 - 在此处添加配方注册
+            event.addRepositorySource(new TiCPackSource(
+                "tconstruct:dynamic_data",
+                event.getPackType(),
+                Pack.Position.BOTTOM,
+                TiCDynamicDataPack::new
+            ));
+        }
     }
 
     /** Handles missing mappings of all types */
