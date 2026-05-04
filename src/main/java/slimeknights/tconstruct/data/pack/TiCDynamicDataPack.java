@@ -75,6 +75,7 @@ public class TiCDynamicDataPack implements PackResources {
      */
     public static void clearServer() {
         CONTENTS.clearData();
+        RECIPE_FILTERS.clear();
     }
 
     /**
@@ -161,6 +162,7 @@ public class TiCDynamicDataPack implements PackResources {
         return type == PackType.SERVER_DATA ? SERVER_DOMAINS : Set.of();
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     @Override
     public <T> T getMetadataSection(MetadataSectionSerializer<T> metaReader) {
