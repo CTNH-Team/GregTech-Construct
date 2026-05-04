@@ -118,6 +118,7 @@ public class TiCDynamicPackContents {
         }
     }
 
+    @Nullable
     public IoSupplier<InputStream> getResource(ResourceLocation location) {
         var lock = this.lock.readLock();
         lock.lock();
