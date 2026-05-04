@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material_fluid",
-  "fluid": {
-    "amount": 144,
-    "tag": "forge:rose_gold"
-  },
-  "output": "tconstruct:rose_gold",
-  "temperature": 550
-}

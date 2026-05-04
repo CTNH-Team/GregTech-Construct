@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material_melting",
-  "input": "tconstruct:gold",
-  "result": {
-    "amount": 144,
-    "tag": "forge:gold"
-  },
-  "temperature": 700
-}

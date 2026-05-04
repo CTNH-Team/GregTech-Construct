@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material_fluid",
-  "fluid": {
-    "amount": 36,
-    "tag": "tconstruct:glass"
-  },
-  "output": "tconstruct:glass",
-  "temperature": 750
-}
