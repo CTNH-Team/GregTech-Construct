@@ -34,8 +34,8 @@ public class TiCRecipes {
      * 配方添加
      */
     private static void recipeAddition(Consumer<FinishedRecipe> consumer) {
-        // TODO: Task 7 - 材料配方
-        // MaterialRecipeGenerator.register(consumer);
+        // Task 7 - 材料配方
+        MaterialRecipeGenerator.register(consumer);
 
         // TODO: Task 8 - 工具配方
         // ToolsRecipeGenerator.register(consumer);
