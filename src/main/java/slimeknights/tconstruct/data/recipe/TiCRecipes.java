@@ -37,8 +37,8 @@ public class TiCRecipes {
         // Task 7 - 材料配方
         MaterialRecipeGenerator.register(consumer);
 
-        // TODO: Task 8 - 工具配方
-        // ToolsRecipeGenerator.register(consumer);
+        // Task 8 - 工具配方
+        ToolsRecipeGenerator.register(consumer);
 
         // TODO: Task 9 - 冶炼厂配方
         // SmelteryRecipeGenerator.register(consumer);
