@@ -39,6 +39,7 @@ import slimeknights.tconstruct.common.data.loot.GlobalLootModifiersProvider;
 import slimeknights.tconstruct.common.data.loot.LootTableInjectionProvider;
 import slimeknights.tconstruct.common.data.loot.TConstructLootTableProvider;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
+import slimeknights.tconstruct.data.recipe.TiCRecipes;
 import slimeknights.tconstruct.data.pack.TiCDynamicResourcePack;
 import slimeknights.tconstruct.data.pack.TiCPackSource;
 import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
@@ -213,7 +214,7 @@ public class TConstruct {
             ));
         } else if (event.getPackType() == PackType.SERVER_DATA) {
             TiCDynamicDataPack.clearServer();
-            // TODO: Task 6 - 在此处添加配方注册
+            TiCRecipes.registerRecipes();
             event.addRepositorySource(new TiCPackSource(
                 "tconstruct:dynamic_data",
                 event.getPackType(),
