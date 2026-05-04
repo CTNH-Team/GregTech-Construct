@@ -105,7 +105,6 @@ import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tools.data.EnchantmentToModifierProvider;
 import slimeknights.tconstruct.tools.data.FluidEffectProvider;
 import slimeknights.tconstruct.tools.data.ModifierProvider;
-import slimeknights.tconstruct.tools.data.ModifierRecipeProvider;
 import slimeknights.tconstruct.tools.entity.FluidEffectProjectile;
 import slimeknights.tconstruct.tools.item.CreativeSlotItem;
 import slimeknights.tconstruct.tools.item.DragonScaleItem;
@@ -743,7 +742,6 @@ public final class TinkerModifiers extends TinkerModule {
         PackOutput packOutput = generator.getPackOutput();
         boolean server = event.includeServer();
         generator.addProvider(server, new ModifierProvider(packOutput));
-        generator.addProvider(server, new ModifierRecipeProvider(packOutput));
         generator.addProvider(server, new FluidEffectProvider(packOutput));
         generator.addProvider(server, new ModifierTagProvider(packOutput, event.getExistingFileHelper()));
         generator.addProvider(server, new EnchantmentToModifierProvider(packOutput));

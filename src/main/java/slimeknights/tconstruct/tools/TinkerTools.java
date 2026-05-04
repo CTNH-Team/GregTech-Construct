@@ -343,12 +343,6 @@ public final class TinkerTools extends TinkerModule {
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         boolean server = event.includeServer();
         boolean client = event.includeClient();
-        generator.addProvider(server, new ToolsRecipeProvider(packOutput));
-        generator.addProvider(server, new MaterialRecipeProvider(packOutput));
-        MaterialDataProvider materials = new MaterialDataProvider(packOutput);
-        generator.addProvider(server, materials);
-        generator.addProvider(server, new MaterialStatsDataProvider(packOutput, materials));
-        generator.addProvider(server, new MaterialTraitsDataProvider(packOutput, materials));
         generator.addProvider(server, new ToolDefinitionDataProvider(packOutput));
         generator.addProvider(server, new StationSlotLayoutProvider(packOutput));
         generator.addProvider(server, new MaterialTagProvider(packOutput, existingFileHelper));
