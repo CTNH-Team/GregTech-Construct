@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.data.recipe;
 
 import net.minecraft.data.recipes.FinishedRecipe;
+import slimeknights.tconstruct.data.material.MaterialDataGenerator;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
 
 import java.util.function.Consumer;
@@ -16,6 +17,9 @@ public class TiCRecipes {
      * 在 AddPackFindersEvent 中调用
      */
     public static void registerRecipes() {
+        // 材料数据（定义、属性、特性）必须在配方之前注册
+        MaterialDataGenerator.register();
+
         // 配方移除
         recipeRemoval();
 

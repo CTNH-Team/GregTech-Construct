@@ -89,6 +89,16 @@ public class TiCDynamicDataPack implements PackResources {
     }
 
     /**
+     * 公开添加数据方法，供 MaterialDataGenerator 等运行时数据生成器使用
+     *
+     * @param location 资源位置
+     * @param bytes 数据字节
+     */
+    public static void addData(ResourceLocation location, byte[] bytes) {
+        addToData(location, bytes);
+    }
+
+    /**
      * Adds a finished recipe to the dynamic data pack.
      * Also adds the associated advancement if present.
      *
