@@ -43,7 +43,7 @@ public class TiCRecipes {
         // Task 9 - 冶炼厂配方
         SmelteryRecipeGenerator.register(consumer);
 
-        // TODO: Task 10 - 修饰器配方
-        // ModifierRecipeGenerator.register(consumer);
+        // Task 10 - 修饰器配方
+        ModifierRecipeGenerator.register(consumer);
     }
 }
