@@ -328,7 +328,7 @@ public class SmelteryRecipeBuilder {
         } else {
           builder.addCondition(tagCondition("ingots/" + byproduct.getName()));
         }
-        builder.addRecipe(supplier.get().addByproduct(byproduct.getFluid(scale)).setOre(oreRate, byproduct.getOreRate())::save);
+        builder.addRecipe(consumer -> supplier.get().addByproduct(byproduct.getFluid(scale)).setOre(oreRate, byproduct.getOreRate()).save(consumer, location));
 
         if (alwaysPresent) {
           break;
@@ -337,7 +337,7 @@ public class SmelteryRecipeBuilder {
       // not always present? add a recipe with no byproducts as a final fallback
       if (!alwaysPresent) {
         builder.addCondition(TrueCondition.INSTANCE);
-        builder.addRecipe(supplier.get()::save);
+        builder.addRecipe(consumer -> supplier.get().save(consumer, location));
       }
       builder.build(wrapped, location);
     }
