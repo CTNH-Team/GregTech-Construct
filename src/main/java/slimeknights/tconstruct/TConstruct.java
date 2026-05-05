@@ -42,6 +42,7 @@ import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
 import slimeknights.tconstruct.data.recipe.TiCRecipes;
 import slimeknights.tconstruct.data.pack.TiCDynamicResourcePack;
 import slimeknights.tconstruct.data.pack.TiCPackSource;
+import slimeknights.tconstruct.data.tag.TiCDynamicTagGenerator;
 import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
 import slimeknights.tconstruct.common.data.tags.BlockEntityTypeTagProvider;
 import slimeknights.tconstruct.common.data.tags.BlockTagProvider;
@@ -214,6 +215,7 @@ public class TConstruct {
             ));
         } else if (event.getPackType() == PackType.SERVER_DATA) {
             TiCDynamicDataPack.clearServer();
+            TiCDynamicTagGenerator.register();
             TiCRecipes.registerRecipes();
             event.addRepositorySource(new TiCPackSource(
                 "tconstruct:dynamic_data",

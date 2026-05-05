@@ -88,6 +88,10 @@ public class TiCDynamicDataPack implements PackResources {
         CONTENTS.addToData(location, bytes);
     }
 
+    private static void registerDataLocation(ResourceLocation location) {
+        SERVER_DOMAINS.add(location.getNamespace());
+    }
+
     /**
      * 公开添加数据方法，供 MaterialDataGenerator 等运行时数据生成器使用
      *
@@ -95,6 +99,7 @@ public class TiCDynamicDataPack implements PackResources {
      * @param bytes 数据字节
      */
     public static void addData(ResourceLocation location, byte[] bytes) {
+        registerDataLocation(location);
         addToData(location, bytes);
     }
 
@@ -108,12 +113,12 @@ public class TiCDynamicDataPack implements PackResources {
         JsonObject recipeJson = recipe.serializeRecipe();
         byte[] recipeBytes = recipeJson.toString().getBytes(StandardCharsets.UTF_8);
         ResourceLocation recipeId = recipe.getId();
-        addToData(getRecipeLocation(recipeId), recipeBytes);
+        addData(getRecipeLocation(recipeId), recipeBytes);
 
         if (recipe.serializeAdvancement() != null) {
             JsonObject advancement = recipe.serializeAdvancement();
             byte[] advancementBytes = advancement.toString().getBytes(StandardCharsets.UTF_8);
-            addToData(getAdvancementLocation(Objects.requireNonNull(recipe.getAdvancementId())), advancementBytes);
+            addData(getAdvancementLocation(Objects.requireNonNull(recipe.getAdvancementId())), advancementBytes);
         }
     }
 
