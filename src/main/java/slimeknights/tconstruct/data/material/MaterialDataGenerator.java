@@ -36,6 +36,7 @@ import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider.*;
@@ -48,6 +49,7 @@ public class MaterialDataGenerator {
 
     /** TConstruct 命名空间 */
     private static final String TCONSTRUCT = TConstruct.MOD_ID;
+    private static final Map<MaterialId, JsonObject> MATERIAL_STATS = new LinkedHashMap<>();
 
     /**
      * 注册所有材料数据
@@ -204,11 +206,14 @@ public class MaterialDataGenerator {
      * 生成 JSON 到 tinkering/materials/stats/{name}.json
      */
     private static void addMaterialStats() {
+        MATERIAL_STATS.clear();
         addMeleeHarvestStats();
         addRangedStats();
         addAmmoStats();
         addArmorStats();
         addMiscStats();
+        MATERIAL_STATS.forEach(MaterialDataGenerator::writeMaterialStatsJson);
+        MATERIAL_STATS.clear();
     }
 
     private static void addMeleeHarvestStats() {
@@ -906,6 +911,26 @@ public class MaterialDataGenerator {
             JsonObject statJson = encodeStat(stat);
             statsObj.add(stat.getIdentifier().toString(), statJson);
         }
+        mergeMaterialStatsJson(id, statsObj);
+    }
+
+    private static void mergeMaterialStatsJson(MaterialId id, JsonObject statsObj) {
+        JsonObject mergedStats = MATERIAL_STATS.computeIfAbsent(id, material -> new JsonObject());
+        for (Map.Entry<String, com.google.gson.JsonElement> entry : statsObj.entrySet()) {
+            String statType = entry.getKey();
+            JsonObject statJson = entry.getValue().getAsJsonObject();
+            if (mergedStats.has(statType)) {
+                JsonObject existing = mergedStats.getAsJsonObject(statType);
+                for (Map.Entry<String, com.google.gson.JsonElement> statEntry : statJson.entrySet()) {
+                    existing.add(statEntry.getKey(), statEntry.getValue());
+                }
+            } else {
+                mergedStats.add(statType, statJson);
+            }
+        }
+    }
+
+    private static void writeMaterialStatsJson(MaterialId id, JsonObject statsObj) {
         JsonObject json = new JsonObject();
         json.add("stats", statsObj);
 
@@ -933,15 +958,7 @@ public class MaterialDataGenerator {
         for (IMaterialStats stat : otherStats) {
             statsObj.add(stat.getIdentifier().toString(), encodeStat(stat));
         }
-
-        JsonObject json = new JsonObject();
-        json.add("stats", statsObj);
-
-        ResourceLocation location = new ResourceLocation(
-            id.getNamespace(),
-            MaterialStatsManager.FOLDER + "/" + id.getPath() + ".json"
-        );
-        TiCDynamicDataPack.addData(location, json.toString().getBytes(StandardCharsets.UTF_8));
+        mergeMaterialStatsJson(id, statsObj);
     }
 
     /**
