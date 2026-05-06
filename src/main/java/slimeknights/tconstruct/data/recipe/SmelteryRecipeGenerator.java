@@ -82,17 +82,9 @@ import static slimeknights.mantle.Mantle.COMMON;
 import static slimeknights.mantle.Mantle.commonResource;
 import static slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder.*;
 
-/**
- * 冶炼厂配方生成器
- * 运行时生成冶炼厂相关配方，替代 DataGen
- */
 @SuppressWarnings("removal")
 public class SmelteryRecipeGenerator implements ISmelteryRecipeHelper, ICommonRecipeHelper {
 
-    /**
-     * 注册所有冶炼厂配方
-     * @param consumer 配方消费者（TiCDynamicDataPack::addRecipe）
-     */
     public static void register(Consumer<FinishedRecipe> consumer) {
         SmelteryRecipeGenerator generator = new SmelteryRecipeGenerator();
         generator.addCraftingRecipes(consumer);

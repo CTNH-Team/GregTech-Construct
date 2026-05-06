@@ -7,13 +7,11 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.IoSupplier;
-import net.minecraftforge.fml.loading.FMLPaths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,6 +51,21 @@ class DynamicDataProviderRunnerTest extends BaseMcTest {
     }
 
     @Test
+    void failingProviderRunDoesNotStopLaterProviders() {
+        DynamicDataProviderRunner.run(
+            "test",
+            output -> new TestTagProvider(output, "first"),
+            output -> new FailingRunProvider(),
+            output -> new TestTagProvider(output, "later")
+        );
+
+        ResourceLocation firstLocation = new ResourceLocation("example", "tags/items/first.json");
+        ResourceLocation laterLocation = new ResourceLocation("example", "tags/items/later.json");
+        assertThat(pack.getResource(PackType.SERVER_DATA, firstLocation)).isNotNull();
+        assertThat(pack.getResource(PackType.SERVER_DATA, laterLocation)).isNotNull();
+    }
+
+    @Test
     void nullProviderDoesNotStopLaterProviders() {
         DynamicDataProviderRunner.run(
             "test",
@@ -76,9 +89,15 @@ class DynamicDataProviderRunnerTest extends BaseMcTest {
 
     private static class TestTagProvider implements DataProvider {
         private final PackOutput.PathProvider paths;
+        private final String path;
 
         private TestTagProvider(PackOutput output) {
+            this(output, "generated");
+        }
+
+        private TestTagProvider(PackOutput output, String path) {
             this.paths = output.createPathProvider(PackOutput.Target.DATA_PACK, "tags/items");
+            this.path = path;
         }
 
         @Override
@@ -86,12 +105,24 @@ class DynamicDataProviderRunnerTest extends BaseMcTest {
             JsonObject json = new JsonObject();
             json.addProperty("replace", false);
             json.add("values", new com.google.gson.JsonArray());
-            return DataProvider.saveStable(output, json, paths.json(new ResourceLocation("example", "generated")));
+            return DataProvider.saveStable(output, json, paths.json(new ResourceLocation("example", path)));
         }
 
         @Override
         public String getName() {
             return "Test Dynamic Tag Provider";
+        }
+    }
+
+    private static class FailingRunProvider implements DataProvider {
+        @Override
+        public CompletableFuture<?> run(CachedOutput output) {
+            throw new IllegalStateException("expected provider run failure");
+        }
+
+        @Override
+        public String getName() {
+            return "Failing Run Provider";
         }
     }
 

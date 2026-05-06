@@ -69,16 +69,8 @@ import java.util.function.Function;
 
 import static net.minecraft.advancements.critereon.InventoryChangeTrigger.TriggerInstance.hasItems;
 
-/**
- * 工具配方生成器
- * 将工具配方注入动态数据包，无需 DataGen 框架
- */
 public class ToolsRecipeGenerator implements IMaterialRecipeHelper, IToolRecipeHelper, IConditionBuilder {
 
-    /**
-     * 注册所有工具配方
-     * @param consumer 配方消费者（TiCDynamicDataPack::addRecipe）
-     */
     public static void register(Consumer<FinishedRecipe> consumer) {
         ToolsRecipeGenerator generator = new ToolsRecipeGenerator();
         generator.addToolBuildingRecipes(consumer);

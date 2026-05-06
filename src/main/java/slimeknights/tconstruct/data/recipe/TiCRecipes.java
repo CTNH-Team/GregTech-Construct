@@ -6,16 +6,8 @@ import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
 
 import java.util.function.Consumer;
 
-/**
- * TiC 配方注册入口
- * 协调所有配方生成器，将配方注入动态数据包
- */
 public class TiCRecipes {
 
-    /**
-     * 注册所有配方
-     * 在 AddPackFindersEvent 中调用
-     */
     public static void registerRecipes() {
         // 材料数据（定义、属性、特性）必须在配方之前注册
         MaterialDataGenerator.register();

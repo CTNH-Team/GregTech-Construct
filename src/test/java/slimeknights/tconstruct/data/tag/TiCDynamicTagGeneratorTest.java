@@ -1,24 +1,35 @@
 package slimeknights.tconstruct.data.tag;
 
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mockito;
 import slimeknights.tconstruct.test.BaseMcTest;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class TiCDynamicTagGeneratorTest extends BaseMcTest {
     @Test
-    void registerSendsTwelveProviderFactories() {
+    void registerSendsElevenProviderFactories() {
         RecordingRunner runner = new RecordingRunner();
 
         TiCDynamicTagGenerator.register(runner);
 
         assertThat(runner.owner).isEqualTo("tconstruct-tags");
-        assertThat(runner.providers).hasSize(12);
+        assertThat(runner.providers).hasSize(11);
     }
 
     @Test
@@ -29,7 +40,6 @@ class TiCDynamicTagGeneratorTest extends BaseMcTest {
             "FluidTagProvider",
             "EntityTypeTagProvider",
             "BlockEntityTypeTagProvider",
-            "BiomeTagProvider",
             "EnchantmentTagProvider",
             "MenuTypeTagProvider",
             "PotionTagProvider",
@@ -37,6 +47,55 @@ class TiCDynamicTagGeneratorTest extends BaseMcTest {
             "MaterialTagProvider",
             "ModifierTagProvider"
         );
+    }
+
+    @Test
+    void runtimeMaterialAndModifierProvidersRunWithExistingFileHelper(@TempDir Path outputRoot) throws Exception {
+        Object state = newTagProviderState();
+        Class<?> stateClass = state.getClass();
+        ExistingFileHelper helper = existingFileHelper(state);
+
+        assertThat(helper).isNotNull();
+
+        PackOutput output = new PackOutput(outputRoot);
+        CachedOutput cachedOutput = Mockito.mock(CachedOutput.class);
+        assertThatCode(() -> {
+            Method createMaterialTags = stateClass.getDeclaredMethod("createMaterialTags", PackOutput.class);
+            Method createModifierTags = stateClass.getDeclaredMethod("createModifierTags", PackOutput.class);
+            createMaterialTags.setAccessible(true);
+            createModifierTags.setAccessible(true);
+
+            DataProvider materialProvider = (DataProvider) createMaterialTags.invoke(state, output);
+            DataProvider modifierProvider = (DataProvider) createModifierTags.invoke(state, output);
+            materialProvider.run(cachedOutput).join();
+            modifierProvider.run(cachedOutput).join();
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
+    void runtimeExistingFileHelperAllowsRequiredForgeTagReferences() throws Exception {
+        ExistingFileHelper helper = existingFileHelper(newTagProviderState());
+        ExistingFileHelper.ResourceType blockTagType = new ExistingFileHelper.ResourceType(PackType.SERVER_DATA, ".json", "tags/blocks");
+        ExistingFileHelper.ResourceType itemTagType = new ExistingFileHelper.ResourceType(PackType.SERVER_DATA, ".json", "tags/items");
+        ExistingFileHelper.ResourceType fluidTagType = new ExistingFileHelper.ResourceType(PackType.SERVER_DATA, ".json", "tags/fluids");
+
+        assertThat(helper.exists(new ResourceLocation("forge", "storage_blocks/netherite"), blockTagType)).isTrue();
+        assertThat(helper.exists(new ResourceLocation("forge", "ore_rates/dense"), itemTagType)).isTrue();
+        assertThat(helper.exists(new ResourceLocation("forge", "ore_rates/sparse"), itemTagType)).isTrue();
+        assertThat(helper.exists(new ResourceLocation("forge", "milk"), fluidTagType)).isTrue();
+    }
+
+    private static Object newTagProviderState() throws ReflectiveOperationException {
+        Class<?> stateClass = Class.forName("slimeknights.tconstruct.data.tag.TiCDynamicTagGenerator$TagProviderState");
+        Constructor<?> constructor = stateClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        return constructor.newInstance();
+    }
+
+    private static ExistingFileHelper existingFileHelper(Object state) throws ReflectiveOperationException {
+        Field helperField = state.getClass().getDeclaredField("existingFileHelper");
+        helperField.setAccessible(true);
+        return (ExistingFileHelper) helperField.get(state);
     }
 
     private static class RecordingRunner implements TiCDynamicTagGenerator.TagRunner {

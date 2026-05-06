@@ -43,16 +43,8 @@ import java.util.function.Consumer;
 
 import static slimeknights.mantle.Mantle.COMMON;
 
-/**
- * 材料配方生成器
- * 将材料配方注入动态数据包，无需 DataGen 框架
- */
 public class MaterialRecipeGenerator implements IMaterialRecipeHelper {
 
-    /**
-     * 注册所有材料配方
-     * @param consumer 配方消费者（TiCDynamicDataPack::addRecipe）
-     */
     public static void register(Consumer<FinishedRecipe> consumer) {
         MaterialRecipeGenerator generator = new MaterialRecipeGenerator();
         generator.addMaterialItems(consumer);

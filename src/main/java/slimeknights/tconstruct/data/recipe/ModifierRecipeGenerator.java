@@ -87,16 +87,8 @@ import java.util.function.Consumer;
 import static slimeknights.mantle.Mantle.COMMON;
 import static slimeknights.tconstruct.library.recipe.melting.IMeltingRecipe.getTemperature;
 
-/**
- * 修饰器配方生成器
- * 运行时生成修饰器相关配方，替代 DataGen
- */
 public class ModifierRecipeGenerator implements IMaterialRecipeHelper, IConditionBuilder {
 
-    /**
-     * 注册所有修饰器配方
-     * @param consumer 配方消费者（TiCDynamicDataPack::addRecipe）
-     */
     public static void register(Consumer<FinishedRecipe> consumer) {
         ModifierRecipeGenerator generator = new ModifierRecipeGenerator();
         generator.addItemRecipes(consumer);

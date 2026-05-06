@@ -10,7 +10,6 @@ import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.data.DamageTypeProvider;
-import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
 import slimeknights.tconstruct.common.data.tags.BlockEntityTypeTagProvider;
 import slimeknights.tconstruct.common.data.tags.BlockTagProvider;
 import slimeknights.tconstruct.common.data.tags.DamageTypeTagProvider;
@@ -23,9 +22,8 @@ import slimeknights.tconstruct.common.data.tags.MenuTypeTagProvider;
 import slimeknights.tconstruct.common.data.tags.ModifierTagProvider;
 import slimeknights.tconstruct.common.data.tags.PotionTagProvider;
 import slimeknights.tconstruct.data.pack.DynamicDataProviderRunner;
-import slimeknights.tconstruct.tools.data.material.TrimMaterialProvider;
-import slimeknights.tconstruct.world.data.WorldgenProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -43,7 +41,11 @@ public class TiCDynamicTagGenerator {
     }
 
     static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
-        return createProviderEntries().stream().map(TagProviderEntry::factory).toList();
+        List<Function<PackOutput, ? extends DataProvider>> providers = new ArrayList<>();
+        for (TagProviderEntry entry : createProviderEntries()) {
+            providers.add(entry.factory());
+        }
+        return providers;
     }
 
     static List<TagProviderEntry> createProviderEntries() {
@@ -54,7 +56,6 @@ public class TiCDynamicTagGenerator {
             new TagProviderEntry("FluidTagProvider", state::createFluidTags),
             new TagProviderEntry("EntityTypeTagProvider", state::createEntityTypeTags),
             new TagProviderEntry("BlockEntityTypeTagProvider", state::createBlockEntityTypeTags),
-            new TagProviderEntry("BiomeTagProvider", state::createBiomeTags),
             new TagProviderEntry("EnchantmentTagProvider", state::createEnchantmentTags),
             new TagProviderEntry("MenuTypeTagProvider", state::createMenuTypeTags),
             new TagProviderEntry("PotionTagProvider", state::createPotionTags),
@@ -73,7 +74,7 @@ public class TiCDynamicTagGenerator {
 
     private static final class TagProviderState {
         private CompletableFuture<Provider> lookupProvider;
-        private final ExistingFileHelper existingFileHelper = null;
+        private final ExistingFileHelper existingFileHelper = createExistingFileHelper();
         private BlockTagProvider blockTags;
         private DatapackBuiltinEntriesProvider datapackRegistryProvider;
 
@@ -105,10 +106,6 @@ public class TiCDynamicTagGenerator {
             return new BlockEntityTypeTagProvider(output, lookupProvider(), existingFileHelper);
         }
 
-        private BiomeTagProvider createBiomeTags(PackOutput output) {
-            return new BiomeTagProvider(output, lookupProvider(), existingFileHelper);
-        }
-
         private EnchantmentTagProvider createEnchantmentTags(PackOutput output) {
             return new EnchantmentTagProvider(output, lookupProvider(), existingFileHelper);
         }
@@ -137,11 +134,13 @@ public class TiCDynamicTagGenerator {
             if (datapackRegistryProvider == null) {
                 RegistrySetBuilder registrySetBuilder = new RegistrySetBuilder();
                 DamageTypeProvider.register(registrySetBuilder);
-                WorldgenProvider.register(registrySetBuilder);
-                TrimMaterialProvider.register(registrySetBuilder);
                 datapackRegistryProvider = new DatapackBuiltinEntriesProvider(output, lookupProvider(), registrySetBuilder, Set.of(TConstruct.MOD_ID));
             }
             return datapackRegistryProvider;
+        }
+
+        private static ExistingFileHelper createExistingFileHelper() {
+            return new ExistingFileHelper(List.of(), Set.of(), false, null, null);
         }
     }
 }
