@@ -7,29 +7,27 @@ import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
 import java.util.function.Consumer;
 
 public class TiCRecipes {
-
     public static void registerRecipes() {
+        registerAllRecipes(TiCDynamicDataPack::addRecipe);
+    }
+
+    private static void registerAllRecipes(Consumer<FinishedRecipe> consumer) {
         // 材料数据（定义、属性、特性）必须在配方之前注册
         MaterialDataGenerator.register();
 
-        // 配方移除
-        recipeRemoval();
-
         // 配方添加
-        recipeAddition(TiCDynamicDataPack::addRecipe);
-    }
-
-    /**
-     * 配方移除
-     */
-    private static void recipeRemoval() {
-        // TODO: 实现配方移除逻辑
+        recipeAddition(consumer);
     }
 
     /**
      * 配方添加
      */
     private static void recipeAddition(Consumer<FinishedRecipe> consumer) {
+        CommonRecipeGenerator.register(consumer);
+        TableRecipeGenerator.register(consumer);
+        GadgetRecipeGenerator.register(consumer);
+        WorldRecipeGenerator.register(consumer);
+
         // Task 7 - 材料配方
         MaterialRecipeGenerator.register(consumer);
 

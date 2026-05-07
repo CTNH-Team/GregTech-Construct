@@ -92,7 +92,6 @@ import slimeknights.tconstruct.world.block.SlimeTallGrassBlock;
 import slimeknights.tconstruct.world.block.SlimeVineBlock;
 import slimeknights.tconstruct.world.block.StickySlimeBlock;
 import slimeknights.tconstruct.world.data.MobEquipmentProvider;
-import slimeknights.tconstruct.world.data.WorldRecipeProvider;
 import slimeknights.tconstruct.world.entity.EnderSlimeEntity;
 import slimeknights.tconstruct.world.entity.SkySlimeEntity;
 import slimeknights.tconstruct.world.entity.SlimePlacementPredicate;
@@ -333,6 +332,14 @@ public final class TinkerWorld extends TinkerModule {
     event.put(terracubeEntity.get(), Monster.createMonsterAttributes().build());
   }
 
+  @SubscribeEvent
+  void gatherData(final GatherDataEvent event) {
+    DataGenerator generator = event.getGenerator();
+    boolean server = event.includeServer();
+    PackOutput packOutput = generator.getPackOutput();
+    generator.addProvider(server, new MobEquipmentProvider(packOutput));
+  }
+
   /** Sets all fire info for the given wood */
   private static void setWoodFireInfo(FireBlock fireBlock, WoodBlockObject wood) {
     // planks
@@ -407,15 +414,6 @@ public final class TinkerWorld extends TinkerModule {
       fireblock.setFlammable(skySlimeVine.get(), 15, 100);
       fireblock.setFlammable(enderSlimeVine.get(), 15, 100);
     });
-  }
-
-  @SubscribeEvent
-  void gatherData(final GatherDataEvent event) {
-    DataGenerator generator = event.getGenerator();
-    boolean server = event.includeServer();
-    PackOutput packOutput = generator.getPackOutput();
-    generator.addProvider(server, new WorldRecipeProvider(packOutput));
-    generator.addProvider(server, new MobEquipmentProvider(packOutput));
   }
 
   /** Adds all relevant items to the creative tab */

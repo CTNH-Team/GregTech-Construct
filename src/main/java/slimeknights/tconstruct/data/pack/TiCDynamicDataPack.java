@@ -53,6 +53,9 @@ public class TiCDynamicDataPack implements PackResources {
     /** Set of recipe IDs to filter out via pack metadata */
     public static final Set<ResourceLocation> RECIPE_FILTERS = new HashSet<>();
 
+    /** Set of server-data resources to filter out via pack metadata */
+    private static final Set<ResourceLocation> RESOURCE_FILTERS = new HashSet<>();
+
     /** The name of this pack */
     private final String name;
 
@@ -76,6 +79,7 @@ public class TiCDynamicDataPack implements PackResources {
     public static void clearServer() {
         CONTENTS.clearData();
         RECIPE_FILTERS.clear();
+        RESOURCE_FILTERS.clear();
     }
 
     /**
@@ -104,6 +108,26 @@ public class TiCDynamicDataPack implements PackResources {
     }
 
     /**
+     * Adds a server-data resource to the pack filter metadata.
+     *
+     * @param location the resource location for the data
+     */
+    public static void addFilter(ResourceLocation location) {
+        registerDataLocation(location);
+        RESOURCE_FILTERS.add(location);
+    }
+
+    /**
+     * Adds a recipe ID to the legacy recipe filter set and the generic resource filter set.
+     *
+     * @param recipeId the recipe ID without the {@code recipes/} prefix
+     */
+    public static void addRecipeFilter(ResourceLocation recipeId) {
+        RECIPE_FILTERS.add(recipeId);
+        addFilter(getRecipeLocation(recipeId));
+    }
+
+    /**
      * Adds a finished recipe to the dynamic data pack.
      * Also adds the associated advancement if present.
      *
@@ -114,11 +138,15 @@ public class TiCDynamicDataPack implements PackResources {
         byte[] recipeBytes = recipeJson.toString().getBytes(StandardCharsets.UTF_8);
         ResourceLocation recipeId = recipe.getId();
         addData(getRecipeLocation(recipeId), recipeBytes);
+        addRecipeFilter(recipeId);
 
-        if (recipe.serializeAdvancement() != null) {
-            JsonObject advancement = recipe.serializeAdvancement();
+        JsonObject advancement = recipe.serializeAdvancement();
+        if (advancement != null) {
             byte[] advancementBytes = advancement.toString().getBytes(StandardCharsets.UTF_8);
-            addData(getAdvancementLocation(Objects.requireNonNull(recipe.getAdvancementId())), advancementBytes);
+            ResourceLocation advancementId = Objects.requireNonNull(recipe.getAdvancementId());
+            ResourceLocation advancementLocation = getAdvancementLocation(advancementId);
+            addData(advancementLocation, advancementBytes);
+            addFilter(advancementLocation);
         }
     }
 
@@ -188,11 +216,19 @@ public class TiCDynamicDataPack implements PackResources {
         } else if (metaReader.getMetadataSectionName().equals("filter")) {
             JsonObject filter = new JsonObject();
             JsonArray block = new JsonArray();
-            // Add recipe filters - these are recipes that should be blocked from loading
-            RECIPE_FILTERS.forEach((id) -> {
+            RESOURCE_FILTERS.forEach((location) -> {
                 JsonObject entry = new JsonObject();
-                entry.addProperty("namespace", "^" + id.getNamespace().replaceAll("[\\W]", "\\\\$0") + "$");
-                entry.addProperty("path", "^recipes/" + id.getPath().replaceAll("[\\W]", "\\\\$0") + "\\.json$");
+                entry.addProperty("namespace", "^" + escapeRegex(location.getNamespace()) + "$");
+                entry.addProperty("path", "^" + escapeRegex(location.getPath()) + "$");
+                block.add(entry);
+            });
+            RECIPE_FILTERS.forEach((recipeId) -> {
+                if (RESOURCE_FILTERS.contains(getRecipeLocation(recipeId))) {
+                    return;
+                }
+                JsonObject entry = new JsonObject();
+                entry.addProperty("namespace", "^" + escapeRegex(recipeId.getNamespace()) + "$");
+                entry.addProperty("path", "^recipes/" + escapeRegex(recipeId.getPath()) + "\\.json$");
                 block.add(entry);
             });
             filter.add("block", block);
@@ -245,5 +281,33 @@ public class TiCDynamicDataPack implements PackResources {
      */
     public static ResourceLocation getTagLocation(String identifier, ResourceLocation tagId) {
         return new ResourceLocation(tagId.getNamespace(), "tags/" + identifier + "/" + tagId.getPath() + ".json");
+    }
+
+    private static String escapeRegex(String value) {
+        StringBuilder builder = new StringBuilder(value.length());
+        for (int index = 0; index < value.length(); index++) {
+            char character = value.charAt(index);
+            switch (character) {
+                case '\\':
+                case '.':
+                case '^':
+                case '$':
+                case '|':
+                case '?':
+                case '*':
+                case '+':
+                case '(':
+                case ')':
+                case '[':
+                case ']':
+                case '{':
+                case '}':
+                    builder.append('\\');
+                    // fall through
+                default:
+                    builder.append(character);
+            }
+        }
+        return builder.toString();
     }
 }
