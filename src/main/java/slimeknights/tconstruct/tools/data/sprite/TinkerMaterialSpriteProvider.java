@@ -117,12 +117,18 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
         buildMaterial(MaterialIds.iron)
                 .meleeHarvest().armor()
                 .fallbacks("metal").ranged()
-                .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF353535).addARGB(102, 0xFF5E5E5E).addARGB(140, 0xFF828282).addARGB(178, 0xFFA8A8A8).addARGB(216, 0xFFD8D8D8).addARGB(255, 0xFFFFFFFF).build());
+                .colorMapper(GreyToColorMapping.builderFromBlack()
+                        .addARGB(63,  0xFF353535)
+                        .addARGB(102, 0xFF5E5E5E)
+                        .addARGB(140, 0xFF828282)
+                        .addARGB(178, 0xFFA8A8A8)
+                        .addARGB(216, 0xFFD8D8D8)
+                        .addARGB(255, 0xFFFFFFFF).build());
         buildMaterial(MaterialIds.manaSteel)
                 .meleeHarvest().ranged().armor()
                 .fallbacks("metal")
                 .colorMapper(GreyToColorMapping.builderFromBlack()
-                        .addARGB(63,0xFF160539)
+                        .addARGB(63, 0xFF160539)
                         .addARGB(102,0xFF14084f)
                         .addARGB(140,0xFF2e199f)
                         .addARGB(178,0xFF1f20b9)
@@ -200,7 +206,23 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
                 .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF5A391C).addARGB(102, 0xFF7E4821).addARGB(140, 0xFFB47140).addARGB(178, 0xFFEBAA4E).addARGB(216, 0xFFFFBC5E).addARGB(255, 0xFFF9D49C).build());
         buildMaterial(MaterialIds.gunpowder)
                 .arrowHead()
-                .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF2D2D2D).addARGB(102, 0xFF3E3E3E).addARGB(140, 0xFF494949).addARGB(178, 0xFF545454).addARGB(216, 0xFF727272).addARGB(255, 0xFF8A8A8A).build());
+                .colorMapper(GreyToColorMapping.builderFromBlack()
+                        .addARGB(63, 0xFF2D2D2D)
+                        .addARGB(102, 0xFF3E3E3E)
+                        .addARGB(140, 0xFF494949)
+                        .addARGB(178, 0xFF545454)
+                        .addARGB(216, 0xFF727272)
+                        .addARGB(255, 0xFF8A8A8A).build());
+        buildMaterial(MaterialIds.polyethylene)
+                .meleeHarvest().ranged().armor()
+                .fallbacks("metal")
+                .colorMapper(GreyToColorMapping.builderFromBlack()
+                        .addARGB(63,  0xFF353535)
+                        .addARGB(102, 0xFF5E5E5E)
+                        .addARGB(140, 0xFF828282)
+                        .addARGB(178, 0xFFA8A8A8)
+                        .addARGB(216, 0xFFD8D8D8)
+                        .addARGB(255, 0xFFFFFFFF).build());
         // tier 2 - slimewood
         IColorMapping greenSlime = GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF229630).addARGB(102, 0xFF24A033).addARGB(140, 0xFF27AB37).addARGB(178, 0xFF3EBD42).addARGB(216, 0xFF56CF4C).addARGB(234, 0xFF6FEA60).addARGB(255, 0xFF82F86D).build();
         buildPlanks(MaterialIds.greenheart).arrowShaft()

@@ -1,0 +1,15 @@
+{
+  "type": "tconstruct:material",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/polyethylene"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:ingots/polyethylene"
+  },
+  "material": "tconstruct:polyethylene",
+  "needed": 1,
+  "value": 1
+}

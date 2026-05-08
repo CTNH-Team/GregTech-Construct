@@ -82,6 +82,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 2
                 MaterialIds.silver, MaterialIds.lead, MaterialIds.aluminum,
                 MaterialIds.osmium, MaterialIds.ironwood, MaterialIds.manaSteel,
+                MaterialIds.polyethylene,
                 // tier 3
                 MaterialIds.steeleaf, MaterialIds.terraSteel,
                 // tier 4
@@ -100,12 +101,14 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 MaterialIds.copper,
                 // tier 2
                 MaterialIds.iron,
-                MaterialIds.osmium, MaterialIds.lead, MaterialIds.silver, MaterialIds.aluminum,
+                MaterialIds.osmium, MaterialIds.lead, MaterialIds.silver,
+                MaterialIds.aluminum,MaterialIds.manaSteel,
                 // tier 3
                 MaterialIds.slimesteel, MaterialIds.amethystBronze, MaterialIds.pigIron,
-                MaterialIds.cobalt, MaterialIds.steel,
-                MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter,
-                MaterialIds.manaSteel, MaterialIds.terraSteel,
+                MaterialIds.cobalt, MaterialIds.steel, MaterialIds.bronze,
+                MaterialIds.constantan, MaterialIds.invar,MaterialIds.electrum,
+                MaterialIds.pewter, MaterialIds.terraSteel,
+
                 // tier 4
                 MaterialIds.manyullyn, MaterialIds.hepatizon,
                 MaterialIds.cinderslime, MaterialIds.queensSlime,
@@ -116,7 +119,8 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
 
         tag(TinkerTags.Materials.HARD).addOptional(
                 // tier 1
-                MaterialIds.rock, MaterialIds.flint, MaterialIds.bone, MaterialIds.whitestone,
+                MaterialIds.rock, MaterialIds.flint, MaterialIds.bone,
+                MaterialIds.whitestone,
                 // tier 2
                 MaterialIds.scorchedStone, MaterialIds.necroticBone, MaterialIds.venombone,
                 // tier 3
@@ -129,18 +133,20 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
         // melee harvest
         tag(TinkerTags.Materials.GENERAL).add(
                 // tier 1
-                MaterialIds.wood, MaterialIds.string, MaterialIds.vine, MaterialIds.leather,
+                MaterialIds.wood, MaterialIds.string, MaterialIds.vine,
+                MaterialIds.leather,
                 // tier 2
                 MaterialIds.iron, MaterialIds.slimewood,
                 // tier 3
-                MaterialIds.slimesteel, MaterialIds.pigIron, MaterialIds.roseGold, MaterialIds.cobalt,
+                MaterialIds.slimesteel, MaterialIds.pigIron, MaterialIds.roseGold,
+                MaterialIds.cobalt,
                 // tier 4
                 MaterialIds.cinderslime, MaterialIds.queensSlime, MaterialIds.enderslimeVine
         ).addOptional(
                 // tier 1
                 MaterialIds.treatedWood,
                 // tier 2
-                MaterialIds.osmium, MaterialIds.ironwood,
+                MaterialIds.osmium, MaterialIds.ironwood, MaterialIds.polyethylene,
                 // tier 3
                 MaterialIds.platedSlimewood, MaterialIds.electrum, MaterialIds.steeleaf,
                 // tier 4
@@ -150,7 +156,8 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 1
                 MaterialIds.rock, MaterialIds.copper,
                 // tier 2
-                MaterialIds.searedStone, MaterialIds.whitestone, MaterialIds.skyslimeVine, MaterialIds.twistingVine,
+                MaterialIds.searedStone, MaterialIds.whitestone, MaterialIds.skyslimeVine,
+                MaterialIds.twistingVine,
                 // tier 3
                 MaterialIds.amethystBronze,
                 // tier 4
@@ -165,7 +172,8 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 1
                 MaterialIds.flint, MaterialIds.bone, MaterialIds.chorus,
                 // tier 2
-                MaterialIds.scorchedStone, MaterialIds.necroticBone, MaterialIds.venombone, MaterialIds.weepingVine,
+                MaterialIds.scorchedStone, MaterialIds.necroticBone, MaterialIds.venombone,
+                MaterialIds.weepingVine,
                 // tier 3
                 MaterialIds.nahuatl, MaterialIds.steel, MaterialIds.darkthread,
                 // tier 4
@@ -185,14 +193,15 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 2
                 MaterialIds.slimewood, MaterialIds.necroticBone, MaterialIds.skyslimeVine,
                 // tier 3
-                MaterialIds.slimesteel, MaterialIds.roseGold, MaterialIds.darkthread, MaterialIds.cobalt,
+                MaterialIds.slimesteel, MaterialIds.roseGold, MaterialIds.darkthread,
+                MaterialIds.cobalt,
                 // tier 4
                 MaterialIds.blazingBone, MaterialIds.ancientHide, MaterialIds.enderslimeVine
         ).addOptional(
                 // tier 1
                 MaterialIds.treatedWood,
                 // tier 2
-                MaterialIds.silver, MaterialIds.ironwood,
+                MaterialIds.silver, MaterialIds.ironwood, MaterialIds.polyethylene,
                 // tier 3
                 MaterialIds.invar, MaterialIds.pewter, MaterialIds.steeleaf
         );
@@ -207,9 +216,10 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 MaterialIds.hepatizon, MaterialIds.queensSlime, MaterialIds.knightmetal
         ).addOptional(
                 // tier 2
-                MaterialIds.aluminum, MaterialIds.manaSteel,
+                MaterialIds.aluminum, MaterialIds.manaSteel, MaterialIds.polyethylene,
                 // tier 3
-                MaterialIds.necronium, MaterialIds.constantan, MaterialIds.platedSlimewood, MaterialIds.terraSteel
+                MaterialIds.necronium, MaterialIds.constantan, MaterialIds.platedSlimewood,
+                MaterialIds.terraSteel
         );
         tag(TinkerTags.Materials.HEAVY).add(
                 // tier 1

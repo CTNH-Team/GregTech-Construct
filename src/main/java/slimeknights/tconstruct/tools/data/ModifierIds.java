@@ -201,6 +201,7 @@ public class ModifierIds {
     public static final ModifierId barkskin = id("barkskin");
     public static final ModifierId dense = id("dense");
     public static final ModifierId lustrous = id("lustrous");
+    public static final ModifierId plastic = id("plastic");
     /** @deprecated use {@link #heavy} */
     @Deprecated(forRemoval = true)
     public static final ModifierId sharpweight = id("sharpweight");

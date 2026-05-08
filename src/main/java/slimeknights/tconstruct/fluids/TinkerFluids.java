@@ -13,13 +13,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import net.minecraft.world.item.CreativeModeTab.Output;
-import net.minecraft.world.item.DispensibleContainerItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -187,6 +183,8 @@ public final class TinkerFluids extends TinkerModule {
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenCadmium  = FLUIDS.registerMetal("cadmium").type(hot("cadmium").temperature(594).lightLevel(10)).block(createBurning(MapColor.COLOR_BROWN, 10, 10, 5f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenManaSteel = FLUIDS.registerMetal("manasteel").type(hot("manasteel").temperature(1100).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenTerraSteel = FLUIDS.registerMetal("terrasteel").type(hot("terrasteel").temperature(1500).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
+    //gt
+    public static final FlowingFluidObject<ForgeFlowingFluid> moltenPolyethylene = FLUIDS.registerMetal("polyethylene").type(cool("polyethylene").temperature(445)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
 
     // compat alloys
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenBronze     = FLUIDS.registerMetal("bronze").type(hot("bronze").temperature(1000).lightLevel(10)).block(createBurning(MapColor.TERRACOTTA_ORANGE, 10, 10, 6f)).bucket().commonTag().flowing();
@@ -469,6 +467,7 @@ public final class TinkerFluids extends TinkerModule {
         acceptMolten(output, moltenCadmium);
         acceptCompat(output, moltenManaSteel, MaterialIds.manaSteel);
         acceptCompat(output, moltenTerraSteel, MaterialIds.terraSteel);
+        acceptCompat(output, moltenPolyethylene, MaterialIds.polyethylene);
         // compat alloys
         acceptCompat(output, moltenBronze, MaterialIds.bronze);
         acceptMolten(output, moltenBrass, MaterialIds.platedSlimewood);

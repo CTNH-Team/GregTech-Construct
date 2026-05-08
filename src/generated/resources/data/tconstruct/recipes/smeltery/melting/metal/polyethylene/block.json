@@ -1,0 +1,18 @@
+{
+  "type": "tconstruct:melting",
+  "conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:storage_blocks/polyethylene"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:storage_blocks/polyethylene"
+  },
+  "result": {
+    "amount": 1296,
+    "tag": "forge:polyethylene"
+  },
+  "temperature": 145,
+  "time": 106
+}
