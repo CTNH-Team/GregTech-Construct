@@ -31,7 +31,6 @@ import slimeknights.mantle.registration.object.ItemObject;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerEffect;
 import slimeknights.tconstruct.common.TinkerModule;
-import slimeknights.tconstruct.common.data.tags.ModifierTagProvider;
 import slimeknights.tconstruct.library.json.predicate.modifier.ModifierPredicate;
 import slimeknights.tconstruct.library.json.predicate.modifier.SingleModifierPredicate;
 import slimeknights.tconstruct.library.json.predicate.modifier.SlotTypeModifierPredicate;
@@ -743,7 +742,6 @@ public final class TinkerModifiers extends TinkerModule {
         boolean server = event.includeServer();
         generator.addProvider(server, new ModifierProvider(packOutput));
         generator.addProvider(server, new FluidEffectProvider(packOutput));
-        generator.addProvider(server, new ModifierTagProvider(packOutput, event.getExistingFileHelper()));
         generator.addProvider(server, new EnchantmentToModifierProvider(packOutput));
     }
 

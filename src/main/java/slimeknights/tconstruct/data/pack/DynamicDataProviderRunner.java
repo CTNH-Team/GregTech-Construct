@@ -35,11 +35,11 @@ public class DynamicDataProviderRunner {
                 provider = providerFactory.apply(output);
             } catch (Exception exception) {
                 log.error("Failed to create dynamic datagen provider for {}", owner, exception);
-                continue;
+                throw new IllegalStateException("Failed to create dynamic datagen provider for " + owner, exception);
             }
             if (provider == null) {
                 log.error("Dynamic datagen provider factory returned null for {}", owner);
-                continue;
+                throw new IllegalStateException("Dynamic datagen provider factory returned null for " + owner);
             }
             CapturingOutput cache = new CapturingOutput(outputRoot);
             try {
@@ -48,6 +48,7 @@ public class DynamicDataProviderRunner {
                 capturedResources += cache.capturedResources.get();
             } catch (Exception exception) {
                 log.error("Failed to run dynamic datagen provider '{}' for {}", provider.getName(), owner, exception);
+                throw new IllegalStateException("Failed to run dynamic datagen provider '" + provider.getName() + "' for " + owner, exception);
             }
         }
         log.info("Captured {} dynamic data resources from {} providers for {} in {} ms",

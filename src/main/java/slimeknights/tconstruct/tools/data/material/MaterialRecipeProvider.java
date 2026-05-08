@@ -1,5 +1,6 @@
-package slimeknights.tconstruct.data.recipe;
+package slimeknights.tconstruct.tools.data.material;
 
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -21,8 +22,8 @@ import slimeknights.mantle.recipe.helper.FluidOutput;
 import slimeknights.mantle.recipe.helper.ItemOutput;
 import slimeknights.mantle.recipe.ingredient.FluidIngredient;
 import slimeknights.mantle.registration.object.FluidObject;
-import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.common.data.BaseRecipeProvider;
 import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.library.data.recipe.IMaterialRecipeHelper;
@@ -35,7 +36,6 @@ import slimeknights.tconstruct.shared.TinkerMaterials;
 import slimeknights.tconstruct.shared.block.SlimeType;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.tools.TinkerModifiers;
-import slimeknights.tconstruct.tools.data.material.MaterialIds;
 import slimeknights.tconstruct.tools.recipe.severing.SheepShearingRecipe;
 import slimeknights.tconstruct.world.TinkerWorld;
 
@@ -43,17 +43,20 @@ import java.util.function.Consumer;
 
 import static slimeknights.mantle.Mantle.COMMON;
 
-public class MaterialRecipeGenerator implements IMaterialRecipeHelper {
-
-    public static void register(Consumer<FinishedRecipe> consumer) {
-        MaterialRecipeGenerator generator = new MaterialRecipeGenerator();
-        generator.addMaterialItems(consumer);
-        generator.addMaterialSmeltery(consumer);
+public class MaterialRecipeProvider extends BaseRecipeProvider implements IMaterialRecipeHelper {
+    public MaterialRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    public String getModId() {
-        return TConstruct.MOD_ID;
+    public String getName() {
+        return "Tinkers' Construct Material Recipe";
+    }
+
+    @Override
+    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+        addMaterialItems(consumer);
+        addMaterialSmeltery(consumer);
     }
 
     private void addMaterialItems(Consumer<FinishedRecipe> consumer) {
@@ -343,7 +346,7 @@ public class MaterialRecipeGenerator implements IMaterialRecipeHelper {
         materialMeltingCasting(consumer, MaterialIds.enderslime, TinkerFluids.enderSlime, FluidValues.SLIMEBALL, folder);
     }
 
-    /** 白石铸造配方 */
+    /** Adds a  */
     private void whitestoneCasting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, String folder) {
         String name = TinkerFluids.withoutMolten(fluid);
         materialComposite(withCondition(consumer, tagCondition("ingots/" + name)), MaterialIds.rock, MaterialIds.whitestoneComposite, fluid, FluidValues.INGOT, folder, "whitestone_from_" + name);

@@ -1,14 +1,11 @@
-package slimeknights.tconstruct.data.recipe;
+package slimeknights.tconstruct.tools.data;
 
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +22,7 @@ import slimeknights.mantle.recipe.ingredient.PotionDisplayIngredient;
 import slimeknights.mantle.recipe.ingredient.SizedIngredient;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.common.data.BaseRecipeProvider;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.library.data.recipe.IMaterialRecipeHelper;
 import slimeknights.tconstruct.library.data.recipe.IToolRecipeHelper;
@@ -54,38 +52,31 @@ import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tools.TinkerToolParts;
 import slimeknights.tconstruct.tools.TinkerTools;
-import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
 import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
 import slimeknights.tconstruct.world.TinkerHeadType;
 import slimeknights.tconstruct.world.TinkerWorld;
 
-import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
-
 import java.util.Collections;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static net.minecraft.advancements.critereon.InventoryChangeTrigger.TriggerInstance.hasItems;
-
-public class ToolsRecipeGenerator implements IMaterialRecipeHelper, IToolRecipeHelper, IConditionBuilder {
-
-    public static void register(Consumer<FinishedRecipe> consumer) {
-        ToolsRecipeGenerator generator = new ToolsRecipeGenerator();
-        generator.addToolBuildingRecipes(consumer);
-        generator.addPartRecipes(consumer);
-        generator.addRecycleRecipes(consumer);
+public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterialRecipeHelper, IToolRecipeHelper {
+    public ToolsRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    public String getModId() {
-        return TConstruct.MOD_ID;
+    public String getName() {
+        return "Tinkers' Construct Tool Recipes";
     }
 
-    /** 辅助方法：创建基于标签的物品检测触发器 */
-    private static InventoryChangeTrigger.TriggerInstance has(TagKey<net.minecraft.world.item.Item> tag) {
-        return hasItems(ItemPredicate.Builder.item().of(tag).build());
+    @Override
+    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+        this.addToolBuildingRecipes(consumer);
+        this.addPartRecipes(consumer);
+        this.addRecycleRecipes(consumer);
     }
 
     private void addToolBuildingRecipes(Consumer<FinishedRecipe> consumer) {
@@ -155,8 +146,8 @@ public class ToolsRecipeGenerator implements IMaterialRecipeHelper, IToolRecipeH
         ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, TinkerTools.flintAndBrick)
                 .requires(Items.FLINT)
                 .requires(Ingredient.of(TinkerSmeltery.searedBrick, TinkerSmeltery.scorchedBrick))
-                .unlockedBy("has_seared", hasItems(TinkerSmeltery.searedBrick))
-                .unlockedBy("has_scorched", hasItems(TinkerSmeltery.scorchedBrick))
+                .unlockedBy("has_seared", has(TinkerSmeltery.searedBrick))
+                .unlockedBy("has_scorched", has(TinkerSmeltery.scorchedBrick))
                 .save(consumer, prefix(TinkerTools.flintAndBrick, folder));
 
         // staff
@@ -201,7 +192,7 @@ public class ToolsRecipeGenerator implements IMaterialRecipeHelper, IToolRecipeH
         String travelersFolder = armorFolder + "travelers/";
         Consumer<FinishedRecipe> shapedMaterial = MaterialsConsumerBuilder.shaped("c").material(MaterialIds.leather).build(consumer);
         // fake ingot allows things like bronze and pewter to craft it even if their ingot form is not registered
-        Function<MaterialStatsId, Ingredient> travelersMaterial = type -> CompoundIngredient.of(
+        Function<MaterialStatsId,Ingredient> travelersMaterial = type -> CompoundIngredient.of(
                 MaterialValueIngredient.of(MaterialPredicate.and(MaterialPredicate.or(MaterialPredicate.CASTABLE, MaterialPredicate.COMPOSITE), new MaterialStatTypePredicate(type)), 1),
                 MaterialIngredient.of(TinkerToolParts.fakeIngot, new MaterialStatTypePredicate(type))
         );
@@ -288,6 +279,7 @@ public class ToolsRecipeGenerator implements IMaterialRecipeHelper, IToolRecipeH
         slimeskullCasting(consumer, MaterialIds.leather,      Items.ZOMBIE_HEAD,           armorFolder);
         slimeskullCasting(consumer, MaterialIds.gold,         Items.PIGLIN_HEAD,           armorFolder);
         slimeskullCasting(consumer, MaterialIds.enderPearl,  TinkerWorld.heads.get(TinkerHeadType.ENDERMAN),         armorFolder);
+        // TODO 1.20: switch this to bogged, perhaps use a new bone type for stray
         slimeskullCasting(consumer, MaterialIds.venombone,   TinkerWorld.heads.get(TinkerHeadType.STRAY),            armorFolder);
         slimeskullCasting(consumer, MaterialIds.string,      TinkerWorld.heads.get(TinkerHeadType.SPIDER),           armorFolder);
         slimeskullCasting(consumer, MaterialIds.darkthread,  TinkerWorld.heads.get(TinkerHeadType.CAVE_SPIDER),      armorFolder);
@@ -422,12 +414,12 @@ public class ToolsRecipeGenerator implements IMaterialRecipeHelper, IToolRecipeH
                 .pattern("###")
                 .pattern("###")
                 .pattern("###")
-                .unlockedBy("has_item", hasItems(TinkerToolParts.fakeIngot))
+                .unlockedBy("has_item", has(TinkerToolParts.fakeIngot))
                 .save(MaterialsConsumerBuilder.shaped("#").build(consumer), location(partFolder + "fake_ingot_to_block"));
         // block to ingot
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, TinkerToolParts.fakeIngot, 9)
                 .requires(MaterialIngredient.of(TinkerToolParts.fakeStorageBlock, new MaterialHasPartPredicate(TinkerToolParts.fakeIngot.get())))
-                .unlockedBy("has_item", hasItems(TinkerToolParts.fakeStorageBlock))
+                .unlockedBy("has_item", has(TinkerToolParts.fakeStorageBlock))
                 .save(MaterialsConsumerBuilder.shapeless(1).build(consumer), location(partFolder + "fake_block_to_ingots"));
 
         // head

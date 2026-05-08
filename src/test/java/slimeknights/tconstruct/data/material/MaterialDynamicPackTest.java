@@ -9,20 +9,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
+import slimeknights.tconstruct.library.materials.definition.MaterialManager;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsManager;
+import slimeknights.tconstruct.library.materials.traits.MaterialTraitsManager;
 import slimeknights.tconstruct.test.BaseMcTest;
-import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
-import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
-import slimeknights.tconstruct.tools.stats.SkullStats;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MaterialDataGeneratorTest extends BaseMcTest {
+class MaterialDynamicPackTest extends BaseMcTest {
   private final TiCDynamicDataPack pack = new TiCDynamicDataPack("test");
 
   @BeforeEach
@@ -31,31 +29,20 @@ class MaterialDataGeneratorTest extends BaseMcTest {
   }
 
   @Test
-  void materialStatsGeneratedInMultiplePassesMergeIntoOneFile() throws Exception {
-    generateMaterialStats();
+  void registerCapturesMaterialDefinitionStatsAndTraits() throws Exception {
+    TiCDynamicMaterialGenerator.register();
 
-    JsonObject stats = readMaterialStats("iron");
-
-    assertThat(stats.keySet()).contains(
-      HeadMaterialStats.ID.toString(),
-      PlatingMaterialStats.HELMET.getId().toString(),
-      SkullStats.ID.toString()
-    );
+    assertThat(readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialManager.FOLDER + "/wood.json"))).isNotNull();
+    assertThat(readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialStatsManager.FOLDER + "/iron.json"))).isNotNull();
+    assertThat(readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialTraitsManager.FOLDER + "/iron.json"))).isNotNull();
   }
 
-  private static void generateMaterialStats() throws Exception {
-    Method method = MaterialDataGenerator.class.getDeclaredMethod("addMaterialStats");
-    method.setAccessible(true);
-    method.invoke(null);
-  }
-
-  private JsonObject readMaterialStats(String material) throws Exception {
-    ResourceLocation location = new ResourceLocation(TConstruct.MOD_ID, MaterialStatsManager.FOLDER + "/" + material + ".json");
+  private JsonObject readJson(ResourceLocation location) throws Exception {
     IoSupplier<InputStream> resource = pack.getResource(PackType.SERVER_DATA, location);
-    assertThat(resource).isNotNull();
+    assertThat(resource).as(location.toString()).isNotNull();
     try (InputStream inputStream = resource.get();
          InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-      return JsonParser.parseReader(reader).getAsJsonObject().getAsJsonObject("stats");
+      return JsonParser.parseReader(reader).getAsJsonObject();
     }
   }
 }

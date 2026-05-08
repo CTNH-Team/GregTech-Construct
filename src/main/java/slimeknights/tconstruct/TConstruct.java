@@ -34,11 +34,13 @@ import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.common.data.AdvancementsProvider;
 import slimeknights.tconstruct.common.data.ConfigurationDataProvider;
 import slimeknights.tconstruct.common.data.DamageTypeProvider;
+import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
 import slimeknights.tconstruct.common.data.loot.GlobalLootModifiersProvider;
 import slimeknights.tconstruct.common.data.loot.LootTableInjectionProvider;
 import slimeknights.tconstruct.common.data.loot.TConstructLootTableProvider;
+import slimeknights.tconstruct.data.material.TiCDynamicMaterialGenerator;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
-import slimeknights.tconstruct.data.recipe.TiCRecipes;
+import slimeknights.tconstruct.data.recipe.TiCDynamicRecipeGenerator;
 import slimeknights.tconstruct.data.pack.TiCDynamicResourcePack;
 import slimeknights.tconstruct.data.pack.TiCPackSource;
 import slimeknights.tconstruct.data.tag.TiCDynamicTagGenerator;
@@ -169,6 +171,7 @@ public class TConstruct {
         TrimMaterialProvider.register(registrySetBuilder);
         DatapackBuiltinEntriesProvider datapackRegistryProvider = new DatapackBuiltinEntriesProvider(packOutput, lookupProvider, registrySetBuilder, Set.of(MOD_ID));
         generator.addProvider(server, datapackRegistryProvider);
+        generator.addProvider(server, new BiomeTagProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
 
         // other datagen
         generator.addProvider(server, new TConstructLootTableProvider(packOutput));
@@ -190,8 +193,9 @@ public class TConstruct {
             ));
         } else if (event.getPackType() == PackType.SERVER_DATA) {
             TiCDynamicDataPack.clearServer();
+            TiCDynamicMaterialGenerator.register();
             TiCDynamicTagGenerator.register();
-            TiCRecipes.registerRecipes();
+            TiCDynamicRecipeGenerator.register();
             event.addRepositorySource(new TiCPackSource(
                 "tconstruct:dynamic_data",
                 event.getPackType(),

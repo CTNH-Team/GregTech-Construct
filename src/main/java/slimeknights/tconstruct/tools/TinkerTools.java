@@ -28,7 +28,6 @@ import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerModule;
 import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.common.config.ConfigurableAction;
-import slimeknights.tconstruct.common.data.tags.MaterialTagProvider;
 import slimeknights.tconstruct.library.client.data.material.GeneratorPartTextureJsonGenerator;
 import slimeknights.tconstruct.library.client.data.material.MaterialPaletteDebugGenerator;
 import slimeknights.tconstruct.library.client.data.material.MaterialPartTextureGenerator;
@@ -345,7 +344,6 @@ public final class TinkerTools extends TinkerModule {
         boolean client = event.includeClient();
         generator.addProvider(server, new ToolDefinitionDataProvider(packOutput));
         generator.addProvider(server, new StationSlotLayoutProvider(packOutput));
-        generator.addProvider(server, new MaterialTagProvider(packOutput, existingFileHelper));
         generator.addProvider(client, new ToolItemModelProvider(packOutput, existingFileHelper));
         TinkerMaterialSpriteProvider materialSprites = new TinkerMaterialSpriteProvider();
         TinkerPartSpriteProvider partSprites = new TinkerPartSpriteProvider();

@@ -60,6 +60,9 @@ public class TiCDynamicTagGenerator {
             new TagProviderEntry("MenuTypeTagProvider", state::createMenuTypeTags),
             new TagProviderEntry("PotionTagProvider", state::createPotionTags),
             new TagProviderEntry("DamageTypeTagProvider", state::createDamageTypeTags),
+            // Biome tags are not supported in the dynamic data pack path on Forge 1.20.1.
+            // Keep them in normal datagen instead.
+            // new TagProviderEntry("BiomeTagProvider", state::createBiomeTags),
             new TagProviderEntry("MaterialTagProvider", state::createMaterialTags),
             new TagProviderEntry("ModifierTagProvider", state::createModifierTags)
         );

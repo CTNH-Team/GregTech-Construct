@@ -20,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DynamicDataProviderRunnerTest extends BaseMcTest {
     private final TiCDynamicDataPack pack = new TiCDynamicDataPack("test");
@@ -40,46 +41,52 @@ class DynamicDataProviderRunnerTest extends BaseMcTest {
         assertThat(pack.getNamespaces(PackType.SERVER_DATA)).contains("example");
     }
 
-    @Test
-    void failingProviderDoesNotStopLaterProviders() {
-        DynamicDataProviderRunner.run(
-            "test",
-            output -> {
-                throw new IllegalStateException("expected provider construction failure");
-            },
-            output -> new TestTagProvider(output)
-        );
+  @Test
+  void failingProviderConstructionStopsLaterProviders() {
+    assertThatThrownBy(() -> DynamicDataProviderRunner.run(
+        "test",
+        output -> {
+          throw new IllegalStateException("expected provider construction failure");
+        },
+        output -> new TestTagProvider(output)
+    ))
+      .isInstanceOf(IllegalStateException.class)
+      .hasRootCauseMessage("expected provider construction failure");
 
-        ResourceLocation location = new ResourceLocation("example", "tags/items/generated.json");
-        assertThat(pack.getResource(PackType.SERVER_DATA, location)).isNotNull();
-    }
+    ResourceLocation location = new ResourceLocation("example", "tags/items/generated.json");
+    assertThat(pack.getResource(PackType.SERVER_DATA, location)).isNull();
+  }
 
-    @Test
-    void failingProviderRunDoesNotStopLaterProviders() {
-        DynamicDataProviderRunner.run(
-            "test",
-            output -> new TestTagProvider(output, "first"),
-            output -> new FailingRunProvider(),
-            output -> new TestTagProvider(output, "later")
-        );
+  @Test
+  void failingProviderRunStopsLaterProviders() {
+    assertThatThrownBy(() -> DynamicDataProviderRunner.run(
+        "test",
+        output -> new TestTagProvider(output, "first"),
+        output -> new FailingRunProvider(),
+        output -> new TestTagProvider(output, "later")
+    ))
+      .isInstanceOf(IllegalStateException.class)
+      .hasRootCauseMessage("expected provider run failure");
 
-        ResourceLocation firstLocation = new ResourceLocation("example", "tags/items/first.json");
-        ResourceLocation laterLocation = new ResourceLocation("example", "tags/items/later.json");
-        assertThat(pack.getResource(PackType.SERVER_DATA, firstLocation)).isNotNull();
-        assertThat(pack.getResource(PackType.SERVER_DATA, laterLocation)).isNotNull();
-    }
+    ResourceLocation firstLocation = new ResourceLocation("example", "tags/items/first.json");
+    ResourceLocation laterLocation = new ResourceLocation("example", "tags/items/later.json");
+    assertThat(pack.getResource(PackType.SERVER_DATA, firstLocation)).isNotNull();
+    assertThat(pack.getResource(PackType.SERVER_DATA, laterLocation)).isNull();
+  }
 
-    @Test
-    void nullProviderDoesNotStopLaterProviders() {
-        DynamicDataProviderRunner.run(
-            "test",
-            output -> null,
-            output -> new TestTagProvider(output)
-        );
+  @Test
+  void nullProviderStopsLaterProviders() {
+    assertThatThrownBy(() -> DynamicDataProviderRunner.run(
+        "test",
+        output -> null,
+        output -> new TestTagProvider(output)
+    ))
+      .isInstanceOf(IllegalStateException.class)
+      .hasMessageContaining("returned null");
 
-        ResourceLocation location = new ResourceLocation("example", "tags/items/generated.json");
-        assertThat(pack.getResource(PackType.SERVER_DATA, location)).isNotNull();
-    }
+    ResourceLocation location = new ResourceLocation("example", "tags/items/generated.json");
+    assertThat(pack.getResource(PackType.SERVER_DATA, location)).isNull();
+  }
 
     @Test
     void malformedServerDataPathIsIgnored() {
