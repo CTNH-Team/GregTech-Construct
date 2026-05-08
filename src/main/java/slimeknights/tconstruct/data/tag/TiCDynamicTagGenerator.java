@@ -29,7 +29,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
-public class TiCDynamicTagGenerator {
+public final class TiCDynamicTagGenerator {
     private TiCDynamicTagGenerator() {}
 
     public static void register() {

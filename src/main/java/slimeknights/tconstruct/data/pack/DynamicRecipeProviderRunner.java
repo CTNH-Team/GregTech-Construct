@@ -7,9 +7,7 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.IoSupplier;
 
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,18 +23,20 @@ public class DynamicRecipeProviderRunner {
     long startTime = System.nanoTime();
     int completedProviders = 0;
     int capturedResources = 0;
+
     for (Function<PackOutput, ? extends DataProvider> providerFactory : providers) {
       DataProvider provider;
       try {
         provider = providerFactory.apply(output);
       } catch (Exception exception) {
         log.error("Failed to create dynamic recipe provider for {}", owner, exception);
-        continue;
+        throw new IllegalStateException("Failed to create dynamic recipe provider for " + owner, exception);
       }
       if (provider == null) {
         log.error("Dynamic recipe provider factory returned null for {}", owner);
-        continue;
+        throw new IllegalStateException("Dynamic recipe provider factory returned null for " + owner);
       }
+
       CapturingOutput cache = new CapturingOutput(outputRoot);
       try {
         provider.run(cache).join();
@@ -44,8 +44,10 @@ public class DynamicRecipeProviderRunner {
         capturedResources += cache.capturedResources.get();
       } catch (Exception exception) {
         log.error("Failed to run dynamic recipe provider '{}' for {}", provider.getName(), owner, exception);
+        throw new IllegalStateException("Failed to run dynamic recipe provider '" + provider.getName() + "' for " + owner, exception);
       }
     }
+
     log.info("Captured {} dynamic recipe resources from {} providers for {} in {} ms",
       capturedResources, completedProviders, owner, (System.nanoTime() - startTime) / 1000000f);
   }
