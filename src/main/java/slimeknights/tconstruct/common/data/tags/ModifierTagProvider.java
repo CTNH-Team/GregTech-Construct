@@ -123,7 +123,7 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
       ModifierIds.experienced, TinkerModifiers.magnetic.getId(), ModifierIds.scope, ModifierIds.zoom,
       ModifierIds.tank, ModifierIds.smelting, TinkerModifiers.fireprimer.getId())
         .addOptional(ModifierIds.theOneProbe);
-    if (ModList.get().isLoaded("botania")) {
+    if (isBotaniaLoaded()) {
       this.tag(GENERAL_UPGRADES).add(TinkerModifiers.manafix.getId(), TinkerModifiers.terrarecover.getId());
     }
 
@@ -206,5 +206,10 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
   @Override
   public String getName() {
     return "Tinkers' Construct Modifier Tag Provider";
+  }
+
+  private static boolean isBotaniaLoaded() {
+    try { return ModList.get().isLoaded("botania"); }
+    catch (Exception e) { return false; }
   }
 }

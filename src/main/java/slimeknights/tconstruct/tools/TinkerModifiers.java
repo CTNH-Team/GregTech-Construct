@@ -204,8 +204,21 @@ public final class TinkerModifiers extends TinkerModule {
      * Modifiers
      */
     public static final StaticModifier<OverslimeModifier> overslime = MODIFIERS.register("overslime", OverslimeModifier::new);
-    public static final StaticModifier<?> manafix = ModList.get().isLoaded("botania") ? MODIFIERS.register("manafix", slimeknights.tconstruct.tools.modifiers.Botania.ManaFixModifier::new) : null;
-    public static final StaticModifier<?> terrarecover = ModList.get().isLoaded("botania") ? MODIFIERS.register("terrarecover", slimeknights.tconstruct.tools.modifiers.Botania.TerraRecoverModifier::new) : null;
+    public static final StaticModifier<?> manafix;
+    public static final StaticModifier<?> terrarecover;
+    static {
+        if (isBotaniaLoaded()) {
+            manafix = MODIFIERS.register("manafix", slimeknights.tconstruct.tools.modifiers.Botania.ManaFixModifier::new);
+            terrarecover = MODIFIERS.register("terrarecover", slimeknights.tconstruct.tools.modifiers.Botania.TerraRecoverModifier::new);
+        } else {
+            manafix = null;
+            terrarecover = null;
+        }
+    }
+    private static boolean isBotaniaLoaded() {
+        try { return ModList.get().isLoaded("botania"); }
+        catch (Exception e) { return false; }
+    }
     public static final StaticModifier<MagneticModifier> magnetic = MODIFIERS.register("magnetic", MagneticModifier::new);
     public static final StaticModifier<FarsightedModifier> farsighted = MODIFIERS.register("farsighted", FarsightedModifier::new);
     public static final StaticModifier<NearsightedModifier> nearsighted = MODIFIERS.register("nearsighted", NearsightedModifier::new);

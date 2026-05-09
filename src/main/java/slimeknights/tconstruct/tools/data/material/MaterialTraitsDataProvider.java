@@ -152,7 +152,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     addTraits(MaterialIds.silver, ARMOR, ModifierIds.consecrated);
     addDefaultTraits(MaterialIds.treatedWood, ModifierIds.preserved);
     addDefaultTraits(MaterialIds.ironwood, ModifierIds.deciduous);
-    if (ModList.get().isLoaded("botania")) {
+    if (isBotaniaLoaded()) {
       addDefaultTraits(MaterialIds.manaSteel, TinkerModifiers.manafix);
     } else {
       noTraits(MaterialIds.manaSteel);
@@ -170,7 +170,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     addDefaultTraits(MaterialIds.platedSlimewood, TinkerModifiers.overworked, TinkerModifiers.overslime);
     addDefaultTraits(MaterialIds.steeleaf, ModifierIds.experienced);
     addTraits(MaterialIds.steeleaf, AMMO, ModifierIds.looting);
-    if (ModList.get().isLoaded("botania")) {
+    if (isBotaniaLoaded()) {
       addDefaultTraits(MaterialIds.terraSteel, TinkerModifiers.manafix, TinkerModifiers.terrarecover);
     } else {
       noTraits(MaterialIds.terraSteel);
@@ -200,5 +200,10 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     noTraits(MaterialIds.clay);
     noTraits(MaterialIds.honey);
     noTraits(MaterialIds.phantom);
+  }
+
+  private static boolean isBotaniaLoaded() {
+    try { return ModList.get().isLoaded("botania"); }
+    catch (Exception e) { return false; }
   }
 }

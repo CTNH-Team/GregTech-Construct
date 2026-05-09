@@ -287,7 +287,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .setSlots(SlotType.UPGRADE, 1)
                 .setTools(ingredientFromTags(TinkerTags.Items.MELEE_WEAPON, TinkerTags.Items.HARVEST))
                 .save(consumer, prefix(TinkerModifiers.magnetic, upgradeFolder));
-        if (ModList.get().isLoaded("botania")) {
+        if (isBotaniaLoaded()) {
             ModifierRecipeBuilder.modifier(TinkerModifiers.manafix)
                     .addInput(vazkii.botania.common.block.BotaniaBlocks.spawnerClaw)
                     .setMaxLevel(5)
@@ -2071,5 +2071,10 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
             tagIngredients[i] = Ingredient.of(tags[i]);
         }
         return CompoundIngredient.of(tagIngredients);
+    }
+
+    private static boolean isBotaniaLoaded() {
+        try { return ModList.get().isLoaded("botania"); }
+        catch (Exception e) { return false; }
     }
 }

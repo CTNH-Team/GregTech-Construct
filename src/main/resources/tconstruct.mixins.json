@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "slimeknights.tconstruct.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "refmap": "mixins.tconstruct.refmap.json",
+  "mixins": [
+    "ShapedRecipeMixin",
+    "ShapelessRecipeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
