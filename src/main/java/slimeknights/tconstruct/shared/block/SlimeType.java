@@ -76,4 +76,8 @@ public enum SlimeType implements StringRepresentable {
     }
     return dirtType;
   }
+
+  public DirtType getDirtType() {
+    return asDirt();
+  }
 }

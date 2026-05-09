@@ -8,20 +8,24 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,19 +36,19 @@ import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.common.data.AdvancementsProvider;
 import slimeknights.tconstruct.common.data.ConfigurationDataProvider;
 import slimeknights.tconstruct.common.data.DamageTypeProvider;
+import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
 import slimeknights.tconstruct.common.data.loot.GlobalLootModifiersProvider;
 import slimeknights.tconstruct.common.data.loot.LootTableInjectionProvider;
 import slimeknights.tconstruct.common.data.loot.TConstructLootTableProvider;
-import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
-import slimeknights.tconstruct.common.data.tags.BlockEntityTypeTagProvider;
-import slimeknights.tconstruct.common.data.tags.BlockTagProvider;
-import slimeknights.tconstruct.common.data.tags.DamageTypeTagProvider;
-import slimeknights.tconstruct.common.data.tags.EnchantmentTagProvider;
-import slimeknights.tconstruct.common.data.tags.EntityTypeTagProvider;
-import slimeknights.tconstruct.common.data.tags.FluidTagProvider;
-import slimeknights.tconstruct.common.data.tags.ItemTagProvider;
-import slimeknights.tconstruct.common.data.tags.MenuTypeTagProvider;
-import slimeknights.tconstruct.common.data.tags.PotionTagProvider;
+import slimeknights.tconstruct.data.advancement.TiCDynamicAdvancementGenerator;
+import slimeknights.tconstruct.data.material.TiCDynamicMaterialGenerator;
+import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
+import slimeknights.tconstruct.data.recipe.TiCDynamicRecipeGenerator;
+import slimeknights.tconstruct.data.pack.TiCDynamicResourcePack;
+import slimeknights.tconstruct.data.pack.TiCPackSource;
+import slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator;
+import slimeknights.tconstruct.data.tag.TiCDynamicTagGenerator;
+import slimeknights.tconstruct.data.tinkering.TiCDynamicTinkeringGenerator;
 import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
@@ -159,10 +163,25 @@ public class TConstruct {
     }
 
     @SubscribeEvent
+    static void onCommonConfigLoaded(final ModConfigEvent.Loading event) {
+        if (event.getConfig().getSpec() == Config.commonSpec) {
+            TiCDynamicDataPack.dumpAllDataIfConfigured();
+            TiCDynamicResourcePack.dumpAllAssetsIfConfigured();
+        }
+    }
+
+    @SubscribeEvent
+    static void onCommonConfigReloading(final ModConfigEvent.Reloading event) {
+        if (event.getConfig().getSpec() == Config.commonSpec) {
+            TiCDynamicDataPack.dumpAllDataIfConfigured();
+            TiCDynamicResourcePack.dumpAllAssetsIfConfigured();
+        }
+    }
+
+    @SubscribeEvent
     static void gatherData(final GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
-        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         CompletableFuture<Provider> lookupProvider = event.getLookupProvider();
         boolean server = event.includeServer();
 
@@ -173,26 +192,42 @@ public class TConstruct {
         TrimMaterialProvider.register(registrySetBuilder);
         DatapackBuiltinEntriesProvider datapackRegistryProvider = new DatapackBuiltinEntriesProvider(packOutput, lookupProvider, registrySetBuilder, Set.of(MOD_ID));
         generator.addProvider(server, datapackRegistryProvider);
-
-        // tags
-        BlockTagProvider blockTags = new BlockTagProvider(packOutput, lookupProvider, existingFileHelper);
-        generator.addProvider(server, blockTags);
-        generator.addProvider(server, new ItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
-        generator.addProvider(server, new FluidTagProvider(packOutput, lookupProvider, existingFileHelper));
-        generator.addProvider(server, new EntityTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
-        generator.addProvider(server, new BlockEntityTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
-        generator.addProvider(server, new BiomeTagProvider(packOutput, lookupProvider, existingFileHelper));
-        generator.addProvider(server, new EnchantmentTagProvider(packOutput, lookupProvider, existingFileHelper));
-        generator.addProvider(server, new MenuTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
-        generator.addProvider(server, new PotionTagProvider(packOutput, lookupProvider, existingFileHelper));
-        generator.addProvider(server, new DamageTypeTagProvider(packOutput, datapackRegistryProvider.getRegistryProvider(), existingFileHelper));
+        generator.addProvider(server, new BiomeTagProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
 
         // other datagen
         generator.addProvider(server, new TConstructLootTableProvider(packOutput));
-        generator.addProvider(server, new AdvancementsProvider(packOutput));
         generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
         generator.addProvider(server, new LootTableInjectionProvider(packOutput));
         generator.addProvider(server, new ConfigurationDataProvider(packOutput));
+    }
+
+    @SubscribeEvent
+    static void registerPackFinders(AddPackFindersEvent event) {
+        if (event.getPackType() == PackType.CLIENT_RESOURCES) {
+            TiCDynamicResourcePack.clearClient();
+            if (FMLEnvironment.dist == Dist.CLIENT) {
+                TiCDynamicResourceGenerator.register();
+            }
+            event.addRepositorySource(new TiCPackSource(
+                "tconstruct:dynamic_assets",
+                event.getPackType(),
+                Pack.Position.BOTTOM,
+                TiCDynamicResourcePack::new
+            ));
+        } else if (event.getPackType() == PackType.SERVER_DATA) {
+            TiCDynamicDataPack.clearServer();
+            TiCDynamicAdvancementGenerator.register();
+            TiCDynamicMaterialGenerator.register();
+            TiCDynamicTinkeringGenerator.register();
+            TiCDynamicTagGenerator.register();
+            TiCDynamicRecipeGenerator.register();
+            event.addRepositorySource(new TiCPackSource(
+                "tconstruct:dynamic_data",
+                event.getPackType(),
+                Pack.Position.BOTTOM,
+                TiCDynamicDataPack::new
+            ));
+        }
     }
 
     /** Handles missing mappings of all types */

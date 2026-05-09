@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material_fluid",
-  "fluid": {
-    "amount": 144,
-    "tag": "forge:iron"
-  },
-  "output": "tconstruct:iron",
-  "temperature": 800
-}

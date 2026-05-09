@@ -3,8 +3,6 @@ package slimeknights.tconstruct.tools;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
@@ -14,7 +12,6 @@ import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -28,7 +25,6 @@ import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerModule;
 import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.common.config.ConfigurableAction;
-import slimeknights.tconstruct.common.data.tags.MaterialTagProvider;
 import slimeknights.tconstruct.library.client.data.material.GeneratorPartTextureJsonGenerator;
 import slimeknights.tconstruct.library.client.data.material.MaterialPaletteDebugGenerator;
 import slimeknights.tconstruct.library.client.data.material.MaterialPartTextureGenerator;
@@ -334,43 +330,6 @@ public final class TinkerTools extends TinkerModule {
             ToolStackPredicate.LOADER.register(getResource("stat_in_set"), StatInSetPredicate.LOADER);
             ToolStackPredicate.LOADER.register(getResource("has_volatile_key"), VolatileDataPredicate.LOADER);
         }
-    }
-
-    @SubscribeEvent
-    void gatherData(final GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput packOutput = generator.getPackOutput();
-        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-        boolean server = event.includeServer();
-        boolean client = event.includeClient();
-        generator.addProvider(server, new ToolsRecipeProvider(packOutput));
-        generator.addProvider(server, new MaterialRecipeProvider(packOutput));
-        MaterialDataProvider materials = new MaterialDataProvider(packOutput);
-        generator.addProvider(server, materials);
-        generator.addProvider(server, new MaterialStatsDataProvider(packOutput, materials));
-        generator.addProvider(server, new MaterialTraitsDataProvider(packOutput, materials));
-        generator.addProvider(server, new ToolDefinitionDataProvider(packOutput));
-        generator.addProvider(server, new StationSlotLayoutProvider(packOutput));
-        generator.addProvider(server, new MaterialTagProvider(packOutput, existingFileHelper));
-        generator.addProvider(client, new ToolItemModelProvider(packOutput, existingFileHelper));
-        TinkerMaterialSpriteProvider materialSprites = new TinkerMaterialSpriteProvider();
-        TinkerPartSpriteProvider partSprites = new TinkerPartSpriteProvider();
-        generator.addProvider(client, new MaterialRenderInfoProvider(packOutput, materialSprites, existingFileHelper));
-        generator.addProvider(client, new GeneratorPartTextureJsonGenerator(packOutput, TConstruct.MOD_ID, partSprites));
-        generator.addProvider(client, new MaterialPartTextureGenerator(packOutput, existingFileHelper, partSprites, materialSprites));
-        generator.addProvider(client, new MaterialPaletteDebugGenerator(packOutput, TConstruct.MOD_ID, materialSprites));
-        generator.addProvider(client, new ArmorModelProvider(packOutput));
-        generator.addProvider(client, new TrimMaterialPaletteGenerator(packOutput, TConstruct.MOD_ID, existingFileHelper, materialSprites, MaterialIds.TRIM_MATERIALS) {
-            @Override
-            protected ISpriteTransformer getTransformer(MaterialId material) {
-                // queens slime is normally a spacially aware generator, use flat colors
-                if (MaterialIds.queensSlime.equals(material)) {
-                    // return new RecolorSpriteTransformer(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF274723).addARGB(102, 0xFF325B2D).addARGB(140, 0xFF34742D).addARGB(178, 0xFF348D3C).addARGB(216, 0xFF52BB53).addARGB(255, 0xFF5DD45F).build());
-                    return new RecolorSpriteTransformer(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF5F1100).addARGB(102, 0xFF893200).addARGB(140, 0xFF966A03).addARGB(178, 0xFF8C9226).addARGB(216, 0xFF52BB53).addARGB(255, 0xFF5DD45F).build());
-                }
-                return super.getTransformer(material);
-            }
-        });
     }
 
     /** Adds all relevant items to the creative tab */

@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:casting_basin",
-  "cooling_time": 66,
-  "fluid": {
-    "amount": 144,
-    "tag": "tconstruct:obsidian"
-  },
-  "result": "minecraft:obsidian"
-}

@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material_melting",
-  "input": "tconstruct:glass",
-  "result": {
-    "amount": 36,
-    "fluid": "tconstruct:glass"
-  },
-  "temperature": 750
-}

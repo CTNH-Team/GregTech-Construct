@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material_melting",
-  "input": "tconstruct:cobalt",
-  "result": {
-    "amount": 144,
-    "tag": "forge:cobalt"
-  },
-  "temperature": 950
-}
