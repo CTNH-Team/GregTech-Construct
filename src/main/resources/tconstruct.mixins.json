@@ -9,7 +9,6 @@
     "OverslimeCraftingTableRecipeMixin",
     "ShapedRecipeMixin",
     "ShapelessRecipeMixin",
-    "StrictShapedRecipeMixin",
     "ToolHelperMixin"
   ],
   "injectors": {
