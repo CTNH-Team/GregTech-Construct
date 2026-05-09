@@ -1,4 +1,4 @@
-package slimeknights.tconstruct.library.recipe.gtceu;
+package slimeknights.tconstruct.data.gtceu;
 
 import com.gregtechceu.gtceu.api.addon.GTAddon;
 import com.gregtechceu.gtceu.api.addon.IGTAddon;
