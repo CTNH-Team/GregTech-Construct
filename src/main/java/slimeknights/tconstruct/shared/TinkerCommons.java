@@ -3,9 +3,6 @@ package slimeknights.tconstruct.shared;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import net.minecraft.world.item.Item;
@@ -27,7 +24,6 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
@@ -41,12 +37,6 @@ import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.ItemObject;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerModule;
-import slimeknights.tconstruct.common.data.model.ModelSpriteProvider;
-import slimeknights.tconstruct.common.data.model.TinkerBlockStateProvider;
-import slimeknights.tconstruct.common.data.model.TinkerItemModelProvider;
-import slimeknights.tconstruct.common.data.model.TinkerSpriteSourceProvider;
-import slimeknights.tconstruct.common.data.render.RenderFluidProvider;
-import slimeknights.tconstruct.common.data.render.RenderItemProvider;
 import slimeknights.tconstruct.common.json.BlockOrEntityCondition;
 import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
 import slimeknights.tconstruct.common.recipe.RecipeCacheInvalidator;
@@ -175,20 +165,6 @@ public final class TinkerCommons extends TinkerModule {
   @SubscribeEvent
   void commonSetupEvent(FMLCommonSetupEvent event) {
     SlimeBounceHandler.init();
-  }
-
-  @SubscribeEvent
-  void gatherData(final GatherDataEvent event) {
-    DataGenerator generator = event.getGenerator();
-    PackOutput output = generator.getPackOutput();
-    ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-    boolean client = event.includeClient();
-    generator.addProvider(client, new ModelSpriteProvider(output, existingFileHelper));
-    generator.addProvider(client, new TinkerSpriteSourceProvider(output, existingFileHelper));
-    generator.addProvider(client, new TinkerItemModelProvider(output, existingFileHelper));
-    generator.addProvider(client, new TinkerBlockStateProvider(output, existingFileHelper));
-    generator.addProvider(client, new RenderFluidProvider(output));
-    generator.addProvider(client, new RenderItemProvider(output));
   }
 
   @SuppressWarnings("removal")

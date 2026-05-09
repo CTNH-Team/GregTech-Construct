@@ -16,12 +16,17 @@ import net.minecraft.server.packs.resources.IoSupplier;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
+import net.minecraftforge.fml.loading.FMLPaths;
+import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.TConstruct;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -68,6 +73,8 @@ public class TiCDynamicResourcePack implements PackResources {
      * Should be called on resource reload or client disconnect.
      */
     public static void clearClient() {
+        CLIENT_DOMAINS.clear();
+        CLIENT_DOMAINS.addAll(Sets.newHashSet(TConstruct.MOD_ID, "minecraft", "forge", "c"));
         CONTENTS.clearData();
     }
 
@@ -88,7 +95,30 @@ public class TiCDynamicResourcePack implements PackResources {
      * @param data the data bytes to store
      */
     public static void addResource(ResourceLocation location, byte[] data) {
+        CLIENT_DOMAINS.add(location.getNamespace());
+        if (shouldDumpAssets()) {
+            TiCDynamicDataPack.writeBytes(location, getDumpAssetsRoot(), data);
+        }
         CONTENTS.addToData(location, data);
+    }
+
+    /**
+     * Adds a texture to the pack. Automatically prepends "textures/" to the path if not present
+     * and appends ".png" if missing.
+     *
+     * @param loc   the texture location (without "textures/" prefix or ".png" suffix)
+     * @param data  the texture bytes to store
+     */
+    public static void addTexture(ResourceLocation loc, byte[] data) {
+        String path = loc.getPath();
+        if (!path.startsWith("textures/")) {
+            loc = loc.withPrefix("textures/");
+            path = loc.getPath();
+        }
+        if (!path.endsWith(".png")) {
+            loc = loc.withSuffix(".png");
+        }
+        addResource(loc, data);
     }
 
     /**
@@ -194,5 +224,34 @@ public class TiCDynamicResourcePack implements PackResources {
     @Override
     public void close() {
         // NOOP
+    }
+
+    /** Dumps all currently captured dynamic client resources to disk if the config is enabled. */
+    public static void dumpAllAssetsIfConfigured() {
+        if (!shouldDumpAssets()) {
+            return;
+        }
+        Path parent = getDumpAssetsRoot();
+        for (String namespace : new LinkedHashSet<>(CLIENT_DOMAINS)) {
+            CONTENTS.listResources(namespace, "", (location, supplier) -> {
+                try (InputStream input = supplier.get()) {
+                    TiCDynamicDataPack.writeBytes(location, parent, input.readAllBytes());
+                } catch (IOException exception) {
+                    TConstruct.LOG.error("Failed to dump dynamic asset {}", location, exception);
+                }
+            });
+        }
+    }
+
+    private static Path getDumpAssetsRoot() {
+        return FMLPaths.GAMEDIR.get().resolve(TConstruct.MOD_ID).resolve("dumped").resolve("assets");
+    }
+
+    private static boolean shouldDumpAssets() {
+        try {
+            return Config.COMMON.dumpAssets.get();
+        } catch (IllegalStateException ignored) {
+            return false;
+        }
     }
 }

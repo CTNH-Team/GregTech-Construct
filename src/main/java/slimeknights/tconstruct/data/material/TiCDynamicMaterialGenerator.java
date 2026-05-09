@@ -1,13 +1,9 @@
 package slimeknights.tconstruct.data.material;
 
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.crafting.conditions.AndCondition;
-import net.minecraftforge.common.crafting.conditions.OrCondition;
-import slimeknights.mantle.recipe.condition.TagFilledCondition;
+import slimeknights.tconstruct.data.DynamicConditionSerializerRegistrar;
 import slimeknights.tconstruct.data.pack.DynamicDataProviderRunner;
-import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
 import slimeknights.tconstruct.tools.data.material.MaterialDataProvider;
 import slimeknights.tconstruct.tools.data.material.MaterialStatsDataProvider;
 import slimeknights.tconstruct.tools.data.material.MaterialTraitsDataProvider;
@@ -20,7 +16,7 @@ public final class TiCDynamicMaterialGenerator {
   private TiCDynamicMaterialGenerator() {}
 
   public static void register() {
-    registerConditionSerializers();
+    DynamicConditionSerializerRegistrar.registerCommonSerializers();
     register((owner, providers) -> DynamicDataProviderRunner.run(owner, providers));
   }
 
@@ -45,21 +41,6 @@ public final class TiCDynamicMaterialGenerator {
     return providers;
   }
 
-  private static void registerConditionSerializers() {
-    tryRegister(OrCondition.Serializer.INSTANCE);
-    tryRegister(AndCondition.Serializer.INSTANCE);
-    tryRegister(ConfigEnabledCondition.SERIALIZER);
-    tryRegister(TagFilledCondition.SERIALIZER);
-  }
-
-  private static void tryRegister(net.minecraftforge.common.crafting.conditions.IConditionSerializer<?> serializer) {
-    try {
-      CraftingHelper.register(serializer);
-    } catch (IllegalStateException ignored) {
-      // already registered
-    }
-  }
-
   @FunctionalInterface
   interface MaterialRunner {
     void run(String owner, List<Function<PackOutput, ? extends DataProvider>> providers);
@@ -75,18 +56,19 @@ public final class TiCDynamicMaterialGenerator {
       return this.materials;
     }
 
-    private DataProvider createMaterialStatsDataProvider(PackOutput output) {
+    private MaterialDataProvider getMaterials(PackOutput output) {
       if (materials == null) {
-        createMaterialDataProvider(output);
+        this.materials = (MaterialDataProvider) createMaterialDataProvider(output);
       }
-      return new MaterialStatsDataProvider(output, materials);
+      return materials;
+    }
+
+    private DataProvider createMaterialStatsDataProvider(PackOutput output) {
+      return new MaterialStatsDataProvider(output, getMaterials(output));
     }
 
     private DataProvider createMaterialTraitsDataProvider(PackOutput output) {
-      if (materials == null) {
-        createMaterialDataProvider(output);
-      }
-      return new MaterialTraitsDataProvider(output, materials);
+      return new MaterialTraitsDataProvider(output, getMaterials(output));
     }
   }
 }

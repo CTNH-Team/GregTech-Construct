@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,6 +41,26 @@ class DynamicDataProviderRunnerTest extends BaseMcTest {
 
         assertThat(resource).isNotNull();
         assertThat(pack.getNamespaces(PackType.SERVER_DATA)).contains("example");
+    }
+
+    @Test
+    void listResourcesFindsRootPathEntries() {
+        DynamicDataProviderRunner.run("test", output -> new TestTagProvider(output));
+
+        List<ResourceLocation> resources = new ArrayList<>();
+        pack.listResources(PackType.SERVER_DATA, "example", "", (location, supplier) -> resources.add(location));
+
+        assertThat(resources).containsExactly(new ResourceLocation("example", "tags/items/generated.json"));
+    }
+
+    @Test
+    void clearServerResetsDynamicNamespaces() {
+        DynamicDataProviderRunner.run("test", output -> new TestTagProvider(output));
+
+        TiCDynamicDataPack.clearServer();
+
+        assertThat(pack.getNamespaces(PackType.SERVER_DATA))
+            .containsExactlyInAnyOrder("tconstruct", "minecraft", "forge", "c");
     }
 
   @Test

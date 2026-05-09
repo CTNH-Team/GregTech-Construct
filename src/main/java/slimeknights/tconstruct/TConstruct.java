@@ -23,7 +23,9 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,12 +40,15 @@ import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
 import slimeknights.tconstruct.common.data.loot.GlobalLootModifiersProvider;
 import slimeknights.tconstruct.common.data.loot.LootTableInjectionProvider;
 import slimeknights.tconstruct.common.data.loot.TConstructLootTableProvider;
+import slimeknights.tconstruct.data.advancement.TiCDynamicAdvancementGenerator;
 import slimeknights.tconstruct.data.material.TiCDynamicMaterialGenerator;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
 import slimeknights.tconstruct.data.recipe.TiCDynamicRecipeGenerator;
 import slimeknights.tconstruct.data.pack.TiCDynamicResourcePack;
 import slimeknights.tconstruct.data.pack.TiCPackSource;
+import slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator;
 import slimeknights.tconstruct.data.tag.TiCDynamicTagGenerator;
+import slimeknights.tconstruct.data.tinkering.TiCDynamicTinkeringGenerator;
 import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
@@ -158,6 +163,22 @@ public class TConstruct {
     }
 
     @SubscribeEvent
+    static void onCommonConfigLoaded(final ModConfigEvent.Loading event) {
+        if (event.getConfig().getSpec() == Config.commonSpec) {
+            TiCDynamicDataPack.dumpAllDataIfConfigured();
+            TiCDynamicResourcePack.dumpAllAssetsIfConfigured();
+        }
+    }
+
+    @SubscribeEvent
+    static void onCommonConfigReloading(final ModConfigEvent.Reloading event) {
+        if (event.getConfig().getSpec() == Config.commonSpec) {
+            TiCDynamicDataPack.dumpAllDataIfConfigured();
+            TiCDynamicResourcePack.dumpAllAssetsIfConfigured();
+        }
+    }
+
+    @SubscribeEvent
     static void gatherData(final GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
@@ -175,7 +196,6 @@ public class TConstruct {
 
         // other datagen
         generator.addProvider(server, new TConstructLootTableProvider(packOutput));
-        generator.addProvider(server, new AdvancementsProvider(packOutput));
         generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
         generator.addProvider(server, new LootTableInjectionProvider(packOutput));
         generator.addProvider(server, new ConfigurationDataProvider(packOutput));
@@ -185,6 +205,9 @@ public class TConstruct {
     static void registerPackFinders(AddPackFindersEvent event) {
         if (event.getPackType() == PackType.CLIENT_RESOURCES) {
             TiCDynamicResourcePack.clearClient();
+            if (FMLEnvironment.dist == Dist.CLIENT) {
+                TiCDynamicResourceGenerator.register();
+            }
             event.addRepositorySource(new TiCPackSource(
                 "tconstruct:dynamic_assets",
                 event.getPackType(),
@@ -193,7 +216,9 @@ public class TConstruct {
             ));
         } else if (event.getPackType() == PackType.SERVER_DATA) {
             TiCDynamicDataPack.clearServer();
+            TiCDynamicAdvancementGenerator.register();
             TiCDynamicMaterialGenerator.register();
+            TiCDynamicTinkeringGenerator.register();
             TiCDynamicTagGenerator.register();
             TiCDynamicRecipeGenerator.register();
             event.addRepositorySource(new TiCPackSource(

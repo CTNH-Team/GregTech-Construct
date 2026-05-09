@@ -2,8 +2,6 @@ package slimeknights.tconstruct.tools;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -18,7 +16,6 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -101,9 +98,6 @@ import slimeknights.tconstruct.library.tools.capability.inventory.InventoryModul
 import slimeknights.tconstruct.library.tools.capability.inventory.InventorySlotMenuModule;
 import slimeknights.tconstruct.shared.TinkerEffects;
 import slimeknights.tconstruct.tables.TinkerTables;
-import slimeknights.tconstruct.tools.data.EnchantmentToModifierProvider;
-import slimeknights.tconstruct.tools.data.FluidEffectProvider;
-import slimeknights.tconstruct.tools.data.ModifierProvider;
 import slimeknights.tconstruct.tools.entity.FluidEffectProjectile;
 import slimeknights.tconstruct.tools.item.CreativeSlotItem;
 import slimeknights.tconstruct.tools.item.DragonScaleItem;
@@ -507,6 +501,7 @@ public final class TinkerModifiers extends TinkerModule {
             FluidEffect.ENTITY_EFFECTS.register(getResource("cure_effects"), CureEffectsFluidEffect.LOADER);
             FluidEffect.ENTITY_EFFECTS.register(getResource("remove_effect"), RemoveEffectFluidEffect.LOADER);
             FluidEffect.ENTITY_EFFECTS.register(getResource("mob_effect"), MobEffectFluidEffect.LOADER);
+            FluidEffect.ENTITY_EFFECTS.register(getResource("compat_mob_effect"), CompatMobEffectFluidEffect.LOADER);
             FluidEffect.ENTITY_EFFECTS.register(getResource("potion"), PotionFluidEffect.LOADER);
             // misc
             FluidEffect.ENTITY_EFFECTS.register(getResource("damage"), DamageFluidEffect.LOADER);
@@ -522,6 +517,7 @@ public final class TinkerModifiers extends TinkerModule {
             FluidEffect.BLOCK_EFFECTS.register(getResource("break_block"), BreakBlockFluidEffect.LOADER);
             FluidEffect.BLOCK_EFFECTS.register(getResource("remove_block"), FluidEffect.REMOVE_BLOCK.getLoader());
             FluidEffect.BLOCK_EFFECTS.register(getResource("mob_effect_cloud"), MobEffectCloudFluidEffect.LOADER);
+            FluidEffect.BLOCK_EFFECTS.register(getResource("compat_mob_effect_cloud"), CompatMobEffectCloudFluidEffect.LOADER);
             FluidEffect.BLOCK_EFFECTS.register(getResource("potion_cloud"), PotionCloudFluidEffect.LOADER);
             FluidEffect.BLOCK_EFFECTS.register(getResource("move_block"), MoveBlocksFluidEffect.LOADER);
             FluidEffect.BLOCK_EFFECTS.register(getResource("interact"), BlockInteractFluidEffect.INSTANCE.getLoader());
@@ -531,6 +527,8 @@ public final class TinkerModifiers extends TinkerModule {
             FluidEffect.registerGeneral(getResource("explosion"), ExplosionFluidEffect.LOADER);
             FluidEffect.registerGeneral(getResource("set_block"), SetBlockFluidEffect.LOADER);
             FluidEffect.registerGeneral(getResource("area_mob_effect"), AreaMobEffectFluidEffect.LOADER);
+            FluidEffect.registerGeneral(getResource("compat_set_block"), CompatSetBlockFluidEffect.LOADER);
+            FluidEffect.registerGeneral(getResource("compat_area_mob_effect"), CompatAreaMobEffectFluidEffect.LOADER);
 
 
             // modifier names, sometimes I wonder if I have too many registries for tiny JSON pieces
@@ -733,16 +731,6 @@ public final class TinkerModifiers extends TinkerModule {
         EntityModifierCapability.register();
         // by default, we support modifying projectiles (arrows or fireworks mainly, but maybe other stuff). other entities may come in the future
         EntityModifierCapability.registerEntityPredicate(entity -> entity instanceof Projectile);
-    }
-
-    @SubscribeEvent
-    void gatherData(final GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput packOutput = generator.getPackOutput();
-        boolean server = event.includeServer();
-        generator.addProvider(server, new ModifierProvider(packOutput));
-        generator.addProvider(server, new FluidEffectProvider(packOutput));
-        generator.addProvider(server, new EnchantmentToModifierProvider(packOutput));
     }
 
     /** Adds all relevant items to the creative tab, called by general */

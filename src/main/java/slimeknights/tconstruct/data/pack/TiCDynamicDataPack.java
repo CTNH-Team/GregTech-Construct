@@ -26,11 +26,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
+import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.TConstruct;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -77,6 +79,8 @@ public class TiCDynamicDataPack implements PackResources {
      * Should be called on server stop or data reload.
      */
     public static void clearServer() {
+        SERVER_DOMAINS.clear();
+        SERVER_DOMAINS.addAll(Sets.newHashSet(TConstruct.MOD_ID, "minecraft", "forge", "c"));
         CONTENTS.clearData();
         RECIPE_FILTERS.clear();
         RESOURCE_FILTERS.clear();
@@ -104,6 +108,9 @@ public class TiCDynamicDataPack implements PackResources {
      */
     public static void addData(ResourceLocation location, byte[] bytes) {
         registerDataLocation(location);
+        if (shouldDumpRecipes()) {
+            writeBytes(location, getDumpDataRoot(), bytes);
+        }
         addToData(location, bytes);
     }
 
@@ -172,6 +179,46 @@ public class TiCDynamicDataPack implements PackResources {
             }
         } catch (IOException e) {
             TConstruct.LOG.error("Failed to write JSON export for file {}", id, e);
+        }
+    }
+
+    /**
+     * Writes raw bytes to a file under the given parent, preserving the full resource path.
+     *
+     * @param id     the resource location for the file to be written
+     * @param parent the parent folder where to write data to
+     * @param data   the bytes to write
+     */
+    public static void writeBytes(ResourceLocation id, Path parent, byte[] data) {
+        writeJson(id, null, parent, data);
+    }
+
+    /** Dumps all currently captured dynamic server data to disk if the config is enabled. */
+    public static void dumpAllDataIfConfigured() {
+        if (!shouldDumpRecipes()) {
+            return;
+        }
+        Path parent = getDumpDataRoot();
+        for (String namespace : new LinkedHashSet<>(SERVER_DOMAINS)) {
+            CONTENTS.listResources(namespace, "", (location, supplier) -> {
+                try (InputStream input = supplier.get()) {
+                    writeBytes(location, parent, input.readAllBytes());
+                } catch (IOException exception) {
+                    TConstruct.LOG.error("Failed to dump dynamic data {}", location, exception);
+                }
+            });
+        }
+    }
+
+    private static Path getDumpDataRoot() {
+        return FMLPaths.GAMEDIR.get().resolve(TConstruct.MOD_ID).resolve("dumped").resolve("data");
+    }
+
+    private static boolean shouldDumpRecipes() {
+        try {
+            return Config.COMMON.dumpRecipes.get();
+        } catch (IllegalStateException ignored) {
+            return false;
         }
     }
 
@@ -259,7 +306,7 @@ public class TiCDynamicDataPack implements PackResources {
      * @return the full resource location including path prefix and .json suffix
      */
     public static ResourceLocation getRecipeLocation(ResourceLocation recipeId) {
-        return new ResourceLocation(recipeId.getNamespace(), "recipes/" + recipeId.getPath() + ".json");
+        return ResourceLocation.tryBuild(recipeId.getNamespace(), "recipes/" + recipeId.getPath() + ".json");
     }
 
     /**
@@ -269,7 +316,7 @@ public class TiCDynamicDataPack implements PackResources {
      * @return the full resource location including path prefix and .json suffix
      */
     public static ResourceLocation getAdvancementLocation(ResourceLocation advancementId) {
-        return new ResourceLocation(advancementId.getNamespace(), "advancements/" + advancementId.getPath() + ".json");
+        return ResourceLocation.tryBuild(advancementId.getNamespace(), "advancements/" + advancementId.getPath() + ".json");
     }
 
     /**
@@ -280,7 +327,7 @@ public class TiCDynamicDataPack implements PackResources {
      * @return the full resource location including path prefix and .json suffix
      */
     public static ResourceLocation getTagLocation(String identifier, ResourceLocation tagId) {
-        return new ResourceLocation(tagId.getNamespace(), "tags/" + identifier + "/" + tagId.getPath() + ".json");
+        return ResourceLocation.tryBuild(tagId.getNamespace(), "tags/" + identifier + "/" + tagId.getPath() + ".json");
     }
 
     private static String escapeRegex(String value) {

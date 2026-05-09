@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -59,11 +60,11 @@ public class TiCDynamicPackContents {
         void outputResources(String namespace, String path, PackResources.ResourceOutput output) {
             if (isTerminalNode()) {
                 // This is a terminal node.
-                ResourceLocation location = new ResourceLocation(namespace, path);
+                ResourceLocation location = ResourceLocation.tryBuild(namespace, path);
                 output.accept(location, this.createIoSupplier());
             } else {
                 for (var entry : getChildren().entrySet()) {
-                    entry.getValue().outputResources(namespace, path + "/" + entry.getKey(), output);
+                    entry.getValue().outputResources(namespace, appendPath(path, entry.getKey()), output);
                 }
             }
         }
@@ -94,7 +95,7 @@ public class TiCDynamicPackContents {
     }
 
     public void addToData(ResourceLocation location, IoSupplier<InputStream> supplier) {
-        String[] pathComponents = location.getPath().split("/");
+        String[] pathComponents = splitPath(location.getPath());
         var lock = this.lock.writeLock();
         lock.lock();
         try {
@@ -124,7 +125,7 @@ public class TiCDynamicPackContents {
         lock.lock();
         try {
             Node node = this.root.getChild(location.getNamespace());
-            String[] pathComponents = location.getPath().split("/");
+            String[] pathComponents = splitPath(location.getPath());
             for (String path : pathComponents) {
                 if (node == null) {
                     return null;
@@ -148,9 +149,22 @@ public class TiCDynamicPackContents {
             if (base == null) {
                 return;
             }
-            base.collectResources(namespace, path.split("/"), 0, resourceOutput);
+            base.collectResources(namespace, splitPath(path), 0, resourceOutput);
         } finally {
             lock.unlock();
         }
+    }
+
+    private static String[] splitPath(String path) {
+        return Arrays.stream(path.split("/"))
+                     .filter(component -> !component.isEmpty())
+                     .toArray(String[]::new);
+    }
+
+    private static String appendPath(String prefix, String suffix) {
+        if (prefix.isEmpty()) {
+            return suffix;
+        }
+        return prefix + "/" + suffix;
     }
 }

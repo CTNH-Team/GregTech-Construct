@@ -6,8 +6,6 @@ import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
@@ -34,7 +32,6 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
@@ -44,7 +41,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.RegistryObject;
 import slimeknights.mantle.fluid.InvertedFluid;
 import slimeknights.mantle.fluid.UnplaceableFluid;
-import slimeknights.mantle.fluid.texture.FluidTextureCameraProvider;
 import slimeknights.mantle.registration.RegistrationHelper;
 import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.FlowingFluidObject;
@@ -53,10 +49,6 @@ import slimeknights.mantle.registration.object.ItemObject;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerModule;
 import slimeknights.tconstruct.common.TinkerTags;
-import slimeknights.tconstruct.fluids.data.FluidBlockstateModelProvider;
-import slimeknights.tconstruct.fluids.data.FluidBucketModelProvider;
-import slimeknights.tconstruct.fluids.data.FluidTextureProvider;
-import slimeknights.tconstruct.fluids.data.FluidTooltipProvider;
 import slimeknights.tconstruct.fluids.fluids.PotionFluidType;
 import slimeknights.tconstruct.fluids.fluids.SlimeFluid;
 import slimeknights.tconstruct.fluids.item.BottleItem;
@@ -256,19 +248,6 @@ public final class TinkerFluids extends TinkerModule {
                 .motionScale(0.0023333333333333335D)
                 .canSwim(false).canDrown(false)
                 .pathType(BlockPathTypes.LAVA).adjacentPathType(null);
-    }
-
-    @SubscribeEvent
-    void gatherData(final GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput packOutput = generator.getPackOutput();
-        boolean client = event.includeClient();
-        generator.addProvider(client, new FluidTooltipProvider(packOutput));
-        FluidTextureProvider textureProvider = new FluidTextureProvider(packOutput);
-        generator.addProvider(client, textureProvider);
-        generator.addProvider(client, new FluidTextureCameraProvider(packOutput, event.getExistingFileHelper(), textureProvider));
-        generator.addProvider(client, new FluidBucketModelProvider(packOutput, TConstruct.MOD_ID));
-        generator.addProvider(client, new FluidBlockstateModelProvider(packOutput, TConstruct.MOD_ID));
     }
 
     @SubscribeEvent
