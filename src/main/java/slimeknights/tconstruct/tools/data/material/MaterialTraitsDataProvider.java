@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tools.data.material;
 
 import net.minecraft.data.PackOutput;
+import net.minecraftforge.fml.ModList;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialTraitDataProvider;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
@@ -151,7 +152,11 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     addTraits(MaterialIds.silver, ARMOR, ModifierIds.consecrated);
     addDefaultTraits(MaterialIds.treatedWood, ModifierIds.preserved);
     addDefaultTraits(MaterialIds.ironwood, ModifierIds.deciduous);
-    addDefaultTraits(MaterialIds.manaSteel, TinkerModifiers.manafix);
+    if (ModList.get().isLoaded("botania")) {
+      addDefaultTraits(MaterialIds.manaSteel, TinkerModifiers.manafix);
+    } else {
+      noTraits(MaterialIds.manaSteel);
+    }
     addDefaultTraits(MaterialIds.polyethylene, ModifierIds.plastic);
     // tier 3 - mod compat
     addDefaultTraits(MaterialIds.bronze, ModifierIds.maintained);
@@ -165,7 +170,11 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     addDefaultTraits(MaterialIds.platedSlimewood, TinkerModifiers.overworked, TinkerModifiers.overslime);
     addDefaultTraits(MaterialIds.steeleaf, ModifierIds.experienced);
     addTraits(MaterialIds.steeleaf, AMMO, ModifierIds.looting);
+    if (ModList.get().isLoaded("botania")) {
       addDefaultTraits(MaterialIds.terraSteel, TinkerModifiers.manafix, TinkerModifiers.terrarecover);
+    } else {
+      noTraits(MaterialIds.terraSteel);
+    }
     // tier 4 - mod compat
     addDefaultTraits(MaterialIds.fiery, TinkerModifiers.autosmelt);
     addTraits(MaterialIds.fiery, ARMOR, ModifierIds.temperedProtection);
