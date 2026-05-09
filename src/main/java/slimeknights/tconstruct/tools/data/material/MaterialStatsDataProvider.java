@@ -134,6 +134,10 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(400, 6.5f, IRON, 2.5f),
                 HandleMaterialStats.multipliers().durability(1.15f).miningSpeed(1.05f).attackSpeed(1.05f).attackDamage(1.1f).build(),
                 StatlessMaterialStats.BINDING);
+        addMaterialStats(MaterialIds.polyethylene,
+                new HeadMaterialStats(600, 9.0f, STONE, 0.5f),
+                HandleMaterialStats.multipliers().durability(0.4f).miningSpeed(0.2f).attackSpeed(0.2f).build(),
+                StatlessMaterialStats.BINDING);
 
         // tier 3
         // vanilla diamond: 1561, 8f, DIAMOND, 3f
@@ -313,6 +317,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.manaSteel,
                 new LimbMaterialStats(350, 0.15f, 0.1f, 0.1f),
                 new GripMaterialStats(0.15f, 0.1f, 2.5f));
+        addMaterialStats(MaterialIds.polyethylene,
+                new LimbMaterialStats(600, 0.0f, -0.1f, 0.2f),
+                new GripMaterialStats(0.5f, 0.2f, 0.5f));
 
         // tier 3
         addMaterialStats(MaterialIds.slimesteel,
@@ -474,6 +481,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.treatedWood, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.ironwood, StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.manaSteel, PlatingMaterialStats.builder().durabilityFactor(20).armor(3, 5, 6, 3).toughness(2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.polyethylene, PlatingMaterialStats.builder().durabilityFactor(25).armor(3, 5, 6, 3).toughness(4).knockbackResistance(0.25f), StatlessMaterialStats.MAILLE);
         // tier 3
         addMaterialStats(MaterialIds.nahuatl, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.ichorskin, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS);

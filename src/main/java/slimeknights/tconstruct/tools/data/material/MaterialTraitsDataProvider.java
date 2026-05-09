@@ -152,6 +152,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     addDefaultTraits(MaterialIds.treatedWood, ModifierIds.preserved);
     addDefaultTraits(MaterialIds.ironwood, ModifierIds.deciduous);
     addDefaultTraits(MaterialIds.manaSteel, TinkerModifiers.manafix);
+    addDefaultTraits(MaterialIds.polyethylene, ModifierIds.plastic);
     // tier 3 - mod compat
     addDefaultTraits(MaterialIds.bronze, ModifierIds.maintained);
     addDefaultTraits(MaterialIds.constantan, ModifierIds.temperate);
