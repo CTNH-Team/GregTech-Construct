@@ -590,6 +590,10 @@ public class ModifiableItem extends TieredItem implements IModifiableDisplay {
     /* GT */
 
     public boolean hasCraftingRemainingItem(ItemStack stack) {
+        // 如果工具损坏了，不能作为合成材料
+        if (ToolDamageUtil.isBroken(stack)) {
+            return false;
+        }
         return stack.getTag() == null || canBeDepleted() ;
     }
 

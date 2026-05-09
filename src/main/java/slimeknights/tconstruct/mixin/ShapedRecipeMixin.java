@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
-import slimeknights.tconstruct.library.tools.item.ModifiableGTToolItem;
+import slimeknights.tconstruct.library.tools.item.ModifiableItem;
 
 @SuppressWarnings("removal")
 @Mixin(value = ShapedRecipe.class)
@@ -32,7 +32,7 @@ public abstract class ShapedRecipeMixin {
         int l
     ) {
         ItemStack stack = craftingInventory.getItem(i + j * craftingInventory.getWidth());
-        if (stack.getItem() instanceof ModifiableGTToolItem && ToolDamageUtil.isBroken(stack)) {
+        if (stack.getItem() instanceof ModifiableItem && ToolDamageUtil.isBroken(stack)) {
             cir.setReturnValue(false);
         }
     }
