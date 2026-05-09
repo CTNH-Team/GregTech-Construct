@@ -74,7 +74,16 @@ public class GTConstructRecipes {
     new SolidifierPart("chestplate_plating", () -> TinkerToolParts.plating.get(ArmorItem.Type.CHESTPLATE), 6, TinkerSmeltery.chestplatePlatingCast, material -> MATERIAL_SUPPORT.hasStat(material, PlatingMaterialStats.CHESTPLATE.getId()), false),
     new SolidifierPart("leggings_plating", () -> TinkerToolParts.plating.get(ArmorItem.Type.LEGGINGS), 5, TinkerSmeltery.leggingsPlatingCast, material -> MATERIAL_SUPPORT.hasStat(material, PlatingMaterialStats.LEGGINGS.getId()), false),
     new SolidifierPart("boots_plating", () -> TinkerToolParts.plating.get(ArmorItem.Type.BOOTS), 2, TinkerSmeltery.bootsPlatingCast, material -> MATERIAL_SUPPORT.hasStat(material, PlatingMaterialStats.BOOTS.getId()), false),
-    new SolidifierPart("maille", TinkerToolParts.maille::get, 2, TinkerSmeltery.mailleCast, material -> MATERIAL_SUPPORT.hasStat(material, StatlessMaterialStats.MAILLE.getIdentifier()))
+    new SolidifierPart("maille", TinkerToolParts.maille::get, 2, TinkerSmeltery.mailleCast, material -> MATERIAL_SUPPORT.hasStat(material, StatlessMaterialStats.MAILLE.getIdentifier())),
+    // gt tool heads
+    new SolidifierPart("wrench_head", TinkerToolParts.wrenchHead::get, 2, TinkerSmeltery.wrenchHeadCast, material -> MATERIAL_SUPPORT.hasStat(material, HeadMaterialStats.ID)),
+    new SolidifierPart("wire_cutter_head", TinkerToolParts.wireCutterHead::get, 2, TinkerSmeltery.wireCutterHeadCast, material -> MATERIAL_SUPPORT.hasStat(material, HeadMaterialStats.ID)),
+    new SolidifierPart("file_head", TinkerToolParts.fileHead::get, 2, TinkerSmeltery.fileHeadCast, material -> MATERIAL_SUPPORT.hasStat(material, HeadMaterialStats.ID)),
+    new SolidifierPart("screwdriver_head", TinkerToolParts.screwdriverHead::get, 2, TinkerSmeltery.screwdriverHeadCast, material -> MATERIAL_SUPPORT.hasStat(material, HeadMaterialStats.ID)),
+    new SolidifierPart("saw_blade", TinkerToolParts.sawBlade::get, 2, TinkerSmeltery.sawBladeCast, material -> MATERIAL_SUPPORT.hasStat(material, HeadMaterialStats.ID)),
+    new SolidifierPart("crowbar_head", TinkerToolParts.crowbarHead::get, 2, TinkerSmeltery.crowbarHeadCast, material -> MATERIAL_SUPPORT.hasStat(material, HeadMaterialStats.ID)),
+    new SolidifierPart("mortar_head", TinkerToolParts.mortarHead::get, 2, TinkerSmeltery.mortarHeadCast, material -> MATERIAL_SUPPORT.hasStat(material, HeadMaterialStats.ID)),
+    new SolidifierPart("mortar_bowl", TinkerToolParts.mortarBowl::get, 2, TinkerSmeltery.mortarBowlCast, material -> MATERIAL_SUPPORT.hasStat(material, HeadMaterialStats.ID))
   );
 
   public static void register(Consumer<FinishedRecipe> provider) {
