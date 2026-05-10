@@ -175,8 +175,9 @@ public final class TinkerFluids extends TinkerModule {
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenCadmium  = FLUIDS.registerMetal("cadmium").type(hot("cadmium").temperature(594).lightLevel(10)).block(createBurning(MapColor.COLOR_BROWN, 10, 10, 5f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenManaSteel = FLUIDS.registerMetal("manasteel").type(hot("manasteel").temperature(1100).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenTerraSteel = FLUIDS.registerMetal("terrasteel").type(hot("terrasteel").temperature(1500).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
-    //gt
+    // gt
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenPolyethylene = FLUIDS.registerMetal("polyethylene").type(cool("polyethylene").temperature(445)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
+    public static final FlowingFluidObject<ForgeFlowingFluid> moltenPolyvinylChloride = FLUIDS.registerMetal("polyvinyl_chloride").type(cool("polyvinyl_chloride").temperature(470)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
 
     // compat alloys
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenBronze     = FLUIDS.registerMetal("bronze").type(hot("bronze").temperature(1000).lightLevel(10)).block(createBurning(MapColor.TERRACOTTA_ORANGE, 10, 10, 6f)).bucket().commonTag().flowing();
@@ -447,6 +448,7 @@ public final class TinkerFluids extends TinkerModule {
         acceptCompat(output, moltenManaSteel, MaterialIds.manaSteel);
         acceptCompat(output, moltenTerraSteel, MaterialIds.terraSteel);
         acceptCompat(output, moltenPolyethylene, MaterialIds.polyethylene);
+        acceptCompat(output, moltenPolyvinylChloride, MaterialIds.polyvinylChloride);
         // compat alloys
         acceptCompat(output, moltenBronze, MaterialIds.bronze);
         acceptMolten(output, moltenBrass, MaterialIds.platedSlimewood);

@@ -123,7 +123,6 @@ public class MaterialDataProvider extends AbstractMaterialDataProvider {
         addCompatMetalMaterial(MaterialIds.silver,   2, ORDER_COMPAT + ORDER_WEAPON);
         addCompatMetalMaterial(MaterialIds.aluminum, 2, ORDER_COMPAT + ORDER_RANGED);
         addCompatMetalMaterial(MaterialIds.manaSteel, 2, ORDER_COMPAT + ORDER_GENERAL);
-        addCompatMetalMaterial(MaterialIds.polyethylene, 2, ORDER_COMPAT + ORDER_GENERAL);
         // ironwood works in a part builder even though its ingots
         addCompatMaterial(MaterialIds.ironwood, 2, ORDER_COMPAT + ORDER_GENERAL, true, "ingots/ironwood");
         // treated wood comes from treated wood or creosote oil
@@ -134,12 +133,15 @@ public class MaterialDataProvider extends AbstractMaterialDataProvider {
         addCompatAlloy(MaterialIds.bronze,          3, ORDER_COMPAT + ORDER_HARVEST, "tin");
         addCompatAlloy(MaterialIds.constantan,      3, ORDER_COMPAT + ORDER_HARVEST, "nickel");
         addCompatAlloy(MaterialIds.invar,           3, ORDER_COMPAT + ORDER_WEAPON,  "nickel");
-        addCompatMetalMaterial(MaterialIds.terraSteel, 3, ORDER_COMPAT + ORDER_GENERAL);
-        // TODO 1.21: consider making this an and condition, so we only get pewter if pewter is present or we have both
         addCompatAlloy(MaterialIds.pewter,          3, ORDER_COMPAT + ORDER_WEAPON,  new OrCondition(tagExistsCondition("ingots/tin"), tagExistsCondition("ingots/lead")));
         addCompatAlloy(MaterialIds.platedSlimewood, 3, ORDER_COMPAT + ORDER_SPECIAL, "zinc");
-        addCompatMaterial(MaterialIds.necronium,       3, ORDER_COMPAT + ORDER_WEAPON, true, "ingots/uranium");
-        addCompatMetalMaterial(MaterialIds.steeleaf, 3, ORDER_COMPAT + ORDER_SPECIAL);
+
+        addCompatMaterial(MaterialIds.necronium,         3, ORDER_COMPAT + ORDER_WEAPON,  true, "ingots/uranium");
+        addCompatMaterial(MaterialIds.polyethylene,      3, ORDER_COMPAT + ORDER_GENERAL, true, "ingots/polyethylene");
+        addCompatMaterial(MaterialIds.polyvinylChloride, 3, ORDER_COMPAT + ORDER_GENERAL, true, "ingots/polyvinyl_chloride");
+
+        addCompatMetalMaterial(MaterialIds.steeleaf,   3, ORDER_COMPAT + ORDER_SPECIAL);
+        addCompatMetalMaterial(MaterialIds.terraSteel, 3, ORDER_COMPAT + ORDER_GENERAL);
         // tier 4 (mod integration)
         addCompatMetalMaterial(MaterialIds.fiery,           4, ORDER_COMPAT + ORDER_END);
 

@@ -205,10 +205,10 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         materialRecipe(consumer, MaterialIds.enderslimeVine, Ingredient.of(TinkerWorld.enderSlimeVine), 1, 1, folder + "enderslime_vine");
 
         // tier 2 (mod compat)
-        metalMaterialRecipe(consumer, MaterialIds.osmium, folder, "osmium", true);
+        metalMaterialRecipe(consumer, MaterialIds.osmium,   folder, "osmium", true);
         metalMaterialRecipe(consumer, MaterialIds.ironwood, folder, "ironwood", true);
-        metalMaterialRecipe(consumer, MaterialIds.silver, folder, "silver", true);
-        metalMaterialRecipe(consumer, MaterialIds.lead, folder, "lead", true);
+        metalMaterialRecipe(consumer, MaterialIds.silver,   folder, "silver", true);
+        metalMaterialRecipe(consumer, MaterialIds.lead,     folder, "lead", true);
         metalMaterialRecipe(consumer, MaterialIds.aluminum, folder, "aluminum", true);
         materialRecipe(withCondition(consumer, tagCondition("treated_wood")),  MaterialIds.treatedWood, Ingredient.of(getItemTag(COMMON, "treated_wood")), 1, 1, folder + "treated_wood");
         metalMaterialRecipe(consumer, MaterialIds.manaSteel, folder, "manasteel", true);
@@ -221,9 +221,11 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         materialRecipe(
                 withCondition(consumer, new OrCondition(ConfigEnabledCondition.FORCE_INTEGRATION_MATERIALS, tagCondition("ingots/uranium"))),
                 MaterialIds.necronium, Ingredient.of(TinkerMaterials.necroniumBone), 1, 1, folder + "necronium");
-        metalMaterialRecipe(consumer, MaterialIds.electrum, folder, "electrum", true);
-        metalMaterialRecipe(consumer, MaterialIds.steeleaf, folder, "steeleaf", true);
-        metalMaterialRecipe(consumer, MaterialIds.terraSteel, folder, "terrasteel", true);
+        metalMaterialRecipe(consumer, MaterialIds.electrum,          folder, "electrum",           true);
+        metalMaterialRecipe(consumer, MaterialIds.steeleaf,          folder, "steeleaf",           true);
+        metalMaterialRecipe(consumer, MaterialIds.terraSteel,        folder, "terrasteel",         true);
+        metalMaterialRecipe(consumer, MaterialIds.polyethylene,      folder, "polyethylene",       true);
+        metalMaterialRecipe(consumer, MaterialIds.polyvinylChloride, folder, "polyvinyl_chloride", true);
         // no plated slimewood, use repair kits
         // tier 4 (mod integration)
         metalMaterialRecipe(consumer, MaterialIds.fiery, folder, "fiery", true);
@@ -243,10 +245,10 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         materialMeltingCasting(consumer, MaterialIds.searedStone,   TinkerFluids.searedStone,   FluidValues.BRICK, folder);
         materialMeltingCasting(consumer, MaterialIds.scorchedStone, TinkerFluids.scorchedStone, FluidValues.BRICK, folder);
         // half a clay is 1 seared brick per grout amounts
-        materialComposite(consumer, MaterialIds.rock, MaterialIds.searedStone,        TinkerFluids.moltenClay, FluidValues.BRICK / 2, folder);
-        materialComposite(consumer, MaterialIds.flint, MaterialIds.scorchedStone,     TinkerFluids.magma,      FluidValues.SLIMEBALL / 2, folder);
-        materialComposite(consumer, MaterialIds.wood,    MaterialIds.slimewoodComposite, TinkerFluids.earthSlime, FluidValues.SLIMEBALL, folder);
-        materialComposite(consumer, MaterialIds.bone, MaterialIds.venombone,          TinkerFluids.venom,      FluidValues.SLIMEBALL, folder);
+        materialComposite(consumer, MaterialIds.rock,  MaterialIds.searedStone,        TinkerFluids.moltenClay, FluidValues.BRICK / 2, folder);
+        materialComposite(consumer, MaterialIds.flint, MaterialIds.scorchedStone,      TinkerFluids.magma,      FluidValues.SLIMEBALL / 2, folder);
+        materialComposite(consumer, MaterialIds.wood,  MaterialIds.slimewoodComposite, TinkerFluids.earthSlime, FluidValues.SLIMEBALL, folder);
+        materialComposite(consumer, MaterialIds.bone,  MaterialIds.venombone,          TinkerFluids.venom,      FluidValues.SLIMEBALL, folder);
         // oxidize copper and iron via water, it does not rust iron because magic
         MaterialFluidRecipeBuilder.material(MaterialIds.oxidizedIron)
                 .setInputId(MaterialIds.iron)
@@ -320,11 +322,16 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
                 .addByproduct(TinkerFluids.moltenGold.result(FluidValues.NUGGET))
                 .save(withCondition(consumer, tagCondition("ingots/ironwood")), location(folder + "melting/ironwood"));
         // tier 3 compat
-        compatMeltingCasting(consumer, MaterialIds.constantan, TinkerFluids.moltenConstantan, "nickel", folder);
-        compatMeltingCasting(consumer, MaterialIds.invar,      TinkerFluids.moltenInvar,      "nickel", folder);
-        compatMeltingCasting(consumer, MaterialIds.electrum,   TinkerFluids.moltenElectrum,   "silver", folder);
-        compatMeltingCasting(consumer, MaterialIds.bronze,     TinkerFluids.moltenBronze,     "tin", folder);
-        compatMeltingCasting(consumer, MaterialIds.steeleaf,   TinkerFluids.moltenSteeleaf, folder);
+        compatMeltingCasting(consumer, MaterialIds.constantan,   TinkerFluids.moltenConstantan,   "nickel", folder);
+        compatMeltingCasting(consumer, MaterialIds.invar,        TinkerFluids.moltenInvar,        "nickel", folder);
+        compatMeltingCasting(consumer, MaterialIds.electrum,     TinkerFluids.moltenElectrum,     "silver", folder);
+        compatMeltingCasting(consumer, MaterialIds.bronze,       TinkerFluids.moltenBronze,       "tin",    folder);
+        compatMeltingCasting(consumer, MaterialIds.steeleaf,     TinkerFluids.moltenSteeleaf,     folder);
+        compatMeltingCasting(consumer, MaterialIds.polyethylene, TinkerFluids.moltenPolyethylene, folder);
+        // polyvinyl chloride will decompose during melting and casting, leaving only polyethylene
+        compatMelting(consumer, MaterialIds.polyvinylChloride, TinkerFluids.moltenPolyethylene, folder);
+        compatCasting(consumer, MaterialIds.polyethylene, TinkerFluids.moltenPolyvinylChloride, folder);
+
         // pewter has two different ores that let it appear, tin and lead
         materialMeltingCasting(
                 withCondition(consumer, new OrCondition(tagCondition("ingots/pewter"), tagCondition("ingots/tin"), tagCondition("ingots/lead"))),

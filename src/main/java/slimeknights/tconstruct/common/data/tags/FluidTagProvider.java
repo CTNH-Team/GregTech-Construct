@@ -88,6 +88,7 @@ public class FluidTagProvider extends FluidTagsProvider {
         fluidTag(TinkerFluids.moltenManaSteel);
         fluidTag(TinkerFluids.moltenTerraSteel);
         fluidTag(TinkerFluids.moltenPolyethylene);
+        fluidTag(TinkerFluids.moltenPolyvinylChloride);
         // compat alloys
         fluidTag(TinkerFluids.moltenBronze);
         fluidTag(TinkerFluids.moltenBrass);
@@ -166,8 +167,10 @@ public class FluidTagProvider extends FluidTagsProvider {
                         TinkerFluids.moltenAmethystBronze.getLocalTag(), TinkerFluids.moltenPigIron.getLocalTag(), TinkerFluids.moltenRoseGold.getLocalTag(),
                         TinkerFluids.moltenCobalt.getLocalTag(), TinkerFluids.moltenSteel.getLocalTag(),
                         // tier 3 compat
-                        TinkerFluids.moltenBronze.getLocalTag(), TinkerFluids.moltenBrass.getLocalTag(), TinkerFluids.moltenPewter.getLocalTag(),
-                        TinkerFluids.moltenInvar.getLocalTag(), TinkerFluids.moltenConstantan.getLocalTag(),
+                        TinkerFluids.moltenBronze.getLocalTag(), TinkerFluids.moltenBrass.getLocalTag(),
+                        TinkerFluids.moltenPewter.getLocalTag(), TinkerFluids.moltenConstantan.getLocalTag(),
+                        TinkerFluids.moltenInvar.getLocalTag(),
+                        TinkerFluids.moltenPolyethylene.getTag(), TinkerFluids.moltenPolyvinylChloride.getTag(),
                         // tier 4
                         TinkerFluids.moltenManyullyn.getLocalTag(), TinkerFluids.moltenHepatizon.getLocalTag(), TinkerFluids.moltenNetherite.getLocalTag(),
                         TinkerFluids.moltenKnightmetal.getLocalTag(),
@@ -209,7 +212,7 @@ public class FluidTagProvider extends FluidTagsProvider {
                 TinkerFluids.moltenSilver.getTag(), TinkerFluids.moltenNickel.getTag(), TinkerFluids.moltenZinc.getTag(),
                 TinkerFluids.moltenPlatinum.getTag(), TinkerFluids.moltenTungsten.getTag(), TinkerFluids.moltenOsmium.getTag(),
                 TinkerFluids.moltenUranium.getTag(), TinkerFluids.moltenChromium.getTag(), TinkerFluids.moltenCadmium.getTag(),
-                TinkerFluids.moltenPolyethylene.getTag(),
+                TinkerFluids.moltenPolyethylene.getTag(), TinkerFluids.moltenPolyvinylChloride.getTag(),
                 // compat alloys
                 TinkerFluids.moltenBronze.getTag(), TinkerFluids.moltenBrass.getTag(), TinkerFluids.moltenElectrum.getTag(),
                 TinkerFluids.moltenInvar.getTag(), TinkerFluids.moltenConstantan.getTag(), TinkerFluids.moltenPewter.getTag(),

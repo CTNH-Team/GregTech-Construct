@@ -223,6 +223,16 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
                         .addARGB(178, 0xFFA8A8A8)
                         .addARGB(216, 0xFFD8D8D8)
                         .addARGB(255, 0xFFFFFFFF).build());
+        buildMaterial(MaterialIds.polyvinylChloride)
+                .meleeHarvest().ranged().armor()
+                .fallbacks("metal")
+                .colorMapper(GreyToColorMapping.builderFromBlack()
+                        .addARGB(63,  0xFF203138)
+                        .addARGB(102, 0xFF39494F)
+                        .addARGB(140, 0xFF63574B)
+                        .addARGB(178, 0xFFA7704B)
+                        .addARGB(216, 0xFFCF7C45)
+                        .addARGB(255, 0xFFE29F71).build());
         // tier 2 - slimewood
         IColorMapping greenSlime = GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF229630).addARGB(102, 0xFF24A033).addARGB(140, 0xFF27AB37).addARGB(178, 0xFF3EBD42).addARGB(216, 0xFF56CF4C).addARGB(234, 0xFF6FEA60).addARGB(255, 0xFF82F86D).build();
         buildPlanks(MaterialIds.greenheart).arrowShaft()

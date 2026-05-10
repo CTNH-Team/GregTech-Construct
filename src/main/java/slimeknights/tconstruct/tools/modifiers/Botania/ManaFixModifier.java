@@ -10,7 +10,6 @@ import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.InventoryTickModifierHook;
 import slimeknights.tconstruct.library.module.ModuleHookMap;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
-import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import vazkii.botania.api.mana.ManaItemHandler;
 
 public class ManaFixModifier extends Modifier implements InventoryTickModifierHook {
@@ -29,13 +28,11 @@ public class ManaFixModifier extends Modifier implements InventoryTickModifierHo
         if (world.isClientSide || !(holder instanceof Player player)) {
             return;
         }
-        ToolStack toolStack = ToolStack.from(stack);
         int repairAmount = modifier.getLevel();
         
-        if (toolStack.getDamage() > 0) {
+        if (tool.getDamage() > 0) {
           if (ManaItemHandler.INSTANCE.requestManaExactForTool(stack, player, REPAIR_COST * repairAmount, true)) {
-                tool.setDamage(toolStack.getDamage() - Math.min(toolStack.getDamage(), repairAmount));
-                toolStack.updateStack(stack);
+                tool.setDamage(tool.getDamage() - Math.min(tool.getDamage(), repairAmount));
             }
         }
     }

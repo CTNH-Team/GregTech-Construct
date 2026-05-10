@@ -180,8 +180,6 @@ public class ModifierIds {
     public static final ModifierId spiny = id("spiny");
     // traits - tier 2
     public static final ModifierId overgrowth = id("overgrowth");
-    public static final ModifierId manafix = id("manafix");
-    public static final ModifierId terrarecover = id("terrarecover");
     public static final ModifierId searing = id("searing");
     public static final ModifierId scorching = id("scorching");
     public static final ModifierId scorchProtection = id("scorch_protection");
@@ -201,7 +199,6 @@ public class ModifierIds {
     public static final ModifierId barkskin = id("barkskin");
     public static final ModifierId dense = id("dense");
     public static final ModifierId lustrous = id("lustrous");
-    public static final ModifierId plastic = id("plastic");
     /** @deprecated use {@link #heavy} */
     @Deprecated(forRemoval = true)
     public static final ModifierId sharpweight = id("sharpweight");
@@ -210,6 +207,7 @@ public class ModifierIds {
     public static final ModifierId consecrated = id("consecrated");
     public static final ModifierId preserved = id("preserved");
     public static final ModifierId holy = id("holy");
+    public static final ModifierId manafix = id("manafix");
     // traits - tier 3
     public static final ModifierId overcast = id("overcast");
     public static final ModifierId overshield = id("overshield");
@@ -227,6 +225,9 @@ public class ModifierIds {
     // traits - tier 3 compat
     public static final ModifierId maintained = id("maintained");
     public static final ModifierId temperate = id("temperate");
+    public static final ModifierId terrarecover = id("terrarecover");
+    public static final ModifierId plastic = id("plastic");
+    public static final ModifierId thermaldecomposite = id("thermaldecomposite");
     /** @deprecated no longer used. Make a copy if you need it */
     @Deprecated
     public static final ModifierId invariant = id("invariant");
