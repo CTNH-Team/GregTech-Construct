@@ -65,7 +65,8 @@ public enum SmelteryCompat {
     MANASTEEL (TinkerFluids.moltenManaSteel, CompatType.NONE,  MaterialIds.manaSteel),
     TERRASTEEL(TinkerFluids.moltenTerraSteel, CompatType.NONE,  MaterialIds.terraSteel),
     //gt
-    POLYETHYLENE(TinkerFluids.moltenPolyethylene, CompatType.NONE,  MaterialIds.polyethylene)
+    POLYETHYLENE(TinkerFluids.moltenPolyethylene, CompatType.NONE,  MaterialIds.polyethylene),
+    POLYVINYLCHLORIDE(TinkerFluids.moltenPolyvinylChloride, CompatType.NONE,  MaterialIds.polyvinylChloride)
     ;
 
     @Getter

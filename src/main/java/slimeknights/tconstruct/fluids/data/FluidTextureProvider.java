@@ -91,6 +91,7 @@ public class FluidTextureProvider extends AbstractFluidTextureProvider {
         compatOre(TinkerFluids.moltenManaSteel);
         compatOre(TinkerFluids.moltenTerraSteel);
         compatOre(TinkerFluids.moltenPolyethylene);
+        compatOre(TinkerFluids.moltenPolyvinylChloride);
         tintedMolten(TinkerFluids.moltenChromium).color(0xFFC4B180);
         tintedMolten(TinkerFluids.moltenCadmium).color(0xFF8AB8C8);
         // compat - alloy

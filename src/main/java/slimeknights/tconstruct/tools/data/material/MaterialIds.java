@@ -125,6 +125,7 @@ public final class MaterialIds {
     public static final MaterialId terraSteel = id("terrasteel");
     //gt
     public static final MaterialId polyethylene = id("polyethylene");
+    public static final MaterialId polyvinylChloride = id("polyvinyl_chloride");
 
     // plate
     public static final MaterialId gold = id("gold");

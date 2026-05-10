@@ -82,7 +82,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 2
                 MaterialIds.silver, MaterialIds.lead, MaterialIds.aluminum,
                 MaterialIds.osmium, MaterialIds.ironwood, MaterialIds.manaSteel,
-                MaterialIds.polyethylene,
+                MaterialIds.polyethylene, MaterialIds.polyvinylChloride,
                 // tier 3
                 MaterialIds.steeleaf, MaterialIds.terraSteel,
                 // tier 4
@@ -146,9 +146,10 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 1
                 MaterialIds.treatedWood,
                 // tier 2
-                MaterialIds.osmium, MaterialIds.ironwood, MaterialIds.polyethylene,
+                MaterialIds.osmium, MaterialIds.ironwood,
                 // tier 3
                 MaterialIds.platedSlimewood, MaterialIds.electrum, MaterialIds.steeleaf,
+                MaterialIds.polyethylene, MaterialIds.polyvinylChloride,
                 // tier 4
                 MaterialIds.fiery
         );
@@ -201,9 +202,10 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 1
                 MaterialIds.treatedWood,
                 // tier 2
-                MaterialIds.silver, MaterialIds.ironwood, MaterialIds.polyethylene,
+                MaterialIds.silver, MaterialIds.ironwood,
                 // tier 3
-                MaterialIds.invar, MaterialIds.pewter, MaterialIds.steeleaf
+                MaterialIds.invar, MaterialIds.pewter, MaterialIds.steeleaf,
+                MaterialIds.polyethylene, MaterialIds.polyvinylChloride
         );
         tag(TinkerTags.Materials.LIGHT).add(
                 // tier 1
@@ -216,10 +218,10 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 MaterialIds.hepatizon, MaterialIds.queensSlime, MaterialIds.knightmetal
         ).addOptional(
                 // tier 2
-                MaterialIds.aluminum, MaterialIds.manaSteel, MaterialIds.polyethylene,
+                MaterialIds.aluminum, MaterialIds.manaSteel,
                 // tier 3
                 MaterialIds.necronium, MaterialIds.constantan, MaterialIds.platedSlimewood,
-                MaterialIds.terraSteel
+                MaterialIds.terraSteel, MaterialIds.polyethylene, MaterialIds.polyvinylChloride
         );
         tag(TinkerTags.Materials.HEAVY).add(
                 // tier 1

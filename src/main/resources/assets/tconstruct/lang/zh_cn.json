@@ -2272,15 +2272,9 @@
   "material.tconstruct.ironwood.armor": "每损失1点耐久值，额外损失1点耐久值（无视其他升级）分享给任一当前穿戴的盔甲。目标获得1+等级的树皮覆层。",
 
   "material.tconstruct.manasteel": "魔力钢",
-  "material.tconstruct.manasteel.flavor": "魔法，神奇吧?",
+  "material.tconstruct.manasteel.flavor": "魔法，很神奇吧?",
   "material.tconstruct.manasteel.encyclopedia": "每级每游戏刻可以消耗200点Mana为工具修复1点耐久。",
   "material.tconstruct.manasteel.armor": "每1等级每游戏刻可以消耗200点Mana为装备修复1点耐久。",
-
-  "material.tconstruct.polyethylene": "聚乙烯",
-  "material.tconstruct.polyethylene.flavor": "差不多剩下10%的材料科学内容",
-  "material.tconstruct.polyethylene.encyclopedia": "每级耐久度-20%，近战伤害-10%",
-  "material.tconstruct.polyethylene.ranged": "每级耐久度-20%，弹射物伤害-0.25",
-  "material.tconstruct.polyethylene.armor": "每级耐久度-20%，盔甲韧性-1",
 
   "__comment": "Tier 3 Integration Materials",
   "material.tconstruct.steel": "钢",
@@ -2340,9 +2334,15 @@
   "material.tconstruct.steeleaf.armor": "每级使从方块或怪物处获得的经验+25%",
 
   "material.tconstruct.terrasteel": "泰拉钢",
-  "material.tconstruct.terrasteel.flavor": "魔法，神奇吧?",
+  "material.tconstruct.terrasteel.flavor": "吸取大地之精华",
   "material.tconstruct.terrasteel.encyclopedia": "拿在手上时，每级每2秒可以消耗200点Mana恢复玩家1点生命值。",
   "material.tconstruct.terrasteel.armor": "穿在身上时，每级每2秒可以消耗200点Mana恢复玩家1点生命值。",
+
+  "material.tconstruct.polyethylene": "聚乙烯",
+  "material.tconstruct.polyethylene.flavor": "差不多剩下10%的材料科学内容",
+  "material.tconstruct.polyethylene.encyclopedia": "每级耐久度-20%，近战伤害-10%",
+  "material.tconstruct.polyethylene.ranged": "每级耐久度-20%，弹射物伤害-0.25",
+  "material.tconstruct.polyethylene.armor": "每级耐久度-20%，盔甲韧性-1",
 
 
   "_comment": "Tier 4 Integration Materials",
