@@ -888,6 +888,11 @@
   "fluid.tconstruct.flowing_polyethylene": "Flowing Molten Polyethylene",
   "item.tconstruct.polyethylene_bucket": "Molten Polyethylene Bucket",
 
+  "block.tconstruct.polyvinyl_chloride_fluid": "Molten Polyvinyl Chloride",
+  "fluid.tconstruct.polyvinyl_chloride": "Molten Polyvinyl Chloride",
+  "fluid.tconstruct.flowing_polyvinyl_chloride": "Flowing Molten Polyvinyl Chloride",
+  "item.tconstruct.polyvinyl_chloride_bucket": "Molten Polyvinyl Chloride Bucket",
+
 
   "_comment": "Compat Alloys",
 
@@ -2277,12 +2282,6 @@
   "material.tconstruct.manasteel.encyclopedia": "Each level can consume 200 Mana every game tick to repair 1 durability for the tool.",
   "material.tconstruct.manasteel.armor": "Each level can consume 200 Mana every game tick to repair 1 durability for the armor.",
 
-  "material.tconstruct.polyethylene": "Polyethylene",
-  "material.tconstruct.polyethylene.flavor": "Basically the remaining 10% of materials science",
-  "material.tconstruct.polyethylene.encyclopedia": "Grants -20% durability and -10% melee damage per level",
-  "material.tconstruct.polyethylene.ranged": "Grants -20% durability and -0.25 projectile power per level",
-  "material.tconstruct.polyethylene.armor": "Grants -20% durability and -1 toughness per level",
-
   "__comment": "Tier 3 Integration Materials",
   "material.tconstruct.steel": "Steel",
   "material.tconstruct.steel.flavor": "Basically 90% of material science",
@@ -2344,6 +2343,18 @@
   "material.tconstruct.terrasteel.flavor": "Absorb the essence of the earth.",
   "material.tconstruct.terrasteel.encyclopedia": "When held in hand, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
   "material.tconstruct.terrasteel.armor": "When worn, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
+
+  "material.tconstruct.polyethylene": "Polyethylene",
+  "material.tconstruct.polyethylene.flavor": "Basically the remaining 10% of materials science",
+  "material.tconstruct.polyethylene.encyclopedia": "Grants -20% durability and -10% melee damage per level",
+  "material.tconstruct.polyethylene.ranged": "Grants -20% durability and -0.25 projectile power per level",
+  "material.tconstruct.polyethylene.armor": "Grants -20% durability and -1 toughness per level",
+
+  "material.tconstruct.polyvinyl_chloride": "Polyvinyl Chloride",
+  "material.tconstruct.polyvinyl_chloride.flavor": "This is not environmentally friendly",
+  "material.tconstruct.polyvinyl_chloride.encyclopedia": "Each time the holder is damaged by flames, each level will give them 5 seconds of poison of the same level and lose 20 durability, which will lose more quickly directly in fire or lava",
+  "material.tconstruct.polyvinyl_chloride.ranged": "Each time the holder is damaged by flames, each level will give them 5 seconds of poison of the same level and lose 20 durability, which will lose more quickly directly in fire or lava",
+  "material.tconstruct.polyvinyl_chloride.armor": "Each time the wearer is damaged by flames, each level will give them 5 seconds of poison of the same level and lose 20 durability, which will lose more quickly directly in fire or lava",
 
 
   "_comment": "Tier 4 Integration Materials",
@@ -3300,9 +3311,6 @@
   "modifier.tconstruct.manafix": "Mana Fix",
   "modifier.tconstruct.manafix.flavor": "Manamechine! son!",
   "modifier.tconstruct.manafix.description": "Use mana to repair damaged tools",
-  "modifier.tconstruct.plastic": "Plastic",
-  "modifier.tconstruct.plastic.flavor": "Mere Show!",
-  "modifier.tconstruct.plastic.description": "Tool is shorter lasting, damages less and not tougher",
 
 
 
@@ -3349,6 +3357,12 @@
   "modifier.tconstruct.terrarecover": "Terra Recover",
   "modifier.tconstruct.terrarecover.flavor": "Magic stretcher",
   "modifier.tconstruct.terrarecover.description": "Use mana to recover health",
+  "modifier.tconstruct.plastic": "Plastic",
+  "modifier.tconstruct.plastic.flavor": "Mere Show!",
+  "modifier.tconstruct.plastic.description": "Tool is shorter lasting, damages less and not tougher",
+  "modifier.tconstruct.thermaldecomposite": "Thermal Decomposite",
+  "modifier.tconstruct.thermaldecomposite.flavor": "Be careful of flames!",
+  "modifier.tconstruct.thermaldecomposite.description": "When damaged by flames, the tool will quickly lose durability and release toxic gas",
 
   "_comment": "Slimeskull traits",
   "modifier.tconstruct.self_destructive": "Self Destructive",
