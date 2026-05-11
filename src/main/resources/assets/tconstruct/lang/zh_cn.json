@@ -888,6 +888,11 @@
   "fluid.tconstruct.flowing_polyethylene": "流动的熔融聚乙烯",
   "item.tconstruct.polyethylene_bucket": "熔融聚乙烯桶",
 
+  "block.tconstruct.polyvinyl_chloride_fluid": "熔融聚氯乙烯",
+  "fluid.tconstruct.polyvinyl_chloride": "熔融聚氯乙烯",
+  "fluid.tconstruct.flowing_polyvinyl_chloride": "流动的熔融聚氯乙烯",
+  "item.tconstruct.polyvinyl_chloride_bucket": "熔融聚氯乙烯桶",
+
 
   "_comment": "Compat Alloys",
 
@@ -2344,6 +2349,12 @@
   "material.tconstruct.polyethylene.ranged": "每级耐久度-20%，弹射物伤害-0.25",
   "material.tconstruct.polyethylene.armor": "每级耐久度-20%，盔甲韧性-1",
 
+  "material.tconstruct.polyvinyl_chloride": "聚氯乙烯",
+  "material.tconstruct.polyvinyl_chloride.flavor": "这可不环保",
+  "material.tconstruct.polyvinyl_chloride.encyclopedia": "持有者每次受到火焰伤害时，每级会给予持有者5秒同等级的中毒，并损失20点耐久，直接在火或熔岩中损失得会更快",
+  "material.tconstruct.polyvinyl_chloride.ranged": "持有者每次受到火焰伤害时，每级会给予持有者5秒同等级的中毒，并损失20点耐久，直接在火或熔岩中损失得会更快",
+  "material.tconstruct.polyvinyl_chloride.armor": "穿戴者每次受到火焰伤害时，每级会给予穿戴者5秒同等级的中毒，并损失20点耐久，直接在火或熔岩中损失得会更快",
+
 
   "_comment": "Tier 4 Integration Materials",
 
@@ -3297,9 +3308,6 @@
   "modifier.tconstruct.manafix": "魔力修复",
   "modifier.tconstruct.manafix.flavor": "魔力机器！小子！",
   "modifier.tconstruct.manafix.description": "消耗魔力修复受损的工具",
-  "modifier.tconstruct.plastic": "塑料",
-  "modifier.tconstruct.plastic.flavor": "虚有其表！",
-  "modifier.tconstruct.plastic.description": "工具更不耐用，伤害更低，韧性更低",
 
 
   "__comment": "Tier 3 Mod Compat Traits",
@@ -3345,6 +3353,12 @@
   "modifier.tconstruct.terrarecover": "泰拉恢复",
   "modifier.tconstruct.terrarecover.flavor": "魔法担架",
   "modifier.tconstruct.terrarecover.description": "用魔力恢复生命",
+  "modifier.tconstruct.plastic": "塑料",
+  "modifier.tconstruct.plastic.flavor": "虚有其表！",
+  "modifier.tconstruct.plastic.description": "工具更不耐用，伤害更低，韧性更低",
+  "modifier.tconstruct.thermaldecomposite": "热解",
+  "modifier.tconstruct.thermaldecomposite.flavor": "小心火焰！",
+  "modifier.tconstruct.thermaldecomposite.description": "受到火焰伤害时工具会迅速损失耐久并释放毒气",
 
   "_comment": "Slimeskull traits",
   "modifier.tconstruct.self_destructive": "自毁",
