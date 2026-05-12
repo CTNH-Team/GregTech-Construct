@@ -118,7 +118,9 @@ public class Util {
   public static String toIndentedStringList(Collection<?> list) {
     return list.stream()
       .map(Object::toString)
-      .collect(Collectors.joining("\n\t", "\n\t", ""));
+      .collect(Collectors.joining("
+\t", "
+\t", ""));
   }
 
   /**
@@ -238,6 +240,16 @@ public class Util {
       IS_NEO_FORGE = ModList.get().getModContainerById("forge").filter(mod -> mod.getModInfo().getDisplayName().equals("NeoForge")).isPresent();
     }
     return IS_NEO_FORGE;
+  }
+
+  /**
+   * Checks if a specific mod is loaded (catches exceptions for early access)
+   * @param modId  Mod ID to check
+   * @return  True if the mod is loaded, false if mod list is not yet available
+   */
+  public static boolean isModLoaded(String modId) {
+    try { return ModList.get().isLoaded(modId); }
+    catch (Exception e) { return false; }
   }
 
   /** Checks if we are currently running on Forge as opposed to NeoForge. Allows branching solutions for each loader if needed */

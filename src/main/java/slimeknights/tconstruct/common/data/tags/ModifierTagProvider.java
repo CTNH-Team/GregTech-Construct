@@ -3,7 +3,7 @@ package slimeknights.tconstruct.common.data.tags;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.ModList;
+import slimeknights.tconstruct.library.utils.Util;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.data.tinkering.AbstractModifierTagProvider;
 import slimeknights.tconstruct.tools.TinkerModifiers;
@@ -123,7 +123,7 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
       ModifierIds.experienced, TinkerModifiers.magnetic.getId(), ModifierIds.scope, ModifierIds.zoom,
       ModifierIds.tank, ModifierIds.smelting, TinkerModifiers.fireprimer.getId())
         .addOptional(ModifierIds.theOneProbe);
-    if (isBotaniaLoaded()) {
+    if (Util.isModLoaded("botania")) {
       this.tag(GENERAL_UPGRADES).add(TinkerModifiers.manafix.getId(), TinkerModifiers.terrarecover.getId());
     }
 
@@ -208,8 +208,4 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
     return "Tinkers' Construct Modifier Tag Provider";
   }
 
-  private static boolean isBotaniaLoaded() {
-    try { return ModList.get().isLoaded("botania"); }
-    catch (Exception e) { return false; }
-  }
 }

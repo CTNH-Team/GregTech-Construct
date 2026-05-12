@@ -18,7 +18,7 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.ModList;
+import slimeknights.tconstruct.library.utils.Util;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
@@ -207,7 +207,7 @@ public final class TinkerModifiers extends TinkerModule {
     public static final StaticModifier<?> manafix;
     public static final StaticModifier<?> terrarecover;
     static {
-        if (isBotaniaLoaded()) {
+        if (Util.isModLoaded("botania")) {
             manafix = MODIFIERS.register("manafix", slimeknights.tconstruct.tools.modifiers.Botania.ManaFixModifier::new);
             terrarecover = MODIFIERS.register("terrarecover", slimeknights.tconstruct.tools.modifiers.Botania.TerraRecoverModifier::new);
         } else {
@@ -215,10 +215,7 @@ public final class TinkerModifiers extends TinkerModule {
             terrarecover = null;
         }
     }
-    private static boolean isBotaniaLoaded() {
-        try { return ModList.get().isLoaded("botania"); }
-        catch (Exception e) { return false; }
-    }
+
     public static final StaticModifier<MagneticModifier> magnetic = MODIFIERS.register("magnetic", MagneticModifier::new);
     public static final StaticModifier<FarsightedModifier> farsighted = MODIFIERS.register("farsighted", FarsightedModifier::new);
     public static final StaticModifier<NearsightedModifier> nearsighted = MODIFIERS.register("nearsighted", NearsightedModifier::new);

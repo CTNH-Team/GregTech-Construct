@@ -1,7 +1,7 @@
 package slimeknights.tconstruct.tools.data.material;
 
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.fml.ModList;
+import slimeknights.tconstruct.library.utils.Util;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialTraitDataProvider;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
@@ -152,7 +152,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     addTraits(MaterialIds.silver, ARMOR, ModifierIds.consecrated);
     addDefaultTraits(MaterialIds.treatedWood, ModifierIds.preserved);
     addDefaultTraits(MaterialIds.ironwood, ModifierIds.deciduous);
-    if (isBotaniaLoaded()) {
+    if (Util.isModLoaded("botania")) {
       addDefaultTraits(MaterialIds.manaSteel, TinkerModifiers.manafix);
     } else {
       noTraits(MaterialIds.manaSteel);
@@ -170,7 +170,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     addDefaultTraits(MaterialIds.platedSlimewood, TinkerModifiers.overworked, TinkerModifiers.overslime);
     addDefaultTraits(MaterialIds.steeleaf, ModifierIds.experienced);
     addTraits(MaterialIds.steeleaf, AMMO, ModifierIds.looting);
-    if (isBotaniaLoaded()) {
+    if (Util.isModLoaded("botania")) {
       addDefaultTraits(MaterialIds.terraSteel, TinkerModifiers.manafix, TinkerModifiers.terrarecover);
     } else {
       noTraits(MaterialIds.terraSteel);
@@ -200,10 +200,5 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
     noTraits(MaterialIds.clay);
     noTraits(MaterialIds.honey);
     noTraits(MaterialIds.phantom);
-  }
-
-  private static boolean isBotaniaLoaded() {
-    try { return ModList.get().isLoaded("botania"); }
-    catch (Exception e) { return false; }
   }
 }

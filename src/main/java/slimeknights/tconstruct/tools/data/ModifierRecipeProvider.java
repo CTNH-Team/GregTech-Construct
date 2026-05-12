@@ -12,7 +12,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.fml.ModList;
+import slimeknights.tconstruct.library.utils.Util;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.Tags.Fluids;
 import net.minecraftforge.common.crafting.CompoundIngredient;
@@ -287,7 +287,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .setSlots(SlotType.UPGRADE, 1)
                 .setTools(ingredientFromTags(TinkerTags.Items.MELEE_WEAPON, TinkerTags.Items.HARVEST))
                 .save(consumer, prefix(TinkerModifiers.magnetic, upgradeFolder));
-        if (isBotaniaLoaded()) {
+        if (Util.isModLoaded("botania")) {
             ModifierRecipeBuilder.modifier(TinkerModifiers.manafix)
                     .addInput(vazkii.botania.common.block.BotaniaBlocks.spawnerClaw)
                     .setMaxLevel(5)
@@ -2071,10 +2071,5 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
             tagIngredients[i] = Ingredient.of(tags[i]);
         }
         return CompoundIngredient.of(tagIngredients);
-    }
-
-    private static boolean isBotaniaLoaded() {
-        try { return ModList.get().isLoaded("botania"); }
-        catch (Exception e) { return false; }
     }
 }
