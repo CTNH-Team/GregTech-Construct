@@ -84,6 +84,32 @@ class TinkerStationGemSlotTest extends BaseMcTest {
     assertThat(slot.mayPickup(Mockito.mock(Player.class))).isTrue();
   }
 
+  @Test
+  void hiddenReusedSocketSlotDoesNotAcceptOrdinaryLayoutItemsInGemMode() {
+    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(
+      List.of(ApotheosisBridge.SocketGem.empty(0)),
+      rawSocketIndex -> false
+    ));
+
+    TinkerStationBlockEntity tile = Mockito.mock(TinkerStationBlockEntity.class);
+    LazyResultContainer craftingResult = Mockito.mock(LazyResultContainer.class);
+    TinkerStationContainerMenu menu = Mockito.mock(TinkerStationContainerMenu.class);
+    LayoutSlot layout = Mockito.mock(LayoutSlot.class);
+    TinkerStationSlot slot = new TinkerStationSlot(tile, TinkerStationBlockEntity.INPUT_SLOT + 1, 0, 0);
+    slot.setMenu(menu);
+    slot.activate(layout);
+
+    when(tile.getCraftingResult()).thenReturn(craftingResult);
+    when(tile.getItem(TinkerStationBlockEntity.TINKER_SLOT)).thenReturn(TOOL);
+    when(tile.isGemMode()).thenReturn(true);
+    when(menu.getVisibleSocketCount()).thenReturn(1);
+    when(menu.getCurrentTool()).thenReturn(TOOL);
+    when(layout.isValid(any(ItemStack.class))).thenReturn(true);
+
+    assertThat(slot.mayPlace(new ItemStack(Items.DIRT))).isFalse();
+    assertThat(slot.hasItem()).isFalse();
+  }
+
   private record FakeSocketHooks(List<ApotheosisBridge.SocketGem> sockets, java.util.function.IntPredicate acceptsSocket) implements ApotheosisBridge.SocketHooks {
     @Override
     public boolean hasSocketedGems(ItemStack stack) {

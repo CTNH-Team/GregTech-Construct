@@ -49,6 +49,9 @@ public class TinkerStationSlot extends Slot {
   @Override
   public boolean mayPlace(ItemStack stack) {
     if (isGemSocketSlot()) {
+      if (!hasVisibleSocketEntry()) {
+        return false;
+      }
       if (getSocketEntry().isFilled()) {
         return false;
       }
@@ -61,6 +64,9 @@ public class TinkerStationSlot extends Slot {
   @Override
   public ItemStack getItem() {
     if (isGemSocketSlot()) {
+      if (!hasVisibleSocketEntry()) {
+        return ItemStack.EMPTY;
+      }
       return getSocketEntry().gem();
     }
     return super.getItem();
@@ -69,6 +75,9 @@ public class TinkerStationSlot extends Slot {
   @Override
   public boolean hasItem() {
     if (isGemSocketSlot()) {
+      if (!hasVisibleSocketEntry()) {
+        return false;
+      }
       return getSocketEntry().isFilled();
     }
     return super.hasItem();
@@ -93,7 +102,12 @@ public class TinkerStationSlot extends Slot {
       return false;
     }
     int socketSlotIndex = getContainerSlot() - TinkerStationBlockEntity.INPUT_SLOT;
-    return socketSlotIndex >= 0 && socketSlotIndex < 5 && socketSlotIndex < this.menu.getVisibleSocketCount();
+    return socketSlotIndex >= 0 && socketSlotIndex < 5;
+  }
+
+  private boolean hasVisibleSocketEntry() {
+    int socketSlotIndex = getContainerSlot() - TinkerStationBlockEntity.INPUT_SLOT;
+    return socketSlotIndex >= 0 && socketSlotIndex < this.menu.getVisibleSocketCount();
   }
 
   private ApotheosisBridge.SocketGem getSocketEntry() {
