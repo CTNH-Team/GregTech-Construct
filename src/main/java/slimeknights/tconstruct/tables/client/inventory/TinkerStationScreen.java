@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -31,16 +32,20 @@ import slimeknights.tconstruct.library.tools.layout.StationSlotLayout;
 import slimeknights.tconstruct.library.tools.layout.StationSlotLayoutLoader;
 import slimeknights.tconstruct.library.tools.nbt.LazyToolStack;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
+import slimeknights.tconstruct.tables.apotheosis.ApotheosisSocketMode;
 import slimeknights.tconstruct.tables.block.entity.table.TinkerStationBlockEntity;
+import slimeknights.tconstruct.tables.client.inventory.widget.GemSelectionButton;
 import slimeknights.tconstruct.tables.client.inventory.widget.SlotButtonItem;
 import slimeknights.tconstruct.tables.client.inventory.widget.TinkerStationButtonsWidget;
 import slimeknights.tconstruct.tables.menu.TinkerStationContainerMenu;
 import slimeknights.tconstruct.tables.menu.slot.TinkerStationSlot;
 import slimeknights.tconstruct.tables.network.TinkerStationRenamePacket;
 import slimeknights.tconstruct.tables.network.TinkerStationSelectionPacket;
+import slimeknights.tconstruct.tables.network.TinkerStationSocketSelectionPacket;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.ArrayList;
 
 import static slimeknights.tconstruct.tables.block.entity.table.TinkerStationBlockEntity.INPUT_SLOT;
 import static slimeknights.tconstruct.tables.block.entity.table.TinkerStationBlockEntity.TINKER_SLOT;
@@ -80,6 +85,17 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
   private static final ScalableElementScreen CENTER_BEAM = new ScalableElementScreen(TINKER_TEXTURE, 2, 202, 129, 7, 256, 256);
   // text boxes
   private static final ElementScreen TEXT_BOX = ACTIVE_TEXT_FIELD.move(0, 244, 90, 12);
+  private static final Component EXTRACTION_TOGGLE_ON = TConstruct.makeTranslation("gui", "tinker_station.socket_extraction.on");
+  private static final Component EXTRACTION_TOGGLE_OFF = TConstruct.makeTranslation("gui", "tinker_station.socket_extraction.off");
+  private static final Component EXTRACTION_TOGGLE_TOOLTIP = TConstruct.makeTranslation("gui", "tinker_station.socket_extraction.tooltip");
+  private static final Component SOCKET_SELECTION_TOOLTIP = TConstruct.makeTranslation("gui", "tinker_station.socket_selection.tooltip");
+  private static final int EXTRACTION_TOGGLE_X = 80;
+  private static final int EXTRACTION_TOGGLE_Y = 84;
+  private static final int EXTRACTION_TOGGLE_WIDTH = 82;
+  private static final int GEM_BUTTON_X = 80;
+  private static final int GEM_BUTTON_Y = 65;
+  private static final int GEM_BUTTON_SPACING = 4;
+  private static final int MAX_GEM_BUTTONS = 5;
 
   /** Number of button columns in the UI */
   public static final int COLUMN_COUNT = 6;
@@ -109,6 +125,9 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
   // components
   protected EditBox textField;
   protected TinkerStationButtonsWidget buttonsScreen;
+  protected Button extractionToggleButton;
+  protected final List<GemSelectionButton> gemButtons = new ArrayList<>();
+  protected TinkerStationExtractionViewState extractionViewState = TinkerStationExtractionViewState.hidden();
 
   /** Maximum available slots */
   @Getter
@@ -182,6 +201,30 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     textField.visible = false;
     textField.setEditable(false);
 
+    this.extractionToggleButton = this.addRenderableWidget(new Button.Builder(EXTRACTION_TOGGLE_OFF, button -> toggleSocketExtractionMode())
+      .pos(this.cornerX + EXTRACTION_TOGGLE_X, this.cornerY + EXTRACTION_TOGGLE_Y)
+      .size(EXTRACTION_TOGGLE_WIDTH, 20)
+      .build());
+    this.extractionToggleButton.visible = false;
+    this.extractionToggleButton.active = false;
+
+    for (int i = 0; i < MAX_GEM_BUTTONS; i++) {
+      GemSelectionButton button = this.addRenderableWidget(new GemSelectionButton(
+        this.cornerX + GEM_BUTTON_X + i * (GemSelectionButton.WIDTH + GEM_BUTTON_SPACING),
+        this.cornerY + GEM_BUTTON_Y,
+        i,
+        ItemStack.EMPTY,
+        self -> {
+          if (self instanceof GemSelectionButton gemButton) {
+            selectSocket(gemButton.getSocketIndex());
+          }
+        }
+      ));
+      button.visible = false;
+      button.active = false;
+      this.gemButtons.add(button);
+    }
+
     int buttonsStyle = this.maxInputs > 3 ? TinkerStationButtonsWidget.METAL_STYLE : TinkerStationButtonsWidget.WOOD_STYLE;
 
     List<StationSlotLayout> layouts = Lists.newArrayList();
@@ -243,8 +286,10 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
       return;
     }
 
+    this.refreshSocketExtractionControls();
+
     // fetch the tool version of the result for the screen
-    LazyToolStack lazyResult = tile.getResult();
+    LazyToolStack lazyResult = LazyToolStack.from(this.getMenu().getDisplayedResult());
 
     // if we have a message, display instead of refreshing the tool
     Component currentError = tile.getCurrentError();
@@ -269,7 +314,7 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     }
 
     // if there is no result, use the input
-    if (lazyResult == null) {
+    if (lazyResult == null || lazyResult.getStack().isEmpty()) {
       lazyResult = tile.getTool();
     }
     updateArmorStandPreview(lazyResult.getStack());
@@ -435,6 +480,25 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     }
 
     renderArmorStand(graphics);
+  }
+
+  @Override
+  protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    super.renderTooltip(graphics, mouseX, mouseY);
+
+    if (this.extractionToggleButton != null && this.extractionToggleButton.visible && this.extractionToggleButton.isHoveredOrFocused()) {
+      graphics.renderTooltip(this.font, this.font.split(EXTRACTION_TOGGLE_TOOLTIP, 180), mouseX, mouseY);
+      return;
+    }
+
+    for (GemSelectionButton button : this.gemButtons) {
+      if (button.visible && button.isHoveredOrFocused()) {
+        List<Component> tooltip = new ArrayList<>(button.getGem().getTooltipLines(this.minecraft.player, this.minecraft.options.advancedItemTooltips ? net.minecraft.world.item.TooltipFlag.Default.ADVANCED : net.minecraft.world.item.TooltipFlag.Default.NORMAL));
+        tooltip.add(SOCKET_SELECTION_TOOLTIP);
+        graphics.renderTooltip(this.font, tooltip, java.util.Optional.empty(), mouseX, mouseY);
+        return;
+      }
+    }
   }
 
 
@@ -656,5 +720,89 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     super.onClose();
 
     assert this.minecraft != null;
+  }
+
+  private void refreshSocketExtractionControls() {
+    ItemStack currentTool = this.getMenu().getSlot(TINKER_SLOT).getItem();
+    this.extractionViewState = TinkerStationExtractionViewState.create(
+      currentTool,
+      this.maxInputs,
+      this.getMenu().isSocketExtractionMode(),
+      this.getMenu().getSelectedSocket()
+    );
+
+    this.extractionToggleButton.visible = this.extractionViewState.visible();
+    this.extractionToggleButton.active = this.extractionViewState.visible();
+    this.extractionToggleButton.setMessage(this.extractionViewState.extractionMode() ? EXTRACTION_TOGGLE_ON : EXTRACTION_TOGGLE_OFF);
+
+    for (int i = 0; i < this.gemButtons.size(); i++) {
+      GemSelectionButton button = this.gemButtons.get(i);
+      if (i < this.extractionViewState.gems().size()) {
+        ItemStack gem = this.extractionViewState.gems().get(i);
+        GemSelectionButton replacement = button;
+        if (!ItemStack.isSameItemSameTags(button.getGem(), gem)) {
+          replacement = new GemSelectionButton(button.getX(), button.getY(), i, gem, self -> {
+            if (self instanceof GemSelectionButton gemButton) {
+              selectSocket(gemButton.getSocketIndex());
+            }
+          });
+          replacement.visible = true;
+          replacement.active = true;
+          replacement.setSelected(i == this.extractionViewState.selectedSocket());
+          this.removeWidget(button);
+          this.gemButtons.set(i, this.addRenderableWidget(replacement));
+        } else {
+          button.visible = true;
+          button.active = true;
+          button.setSelected(i == this.extractionViewState.selectedSocket());
+        }
+        replacement.visible = true;
+        replacement.active = true;
+        replacement.setSelected(i == this.extractionViewState.selectedSocket());
+      } else {
+        button.visible = false;
+        button.active = false;
+        button.setSelected(false);
+      }
+    }
+  }
+
+  private void toggleSocketExtractionMode() {
+    if (!this.extractionViewState.visible()) {
+      return;
+    }
+    boolean enabled = !this.extractionViewState.extractionMode();
+    int selectedSocket = enabled ? Math.max(0, this.extractionViewState.selectedSocket()) : -1;
+    sendSocketSelection(enabled, selectedSocket);
+  }
+
+  private void selectSocket(int selectedSocket) {
+    if (!this.extractionViewState.visible() || selectedSocket < 0 || selectedSocket >= this.extractionViewState.gems().size()) {
+      return;
+    }
+    sendSocketSelection(true, selectedSocket);
+  }
+
+  private void sendSocketSelection(boolean enabled, int selectedSocket) {
+    this.getMenu().setSocketExtractionState(enabled, selectedSocket);
+    this.refreshSocketExtractionControls();
+    this.updateDisplay();
+    TinkerNetwork.getInstance().sendToServer(new TinkerStationSocketSelectionPacket(enabled, selectedSocket));
+  }
+}
+
+record TinkerStationExtractionViewState(boolean visible, boolean extractionMode, int selectedSocket, List<ItemStack> gems) {
+  static TinkerStationExtractionViewState hidden() {
+    return new TinkerStationExtractionViewState(false, false, -1, List.of());
+  }
+
+  static TinkerStationExtractionViewState create(ItemStack tool, int inputCount, boolean extractionMode, int selectedSocket) {
+    if (!ApotheosisSocketMode.canExtract(tool, inputCount)) {
+      return hidden();
+    }
+    List<ItemStack> gems = ApotheosisSocketMode.getDisplayedGems(tool);
+    int normalizedSelection = ApotheosisSocketMode.normalizeSelection(tool, selectedSocket);
+    boolean normalizedMode = extractionMode && normalizedSelection >= 0;
+    return new TinkerStationExtractionViewState(true, normalizedMode, normalizedSelection, gems);
   }
 }

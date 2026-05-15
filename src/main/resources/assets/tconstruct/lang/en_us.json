@@ -3711,6 +3711,10 @@
   "gui.tconstruct.tinker_station.traits": "Traits",
   "gui.tconstruct.tinker_station.components": "Components",
   "gui.tconstruct.tinker_station.info": "The main way to repair or change your tools. Place a tool and a material on the left to get started.",
+  "gui.tconstruct.tinker_station.socket_extraction.off": "Extract Gem: Off",
+  "gui.tconstruct.tinker_station.socket_extraction.on": "Extract Gem: On",
+  "gui.tconstruct.tinker_station.socket_extraction.tooltip": "Toggle socket extraction mode. In extraction mode, the anvil result is the tool with the selected gem removed.",
+  "gui.tconstruct.tinker_station.socket_selection.tooltip": "Select this socket for extraction.",
   "gui.tconstruct.tinker_station.no_traits": "None :[",
 
   "gui.tconstruct.manual.cycle.recipes": "Cycle to other recipes",

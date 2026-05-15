@@ -26,6 +26,7 @@ import slimeknights.tconstruct.library.tools.item.ITinkerStationDisplay;
 import slimeknights.tconstruct.library.tools.nbt.LazyToolStack;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.utils.TinkerTooltipFlags;
+import slimeknights.tconstruct.tables.apotheosis.ApotheosisSocketMode;
 import slimeknights.tconstruct.tables.client.inventory.module.InfoPanelScreen;
 import slimeknights.tconstruct.tables.menu.TabbedContainerMenu;
 
@@ -138,16 +139,23 @@ public abstract class ToolTableScreen<T extends BlockEntity, C extends TabbedCon
   protected void updateToolPanel(LazyToolStack lazyToolStack) {
     ToolStack tool = lazyToolStack.getTool();
     if (tool.getItem() instanceof ITinkerStationDisplay display) {
+      List<Component> tooltip = display.getStatInformation(tool, Minecraft.getInstance().player, new ArrayList<>(), SafeClientAccess.getTooltipKey(), TinkerTooltipFlags.TINKER_STATION);
+      appendApotheosisSocketBonuses(lazyToolStack.getStack(), tooltip);
       tinkerInfo.setCaption(display.getLocalizedName());
-      tinkerInfo.setText(display.getStatInformation(tool, Minecraft.getInstance().player, new ArrayList<>(), SafeClientAccess.getTooltipKey(), TinkerTooltipFlags.TINKER_STATION));
+      tinkerInfo.setText(tooltip);
     }
     else {
       ItemStack result = lazyToolStack.getStack();
       tinkerInfo.setCaption(result.getHoverName());
       List<Component> list = new ArrayList<>();
       result.getItem().appendHoverText(result, Minecraft.getInstance().level, list, Default.NORMAL);
+      appendApotheosisSocketBonuses(result, list);
       tinkerInfo.setText(list);
     }
+  }
+
+  static void appendApotheosisSocketBonuses(ItemStack stack, List<Component> tooltip) {
+    ApotheosisSocketMode.appendTooltip(stack, tooltip);
   }
 
   /** Updates the modifier panel with relevant info */

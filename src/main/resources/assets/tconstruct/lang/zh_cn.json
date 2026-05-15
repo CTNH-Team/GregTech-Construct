@@ -3707,6 +3707,10 @@
   "gui.tconstruct.tinker_station.traits": "材料特性",
   "gui.tconstruct.tinker_station.components": "组成部件",
   "gui.tconstruct.tinker_station.info": "修复和改装你工具的主要手段。在左侧放置工具和材料即可开始。",
+  "gui.tconstruct.tinker_station.socket_extraction.off": "宝石拆除：关",
+  "gui.tconstruct.tinker_station.socket_extraction.on": "宝石拆除：开",
+  "gui.tconstruct.tinker_station.socket_extraction.tooltip": "切换宝石拆除模式。启用后，铁砧结果会显示移除所选宝石后的工具。",
+  "gui.tconstruct.tinker_station.socket_selection.tooltip": "选择要拆除的这个宝石槽。",
   "gui.tconstruct.tinker_station.no_traits": "无 :[",
 
   "gui.tconstruct.manual.cycle.recipes": "切换至其它配方",
