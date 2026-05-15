@@ -34,6 +34,7 @@ import slimeknights.tconstruct.library.recipe.TinkerRecipeTypes;
 import slimeknights.tconstruct.library.recipe.tinkerstation.ITinkerStationRecipe;
 import slimeknights.tconstruct.library.tools.helper.TooltipUtil;
 import slimeknights.tconstruct.library.tools.nbt.LazyToolStack;
+import slimeknights.tconstruct.plugin.apotheosis.ApotheosisBridge;
 import slimeknights.tconstruct.shared.inventory.ConfigurableInvWrapperCapability;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tables.apotheosis.ApotheosisSocketMode;
@@ -179,6 +180,67 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
     setChanged();
   }
 
+  /** Sends a screen refresh to all viewers currently sharing this station. */
+  public void syncGemModeViewers() {
+    syncScreenToRelevantPlayers();
+  }
+
+  /** Immediately inserts a carried gem into the selected visible socket and returns the carried remainder. */
+  public ItemStack insertGem(int visibleSocketIndex, ItemStack carriedGem) {
+    if (!this.gemMode || carriedGem.isEmpty()) {
+      return carriedGem;
+    }
+
+    ItemStack tool = this.getItem(TINKER_SLOT);
+    var sockets = ApotheosisSocketMode.getVisibleSockets(tool);
+    if (tool.isEmpty() || visibleSocketIndex < 0 || visibleSocketIndex >= sockets.size()) {
+      return carriedGem;
+    }
+
+    ApotheosisBridge.SocketGem socket = sockets.get(visibleSocketIndex);
+    ItemStack singleGem = ItemHandlerHelper.copyStackWithSize(carriedGem, 1);
+    if (!ApotheosisBridge.sockets().canInsertGem(tool, socket.rawSocketIndex(), singleGem)) {
+      return carriedGem;
+    }
+
+    ItemStack updatedTool = ApotheosisSocketMode.insertGem(tool, visibleSocketIndex, singleGem);
+    if (updatedTool.isEmpty()) {
+      return carriedGem;
+    }
+
+    this.setItem(TINKER_SLOT, updatedTool);
+    this.itemName = "";
+    return carriedGem.getCount() <= 1 ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(carriedGem, carriedGem.getCount() - 1);
+  }
+
+  /** Immediately removes a gem from the selected visible socket and returns it to the caller. */
+  public ItemStack removeGem(int visibleSocketIndex) {
+    if (!this.gemMode) {
+      return ItemStack.EMPTY;
+    }
+
+    ItemStack tool = this.getItem(TINKER_SLOT);
+    var sockets = ApotheosisSocketMode.getVisibleSockets(tool);
+    if (tool.isEmpty() || visibleSocketIndex < 0 || visibleSocketIndex >= sockets.size()) {
+      return ItemStack.EMPTY;
+    }
+
+    ApotheosisBridge.SocketGem socket = sockets.get(visibleSocketIndex);
+    if (!socket.isFilled()) {
+      return ItemStack.EMPTY;
+    }
+
+    ItemStack removedGem = ApotheosisBridge.sockets().copyGem(tool, socket.rawSocketIndex());
+    ItemStack updatedTool = ApotheosisSocketMode.removeGem(tool, visibleSocketIndex);
+    if (removedGem.isEmpty() || updatedTool.isEmpty()) {
+      return ItemStack.EMPTY;
+    }
+
+    this.setItem(TINKER_SLOT, updatedTool);
+    this.itemName = "";
+    return removedGem;
+  }
+
   @Nullable
   @Override
   public AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player playerEntity) {
@@ -197,13 +259,12 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
     result = null;
     this.currentError = null;
 
-    if (player != null && player.containerMenu instanceof TinkerStationContainerMenu menu && menu.hasActiveSocketExtraction()) {
-      ItemStack tool = this.getItem(TINKER_SLOT);
-      ItemStack extracted = ApotheosisSocketMode.createResult(tool, menu.getSelectedSocket());
-      if (!extracted.isEmpty()) {
-        result = LazyToolStack.from(extracted);
+    if (this.gemMode) {
+      ItemStack tool = this.getItem(TINKER_SLOT).copy();
+      if (!tool.isEmpty()) {
+        result = LazyToolStack.from(tool);
       }
-      return extracted;
+      return tool;
     }
 
     if (!this.level.isClientSide && this.level.getServer() != null) {
@@ -263,19 +324,7 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
 
   @Override
   public void onCraft(Player player, ItemStack resultItem, int amount) {
-    if (player.containerMenu instanceof TinkerStationContainerMenu menu && menu.hasActiveSocketExtraction()) {
-      if (amount == 0 || this.level == null || resultItem.isEmpty()) {
-        return;
-      }
-      ItemStack extractedGem = ApotheosisSocketMode.createExtractedGem(this.getItem(TINKER_SLOT), menu.getSelectedSocket());
-      resultItem.onCraftedBy(this.level, player, amount);
-      this.playCraftSound(player);
-      this.setItem(TINKER_SLOT, ItemStack.EMPTY);
-      if (!extractedGem.isEmpty()) {
-        player.getInventory().placeItemBackInInventory(extractedGem);
-      }
-      menu.setSocketExtractionState(false, -1);
-      this.itemName = "";
+    if (this.gemMode) {
       return;
     }
 

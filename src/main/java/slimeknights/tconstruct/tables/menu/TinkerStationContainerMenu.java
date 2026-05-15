@@ -6,6 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ArmorItem;
@@ -16,10 +17,12 @@ import slimeknights.tconstruct.library.tools.layout.StationSlotLayoutLoader;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tables.apotheosis.ApotheosisSocketMode;
 import slimeknights.tconstruct.tables.block.entity.table.TinkerStationBlockEntity;
+import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.tables.menu.slot.ArmorSlot;
 import slimeknights.tconstruct.tables.menu.slot.LazyResultSlot;
 import slimeknights.tconstruct.tables.menu.slot.PlayerSensitiveLazyResultSlot;
 import slimeknights.tconstruct.tables.menu.slot.TinkerStationSlot;
+import slimeknights.tconstruct.tables.network.TinkerStationSocketSelectionPacket.InteractionType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -103,9 +106,20 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
   }
 
   @Override
+  public void clicked(int slotId, int dragType, ClickType clickType, Player player) {
+    if (this.tile != null && this.tile.isGemMode() && slotId >= 0 && slotId < this.slots.size() && this.slots.get(slotId) == this.resultSlot) {
+      return;
+    }
+    super.clicked(slotId, dragType, clickType, player);
+  }
+
+  @Override
   public ItemStack quickMoveStack(Player player, int index) {
     Slot slot = this.slots.get(index);
     if (slot == resultSlot) {
+      if (tile != null && tile.isGemMode()) {
+        return ItemStack.EMPTY;
+      }
       if (tile != null && slot.hasItem()) {
         ItemStack original = slot.getItem().copy();
         ItemStack crafted = getDisplayedResult().copy();
@@ -171,6 +185,7 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
       this.tile.exitGemMode();
     }
     invalidateDisplayedResult();
+    this.tile.syncGemModeViewers();
   }
 
   /** Updates the per-player socket extraction state. */
@@ -209,6 +224,46 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
   /** True if a valid socket extraction selection is currently active for this player. */
   public boolean hasActiveSocketExtraction() {
     return this.socketExtractionMode && this.selectedSocket >= 0;
+  }
+
+  /** Applies a shared socket interaction immediately on the server. */
+  public void handleSocketInteraction(Player player, InteractionType interactionType, int socketIndex) {
+    if (this.tile == null || !this.tile.isGemMode()) {
+      return;
+    }
+
+    boolean changed = false;
+    switch (interactionType) {
+      case INSERT_FROM_CARRIED -> {
+        ItemStack carried = this.getCarried();
+        if (!carried.isEmpty()) {
+          ItemStack remainder = this.tile.insertGem(socketIndex, carried);
+          if (!ItemStack.matches(carried, remainder)) {
+            this.setCarried(remainder);
+            changed = true;
+          }
+        }
+      }
+      case REMOVE_TO_PLAYER -> {
+        ItemStack removed = this.tile.removeGem(socketIndex);
+        if (!removed.isEmpty()) {
+          player.getInventory().placeItemBackInInventory(removed);
+          changed = true;
+        }
+      }
+      case TOGGLE_MODE -> {
+        return;
+      }
+    }
+
+    if (changed) {
+      invalidateDisplayedResult();
+      this.broadcastChanges();
+      if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+        TinkerNetwork.getInstance().sendStationScreenUpdate(serverPlayer);
+      }
+      this.tile.syncGemModeViewers();
+    }
   }
 
   /**

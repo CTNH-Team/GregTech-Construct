@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -88,6 +89,33 @@ class TinkerStationContainerMenuQuickMoveTest extends BaseMcTest {
 
     assertThat(moved.getItem()).isEqualTo(Items.IRON_PICKAXE);
     verify(tile).onCraft(eq(player), argThat(stack -> stack.getItem() == Items.IRON_PICKAXE && stack.getCount() == 1), eq(1));
+  }
+
+  @Test
+  void quickMoveRejectsResultSlotWhileGemModeIsActive() {
+    TinkerStationBlockEntity tile = Mockito.mock(TinkerStationBlockEntity.class);
+    LazyResultContainer craftingResult = Mockito.mock(LazyResultContainer.class);
+    Player player = Mockito.mock(Player.class, Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS));
+    PlayerSensitiveLazyResultSlot resultSlot = Mockito.mock(PlayerSensitiveLazyResultSlot.class);
+
+    when(tile.getCraftingResult()).thenReturn(craftingResult);
+    when(tile.isGemMode()).thenReturn(true);
+    when(resultSlot.hasItem()).thenReturn(true);
+    when(resultSlot.getItem()).thenReturn(new ItemStack(Items.DIAMOND_PICKAXE));
+
+    TestMenu menu = allocateMenu();
+    setField(menu, "tile", tile);
+    setField(menu, "resultSlot", resultSlot);
+    setField(menu, "slots", NonNullList.create());
+    setField(menu, "subContainers", new ArrayList<>());
+    menu.slots.clear();
+    menu.slots.add(resultSlot);
+
+    ItemStack moved = menu.quickMoveStack(player, 0);
+
+    assertThat(moved.isEmpty()).isTrue();
+    verify(tile, never()).onCraft(any(), any(), anyInt());
+    verify(craftingResult, never()).clearContent();
   }
 
   private static TestMenu allocateMenu() {

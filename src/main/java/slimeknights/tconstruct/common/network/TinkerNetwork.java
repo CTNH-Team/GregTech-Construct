@@ -178,4 +178,9 @@ public class TinkerNetwork extends NetworkWrapper {
       }
     }
   }
+
+  /** Sends a tinker station screen refresh packet to a specific player. */
+  public void sendStationScreenUpdate(ServerPlayer player) {
+    sendTo(UpdateStationScreenPacket.INSTANCE, player);
+  }
 }
