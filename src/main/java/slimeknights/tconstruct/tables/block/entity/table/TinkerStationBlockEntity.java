@@ -2,7 +2,9 @@ package slimeknights.tconstruct.tables.block.entity.table;
 
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -48,6 +50,8 @@ import java.util.Objects;
 import static slimeknights.tconstruct.library.tools.part.IMaterialItem.MATERIAL_TAG;
 
 public class TinkerStationBlockEntity extends RetexturedTableBlockEntity implements ILazyCrafter {
+  private static final String TAG_GEM_MODE = "gem_mode";
+  private static final String TAG_CACHED_ORDINARY_INPUTS = "cached_ordinary_inputs";
   /** Slot index of the tool slot */
   public static final int TINKER_SLOT = 0;
   /** Slot index of the first input slot */
@@ -74,6 +78,12 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
   /** Current text in the text field */
   @Getter
   private String itemName = "";
+  /** Shared gem mode state for all viewers of this anvil */
+  @Getter
+  private boolean gemMode = false;
+  /** Cached copies of the five ordinary input slots while gem mode is active */
+  @Getter
+  private final NonNullList<ItemStack> cachedOrdinaryInputs = NonNullList.withSize(5, ItemStack.EMPTY);
 
   /** Material variant texture, alterantive to {@link #getTexture()} in the model. */
   @Getter
@@ -134,6 +144,39 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
   public void resize(int size) {
     super.resize(size);
     inventoryWrapper.resize();
+  }
+
+  /** Moves the ordinary inputs into a shared cache and clears the live input slots. */
+  public void enterGemMode() {
+    if (this.gemMode) {
+      return;
+    }
+    this.gemMode = true;
+    for (int i = 0; i < Math.min(5, this.getInputCount()); i++) {
+      ItemStack existing = this.getItem(INPUT_SLOT + i);
+      this.cachedOrdinaryInputs.set(i, existing.copy());
+      if (!existing.isEmpty()) {
+        super.setItem(INPUT_SLOT + i, ItemStack.EMPTY);
+        this.inventoryWrapper.refreshInput(INPUT_SLOT + i);
+      }
+    }
+    this.craftingResult.clearContent();
+    setChanged();
+  }
+
+  /** Restores cached ordinary inputs back into the live input slots and exits gem mode. */
+  public void exitGemMode() {
+    if (!this.gemMode) {
+      return;
+    }
+    this.gemMode = false;
+    for (int i = 0; i < Math.min(5, this.getInputCount()); i++) {
+      super.setItem(INPUT_SLOT + i, this.cachedOrdinaryInputs.get(i));
+      this.cachedOrdinaryInputs.set(i, ItemStack.EMPTY);
+      this.inventoryWrapper.refreshInput(INPUT_SLOT + i);
+    }
+    this.craftingResult.clearContent();
+    setChanged();
   }
 
   @Nullable
@@ -370,6 +413,14 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
     if (material != IMaterial.UNKNOWN_ID) {
       tags.putString(MATERIAL_TAG, material.toString());
     }
+    tags.putBoolean(TAG_GEM_MODE, this.gemMode);
+    ListTag cachedInputs = new ListTag();
+    for (ItemStack stack : this.cachedOrdinaryInputs) {
+      CompoundTag itemTag = new CompoundTag();
+      stack.save(itemTag);
+      cachedInputs.add(itemTag);
+    }
+    tags.put(TAG_CACHED_ORDINARY_INPUTS, cachedInputs);
   }
 
   @Override
@@ -378,6 +429,16 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
     if (tags.contains(MATERIAL_TAG, Tag.TAG_STRING)) {
       material = Objects.requireNonNullElse(MaterialVariantId.tryParse(tags.getString(MATERIAL_TAG)), IMaterial.UNKNOWN_ID);
       RetexturedHelper.onTextureUpdated(this);
+    }
+    this.gemMode = tags.getBoolean(TAG_GEM_MODE);
+    for (int i = 0; i < this.cachedOrdinaryInputs.size(); i++) {
+      this.cachedOrdinaryInputs.set(i, ItemStack.EMPTY);
+    }
+    if (tags.contains(TAG_CACHED_ORDINARY_INPUTS, Tag.TAG_LIST)) {
+      ListTag cachedInputs = tags.getList(TAG_CACHED_ORDINARY_INPUTS, Tag.TAG_COMPOUND);
+      for (int i = 0; i < Math.min(this.cachedOrdinaryInputs.size(), cachedInputs.size()); i++) {
+        this.cachedOrdinaryInputs.set(i, ItemStack.of(cachedInputs.getCompound(i)));
+      }
     }
   }
 }

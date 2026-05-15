@@ -138,6 +138,24 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
     return this.resultSlot.getItem();
   }
 
+  /** True if this anvil is currently in shared gem mode. */
+  public boolean isGemMode() {
+    return this.tile != null && this.tile.isGemMode();
+  }
+
+  /** Updates the shared backend gem mode state on the active anvil. */
+  public void setGemMode(boolean enabled) {
+    if (this.tile == null) {
+      return;
+    }
+    if (enabled) {
+      this.tile.enterGemMode();
+    } else {
+      this.tile.exitGemMode();
+    }
+    invalidateDisplayedResult();
+  }
+
   /** Updates the per-player socket extraction state. */
   public void setSocketExtractionState(boolean enabled, int selectedSocket) {
     boolean oldMode = this.socketExtractionMode;
