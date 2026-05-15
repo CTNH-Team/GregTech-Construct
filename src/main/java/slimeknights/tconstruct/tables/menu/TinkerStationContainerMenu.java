@@ -114,22 +114,37 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
 
   /** Refreshes the current extraction state against the tool and input count. */
   public void refreshSocketExtractionState() {
+    boolean changed = false;
     if (this.tile == null) {
+      changed = this.socketExtractionMode || this.selectedSocket != -1;
       this.socketExtractionMode = false;
       this.selectedSocket = -1;
+      if (changed) {
+        invalidateDisplayedResult();
+      }
       return;
     }
 
     ItemStack tool = this.tile.getItem(TinkerStationBlockEntity.TINKER_SLOT);
     if (!ApotheosisSocketMode.canExtract(tool, this.tile.getInputCount())) {
+      changed = this.socketExtractionMode || this.selectedSocket != -1;
       this.socketExtractionMode = false;
       this.selectedSocket = -1;
+      if (changed) {
+        invalidateDisplayedResult();
+      }
       return;
     }
 
+    int oldSelectedSocket = this.selectedSocket;
+    boolean oldMode = this.socketExtractionMode;
     this.selectedSocket = ApotheosisSocketMode.normalizeSelection(tool, this.selectedSocket);
     if (this.selectedSocket < 0) {
       this.socketExtractionMode = false;
+    }
+    changed = oldMode != this.socketExtractionMode || oldSelectedSocket != this.selectedSocket;
+    if (changed) {
+      invalidateDisplayedResult();
     }
   }
 
@@ -163,5 +178,11 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
   @Override
   public void slotsChanged(Container inventory) {
     refreshSocketExtractionState();
+  }
+
+  private void invalidateDisplayedResult() {
+    if (this.tile != null) {
+      this.tile.getCraftingResult().clearContent();
+    }
   }
 }

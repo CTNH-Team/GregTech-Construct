@@ -158,8 +158,9 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
       ItemStack tool = this.getItem(TINKER_SLOT);
       ItemStack extracted = ApotheosisSocketMode.createResult(tool, menu.getSelectedSocket());
       if (!extracted.isEmpty()) {
-        return extracted;
+        result = LazyToolStack.from(extracted);
       }
+      return extracted;
     }
 
     if (!this.level.isClientSide && this.level.getServer() != null) {
