@@ -86,15 +86,38 @@ class ApotheosisSocketModeTest extends BaseMcTest {
     assertThat(hooks.copyCalls).containsExactly(0, -1);
   }
 
+  @Test
+  void sparseSocketSelectionUsesRawSocketIndex() {
+    ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
+    ItemStack gem = new ItemStack(Items.EMERALD);
+    FakeSocketHooks hooks = FakeSocketHooks.withMappedGems(List.of(new ApotheosisBridge.SocketGem(1, gem)), List.of());
+    ApotheosisBridge.installSocketHooks(hooks);
+
+    assertThat(ApotheosisSocketMode.getDisplayedGems(tool)).containsExactly(gem);
+    assertThat(ApotheosisSocketMode.normalizeSelection(tool, 0)).isEqualTo(0);
+    assertThat(ApotheosisSocketMode.createResult(tool, 0).getItem()).isEqualTo(Items.IRON_PICKAXE);
+    assertThat(ApotheosisSocketMode.createExtractedGem(tool, 0).getItem()).isEqualTo(Items.AMETHYST_SHARD);
+    assertThat(hooks.removeCalls).containsExactly(1);
+    assertThat(hooks.copyCalls).containsExactly(1);
+  }
+
   private static class FakeSocketHooks implements ApotheosisBridge.SocketHooks {
-    private final List<ItemStack> gems;
+    private final List<ApotheosisBridge.SocketGem> gems;
     private final List<Component> tooltip;
     private final List<Integer> removeCalls = new ArrayList<>();
     private final List<Integer> copyCalls = new ArrayList<>();
 
     private FakeSocketHooks(List<ItemStack> gems, List<Component> tooltip) {
+      this(gems.stream().map(gem -> new ApotheosisBridge.SocketGem(gems.indexOf(gem), gem)).toList(), tooltip, true);
+    }
+
+    private FakeSocketHooks(List<ApotheosisBridge.SocketGem> gems, List<Component> tooltip, boolean mapped) {
       this.gems = gems;
       this.tooltip = tooltip;
+    }
+
+    private static FakeSocketHooks withMappedGems(List<ApotheosisBridge.SocketGem> gems, List<Component> tooltip) {
+      return new FakeSocketHooks(gems, tooltip, true);
     }
 
     @Override
@@ -104,6 +127,11 @@ class ApotheosisSocketModeTest extends BaseMcTest {
 
     @Override
     public List<ItemStack> getSocketedGems(ItemStack stack) {
+      return gems.stream().map(ApotheosisBridge.SocketGem::gem).toList();
+    }
+
+    @Override
+    public List<ApotheosisBridge.SocketGem> getSocketedGemData(ItemStack stack) {
       return gems;
     }
 

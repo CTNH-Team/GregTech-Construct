@@ -29,6 +29,19 @@ public class ApotheosisPlugin {
       }
 
       @Override
+      public List<ApotheosisBridge.SocketGem> getSocketedGemData(ItemStack stack) {
+        SocketedGems socketed = SocketHelper.getGems(stack);
+        List<ApotheosisBridge.SocketGem> gems = new ArrayList<>();
+        for (int i = 0; i < socketed.size(); i++) {
+          GemInstance gem = socketed.get(i);
+          if (gem.isValid()) {
+            gems.add(new ApotheosisBridge.SocketGem(i, gem.gemStack().copy()));
+          }
+        }
+        return gems;
+      }
+
+      @Override
       public void appendTooltip(ItemStack stack, java.util.function.Consumer<Component> consumer) {
         for (GemInstance gem : SocketHelper.getGems(stack)) {
           if (gem.isValid()) {

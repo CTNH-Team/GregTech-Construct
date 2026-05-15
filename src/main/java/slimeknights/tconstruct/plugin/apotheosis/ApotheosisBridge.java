@@ -12,6 +12,8 @@ import java.util.function.Consumer;
 public final class ApotheosisBridge {
   private ApotheosisBridge() {}
 
+  public record SocketGem(int rawSocketIndex, ItemStack gem) {}
+
   public interface SocketHooks {
     SocketHooks EMPTY = new SocketHooks() {
       @Override
@@ -21,6 +23,11 @@ public final class ApotheosisBridge {
 
       @Override
       public List<ItemStack> getSocketedGems(ItemStack stack) {
+        return Collections.emptyList();
+      }
+
+      @Override
+      public List<SocketGem> getSocketedGemData(ItemStack stack) {
         return Collections.emptyList();
       }
 
@@ -41,6 +48,16 @@ public final class ApotheosisBridge {
     boolean hasSocketedGems(ItemStack stack);
 
     List<ItemStack> getSocketedGems(ItemStack stack);
+
+    default List<SocketGem> getSocketedGemData(ItemStack stack) {
+      List<ItemStack> gems = getSocketedGems(stack);
+      if (gems.isEmpty()) {
+        return Collections.emptyList();
+      }
+      return java.util.stream.IntStream.range(0, gems.size())
+                                       .mapToObj(index -> new SocketGem(index, gems.get(index)))
+                                       .toList();
+    }
 
     void appendTooltip(ItemStack stack, Consumer<Component> consumer);
 

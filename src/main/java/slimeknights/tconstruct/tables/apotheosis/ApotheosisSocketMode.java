@@ -18,11 +18,11 @@ public final class ApotheosisSocketMode {
   }
 
   public static List<ItemStack> getDisplayedGems(ItemStack tool) {
-    return ApotheosisBridge.sockets().getSocketedGems(tool);
+    return getDisplayedSocketGems(tool).stream().map(ApotheosisBridge.SocketGem::gem).toList();
   }
 
   public static int normalizeSelection(ItemStack tool, int selectedIndex) {
-    List<ItemStack> gems = getDisplayedGems(tool);
+    List<ApotheosisBridge.SocketGem> gems = getDisplayedSocketGems(tool);
     if (selectedIndex < 0 || selectedIndex >= gems.size()) {
       return -1;
     }
@@ -30,11 +30,11 @@ public final class ApotheosisSocketMode {
   }
 
   public static ItemStack createResult(ItemStack tool, int selectedIndex) {
-    return ApotheosisBridge.sockets().removeGem(tool, normalizeSelection(tool, selectedIndex));
+    return ApotheosisBridge.sockets().removeGem(tool, getRawSocketIndex(tool, selectedIndex));
   }
 
   public static ItemStack createExtractedGem(ItemStack tool, int selectedIndex) {
-    return ApotheosisBridge.sockets().copyGem(tool, normalizeSelection(tool, selectedIndex));
+    return ApotheosisBridge.sockets().copyGem(tool, getRawSocketIndex(tool, selectedIndex));
   }
 
   public static void appendTooltip(ItemStack tool, List<Component> tooltip) {
@@ -46,5 +46,17 @@ public final class ApotheosisSocketMode {
     tooltip.add(Component.empty());
     tooltip.add(SOCKET_BONUS_HEADER);
     tooltip.addAll(bridgeLines);
+  }
+
+  private static List<ApotheosisBridge.SocketGem> getDisplayedSocketGems(ItemStack tool) {
+    return ApotheosisBridge.sockets().getSocketedGemData(tool);
+  }
+
+  private static int getRawSocketIndex(ItemStack tool, int selectedIndex) {
+    int normalizedIndex = normalizeSelection(tool, selectedIndex);
+    if (normalizedIndex < 0) {
+      return -1;
+    }
+    return getDisplayedSocketGems(tool).get(normalizedIndex).rawSocketIndex();
   }
 }
