@@ -26,6 +26,16 @@ class ApotheosisSocketModeTest extends BaseMcTest {
   }
 
   @Test
+  void legacyExtractionWrapperIgnoresGemModeOverflowRule() {
+    ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
+    ApotheosisBridge.installSocketHooks(FakeSocketHooks.withMappedGems(List.of(
+      new ApotheosisBridge.SocketGem(5, new ItemStack(Items.EMERALD))
+    ), List.of(), 6));
+
+    assertThat(ApotheosisSocketMode.canExtract(tool, 5)).isTrue();
+  }
+
+  @Test
   void visibleSocketsMapRawIndexesForInsertAndRemove() {
     ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
     ItemStack gem = new ItemStack(Items.EMERALD);

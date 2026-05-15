@@ -31,8 +31,7 @@ public final class ApotheosisSocketMode {
 
   @Deprecated(forRemoval = false)
   public static boolean canExtract(ItemStack tool, int inputCount) {
-    ButtonState state = buttonState(tool, inputCount);
-    return state.visible() && state.enabled() && ApotheosisBridge.sockets().hasSocketedGems(tool);
+    return !tool.isEmpty() && inputCount > 4 && ApotheosisBridge.sockets().hasSocketedGems(tool);
   }
 
   public static List<ApotheosisBridge.SocketGem> getVisibleSockets(ItemStack tool) {
