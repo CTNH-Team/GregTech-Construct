@@ -809,16 +809,15 @@ record TinkerStationGemModeViewState(boolean buttonVisible,
     }
 
     ApotheosisSocketMode.ButtonState buttonState = ApotheosisSocketMode.buttonState(tool, inputCount);
-    String tooltipKey = "";
-    if (!buttonState.enabled() && !buttonState.reasonKey().isEmpty()) {
+    boolean buttonVisible = true;
+    String tooltipKey = "gui.tconstruct.tinker_station.gem_mode.help";
+    if (!buttonState.reasonKey().isEmpty()) {
       tooltipKey = "gui.tconstruct.tinker_station.gem_mode." + buttonState.reasonKey();
-    } else if (buttonState.visible()) {
-      tooltipKey = "gui.tconstruct.tinker_station.gem_mode.help";
     }
 
     boolean socketSlotsVisible = gemModeActive && buttonState.enabled();
     return new TinkerStationGemModeViewState(
-      true,
+      buttonVisible,
       buttonState.enabled(),
       tooltipKey,
       gemModeActive,

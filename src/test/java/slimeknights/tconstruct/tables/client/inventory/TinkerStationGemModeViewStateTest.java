@@ -99,6 +99,28 @@ class TinkerStationGemModeViewStateTest extends BaseMcTest {
     );
   }
 
+  @Test
+  void smallInputStationsStillShowTheGemModeEntryPathWhenAToolIsPresent() {
+    ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
+    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(2, List.of(
+      ApotheosisBridge.SocketGem.empty(0),
+      ApotheosisBridge.SocketGem.empty(1)
+    )));
+
+    TinkerStationGemModeViewState state = TinkerStationGemModeViewState.create(tool, 4, false);
+
+    assertThat(state.buttonVisible()).isTrue();
+    assertThat(state.buttonEnabled()).isFalse();
+    assertThat(state.buttonTooltipKey()).isEqualTo("gui.tconstruct.tinker_station.gem_mode.help");
+    assertThat(state.gemModeActive()).isFalse();
+    assertThat(state.socketSlotsVisible()).isFalse();
+    assertThat(state.outputLocked()).isFalse();
+    assertThat(state.visibleSockets()).containsExactly(
+      ApotheosisBridge.SocketGem.empty(0),
+      ApotheosisBridge.SocketGem.empty(1)
+    );
+  }
+
   private record FakeSocketHooks(int socketCount, List<ApotheosisBridge.SocketGem> gems) implements ApotheosisBridge.SocketHooks {
     @Override
     public boolean hasSocketedGems(ItemStack stack) {
