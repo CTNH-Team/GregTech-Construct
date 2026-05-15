@@ -134,6 +134,11 @@ class TinkerStationBlockEntitySocketExtractionTest extends BaseMcTest {
     }
 
     @Override
+    public int getSocketCount(ItemStack stack) {
+      return gems.size();
+    }
+
+    @Override
     public List<ItemStack> getSocketedGems(ItemStack stack) {
       return gems.stream().map(ApotheosisBridge.SocketGem::gem).toList();
     }
@@ -151,6 +156,16 @@ class TinkerStationBlockEntitySocketExtractionTest extends BaseMcTest {
     @Override
     public ItemStack removeGem(ItemStack stack, int socketIndex) {
       return socketIndex >= 0 && socketIndex < gems.size() ? new ItemStack(Items.IRON_PICKAXE) : ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean canInsertGem(ItemStack tool, int rawSocketIndex, ItemStack gem) {
+      return false;
+    }
+
+    @Override
+    public ItemStack insertGem(ItemStack tool, int rawSocketIndex, ItemStack gem) {
+      return ItemStack.EMPTY;
     }
 
     @Override

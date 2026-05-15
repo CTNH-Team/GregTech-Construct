@@ -12,7 +12,15 @@ import java.util.function.Consumer;
 public final class ApotheosisBridge {
   private ApotheosisBridge() {}
 
-  public record SocketGem(int rawSocketIndex, ItemStack gem) {}
+  public record SocketGem(int rawSocketIndex, ItemStack gem) {
+    public static SocketGem empty(int rawSocketIndex) {
+      return new SocketGem(rawSocketIndex, ItemStack.EMPTY);
+    }
+
+    public boolean isFilled() {
+      return !this.gem.isEmpty();
+    }
+  }
 
   public interface SocketHooks {
     SocketHooks EMPTY = new SocketHooks() {
@@ -24,6 +32,11 @@ public final class ApotheosisBridge {
       @Override
       public List<ItemStack> getSocketedGems(ItemStack stack) {
         return Collections.emptyList();
+      }
+
+      @Override
+      public int getSocketCount(ItemStack stack) {
+        return 0;
       }
 
       @Override
@@ -40,6 +53,16 @@ public final class ApotheosisBridge {
       }
 
       @Override
+      public boolean canInsertGem(ItemStack tool, int rawSocketIndex, ItemStack gem) {
+        return false;
+      }
+
+      @Override
+      public ItemStack insertGem(ItemStack tool, int rawSocketIndex, ItemStack gem) {
+        return ItemStack.EMPTY;
+      }
+
+      @Override
       public ItemStack copyGem(ItemStack stack, int socketIndex) {
         return ItemStack.EMPTY;
       }
@@ -47,7 +70,11 @@ public final class ApotheosisBridge {
 
     boolean hasSocketedGems(ItemStack stack);
 
-    List<ItemStack> getSocketedGems(ItemStack stack);
+    default List<ItemStack> getSocketedGems(ItemStack stack) {
+      return getSocketedGemData(stack).stream().filter(SocketGem::isFilled).map(SocketGem::gem).toList();
+    }
+
+    int getSocketCount(ItemStack stack);
 
     default List<SocketGem> getSocketedGemData(ItemStack stack) {
       List<ItemStack> gems = getSocketedGems(stack);
@@ -62,6 +89,10 @@ public final class ApotheosisBridge {
     void appendTooltip(ItemStack stack, Consumer<Component> consumer);
 
     ItemStack removeGem(ItemStack stack, int socketIndex);
+
+    boolean canInsertGem(ItemStack tool, int rawSocketIndex, ItemStack gem);
+
+    ItemStack insertGem(ItemStack tool, int rawSocketIndex, ItemStack gem);
 
     ItemStack copyGem(ItemStack stack, int socketIndex);
   }

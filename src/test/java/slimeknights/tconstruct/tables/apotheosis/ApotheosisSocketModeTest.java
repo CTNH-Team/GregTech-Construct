@@ -20,31 +20,26 @@ class ApotheosisSocketModeTest extends BaseMcTest {
   }
 
   @Test
-  void extractionRequiresAnvilAndSocketedGem() {
-    ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
-
-    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(new ItemStack(Items.EMERALD)), List.of()));
-
-    assertThat(ApotheosisSocketMode.canExtract(tool, 4)).isFalse();
-    assertThat(ApotheosisSocketMode.canExtract(tool, 5)).isTrue();
-
-    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(), List.of()));
-    assertThat(ApotheosisSocketMode.canExtract(tool, 5)).isFalse();
+  void buttonHiddenWithoutToolOrRequiredInputs() {
+    assertThat(ApotheosisSocketMode.buttonState(ItemStack.EMPTY, 6).visible()).isFalse();
+    assertThat(ApotheosisSocketMode.buttonState(new ItemStack(Items.DIAMOND_PICKAXE), 4).visible()).isFalse();
   }
 
   @Test
-  void selectionNormalizationRejectsInvalidIndexes() {
+  void visibleSocketsMapRawIndexesForInsertAndRemove() {
     ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
-    ItemStack firstGem = new ItemStack(Items.EMERALD);
-    ItemStack secondGem = new ItemStack(Items.DIAMOND);
+    ItemStack gem = new ItemStack(Items.EMERALD);
+    FakeSocketHooks hooks = FakeSocketHooks.withMappedGems(List.of(
+      ApotheosisBridge.SocketGem.empty(0),
+      new ApotheosisBridge.SocketGem(2, gem)
+    ), List.of(), 3);
+    ApotheosisBridge.installSocketHooks(hooks);
 
-    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(firstGem, secondGem), List.of()));
-
-    assertThat(ApotheosisSocketMode.getDisplayedGems(tool)).containsExactly(firstGem, secondGem);
-    assertThat(ApotheosisSocketMode.normalizeSelection(tool, -1)).isEqualTo(-1);
-    assertThat(ApotheosisSocketMode.normalizeSelection(tool, 0)).isEqualTo(0);
-    assertThat(ApotheosisSocketMode.normalizeSelection(tool, 1)).isEqualTo(1);
-    assertThat(ApotheosisSocketMode.normalizeSelection(tool, 2)).isEqualTo(-1);
+    assertThat(ApotheosisSocketMode.getVisibleSockets(tool)).hasSize(3);
+    assertThat(ApotheosisSocketMode.insertGem(tool, 0, new ItemStack(Items.DIAMOND)).getItem()).isEqualTo(Items.NETHERITE_PICKAXE);
+    assertThat(ApotheosisSocketMode.removeGem(tool, 1).getItem()).isEqualTo(Items.IRON_PICKAXE);
+    assertThat(hooks.insertCalls).containsExactly(0);
+    assertThat(hooks.removeCalls).containsExactly(2);
   }
 
   @Test
@@ -52,7 +47,7 @@ class ApotheosisSocketModeTest extends BaseMcTest {
     ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
     List<Component> tooltip = new ArrayList<>();
 
-    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(), List.of(Component.literal("Bonus A"), Component.literal("Bonus B"))));
+    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(), List.of(Component.literal("Bonus A"), Component.literal("Bonus B")), 0));
 
     ApotheosisSocketMode.appendTooltip(tool, tooltip);
 
@@ -62,72 +57,42 @@ class ApotheosisSocketModeTest extends BaseMcTest {
     assertThat(tooltip.subList(2, 4)).extracting(Component::getString).containsExactly("Bonus A", "Bonus B");
 
     tooltip.clear();
-    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(), List.of()));
+    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(), List.of(), 0));
     ApotheosisSocketMode.appendTooltip(tool, tooltip);
     assertThat(tooltip).isEmpty();
-  }
-
-  @Test
-  void extractionDelegatesToBridge() {
-    ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
-    FakeSocketHooks hooks = new FakeSocketHooks(List.of(new ItemStack(Items.EMERALD)), List.of());
-    ApotheosisBridge.installSocketHooks(hooks);
-
-    ItemStack result = ApotheosisSocketMode.createResult(tool, 0);
-    ItemStack extractedGem = ApotheosisSocketMode.createExtractedGem(tool, 0);
-    ItemStack invalidResult = ApotheosisSocketMode.createResult(tool, 5);
-    ItemStack invalidExtractedGem = ApotheosisSocketMode.createExtractedGem(tool, -4);
-
-    assertThat(result.getItem()).isEqualTo(Items.IRON_PICKAXE);
-    assertThat(extractedGem.getItem()).isEqualTo(Items.AMETHYST_SHARD);
-    assertThat(invalidResult.isEmpty()).isTrue();
-    assertThat(invalidExtractedGem.isEmpty()).isTrue();
-    assertThat(hooks.removeCalls).containsExactly(0, -1);
-    assertThat(hooks.copyCalls).containsExactly(0, -1);
-  }
-
-  @Test
-  void sparseSocketSelectionUsesRawSocketIndex() {
-    ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
-    ItemStack gem = new ItemStack(Items.EMERALD);
-    FakeSocketHooks hooks = FakeSocketHooks.withMappedGems(List.of(new ApotheosisBridge.SocketGem(1, gem)), List.of());
-    ApotheosisBridge.installSocketHooks(hooks);
-
-    assertThat(ApotheosisSocketMode.getDisplayedGems(tool)).containsExactly(gem);
-    assertThat(ApotheosisSocketMode.normalizeSelection(tool, 0)).isEqualTo(0);
-    assertThat(ApotheosisSocketMode.createResult(tool, 0).getItem()).isEqualTo(Items.IRON_PICKAXE);
-    assertThat(ApotheosisSocketMode.createExtractedGem(tool, 0).getItem()).isEqualTo(Items.AMETHYST_SHARD);
-    assertThat(hooks.removeCalls).containsExactly(1);
-    assertThat(hooks.copyCalls).containsExactly(1);
   }
 
   private static class FakeSocketHooks implements ApotheosisBridge.SocketHooks {
     private final List<ApotheosisBridge.SocketGem> gems;
     private final List<Component> tooltip;
+    private final int socketCount;
     private final List<Integer> removeCalls = new ArrayList<>();
-    private final List<Integer> copyCalls = new ArrayList<>();
+    private final List<Integer> insertCalls = new ArrayList<>();
 
-    private FakeSocketHooks(List<ItemStack> gems, List<Component> tooltip) {
-      this(gems.stream().map(gem -> new ApotheosisBridge.SocketGem(gems.indexOf(gem), gem)).toList(), tooltip, true);
+    private FakeSocketHooks(List<ItemStack> gems, List<Component> tooltip, int socketCount) {
+      this.gems = gems.stream().map(gem -> new ApotheosisBridge.SocketGem(gems.indexOf(gem), gem)).toList();
+      this.tooltip = tooltip;
+      this.socketCount = socketCount;
     }
 
-    private FakeSocketHooks(List<ApotheosisBridge.SocketGem> gems, List<Component> tooltip, boolean mapped) {
+    private FakeSocketHooks(List<ApotheosisBridge.SocketGem> gems, List<Component> tooltip, int socketCount, boolean mapped) {
       this.gems = gems;
       this.tooltip = tooltip;
+      this.socketCount = socketCount;
     }
 
-    private static FakeSocketHooks withMappedGems(List<ApotheosisBridge.SocketGem> gems, List<Component> tooltip) {
-      return new FakeSocketHooks(gems, tooltip, true);
+    private static FakeSocketHooks withMappedGems(List<ApotheosisBridge.SocketGem> gems, List<Component> tooltip, int socketCount) {
+      return new FakeSocketHooks(gems, tooltip, socketCount, true);
     }
 
     @Override
     public boolean hasSocketedGems(ItemStack stack) {
-      return !gems.isEmpty();
+      return gems.stream().anyMatch(ApotheosisBridge.SocketGem::isFilled);
     }
 
     @Override
-    public List<ItemStack> getSocketedGems(ItemStack stack) {
-      return gems.stream().map(ApotheosisBridge.SocketGem::gem).toList();
+    public int getSocketCount(ItemStack stack) {
+      return socketCount;
     }
 
     @Override
@@ -147,8 +112,18 @@ class ApotheosisSocketModeTest extends BaseMcTest {
     }
 
     @Override
+    public boolean canInsertGem(ItemStack tool, int rawSocketIndex, ItemStack gem) {
+      return rawSocketIndex >= 0;
+    }
+
+    @Override
+    public ItemStack insertGem(ItemStack tool, int rawSocketIndex, ItemStack gem) {
+      insertCalls.add(rawSocketIndex);
+      return rawSocketIndex >= 0 ? new ItemStack(Items.NETHERITE_PICKAXE) : ItemStack.EMPTY;
+    }
+
+    @Override
     public ItemStack copyGem(ItemStack stack, int socketIndex) {
-      copyCalls.add(socketIndex);
       return socketIndex >= 0 ? new ItemStack(Items.AMETHYST_SHARD) : ItemStack.EMPTY;
     }
   }

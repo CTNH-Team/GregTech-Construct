@@ -24,9 +24,12 @@ class ApotheosisBridgeTest extends BaseMcTest {
     List<Component> tooltip = new ArrayList<>();
 
     assertThat(ApotheosisBridge.sockets().hasSocketedGems(tool)).isFalse();
+    assertThat(ApotheosisBridge.sockets().getSocketCount(tool)).isZero();
     assertThat(ApotheosisBridge.sockets().getSocketedGems(tool)).isEmpty();
     ApotheosisBridge.sockets().appendTooltip(tool, tooltip::add);
     assertThat(tooltip).isEmpty();
+    assertThat(ApotheosisBridge.sockets().canInsertGem(tool, 0, new ItemStack(Items.EMERALD))).isFalse();
+    assertThat(ApotheosisBridge.sockets().insertGem(tool, 0, new ItemStack(Items.EMERALD)).isEmpty()).isTrue();
     assertThat(ApotheosisBridge.sockets().removeGem(tool, 0).isEmpty()).isTrue();
     assertThat(ApotheosisBridge.sockets().copyGem(tool, 0).isEmpty()).isTrue();
   }
@@ -43,8 +46,13 @@ class ApotheosisBridgeTest extends BaseMcTest {
       }
 
       @Override
-      public List<ItemStack> getSocketedGems(ItemStack stack) {
-        return List.of(gem);
+      public int getSocketCount(ItemStack stack) {
+        return 1;
+      }
+
+      @Override
+      public List<ApotheosisBridge.SocketGem> getSocketedGemData(ItemStack stack) {
+        return List.of(new ApotheosisBridge.SocketGem(0, gem));
       }
 
       @Override
@@ -58,6 +66,16 @@ class ApotheosisBridgeTest extends BaseMcTest {
       }
 
       @Override
+      public boolean canInsertGem(ItemStack tool, int rawSocketIndex, ItemStack gemStack) {
+        return rawSocketIndex == 0;
+      }
+
+      @Override
+      public ItemStack insertGem(ItemStack tool, int rawSocketIndex, ItemStack gemStack) {
+        return tool.copy();
+      }
+
+      @Override
       public ItemStack copyGem(ItemStack stack, int socketIndex) {
         return gem.copy();
       }
@@ -67,8 +85,10 @@ class ApotheosisBridgeTest extends BaseMcTest {
     ApotheosisBridge.sockets().appendTooltip(tool, tooltip::add);
 
     assertThat(ApotheosisBridge.sockets().hasSocketedGems(tool)).isTrue();
+    assertThat(ApotheosisBridge.sockets().getSocketCount(tool)).isEqualTo(1);
     assertThat(ApotheosisBridge.sockets().getSocketedGems(tool)).hasSize(1);
     assertThat(tooltip).extracting(Component::getString).containsExactly("Test Gem Bonus");
+    assertThat(ApotheosisBridge.sockets().canInsertGem(tool, 0, gem)).isTrue();
     assertThat(ApotheosisBridge.sockets().copyGem(tool, 0).getItem()).isEqualTo(Items.EMERALD);
   }
 }

@@ -41,6 +41,11 @@ class ToolTableScreenTest extends BaseMcTest {
     }
 
     @Override
+    public int getSocketCount(ItemStack stack) {
+      return 0;
+    }
+
+    @Override
     public List<ItemStack> getSocketedGems(ItemStack stack) {
       return List.of();
     }
@@ -57,6 +62,16 @@ class ToolTableScreenTest extends BaseMcTest {
 
     @Override
     public ItemStack removeGem(ItemStack stack, int socketIndex) {
+      return ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean canInsertGem(ItemStack tool, int rawSocketIndex, ItemStack gem) {
+      return false;
+    }
+
+    @Override
+    public ItemStack insertGem(ItemStack tool, int rawSocketIndex, ItemStack gem) {
       return ItemStack.EMPTY;
     }
 

@@ -21,21 +21,19 @@ public class ApotheosisPlugin {
       }
 
       @Override
-      public List<ItemStack> getSocketedGems(ItemStack stack) {
-        return SocketHelper.getGems(stack).stream()
-                           .filter(GemInstance::isValid)
-                           .map(inst -> inst.gemStack().copy())
-                           .toList();
+      public int getSocketCount(ItemStack stack) {
+        return SocketHelper.getSockets(stack);
       }
 
       @Override
       public List<ApotheosisBridge.SocketGem> getSocketedGemData(ItemStack stack) {
         SocketedGems socketed = SocketHelper.getGems(stack);
         List<ApotheosisBridge.SocketGem> gems = new ArrayList<>();
-        for (int i = 0; i < socketed.size(); i++) {
-          GemInstance gem = socketed.get(i);
-          if (gem.isValid()) {
-            gems.add(new ApotheosisBridge.SocketGem(i, gem.gemStack().copy()));
+        for (int i = 0; i < SocketHelper.getSockets(stack); i++) {
+          if (i < socketed.size() && socketed.get(i).isValid()) {
+            gems.add(new ApotheosisBridge.SocketGem(i, socketed.get(i).gemStack().copy()));
+          } else {
+            gems.add(ApotheosisBridge.SocketGem.empty(i));
           }
         }
         return gems;
@@ -60,6 +58,37 @@ public class ApotheosisPlugin {
         ItemStack result = stack.copy();
         result.setCount(1);
         gems.set(socketIndex, GemInstance.EMPTY);
+        SocketHelper.setGems(result, new SocketedGems(gems));
+        return result;
+      }
+
+      @Override
+      public boolean canInsertGem(ItemStack tool, int rawSocketIndex, ItemStack gemStack) {
+        SocketedGems socketed = SocketHelper.getGems(tool);
+        if (rawSocketIndex < 0 || rawSocketIndex >= SocketHelper.getSockets(tool)) {
+          return false;
+        }
+        if (rawSocketIndex < socketed.size() && socketed.get(rawSocketIndex).isValid()) {
+          return false;
+        }
+        GemInstance gem = GemInstance.unsocketed(gemStack);
+        return gem.isValidUnsocketed() && gem.canApplyTo(tool);
+      }
+
+      @Override
+      public ItemStack insertGem(ItemStack tool, int rawSocketIndex, ItemStack gemStack) {
+        if (!canInsertGem(tool, rawSocketIndex, gemStack)) {
+          return ItemStack.EMPTY;
+        }
+        ItemStack result = tool.copy();
+        result.setCount(1);
+        List<GemInstance> gems = new ArrayList<>(SocketHelper.getGems(result).gems());
+        while (gems.size() < SocketHelper.getSockets(result)) {
+          gems.add(GemInstance.EMPTY);
+        }
+        ItemStack singleGem = gemStack.copy();
+        singleGem.setCount(1);
+        gems.set(rawSocketIndex, GemInstance.socketed(result, singleGem));
         SocketHelper.setGems(result, new SocketedGems(gems));
         return result;
       }
