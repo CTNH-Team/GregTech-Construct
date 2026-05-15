@@ -64,6 +64,17 @@ class TinkerStationGemModeStateTest extends BaseMcTest {
     assertThat(restored.getCachedOrdinaryInputs().get(1).getItem()).isEqualTo(Items.COBBLESTONE);
   }
 
+  @Test
+  void wrapperInputMaterialReturnsNullWhileGemModeIsActive() {
+    TinkerStationBlockEntity tile = createStation(6);
+    TinkerStationContainerWrapper wrapper = new TinkerStationContainerWrapper(tile);
+    tile.setItem(TinkerStationBlockEntity.INPUT_SLOT, new ItemStack(Items.DIRT, 3));
+    tile.enterGemMode();
+    tile.setItem(TinkerStationBlockEntity.INPUT_SLOT, new ItemStack(Items.DIRT, 1));
+
+    assertThat(wrapper.getInputMaterial(0)).isNull();
+  }
+
   private static TinkerStationBlockEntity createStation(int size) {
     TinkerStationBlockEntity tile = allocateStation();
     setField(tile, "inventory", NonNullList.withSize(size, ItemStack.EMPTY));
