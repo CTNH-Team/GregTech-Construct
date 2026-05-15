@@ -49,12 +49,12 @@ public final class ApotheosisSocketMode {
 
   @Deprecated(forRemoval = false)
   public static List<ItemStack> getDisplayedGems(ItemStack tool) {
-    return getVisibleSockets(tool).stream().filter(ApotheosisBridge.SocketGem::isFilled).map(ApotheosisBridge.SocketGem::gem).toList();
+    return getLegacyFilledSockets(tool).stream().map(ApotheosisBridge.SocketGem::gem).toList();
   }
 
   @Deprecated(forRemoval = false)
   public static int normalizeSelection(ItemStack tool, int selectedIndex) {
-    List<ItemStack> gems = getDisplayedGems(tool);
+    List<ApotheosisBridge.SocketGem> gems = getLegacyFilledSockets(tool);
     if (selectedIndex < 0 || selectedIndex >= gems.size()) {
       return -1;
     }
@@ -107,10 +107,12 @@ public final class ApotheosisSocketMode {
     if (normalizedIndex < 0) {
       return -1;
     }
-    return getVisibleSockets(tool).stream()
-                                  .filter(ApotheosisBridge.SocketGem::isFilled)
-                                  .toList()
-                                  .get(normalizedIndex)
-                                  .rawSocketIndex();
+    return getLegacyFilledSockets(tool).get(normalizedIndex).rawSocketIndex();
+  }
+
+  private static List<ApotheosisBridge.SocketGem> getLegacyFilledSockets(ItemStack tool) {
+    return ApotheosisBridge.sockets().getSocketedGemData(tool).stream()
+                            .filter(ApotheosisBridge.SocketGem::isFilled)
+                            .toList();
   }
 }

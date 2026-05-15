@@ -36,6 +36,29 @@ class ApotheosisSocketModeTest extends BaseMcTest {
   }
 
   @Test
+  void legacyExtractionWrappersUseFilledSocketBeyondVisibleCap() {
+    ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
+    ItemStack gem = new ItemStack(Items.EMERALD);
+    FakeSocketHooks hooks = FakeSocketHooks.withMappedGems(List.of(
+      ApotheosisBridge.SocketGem.empty(0),
+      ApotheosisBridge.SocketGem.empty(1),
+      ApotheosisBridge.SocketGem.empty(2),
+      ApotheosisBridge.SocketGem.empty(3),
+      ApotheosisBridge.SocketGem.empty(4),
+      new ApotheosisBridge.SocketGem(5, gem)
+    ), List.of(), 6);
+    ApotheosisBridge.installSocketHooks(hooks);
+
+    assertThat(ApotheosisSocketMode.getDisplayedGems(tool)).containsExactly(gem);
+    assertThat(ApotheosisSocketMode.normalizeSelection(tool, 0)).isZero();
+    assertThat(ApotheosisSocketMode.normalizeSelection(tool, 1)).isEqualTo(-1);
+    assertThat(ApotheosisSocketMode.createResult(tool, 0).getItem()).isEqualTo(Items.IRON_PICKAXE);
+    assertThat(ApotheosisSocketMode.createExtractedGem(tool, 0).getItem()).isEqualTo(Items.AMETHYST_SHARD);
+    assertThat(hooks.removeCalls).containsExactly(5);
+    assertThat(hooks.copyCalls).containsExactly(5);
+  }
+
+  @Test
   void visibleSocketsMapRawIndexesForInsertAndRemove() {
     ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
     ItemStack gem = new ItemStack(Items.EMERALD);
@@ -78,6 +101,7 @@ class ApotheosisSocketModeTest extends BaseMcTest {
     private final int socketCount;
     private final List<Integer> removeCalls = new ArrayList<>();
     private final List<Integer> insertCalls = new ArrayList<>();
+    private final List<Integer> copyCalls = new ArrayList<>();
 
     private FakeSocketHooks(List<ItemStack> gems, List<Component> tooltip, int socketCount) {
       this.gems = gems.stream().map(gem -> new ApotheosisBridge.SocketGem(gems.indexOf(gem), gem)).toList();
@@ -134,6 +158,7 @@ class ApotheosisSocketModeTest extends BaseMcTest {
 
     @Override
     public ItemStack copyGem(ItemStack stack, int socketIndex) {
+      copyCalls.add(socketIndex);
       return socketIndex >= 0 ? new ItemStack(Items.AMETHYST_SHARD) : ItemStack.EMPTY;
     }
   }
