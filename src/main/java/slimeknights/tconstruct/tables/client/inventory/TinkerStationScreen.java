@@ -698,11 +698,16 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
 
   private void refreshGemModeControls() {
     ItemStack currentTool = this.getMenu().getSlot(TINKER_SLOT).getItem();
-    TinkerStationGemModeViewState newState = TinkerStationGemModeViewState.create(
+    TinkerStationGemModeResolution resolution = TinkerStationGemModeResolution.create(
       currentTool,
       this.maxInputs,
       this.getMenu().isGemMode()
     );
+    if (resolution.shouldExitGemMode()) {
+      exitGemModeForUnsupportedTool();
+      return;
+    }
+    TinkerStationGemModeViewState newState = resolution.viewState();
     if (!newState.equals(this.gemModeViewState)) {
       this.gemModeViewState = newState;
       this.activeInputs = getDisplayedInputCount();
@@ -722,6 +727,20 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     this.refreshGemModeControls();
     this.updateDisplay();
     TinkerNetwork.getInstance().sendToServer(createTogglePacket(enabled));
+  }
+
+  private void exitGemModeForUnsupportedTool() {
+    if (!this.getMenu().isGemMode()) {
+      return;
+    }
+    this.getMenu().setGemMode(false);
+    this.gemModeViewState = TinkerStationGemModeResolution.create(
+      this.getMenu().getSlot(TINKER_SLOT).getItem(),
+      this.maxInputs,
+      false
+    ).viewState();
+    this.activeInputs = getDisplayedInputCount();
+    TinkerNetwork.getInstance().sendToServer(createTogglePacket(false));
   }
 
   private boolean handleGemModeSocketClick(double mouseX, double mouseY) {
@@ -825,5 +844,16 @@ record TinkerStationGemModeViewState(boolean buttonVisible,
       socketSlotsVisible,
       ApotheosisSocketMode.getVisibleSockets(tool)
     );
+  }
+}
+
+record TinkerStationGemModeResolution(TinkerStationGemModeViewState viewState, boolean shouldExitGemMode) {
+  static TinkerStationGemModeResolution create(ItemStack tool, int inputCount, boolean gemModeActive) {
+    TinkerStationGemModeViewState viewState = TinkerStationGemModeViewState.create(tool, inputCount, gemModeActive);
+    boolean unsupportedWhileActive = gemModeActive && !viewState.buttonEnabled();
+    if (unsupportedWhileActive) {
+      viewState = TinkerStationGemModeViewState.create(tool, inputCount, false);
+    }
+    return new TinkerStationGemModeResolution(viewState, unsupportedWhileActive);
   }
 }

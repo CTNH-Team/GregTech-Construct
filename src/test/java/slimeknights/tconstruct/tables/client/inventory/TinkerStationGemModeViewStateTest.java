@@ -121,6 +121,22 @@ class TinkerStationGemModeViewStateTest extends BaseMcTest {
     );
   }
 
+  @Test
+  void activeGemModeWithUnsupportedToolRequestsRecoveryExit() {
+    ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
+    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(0, List.of()));
+
+    TinkerStationGemModeResolution resolution = TinkerStationGemModeResolution.create(tool, 6, true);
+
+    assertThat(resolution.shouldExitGemMode()).isTrue();
+    assertThat(resolution.viewState().buttonVisible()).isTrue();
+    assertThat(resolution.viewState().buttonEnabled()).isFalse();
+    assertThat(resolution.viewState().buttonTooltipKey()).isEqualTo("gui.tconstruct.tinker_station.gem_mode.no_sockets");
+    assertThat(resolution.viewState().gemModeActive()).isFalse();
+    assertThat(resolution.viewState().socketSlotsVisible()).isFalse();
+    assertThat(resolution.viewState().outputLocked()).isFalse();
+  }
+
   private record FakeSocketHooks(int socketCount, List<ApotheosisBridge.SocketGem> gems) implements ApotheosisBridge.SocketHooks {
     @Override
     public boolean hasSocketedGems(ItemStack stack) {
