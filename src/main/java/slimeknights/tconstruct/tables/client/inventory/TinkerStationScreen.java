@@ -878,7 +878,7 @@ record TinkerStationGemModeScreenState(TinkerStationGemModeViewState viewState,
     int displayedInputCount = nextViewState.socketSlotsVisible()
       ? nextViewState.visibleSockets().size()
       : Math.min(currentLayoutInputCount, maxInputs);
-    boolean shouldUpdateLayout = !nextViewState.equals(currentViewState);
+    boolean shouldUpdateLayout = hasLayoutChange(currentViewState, nextViewState);
     return new TinkerStationGemModeScreenState(
       nextViewState,
       displayedInputCount,
@@ -886,5 +886,13 @@ record TinkerStationGemModeScreenState(TinkerStationGemModeViewState viewState,
       nextViewState.buttonVisible(),
       nextViewState.buttonEnabled()
     );
+  }
+
+  private static boolean hasLayoutChange(TinkerStationGemModeViewState currentViewState,
+                                         TinkerStationGemModeViewState nextViewState) {
+    if (currentViewState.socketSlotsVisible() != nextViewState.socketSlotsVisible()) {
+      return true;
+    }
+    return currentViewState.visibleSockets().size() != nextViewState.visibleSockets().size();
   }
 }

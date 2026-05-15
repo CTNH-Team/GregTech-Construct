@@ -164,6 +164,44 @@ class TinkerStationGemModeViewStateTest extends BaseMcTest {
     assertThat(applied.shouldUpdateLayout()).isTrue();
   }
 
+  @Test
+  void socketContentRefreshDoesNotRequestAnotherLayoutPassWhenVisibleLayoutIsUnchanged() {
+    ItemStack firstGem = new ItemStack(Items.EMERALD);
+    ItemStack refreshedGem = new ItemStack(Items.DIAMOND);
+    TinkerStationGemModeViewState currentViewState = new TinkerStationGemModeViewState(
+      true,
+      true,
+      "gui.tconstruct.tinker_station.gem_mode.help",
+      true,
+      true,
+      true,
+      List.of(
+        new ApotheosisBridge.SocketGem(0, firstGem),
+        ApotheosisBridge.SocketGem.empty(1)
+      )
+    );
+    TinkerStationGemModeViewState refreshedViewState = new TinkerStationGemModeViewState(
+      true,
+      true,
+      "gui.tconstruct.tinker_station.gem_mode.help",
+      true,
+      true,
+      true,
+      List.of(
+        new ApotheosisBridge.SocketGem(0, refreshedGem),
+        ApotheosisBridge.SocketGem.empty(1)
+      )
+    );
+
+    TinkerStationGemModeScreenState applied = TinkerStationGemModeScreenState.create(currentViewState, refreshedViewState, 4, 6);
+
+    assertThat(applied.viewState()).isEqualTo(refreshedViewState);
+    assertThat(applied.displayedInputCount()).isEqualTo(2);
+    assertThat(applied.shouldUpdateLayout()).isFalse();
+    assertThat(applied.toggleVisible()).isTrue();
+    assertThat(applied.toggleActive()).isTrue();
+  }
+
   private record FakeSocketHooks(int socketCount, List<ApotheosisBridge.SocketGem> gems) implements ApotheosisBridge.SocketHooks {
     @Override
     public boolean hasSocketedGems(ItemStack stack) {
