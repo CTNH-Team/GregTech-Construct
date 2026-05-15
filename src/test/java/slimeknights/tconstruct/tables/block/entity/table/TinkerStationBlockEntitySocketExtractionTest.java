@@ -54,6 +54,7 @@ class TinkerStationBlockEntitySocketExtractionTest extends BaseMcTest {
     NonNullList<ItemStack> inventory = NonNullList.withSize(size, ItemStack.EMPTY);
     inventory.set(TinkerStationBlockEntity.TINKER_SLOT, tool);
     setField(tile, "inventory", inventory);
+    setField(tile, "cachedOrdinaryInputs", NonNullList.withSize(5, ItemStack.EMPTY));
     setField(tile, "blockState", net.minecraft.world.level.block.Blocks.ANVIL.defaultBlockState());
   }
 
