@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent.Context;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
+import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.tables.menu.TinkerStationContainerMenu;
 
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class TinkerStationSocketSelectionPacket implements IThreadsafePacket {
       AbstractContainerMenu container = sender.containerMenu;
       if (container instanceof TinkerStationContainerMenu tinker) {
         tinker.setSocketExtractionState(this.enabled, this.selectedSocket);
+        TinkerNetwork.getInstance().sendTo(UpdateStationScreenPacket.INSTANCE, sender);
       }
     }
   }
