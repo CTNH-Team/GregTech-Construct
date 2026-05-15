@@ -34,6 +34,7 @@ import slimeknights.tconstruct.library.tools.helper.TooltipUtil;
 import slimeknights.tconstruct.library.tools.nbt.LazyToolStack;
 import slimeknights.tconstruct.shared.inventory.ConfigurableInvWrapperCapability;
 import slimeknights.tconstruct.tables.TinkerTables;
+import slimeknights.tconstruct.tables.apotheosis.ApotheosisSocketMode;
 import slimeknights.tconstruct.tables.block.TinkerStationBlock;
 import slimeknights.tconstruct.tables.block.entity.inventory.LazyResultContainer;
 import slimeknights.tconstruct.tables.block.entity.inventory.LazyResultContainer.ILazyCrafter;
@@ -153,6 +154,14 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
     result = null;
     this.currentError = null;
 
+    if (player != null && player.containerMenu instanceof TinkerStationContainerMenu menu && menu.hasActiveSocketExtraction()) {
+      ItemStack tool = this.getItem(TINKER_SLOT);
+      ItemStack extracted = ApotheosisSocketMode.createResult(tool, menu.getSelectedSocket());
+      if (!extracted.isEmpty()) {
+        return extracted;
+      }
+    }
+
     if (!this.level.isClientSide && this.level.getServer() != null) {
       RecipeManager manager = this.level.getServer().getRecipeManager();
 
@@ -210,6 +219,22 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
 
   @Override
   public void onCraft(Player player, ItemStack resultItem, int amount) {
+    if (player.containerMenu instanceof TinkerStationContainerMenu menu && menu.hasActiveSocketExtraction()) {
+      if (amount == 0 || this.level == null || resultItem.isEmpty()) {
+        return;
+      }
+      ItemStack extractedGem = ApotheosisSocketMode.createExtractedGem(this.getItem(TINKER_SLOT), menu.getSelectedSocket());
+      resultItem.onCraftedBy(this.level, player, amount);
+      this.playCraftSound(player);
+      this.setItem(TINKER_SLOT, resultItem.copy());
+      if (!extractedGem.isEmpty()) {
+        player.getInventory().placeItemBackInInventory(extractedGem);
+      }
+      menu.setSocketExtractionState(false, -1);
+      this.itemName = "";
+      return;
+    }
+
     // the recipe should match if we got this far, but being null is a problem
     LazyToolStack result = this.result;  // result is going to get cleared as we update things
     if (amount == 0 || this.level == null || this.lastRecipe == null || result == null) {

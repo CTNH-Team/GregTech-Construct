@@ -27,6 +27,7 @@ import slimeknights.tconstruct.smeltery.network.SmelteryTankUpdatePacket;
 import slimeknights.tconstruct.smeltery.network.StructureErrorPositionPacket;
 import slimeknights.tconstruct.smeltery.network.StructureUpdatePacket;
 import slimeknights.tconstruct.tables.network.StationTabPacket;
+import slimeknights.tconstruct.tables.network.TinkerStationSocketSelectionPacket;
 import slimeknights.tconstruct.tables.network.TinkerStationRenamePacket;
 import slimeknights.tconstruct.tables.network.TinkerStationSelectionPacket;
 import slimeknights.tconstruct.tables.network.UpdateCraftingRecipePacket;
@@ -87,6 +88,7 @@ public class TinkerNetwork extends NetworkWrapper {
     // tables
     instance.registerPacket(StationTabPacket.class, StationTabPacket::new, NetworkDirection.PLAY_TO_SERVER);
     instance.registerPacket(TinkerStationRenamePacket.class, TinkerStationRenamePacket::new, NetworkDirection.PLAY_TO_SERVER);
+    instance.registerPacket(TinkerStationSocketSelectionPacket.class, TinkerStationSocketSelectionPacket::new, NetworkDirection.PLAY_TO_SERVER);
     instance.registerPacket(UpdateCraftingRecipePacket.class, UpdateCraftingRecipePacket::new, NetworkDirection.PLAY_TO_CLIENT);
     instance.registerPacket(TinkerStationSelectionPacket.class, TinkerStationSelectionPacket::new, NetworkDirection.PLAY_TO_SERVER);
     instance.registerPacket(UpdateTinkerSlotLayoutsPacket.class, UpdateTinkerSlotLayoutsPacket::new, NetworkDirection.PLAY_TO_CLIENT);

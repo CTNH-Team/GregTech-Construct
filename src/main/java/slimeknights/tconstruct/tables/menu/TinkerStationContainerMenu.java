@@ -3,6 +3,7 @@ package slimeknights.tconstruct.tables.menu;
 import lombok.Getter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
@@ -12,9 +13,11 @@ import slimeknights.tconstruct.library.tools.layout.LayoutSlot;
 import slimeknights.tconstruct.library.tools.layout.StationSlotLayout;
 import slimeknights.tconstruct.library.tools.layout.StationSlotLayoutLoader;
 import slimeknights.tconstruct.tables.TinkerTables;
+import slimeknights.tconstruct.tables.apotheosis.ApotheosisSocketMode;
 import slimeknights.tconstruct.tables.block.entity.table.TinkerStationBlockEntity;
 import slimeknights.tconstruct.tables.menu.slot.ArmorSlot;
 import slimeknights.tconstruct.tables.menu.slot.LazyResultSlot;
+import slimeknights.tconstruct.tables.menu.slot.PlayerSensitiveLazyResultSlot;
 import slimeknights.tconstruct.tables.menu.slot.TinkerStationSlot;
 
 import javax.annotation.Nullable;
@@ -26,6 +29,10 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
   @Getter
   private final List<Slot> inputSlots;
   private final LazyResultSlot resultSlot;
+  @Getter
+  private boolean socketExtractionMode = false;
+  @Getter
+  private int selectedSocket = -1;
 
   /**
    * Standard constructor
@@ -51,7 +58,7 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
       }
 
       // add result slot, will fetch result cache
-      this.addSlot(this.resultSlot = new LazyResultSlot(tile.getCraftingResult(), 114, 38));
+      this.addSlot(this.resultSlot = new PlayerSensitiveLazyResultSlot(inv.player, tile.getCraftingResult(), 114, 38));
       // set initial slot filters and activations
       setToolSelection(StationSlotLayoutLoader.getInstance().get(BuiltInRegistries.BLOCK.getKey(tile.getBlockState().getBlock())));
     }
@@ -90,6 +97,47 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
     return slot != this.resultSlot && super.canTakeItemForPickAll(stack, slot);
   }
 
+  /** Gets the current result stack as displayed to the active player. */
+  public ItemStack getDisplayedResult() {
+    if (this.resultSlot == null) {
+      return ItemStack.EMPTY;
+    }
+    return this.resultSlot.getItem();
+  }
+
+  /** Updates the per-player socket extraction state. */
+  public void setSocketExtractionState(boolean enabled, int selectedSocket) {
+    this.socketExtractionMode = enabled;
+    this.selectedSocket = selectedSocket;
+    refreshSocketExtractionState();
+  }
+
+  /** Refreshes the current extraction state against the tool and input count. */
+  public void refreshSocketExtractionState() {
+    if (this.tile == null) {
+      this.socketExtractionMode = false;
+      this.selectedSocket = -1;
+      return;
+    }
+
+    ItemStack tool = this.tile.getItem(TinkerStationBlockEntity.TINKER_SLOT);
+    if (!ApotheosisSocketMode.canExtract(tool, this.tile.getInputCount())) {
+      this.socketExtractionMode = false;
+      this.selectedSocket = -1;
+      return;
+    }
+
+    this.selectedSocket = ApotheosisSocketMode.normalizeSelection(tool, this.selectedSocket);
+    if (this.selectedSocket < 0) {
+      this.socketExtractionMode = false;
+    }
+  }
+
+  /** True if a valid socket extraction selection is currently active for this player. */
+  public boolean hasActiveSocketExtraction() {
+    return this.socketExtractionMode && this.selectedSocket >= 0;
+  }
+
   /**
    * Updates the active slots from the screen
    * @param layout     New layout
@@ -110,5 +158,10 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
         }
       }
     }
+  }
+
+  @Override
+  public void slotsChanged(Container inventory) {
+    refreshSocketExtractionState();
   }
 }
