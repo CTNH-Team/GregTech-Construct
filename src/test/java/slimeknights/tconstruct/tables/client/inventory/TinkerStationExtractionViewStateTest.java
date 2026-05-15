@@ -19,7 +19,7 @@ class TinkerStationExtractionViewStateTest extends BaseMcTest {
 
   @Test
   void hidesExtractionControlsWhenExtractionIsUnavailable() {
-    TinkerStationExtractionViewState state = TinkerStationExtractionViewState.create(ItemStack.EMPTY, 4, true, 0);
+    TinkerStationExtractionViewState state = TinkerStationExtractionViewState.create(ItemStack.EMPTY, ItemStack.EMPTY, 4, true, 0);
 
     assertThat(state.visible()).isFalse();
     assertThat(state.extractionMode()).isFalse();
@@ -36,7 +36,7 @@ class TinkerStationExtractionViewStateTest extends BaseMcTest {
       new ApotheosisBridge.SocketGem(3, secondGem)
     )));
 
-    TinkerStationExtractionViewState state = TinkerStationExtractionViewState.create(new ItemStack(Items.DIAMOND_PICKAXE), 6, true, 1);
+    TinkerStationExtractionViewState state = TinkerStationExtractionViewState.create(new ItemStack(Items.DIAMOND_PICKAXE), new ItemStack(Items.IRON_PICKAXE), 6, true, 1);
 
     assertThat(state.visible()).isTrue();
     assertThat(state.extractionMode()).isTrue();
@@ -49,7 +49,21 @@ class TinkerStationExtractionViewStateTest extends BaseMcTest {
     ItemStack gem = new ItemStack(Items.EMERALD);
     ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(new ApotheosisBridge.SocketGem(2, gem))));
 
-    TinkerStationExtractionViewState state = TinkerStationExtractionViewState.create(new ItemStack(Items.DIAMOND_PICKAXE), 6, true, 5);
+    TinkerStationExtractionViewState state = TinkerStationExtractionViewState.create(new ItemStack(Items.DIAMOND_PICKAXE), new ItemStack(Items.IRON_PICKAXE), 6, true, 5);
+
+    assertThat(state.visible()).isTrue();
+    assertThat(state.extractionMode()).isFalse();
+    assertThat(state.selectedSocket()).isEqualTo(-1);
+    assertThat(state.gems()).containsExactly(gem);
+  }
+
+  @Test
+  void hidesActiveExtractionStateWhenDisplayedResultIsNotAnExtractionResult() {
+    ItemStack gem = new ItemStack(Items.EMERALD);
+    ItemStack rawTool = new ItemStack(Items.DIAMOND_PICKAXE);
+    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(new ApotheosisBridge.SocketGem(0, gem))));
+
+    TinkerStationExtractionViewState state = TinkerStationExtractionViewState.create(rawTool, rawTool.copy(), 6, true, 0);
 
     assertThat(state.visible()).isTrue();
     assertThat(state.extractionMode()).isFalse();

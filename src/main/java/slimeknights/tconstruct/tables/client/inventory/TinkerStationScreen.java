@@ -724,8 +724,10 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
 
   private void refreshSocketExtractionControls() {
     ItemStack currentTool = this.getMenu().getSlot(TINKER_SLOT).getItem();
+    ItemStack displayedResult = this.getMenu().getDisplayedResult();
     this.extractionViewState = TinkerStationExtractionViewState.create(
       currentTool,
+      displayedResult,
       this.maxInputs,
       this.getMenu().isSocketExtractionMode(),
       this.getMenu().getSelectedSocket()
@@ -796,13 +798,17 @@ record TinkerStationExtractionViewState(boolean visible, boolean extractionMode,
     return new TinkerStationExtractionViewState(false, false, -1, List.of());
   }
 
-  static TinkerStationExtractionViewState create(ItemStack tool, int inputCount, boolean extractionMode, int selectedSocket) {
+  static TinkerStationExtractionViewState create(ItemStack tool, ItemStack displayedResult, int inputCount, boolean extractionMode, int selectedSocket) {
     if (!ApotheosisSocketMode.canExtract(tool, inputCount)) {
       return hidden();
     }
     List<ItemStack> gems = ApotheosisSocketMode.getDisplayedGems(tool);
     int normalizedSelection = ApotheosisSocketMode.normalizeSelection(tool, selectedSocket);
-    boolean normalizedMode = extractionMode && normalizedSelection >= 0;
+    boolean showingExtractionResult = normalizedSelection >= 0 && !displayedResult.isEmpty() && !ItemStack.isSameItemSameTags(tool, displayedResult);
+    boolean normalizedMode = extractionMode && showingExtractionResult;
+    if (!normalizedMode) {
+      normalizedSelection = -1;
+    }
     return new TinkerStationExtractionViewState(true, normalizedMode, normalizedSelection, gems);
   }
 }
