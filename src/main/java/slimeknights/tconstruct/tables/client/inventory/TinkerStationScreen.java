@@ -517,6 +517,10 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
       return false;
     }
 
+    if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && handleGemModeSocketClick(mouseX, mouseY)) {
+      return true;
+    }
+
     return super.mouseClicked(mouseX, mouseY, mouseButton);
   }
 
@@ -774,29 +778,72 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
       return;
     }
     boolean enabled = !this.extractionViewState.extractionMode();
-    int selectedSocket = enabled ? Math.max(0, this.extractionViewState.selectedSocket()) : -1;
-    sendSocketSelection(enabled, selectedSocket);
+    this.getMenu().setSocketExtractionState(enabled, -1);
+    this.refreshSocketExtractionControls();
+    this.updateDisplay();
+    TinkerNetwork.getInstance().sendToServer(createTogglePacket(enabled));
   }
 
   private void selectSocket(int selectedSocket) {
     if (!this.extractionViewState.visible() || selectedSocket < 0 || selectedSocket >= this.extractionViewState.gems().size()) {
       return;
     }
-    sendSocketSelection(true, selectedSocket);
+    TinkerStationSocketSelectionPacket packet = createSocketInteractionPacket(selectedSocket, ItemStack.EMPTY, true);
+    if (packet != null) {
+      this.getMenu().setSocketExtractionState(true, selectedSocket);
+      this.refreshSocketExtractionControls();
+      this.updateDisplay();
+      TinkerNetwork.getInstance().sendToServer(packet);
+    }
   }
 
   private void sendSocketSelection(boolean enabled, int selectedSocket) {
     this.getMenu().setSocketExtractionState(enabled, selectedSocket);
     this.refreshSocketExtractionControls();
     this.updateDisplay();
-    TinkerNetwork.getInstance().sendToServer(createSocketSelectionPacket(enabled, selectedSocket));
+    TinkerNetwork.getInstance().sendToServer(createTogglePacket(enabled));
   }
 
-  static TinkerStationSocketSelectionPacket createSocketSelectionPacket(boolean enabled, int selectedSocket) {
-    if (selectedSocket >= 0) {
+  private boolean handleGemModeSocketClick(double mouseX, double mouseY) {
+    if (!this.getMenu().isGemMode()) {
+      return false;
+    }
+
+    for (Slot slot : this.menu.slots) {
+      if (!(slot instanceof TinkerStationSlot stationSlot)) {
+        continue;
+      }
+      int socketIndex = slot.index - INPUT_SLOT;
+      if (socketIndex < 0 || socketIndex >= this.getMenu().getVisibleSocketCount()) {
+        continue;
+      }
+      if (!this.isHovering(slot, mouseX, mouseY)) {
+        continue;
+      }
+
+      TinkerStationSocketSelectionPacket packet = createSocketInteractionPacket(socketIndex, this.menu.getCarried(), slot.hasItem());
+      if (packet == null) {
+        return true;
+      }
+      TinkerNetwork.getInstance().sendToServer(packet);
+      return true;
+    }
+
+    return false;
+  }
+
+  static TinkerStationSocketSelectionPacket createTogglePacket(boolean enabled) {
+    return TinkerStationSocketSelectionPacket.toggleMode(enabled);
+  }
+
+  static TinkerStationSocketSelectionPacket createSocketInteractionPacket(int selectedSocket, ItemStack carriedStack, boolean socketFilled) {
+    if (!carriedStack.isEmpty()) {
+      return TinkerStationSocketSelectionPacket.insertFromCarried(selectedSocket);
+    }
+    if (socketFilled) {
       return TinkerStationSocketSelectionPacket.removeToPlayer(selectedSocket);
     }
-    return TinkerStationSocketSelectionPacket.toggleMode(enabled);
+    return null;
   }
 }
 
