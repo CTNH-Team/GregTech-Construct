@@ -862,8 +862,7 @@ record TinkerStationExtractionViewState(boolean visible, boolean extractionMode,
     }
     List<ItemStack> gems = ApotheosisSocketMode.getDisplayedGems(tool);
     int normalizedSelection = ApotheosisSocketMode.normalizeSelection(tool, selectedSocket);
-    boolean showingExtractionResult = normalizedSelection >= 0 && !displayedResult.isEmpty() && !ItemStack.isSameItemSameTags(tool, displayedResult);
-    boolean normalizedMode = extractionMode && showingExtractionResult;
+    boolean normalizedMode = extractionMode;
     if (!normalizedMode) {
       normalizedSelection = -1;
     }

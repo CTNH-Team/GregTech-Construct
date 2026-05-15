@@ -52,7 +52,7 @@ class TinkerStationExtractionViewStateTest extends BaseMcTest {
     TinkerStationExtractionViewState state = TinkerStationExtractionViewState.create(new ItemStack(Items.DIAMOND_PICKAXE), new ItemStack(Items.IRON_PICKAXE), 6, true, 5);
 
     assertThat(state.visible()).isTrue();
-    assertThat(state.extractionMode()).isFalse();
+    assertThat(state.extractionMode()).isTrue();
     assertThat(state.selectedSocket()).isEqualTo(-1);
     assertThat(state.gems()).containsExactly(gem);
   }
@@ -66,8 +66,8 @@ class TinkerStationExtractionViewStateTest extends BaseMcTest {
     TinkerStationExtractionViewState state = TinkerStationExtractionViewState.create(rawTool, rawTool.copy(), 6, true, 0);
 
     assertThat(state.visible()).isTrue();
-    assertThat(state.extractionMode()).isFalse();
-    assertThat(state.selectedSocket()).isEqualTo(-1);
+    assertThat(state.extractionMode()).isTrue();
+    assertThat(state.selectedSocket()).isEqualTo(0);
     assertThat(state.gems()).containsExactly(gem);
   }
 
@@ -85,6 +85,21 @@ class TinkerStationExtractionViewStateTest extends BaseMcTest {
     assertThat(state.extractionMode()).isFalse();
     assertThat(state.selectedSocket()).isEqualTo(-1);
     assertThat(state.gems()).isEmpty();
+  }
+
+  @Test
+  void keepsDisplayedModeActiveWhenSharedGemModeIsOnAndPreviewMatchesTool() {
+    ItemStack rawTool = new ItemStack(Items.DIAMOND_PICKAXE);
+    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(
+      ApotheosisBridge.SocketGem.empty(0),
+      ApotheosisBridge.SocketGem.empty(1)
+    )));
+
+    TinkerStationExtractionViewState state = TinkerStationExtractionViewState.create(rawTool, rawTool.copy(), 6, true, -1);
+
+    assertThat(state.visible()).isTrue();
+    assertThat(state.extractionMode()).isTrue();
+    assertThat(state.selectedSocket()).isEqualTo(-1);
   }
 
   private record FakeSocketHooks(List<ApotheosisBridge.SocketGem> gems) implements ApotheosisBridge.SocketHooks {

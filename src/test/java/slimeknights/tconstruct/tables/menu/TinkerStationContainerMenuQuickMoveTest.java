@@ -118,6 +118,33 @@ class TinkerStationContainerMenuQuickMoveTest extends BaseMcTest {
     verify(craftingResult, never()).clearContent();
   }
 
+  @Test
+  void quickMoveRejectsPlayerInventoryShiftClickWhileGemModeIsActive() {
+    TinkerStationBlockEntity tile = Mockito.mock(TinkerStationBlockEntity.class);
+    Player player = Mockito.mock(Player.class, Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS));
+    Slot playerSlot = Mockito.mock(Slot.class);
+
+    when(tile.isGemMode()).thenReturn(true);
+    when(playerSlot.hasItem()).thenReturn(true);
+    when(playerSlot.getItem()).thenReturn(new ItemStack(Items.DIAMOND));
+
+    TestMenu menu = allocateMenu();
+    setField(menu, "tile", tile);
+    setField(menu, "slots", NonNullList.create());
+    setField(menu, "subContainers", new ArrayList<>());
+    setField(menu, "slotContainerMap", new java.util.HashMap<>());
+    menu.slots.clear();
+    menu.slots.add(playerSlot);
+
+    TestMenu spy = Mockito.spy(menu);
+
+    ItemStack moved = spy.quickMoveStack(player, 0);
+
+    assertThat(moved.isEmpty()).isTrue();
+    verify(spy, never()).testMoveToPlayerInventory(any(ItemStack.class));
+    verify(spy, never()).moveToPlayerInventory(any(ItemStack.class));
+  }
+
   private static TestMenu allocateMenu() {
     try {
       Field unsafeField = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");

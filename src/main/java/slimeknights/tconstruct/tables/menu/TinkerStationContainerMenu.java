@@ -148,6 +148,9 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
       }
       return ItemStack.EMPTY;
     }
+    if (tile != null && tile.isGemMode()) {
+      return ItemStack.EMPTY;
+    }
     return super.quickMoveStack(player, index);
   }
 
