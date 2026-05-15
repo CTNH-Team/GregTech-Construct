@@ -17,8 +17,12 @@ public final class ApotheosisBridge {
       return new SocketGem(rawSocketIndex, ItemStack.EMPTY);
     }
 
+    public boolean isEmpty() {
+      return this.gem.isEmpty();
+    }
+
     public boolean isFilled() {
-      return !this.gem.isEmpty();
+      return !isEmpty();
     }
   }
 

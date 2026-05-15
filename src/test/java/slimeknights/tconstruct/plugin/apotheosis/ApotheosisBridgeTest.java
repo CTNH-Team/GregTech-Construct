@@ -19,6 +19,17 @@ class ApotheosisBridgeTest extends BaseMcTest {
   }
 
   @Test
+  void socketGemEmptyHelperMatchesFilledState() {
+    ApotheosisBridge.SocketGem empty = ApotheosisBridge.SocketGem.empty(2);
+    ApotheosisBridge.SocketGem filled = new ApotheosisBridge.SocketGem(1, new ItemStack(Items.EMERALD));
+
+    assertThat(empty.isEmpty()).isTrue();
+    assertThat(empty.isFilled()).isFalse();
+    assertThat(filled.isEmpty()).isFalse();
+    assertThat(filled.isFilled()).isTrue();
+  }
+
+  @Test
   void emptyBridgeIsSafeNoOp() {
     ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
     List<Component> tooltip = new ArrayList<>();
