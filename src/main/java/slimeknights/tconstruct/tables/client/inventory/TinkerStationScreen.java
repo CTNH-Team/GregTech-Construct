@@ -517,7 +517,7 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
       return false;
     }
 
-    if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && handleGemModeSocketClick(mouseX, mouseY)) {
+    if ((mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT || mouseButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT) && handleGemModeSocketClick(mouseX, mouseY)) {
       return true;
     }
 
@@ -777,11 +777,11 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     if (!this.extractionViewState.visible()) {
       return;
     }
-    boolean enabled = !this.extractionViewState.extractionMode();
+    boolean enabled = !this.getMenu().isGemMode();
     this.getMenu().setSocketExtractionState(enabled, -1);
     this.refreshSocketExtractionControls();
     this.updateDisplay();
-    TinkerNetwork.getInstance().sendToServer(createTogglePacket(enabled));
+    TinkerNetwork.getInstance().sendToServer(createTogglePacketForCurrentMode(this.getMenu().isGemMode()));
   }
 
   private void selectSocket(int selectedSocket) {
@@ -834,6 +834,10 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
 
   static TinkerStationSocketSelectionPacket createTogglePacket(boolean enabled) {
     return TinkerStationSocketSelectionPacket.toggleMode(enabled);
+  }
+
+  static TinkerStationSocketSelectionPacket createTogglePacketForCurrentMode(boolean gemModeActive) {
+    return createTogglePacket(!gemModeActive);
   }
 
   static TinkerStationSocketSelectionPacket createSocketInteractionPacket(int selectedSocket, ItemStack carriedStack, boolean socketFilled) {

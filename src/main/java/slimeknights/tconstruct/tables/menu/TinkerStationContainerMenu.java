@@ -110,6 +110,9 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
     if (this.tile != null && this.tile.isGemMode() && slotId >= 0 && slotId < this.slots.size() && this.slots.get(slotId) == this.resultSlot) {
       return;
     }
+    if (isGemModeSocketSlot(slotId)) {
+      return;
+    }
     super.clicked(slotId, dragType, clickType, player);
   }
 
@@ -224,6 +227,19 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
   /** True if a valid socket extraction selection is currently active for this player. */
   public boolean hasActiveSocketExtraction() {
     return this.socketExtractionMode && this.selectedSocket >= 0;
+  }
+
+  /** True if the given menu slot id points at a virtual gem socket slot while shared gem mode is active. */
+  public boolean isGemModeSocketSlot(int slotId) {
+    if (this.tile == null || !this.tile.isGemMode() || slotId < 0 || slotId >= this.slots.size()) {
+      return false;
+    }
+    Slot slot = this.slots.get(slotId);
+    if (!(slot instanceof TinkerStationSlot)) {
+      return false;
+    }
+    int socketIndex = slot.getContainerSlot() - TinkerStationBlockEntity.INPUT_SLOT;
+    return socketIndex >= 0 && socketIndex < 5;
   }
 
   /** Applies a shared socket interaction immediately on the server. */

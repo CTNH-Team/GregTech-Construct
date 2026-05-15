@@ -10,6 +10,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class TinkerStationScreenPacketIntentTest extends BaseMcTest {
   @Test
+  void togglingWhileGemModeActiveBuildsDisablePacket() {
+    TinkerStationSocketSelectionPacket packet = TinkerStationScreen.createTogglePacketForCurrentMode(true);
+
+    assertThat(packet.getInteractionType()).isEqualTo(TinkerStationSocketSelectionPacket.InteractionType.TOGGLE_MODE);
+    assertThat(packet.isGemModeEnabled()).isFalse();
+    assertThat(packet.getSocketIndex()).isEqualTo(-1);
+  }
+
+  @Test
   void togglingGemModeBuildsToggleIntentPacket() {
     TinkerStationSocketSelectionPacket packet = TinkerStationScreen.createTogglePacket(true);
 
