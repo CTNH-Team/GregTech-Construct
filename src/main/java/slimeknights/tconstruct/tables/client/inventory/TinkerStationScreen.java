@@ -789,7 +789,14 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     this.getMenu().setSocketExtractionState(enabled, selectedSocket);
     this.refreshSocketExtractionControls();
     this.updateDisplay();
-    TinkerNetwork.getInstance().sendToServer(new TinkerStationSocketSelectionPacket(enabled, selectedSocket));
+    TinkerNetwork.getInstance().sendToServer(createSocketSelectionPacket(enabled, selectedSocket));
+  }
+
+  static TinkerStationSocketSelectionPacket createSocketSelectionPacket(boolean enabled, int selectedSocket) {
+    if (selectedSocket >= 0) {
+      return TinkerStationSocketSelectionPacket.removeToPlayer(selectedSocket);
+    }
+    return TinkerStationSocketSelectionPacket.toggleMode(enabled);
   }
 }
 
