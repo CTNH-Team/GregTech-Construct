@@ -119,6 +119,13 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        name = "Shadows of Fire"
+        url = "https://maven.shadowsoffire.dev/releases"
+        content {
+            includeGroup "dev.shadowsoffire"
+        }
+    }
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
     flatDir {
         dir '../Mantle/build/libs'

@@ -62,6 +62,7 @@ import slimeknights.tconstruct.library.utils.Util;
 import slimeknights.tconstruct.plugin.DietPlugin;
 import slimeknights.tconstruct.plugin.DummmmmmyPlugin;
 import slimeknights.tconstruct.plugin.ImmersiveEngineeringPlugin;
+import slimeknights.tconstruct.plugin.apotheosis.ApotheosisPlugin;
 import slimeknights.tconstruct.plugin.craftingtweaks.CraftingTweaksPlugin;
 import slimeknights.tconstruct.plugin.jsonthings.JsonThingsPlugin;
 import slimeknights.tconstruct.shared.TinkerAttributes;
@@ -144,6 +145,9 @@ public class TConstruct {
         }
         if (modList.isLoaded("jsonthings")) {
             JsonThingsPlugin.onConstruct();
+        }
+        if (modList.isLoaded("apotheosis")) {
+            ApotheosisPlugin.onConstruct();
         }
         if (modList.isLoaded("diet")) {
             DietPlugin.onConstruct();
