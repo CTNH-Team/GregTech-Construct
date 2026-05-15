@@ -227,7 +227,7 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
       ItemStack extractedGem = ApotheosisSocketMode.createExtractedGem(this.getItem(TINKER_SLOT), menu.getSelectedSocket());
       resultItem.onCraftedBy(this.level, player, amount);
       this.playCraftSound(player);
-      this.setItem(TINKER_SLOT, resultItem.copy());
+      this.setItem(TINKER_SLOT, ItemStack.EMPTY);
       if (!extractedGem.isEmpty()) {
         player.getInventory().placeItemBackInInventory(extractedGem);
       }

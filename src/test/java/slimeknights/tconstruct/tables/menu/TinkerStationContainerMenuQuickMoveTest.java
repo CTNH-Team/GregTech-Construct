@@ -56,6 +56,40 @@ class TinkerStationContainerMenuQuickMoveTest extends BaseMcTest {
     verify(resultSlot, never()).remove(any(Integer.class));
   }
 
+  @Test
+  void quickMovePassesOriginalCraftedStackEvenWhenTransferConsumesWorkingStack() {
+    TinkerStationBlockEntity tile = Mockito.mock(TinkerStationBlockEntity.class);
+    LazyResultContainer craftingResult = Mockito.mock(LazyResultContainer.class);
+    Player player = Mockito.mock(Player.class, Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS));
+    PlayerSensitiveLazyResultSlot resultSlot = Mockito.mock(PlayerSensitiveLazyResultSlot.class);
+    ItemStack displayed = new ItemStack(Items.IRON_PICKAXE);
+
+    when(tile.getCraftingResult()).thenReturn(craftingResult);
+    when(resultSlot.hasItem()).thenReturn(true);
+    when(resultSlot.getItem()).thenReturn(displayed);
+
+    TestMenu menu = allocateMenu();
+    setField(menu, "tile", tile);
+    setField(menu, "resultSlot", resultSlot);
+    setField(menu, "slots", NonNullList.create());
+    setField(menu, "subContainers", new ArrayList<>());
+    menu.slots.clear();
+    menu.slots.add(resultSlot);
+
+    TestMenu spy = Mockito.spy(menu);
+    doReturn(false).when(spy).testMoveToPlayerInventory(any(ItemStack.class));
+    Mockito.doAnswer(invocation -> {
+      ItemStack moved = invocation.getArgument(0);
+      moved.setCount(0);
+      return false;
+    }).when(spy).moveToPlayerInventory(any(ItemStack.class));
+
+    ItemStack moved = spy.quickMoveStack(player, 0);
+
+    assertThat(moved.getItem()).isEqualTo(Items.IRON_PICKAXE);
+    verify(tile).onCraft(eq(player), argThat(stack -> stack.getItem() == Items.IRON_PICKAXE && stack.getCount() == 1), eq(1));
+  }
+
   private static TestMenu allocateMenu() {
     try {
       Field unsafeField = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");

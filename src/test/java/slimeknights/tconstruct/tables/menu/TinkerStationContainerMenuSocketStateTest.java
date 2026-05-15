@@ -54,7 +54,7 @@ class TinkerStationContainerMenuSocketStateTest extends BaseMcTest {
     menu.setSocketExtractionState(true, 1);
     menu.refreshSocketExtractionState();
 
-    verify(craftingResult, Mockito.times(2)).clearContent();
+    verify(craftingResult, Mockito.times(1)).clearContent();
   }
 
   @Test
@@ -73,7 +73,46 @@ class TinkerStationContainerMenuSocketStateTest extends BaseMcTest {
     menu.setSocketExtractionState(true, 0);
     menu.setSocketExtractionState(true, 1);
 
-    verify(resultSlot, Mockito.times(2)).invalidatePlayerResult();
+    verify(resultSlot, Mockito.times(1)).invalidatePlayerResult();
+  }
+
+  @Test
+  void validSocketSelectionChangesInvalidateDisplayedResult() {
+    TinkerStationBlockEntity tile = Mockito.mock(TinkerStationBlockEntity.class);
+    LazyResultContainer craftingResult = Mockito.mock(LazyResultContainer.class);
+    PlayerSensitiveLazyResultSlot resultSlot = Mockito.mock(PlayerSensitiveLazyResultSlot.class);
+    when(tile.getCraftingResult()).thenReturn(craftingResult);
+    when(tile.getInputCount()).thenReturn(6);
+    when(tile.getItem(TinkerStationBlockEntity.TINKER_SLOT)).thenReturn(new ItemStack(Items.DIAMOND_PICKAXE));
+
+    TinkerStationContainerMenu menu = allocateMenu();
+    setField(menu, "tile", tile);
+    setField(menu, "resultSlot", resultSlot);
+
+    menu.setSocketExtractionState(true, 0);
+    menu.setSocketExtractionState(true, 1);
+
+    verify(craftingResult, Mockito.times(1)).clearContent();
+    verify(resultSlot, Mockito.times(1)).invalidatePlayerResult();
+  }
+
+  @Test
+  void enablingValidSocketSelectionInvalidatesDisplayedResult() {
+    TinkerStationBlockEntity tile = Mockito.mock(TinkerStationBlockEntity.class);
+    LazyResultContainer craftingResult = Mockito.mock(LazyResultContainer.class);
+    PlayerSensitiveLazyResultSlot resultSlot = Mockito.mock(PlayerSensitiveLazyResultSlot.class);
+    when(tile.getCraftingResult()).thenReturn(craftingResult);
+    when(tile.getInputCount()).thenReturn(6);
+    when(tile.getItem(TinkerStationBlockEntity.TINKER_SLOT)).thenReturn(new ItemStack(Items.DIAMOND_PICKAXE));
+
+    TinkerStationContainerMenu menu = allocateMenu();
+    setField(menu, "tile", tile);
+    setField(menu, "resultSlot", resultSlot);
+
+    menu.setSocketExtractionState(true, 0);
+
+    verify(craftingResult).clearContent();
+    verify(resultSlot).invalidatePlayerResult();
   }
 
   private static TinkerStationContainerMenu allocateMenu() {

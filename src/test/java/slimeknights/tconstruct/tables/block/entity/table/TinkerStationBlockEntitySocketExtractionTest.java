@@ -3,6 +3,7 @@ package slimeknights.tconstruct.tables.block.entity.table;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -17,9 +18,13 @@ import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class TinkerStationBlockEntitySocketExtractionTest extends BaseMcTest {
@@ -35,6 +40,7 @@ class TinkerStationBlockEntitySocketExtractionTest extends BaseMcTest {
     setField(tile, "craftingResult", new LazyResultContainer(tile));
     setField(tile, "inventoryWrapper", new TinkerStationContainerWrapper(tile));
     setField(tile, "level", Mockito.mock(net.minecraft.world.level.Level.class));
+    setField(tile, "lastSoundTick", new HashMap<>());
 
     Player player = Mockito.mock(Player.class, Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS));
     TinkerStationContainerMenu menu = Mockito.mock(TinkerStationContainerMenu.class);
@@ -48,6 +54,32 @@ class TinkerStationBlockEntitySocketExtractionTest extends BaseMcTest {
 
     assertThat(result).isSameAs(ItemStack.EMPTY);
     assertThat(tile.getResult()).isNull();
+  }
+
+  @Test
+  void normalExtractionCraftConsumesOriginalToolAndReturnsGem() {
+    TinkerStationBlockEntity tile = allocateStation();
+    setInventory(tile, new ItemStack(Items.DIAMOND_PICKAXE), 6);
+    setField(tile, "craftingResult", new LazyResultContainer(tile));
+    setField(tile, "inventoryWrapper", new TinkerStationContainerWrapper(tile));
+    setField(tile, "level", Mockito.mock(net.minecraft.world.level.Level.class));
+    setField(tile, "lastSoundTick", new HashMap<>());
+
+    Inventory inventory = Mockito.mock(Inventory.class);
+    Player player = Mockito.mock(Player.class, Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS));
+    when(player.getInventory()).thenReturn(inventory);
+    TinkerStationContainerMenu menu = Mockito.mock(TinkerStationContainerMenu.class);
+    when(menu.hasActiveSocketExtraction()).thenReturn(true);
+    when(menu.getSelectedSocket()).thenReturn(0);
+    setField(player, "containerMenu", menu);
+
+    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(new ItemStack(Items.EMERALD)), List.of()));
+
+    tile.onCraft(player, new ItemStack(Items.IRON_PICKAXE), 1);
+
+    assertThat(tile.getItem(TinkerStationBlockEntity.TINKER_SLOT).isEmpty()).isTrue();
+    verify(inventory).placeItemBackInInventory(argThat(stack -> stack.getItem() == Items.EMERALD && stack.getCount() == 1));
+    verify(menu).setSocketExtractionState(false, -1);
   }
 
   private static TinkerStationBlockEntity allocateStation() {

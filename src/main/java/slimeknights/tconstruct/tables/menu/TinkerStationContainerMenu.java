@@ -104,18 +104,19 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
     if (slot == resultSlot) {
       if (tile != null && slot.hasItem()) {
         ItemStack original = slot.getItem().copy();
-        ItemStack result = getDisplayedResult().copy();
-        if (!result.isEmpty()) {
+        ItemStack crafted = getDisplayedResult().copy();
+        if (!crafted.isEmpty()) {
+          ItemStack moved = crafted.copy();
           boolean nothingDone = true;
           if (subContainers.size() > 0) {
-            nothingDone = this.refillAnyContainer(result, this.subContainers);
+            nothingDone = this.refillAnyContainer(moved, this.subContainers);
           }
-          nothingDone &= this.moveToPlayerInventory(result);
+          nothingDone &= this.moveToPlayerInventory(moved);
           if (subContainers.size() > 0) {
-            nothingDone &= this.moveToAnyContainer(result, this.subContainers);
+            nothingDone &= this.moveToAnyContainer(moved, this.subContainers);
           }
           if (!nothingDone) {
-            tile.onCraft(player, result, result.getCount());
+            tile.onCraft(player, crafted, crafted.getCount());
             tile.getCraftingResult().clearContent();
             if (this.resultSlot instanceof PlayerSensitiveLazyResultSlot playerSensitive) {
               playerSensitive.invalidatePlayerResult();
@@ -139,44 +140,34 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
 
   /** Updates the per-player socket extraction state. */
   public void setSocketExtractionState(boolean enabled, int selectedSocket) {
+    boolean oldMode = this.socketExtractionMode;
+    int oldSelectedSocket = this.selectedSocket;
     this.socketExtractionMode = enabled;
     this.selectedSocket = selectedSocket;
     refreshSocketExtractionState();
+    if (oldMode != this.socketExtractionMode || oldSelectedSocket != this.selectedSocket) {
+      invalidateDisplayedResult();
+    }
   }
 
   /** Refreshes the current extraction state against the tool and input count. */
   public void refreshSocketExtractionState() {
-    boolean changed = false;
     if (this.tile == null) {
-      changed = this.socketExtractionMode || this.selectedSocket != -1;
       this.socketExtractionMode = false;
       this.selectedSocket = -1;
-      if (changed) {
-        invalidateDisplayedResult();
-      }
       return;
     }
 
     ItemStack tool = this.tile.getItem(TinkerStationBlockEntity.TINKER_SLOT);
     if (!ApotheosisSocketMode.canExtract(tool, this.tile.getInputCount())) {
-      changed = this.socketExtractionMode || this.selectedSocket != -1;
       this.socketExtractionMode = false;
       this.selectedSocket = -1;
-      if (changed) {
-        invalidateDisplayedResult();
-      }
       return;
     }
 
-    int oldSelectedSocket = this.selectedSocket;
-    boolean oldMode = this.socketExtractionMode;
     this.selectedSocket = ApotheosisSocketMode.normalizeSelection(tool, this.selectedSocket);
     if (this.selectedSocket < 0) {
       this.socketExtractionMode = false;
-    }
-    changed = oldMode != this.socketExtractionMode || oldSelectedSocket != this.selectedSocket;
-    if (changed) {
-      invalidateDisplayedResult();
     }
   }
 
