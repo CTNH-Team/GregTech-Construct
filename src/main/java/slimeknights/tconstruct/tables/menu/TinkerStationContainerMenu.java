@@ -52,10 +52,14 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
       tile.syncRecipe(inv.player);
 
       inputSlots = new ArrayList<>();
-      this.addSlot(new TinkerStationSlot(tile, TinkerStationBlockEntity.TINKER_SLOT, 0, 0));
+      TinkerStationSlot tinkerSlot = new TinkerStationSlot(tile, TinkerStationBlockEntity.TINKER_SLOT, 0, 0);
+      tinkerSlot.setMenu(this);
+      this.addSlot(tinkerSlot);
 
       for (int index = 0; index < tile.getContainerSize() - 1; index++) {
-        inputSlots.add(this.addSlot(new TinkerStationSlot(tile, index + TinkerStationBlockEntity.INPUT_SLOT, 0, 0)));
+        TinkerStationSlot inputSlot = new TinkerStationSlot(tile, index + TinkerStationBlockEntity.INPUT_SLOT, 0, 0);
+        inputSlot.setMenu(this);
+        inputSlots.add(this.addSlot(inputSlot));
       }
 
       // add result slot, will fetch result cache
@@ -141,6 +145,19 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
   /** True if this anvil is currently in shared gem mode. */
   public boolean isGemMode() {
     return this.tile != null && this.tile.isGemMode();
+  }
+
+  /** Gets the current tool shown in the station tool slot. */
+  public ItemStack getCurrentTool() {
+    if (this.tile == null) {
+      return ItemStack.EMPTY;
+    }
+    return this.tile.getItem(TinkerStationBlockEntity.TINKER_SLOT);
+  }
+
+  /** Gets the number of visible socket entries currently shown in gem mode. */
+  public int getVisibleSocketCount() {
+    return ApotheosisSocketMode.getVisibleSockets(getCurrentTool()).size();
   }
 
   /** Updates the shared backend gem mode state on the active anvil. */
