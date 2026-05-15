@@ -16,6 +16,7 @@ class ApotheosisSocketModeSharedStateTest extends BaseMcTest {
   private static final ItemStack TOOL = new ItemStack(Items.DIAMOND_PICKAXE);
   private static final ItemStack FILLED_GEM = new ItemStack(Items.EMERALD);
   private static final ItemStack INSERT_GEM = new ItemStack(Items.DIAMOND);
+  private static final String PREVIEW_STATE = "shared_state_preview";
 
   @AfterEach
   void resetBridge() {
@@ -52,6 +53,33 @@ class ApotheosisSocketModeSharedStateTest extends BaseMcTest {
     assertThat(sockets.get(0).isFilled()).isTrue();
     assertThat(sockets.get(1).isFilled()).isFalse();
     assertThat(sockets.get(2).isFilled()).isFalse();
+
+    ApotheosisBridge.installSocketHooks(new FakeHooks(5, List.of(
+      new ApotheosisBridge.SocketGem(0, FILLED_GEM),
+      ApotheosisBridge.SocketGem.empty(1),
+      ApotheosisBridge.SocketGem.empty(2),
+      ApotheosisBridge.SocketGem.empty(3),
+      ApotheosisBridge.SocketGem.empty(4)
+    ), true));
+
+    List<ApotheosisBridge.SocketGem> fiveSockets = ApotheosisSocketMode.getVisibleSockets(TOOL);
+
+    assertThat(fiveSockets).hasSize(5);
+    assertThat(fiveSockets).extracting(ApotheosisBridge.SocketGem::rawSocketIndex).containsExactly(0, 1, 2, 3, 4);
+
+    ApotheosisBridge.installSocketHooks(new FakeHooks(6, List.of(
+      new ApotheosisBridge.SocketGem(0, FILLED_GEM),
+      ApotheosisBridge.SocketGem.empty(1),
+      ApotheosisBridge.SocketGem.empty(2),
+      ApotheosisBridge.SocketGem.empty(3),
+      ApotheosisBridge.SocketGem.empty(4),
+      ApotheosisBridge.SocketGem.empty(5)
+    ), true));
+
+    List<ApotheosisBridge.SocketGem> truncatedSockets = ApotheosisSocketMode.getVisibleSockets(TOOL);
+
+    assertThat(truncatedSockets).hasSize(5);
+    assertThat(truncatedSockets).extracting(ApotheosisBridge.SocketGem::rawSocketIndex).containsExactly(0, 1, 2, 3, 4);
   }
 
   @Test
@@ -67,6 +95,12 @@ class ApotheosisSocketModeSharedStateTest extends BaseMcTest {
 
     assertThat(insertedPreview.getItem()).isEqualTo(Items.NETHERITE_PICKAXE);
     assertThat(removedPreview.getItem()).isEqualTo(Items.IRON_PICKAXE);
+    assertThat(ApotheosisSocketMode.getVisibleSockets(insertedPreview))
+      .extracting(ApotheosisBridge.SocketGem::isFilled)
+      .containsExactly(true, true);
+    assertThat(ApotheosisSocketMode.getVisibleSockets(removedPreview))
+      .extracting(ApotheosisBridge.SocketGem::isFilled)
+      .containsExactly(false, false);
     assertThat(hooks.insertCalls).containsExactly(0);
     assertThat(hooks.removeCalls).containsExactly(1);
   }
@@ -91,6 +125,9 @@ class ApotheosisSocketModeSharedStateTest extends BaseMcTest {
 
     @Override
     public List<ApotheosisBridge.SocketGem> getSocketedGemData(ItemStack stack) {
+      if (stack.hasTag() && stack.getTag().contains(PREVIEW_STATE)) {
+        return decodePreviewSockets(stack);
+      }
       return visibleSockets;
     }
 
@@ -107,13 +144,13 @@ class ApotheosisSocketModeSharedStateTest extends BaseMcTest {
     @Override
     public ItemStack insertGem(ItemStack tool, int rawSocketIndex, ItemStack gem) {
       insertCalls.add(rawSocketIndex);
-      return new ItemStack(Items.NETHERITE_PICKAXE);
+      return createPreviewStack(Items.NETHERITE_PICKAXE, mutatePreview(rawSocketIndex, new ApotheosisBridge.SocketGem(rawSocketIndex, gem.copy())));
     }
 
     @Override
     public ItemStack removeGem(ItemStack tool, int rawSocketIndex) {
       removeCalls.add(rawSocketIndex);
-      return new ItemStack(Items.IRON_PICKAXE);
+      return createPreviewStack(Items.IRON_PICKAXE, mutatePreview(rawSocketIndex, ApotheosisBridge.SocketGem.empty(rawSocketIndex)));
     }
 
     @Override
@@ -123,5 +160,31 @@ class ApotheosisSocketModeSharedStateTest extends BaseMcTest {
 
     @Override
     public void appendTooltip(ItemStack stack, java.util.function.Consumer<Component> consumer) {}
+
+    private List<ApotheosisBridge.SocketGem> mutatePreview(int rawSocketIndex, ApotheosisBridge.SocketGem replacement) {
+      java.util.ArrayList<ApotheosisBridge.SocketGem> updated = new java.util.ArrayList<>(visibleSockets);
+      updated.set(rawSocketIndex, replacement);
+      return updated;
+    }
+
+    private static ItemStack createPreviewStack(net.minecraft.world.item.Item item, List<ApotheosisBridge.SocketGem> sockets) {
+      ItemStack stack = new ItemStack(item);
+      stack.getOrCreateTag().putIntArray(PREVIEW_STATE, sockets.stream().mapToInt(socket -> socket.isFilled() ? socket.rawSocketIndex() + 1 : -(socket.rawSocketIndex() + 1)).toArray());
+      return stack;
+    }
+
+    private static List<ApotheosisBridge.SocketGem> decodePreviewSockets(ItemStack stack) {
+      int[] encoded = stack.getOrCreateTag().getIntArray(PREVIEW_STATE);
+      java.util.ArrayList<ApotheosisBridge.SocketGem> sockets = new java.util.ArrayList<>(encoded.length);
+      for (int entry : encoded) {
+        int rawIndex = Math.abs(entry) - 1;
+        if (entry > 0) {
+          sockets.add(new ApotheosisBridge.SocketGem(rawIndex, new ItemStack(Items.DIAMOND)));
+        } else {
+          sockets.add(ApotheosisBridge.SocketGem.empty(rawIndex));
+        }
+      }
+      return sockets;
+    }
   }
 }
