@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import slimeknights.tconstruct.tables.block.entity.inventory.LazyResultContainer;
 import slimeknights.tconstruct.tables.block.entity.table.TinkerStationBlockEntity;
+import slimeknights.tconstruct.tables.menu.slot.PlayerSensitiveLazyResultSlot;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.lang.reflect.Field;
@@ -54,6 +55,25 @@ class TinkerStationContainerMenuSocketStateTest extends BaseMcTest {
     menu.refreshSocketExtractionState();
 
     verify(craftingResult, Mockito.times(2)).clearContent();
+  }
+
+  @Test
+  void socketStateChangesResetPlayerSensitiveSlotCache() {
+    TinkerStationBlockEntity tile = Mockito.mock(TinkerStationBlockEntity.class);
+    LazyResultContainer craftingResult = Mockito.mock(LazyResultContainer.class);
+    when(tile.getCraftingResult()).thenReturn(craftingResult);
+    when(tile.getInputCount()).thenReturn(6);
+    when(tile.getItem(TinkerStationBlockEntity.TINKER_SLOT)).thenReturn(new ItemStack(Items.DIAMOND_PICKAXE));
+
+    PlayerSensitiveLazyResultSlot resultSlot = Mockito.mock(PlayerSensitiveLazyResultSlot.class);
+    TinkerStationContainerMenu menu = allocateMenu();
+    setField(menu, "tile", tile);
+    setField(menu, "resultSlot", resultSlot);
+
+    menu.setSocketExtractionState(true, 0);
+    menu.setSocketExtractionState(true, 1);
+
+    verify(resultSlot, Mockito.times(2)).invalidatePlayerResult();
   }
 
   private static TinkerStationContainerMenu allocateMenu() {

@@ -5,6 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ArmorItem;
@@ -97,6 +98,37 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
     return slot != this.resultSlot && super.canTakeItemForPickAll(stack, slot);
   }
 
+  @Override
+  public ItemStack quickMoveStack(Player player, int index) {
+    Slot slot = this.slots.get(index);
+    if (slot == resultSlot) {
+      if (tile != null && slot.hasItem()) {
+        ItemStack original = slot.getItem().copy();
+        ItemStack result = getDisplayedResult().copy();
+        if (!result.isEmpty()) {
+          boolean nothingDone = true;
+          if (subContainers.size() > 0) {
+            nothingDone = this.refillAnyContainer(result, this.subContainers);
+          }
+          nothingDone &= this.moveToPlayerInventory(result);
+          if (subContainers.size() > 0) {
+            nothingDone &= this.moveToAnyContainer(result, this.subContainers);
+          }
+          if (!nothingDone) {
+            tile.onCraft(player, result, result.getCount());
+            tile.getCraftingResult().clearContent();
+            if (this.resultSlot instanceof PlayerSensitiveLazyResultSlot playerSensitive) {
+              playerSensitive.invalidatePlayerResult();
+            }
+            return original;
+          }
+        }
+      }
+      return ItemStack.EMPTY;
+    }
+    return super.quickMoveStack(player, index);
+  }
+
   /** Gets the current result stack as displayed to the active player. */
   public ItemStack getDisplayedResult() {
     if (this.resultSlot == null) {
@@ -183,6 +215,9 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
   private void invalidateDisplayedResult() {
     if (this.tile != null) {
       this.tile.getCraftingResult().clearContent();
+    }
+    if (this.resultSlot instanceof PlayerSensitiveLazyResultSlot playerSensitive) {
+      playerSensitive.invalidatePlayerResult();
     }
   }
 }
