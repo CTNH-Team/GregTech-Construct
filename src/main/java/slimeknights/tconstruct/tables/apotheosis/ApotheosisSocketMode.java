@@ -31,7 +31,7 @@ public final class ApotheosisSocketMode {
 
   @Deprecated(forRemoval = false)
   public static boolean canExtract(ItemStack tool, int inputCount) {
-    return !tool.isEmpty() && inputCount > 4 && ApotheosisBridge.sockets().hasSocketedGems(tool);
+    return !tool.isEmpty() && inputCount > 4 && ApotheosisBridge.sockets().getSocketCount(tool) > 0;
   }
 
   public static List<ApotheosisBridge.SocketGem> getVisibleSockets(ItemStack tool) {

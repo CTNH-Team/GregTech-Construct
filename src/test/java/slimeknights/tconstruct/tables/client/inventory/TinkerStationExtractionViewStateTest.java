@@ -71,6 +71,22 @@ class TinkerStationExtractionViewStateTest extends BaseMcTest {
     assertThat(state.gems()).containsExactly(gem);
   }
 
+  @Test
+  void keepsControlsVisibleWhenToolHasOnlyEmptySockets() {
+    ItemStack rawTool = new ItemStack(Items.DIAMOND_PICKAXE);
+    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(List.of(
+      ApotheosisBridge.SocketGem.empty(0),
+      ApotheosisBridge.SocketGem.empty(1)
+    )));
+
+    TinkerStationExtractionViewState state = TinkerStationExtractionViewState.create(rawTool, rawTool.copy(), 6, false, -1);
+
+    assertThat(state.visible()).isTrue();
+    assertThat(state.extractionMode()).isFalse();
+    assertThat(state.selectedSocket()).isEqualTo(-1);
+    assertThat(state.gems()).isEmpty();
+  }
+
   private record FakeSocketHooks(List<ApotheosisBridge.SocketGem> gems) implements ApotheosisBridge.SocketHooks {
     @Override
     public boolean hasSocketedGems(ItemStack stack) {
