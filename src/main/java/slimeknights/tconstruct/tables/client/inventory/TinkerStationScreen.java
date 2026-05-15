@@ -707,15 +707,7 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
       exitGemModeForUnsupportedTool();
       return;
     }
-    TinkerStationGemModeViewState newState = resolution.viewState();
-    if (!newState.equals(this.gemModeViewState)) {
-      this.gemModeViewState = newState;
-      this.activeInputs = getDisplayedInputCount();
-      updateLayout();
-    }
-    this.extractionToggleButton.visible = this.gemModeViewState.buttonVisible();
-    this.extractionToggleButton.active = this.gemModeViewState.buttonEnabled();
-    this.extractionToggleButton.setMessage(this.gemModeViewState.gemModeActive() ? GEM_MODE_ON : GEM_MODE_OFF);
+    applyGemModeScreenState(resolution.viewState());
   }
 
   private void toggleGemMode() {
@@ -734,13 +726,29 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
       return;
     }
     this.getMenu().setGemMode(false);
-    this.gemModeViewState = TinkerStationGemModeResolution.create(
+    applyGemModeScreenState(TinkerStationGemModeResolution.create(
       this.getMenu().getSlot(TINKER_SLOT).getItem(),
       this.maxInputs,
       false
-    ).viewState();
-    this.activeInputs = getDisplayedInputCount();
+    ).viewState());
     TinkerNetwork.getInstance().sendToServer(createTogglePacket(false));
+  }
+
+  private void applyGemModeScreenState(TinkerStationGemModeViewState nextViewState) {
+    TinkerStationGemModeScreenState screenState = TinkerStationGemModeScreenState.create(
+      this.gemModeViewState,
+      nextViewState,
+      this.currentLayout.getInputCount(),
+      this.maxInputs
+    );
+    this.gemModeViewState = screenState.viewState();
+    this.activeInputs = screenState.displayedInputCount();
+    if (screenState.shouldUpdateLayout()) {
+      updateLayout();
+    }
+    this.extractionToggleButton.visible = screenState.toggleVisible();
+    this.extractionToggleButton.active = screenState.toggleActive();
+    this.extractionToggleButton.setMessage(this.gemModeViewState.gemModeActive() ? GEM_MODE_ON : GEM_MODE_OFF);
   }
 
   private boolean handleGemModeSocketClick(double mouseX, double mouseY) {
@@ -855,5 +863,28 @@ record TinkerStationGemModeResolution(TinkerStationGemModeViewState viewState, b
       viewState = TinkerStationGemModeViewState.create(tool, inputCount, false);
     }
     return new TinkerStationGemModeResolution(viewState, unsupportedWhileActive);
+  }
+}
+
+record TinkerStationGemModeScreenState(TinkerStationGemModeViewState viewState,
+                                       int displayedInputCount,
+                                       boolean shouldUpdateLayout,
+                                       boolean toggleVisible,
+                                       boolean toggleActive) {
+  static TinkerStationGemModeScreenState create(TinkerStationGemModeViewState currentViewState,
+                                                TinkerStationGemModeViewState nextViewState,
+                                                int currentLayoutInputCount,
+                                                int maxInputs) {
+    int displayedInputCount = nextViewState.socketSlotsVisible()
+      ? nextViewState.visibleSockets().size()
+      : Math.min(currentLayoutInputCount, maxInputs);
+    boolean shouldUpdateLayout = !nextViewState.equals(currentViewState);
+    return new TinkerStationGemModeScreenState(
+      nextViewState,
+      displayedInputCount,
+      shouldUpdateLayout,
+      nextViewState.buttonVisible(),
+      nextViewState.buttonEnabled()
+    );
   }
 }

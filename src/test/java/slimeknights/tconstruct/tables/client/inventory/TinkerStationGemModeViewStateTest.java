@@ -137,6 +137,33 @@ class TinkerStationGemModeViewStateTest extends BaseMcTest {
     assertThat(resolution.viewState().outputLocked()).isFalse();
   }
 
+  @Test
+  void recoveryResolutionAppliesPostExitUiStateImmediately() {
+    ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
+    ApotheosisBridge.installSocketHooks(new FakeSocketHooks(0, List.of()));
+    TinkerStationGemModeViewState staleGemModeView = new TinkerStationGemModeViewState(
+      true,
+      true,
+      "gui.tconstruct.tinker_station.gem_mode.help",
+      true,
+      true,
+      true,
+      List.of(
+        ApotheosisBridge.SocketGem.empty(0),
+        ApotheosisBridge.SocketGem.empty(1)
+      )
+    );
+    TinkerStationGemModeResolution resolution = TinkerStationGemModeResolution.create(tool, 6, true);
+
+    TinkerStationGemModeScreenState applied = TinkerStationGemModeScreenState.create(staleGemModeView, resolution.viewState(), 4, 6);
+
+    assertThat(applied.viewState()).isEqualTo(resolution.viewState());
+    assertThat(applied.toggleVisible()).isTrue();
+    assertThat(applied.toggleActive()).isFalse();
+    assertThat(applied.displayedInputCount()).isEqualTo(4);
+    assertThat(applied.shouldUpdateLayout()).isTrue();
+  }
+
   private record FakeSocketHooks(int socketCount, List<ApotheosisBridge.SocketGem> gems) implements ApotheosisBridge.SocketHooks {
     @Override
     public boolean hasSocketedGems(ItemStack stack) {
