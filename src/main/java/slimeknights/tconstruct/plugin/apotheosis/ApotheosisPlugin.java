@@ -14,7 +14,7 @@ import java.util.List;
 /** Installs optional Apotheosis socket hooks when Apotheosis is present. */
 public class ApotheosisPlugin {
   public static void onConstruct() {
-    ApotheosisBridge.setSocketHooks(new ApotheosisBridge.SocketHooks() {
+    ApotheosisBridge.installSocketHooks(new ApotheosisBridge.SocketHooks() {
       @Override
       public boolean hasSocketedGems(ItemStack stack) {
         return SocketHelper.getGems(stack).stream().anyMatch(GemInstance::isValid);

@@ -55,7 +55,11 @@ public final class ApotheosisBridge {
     return socketHooks;
   }
 
-  public static void setSocketHooks(SocketHooks hooks) {
+  public static void installSocketHooks(SocketHooks hooks) {
     socketHooks = Objects.requireNonNullElse(hooks, SocketHooks.EMPTY);
+  }
+
+  public static void resetSocketHooks() {
+    socketHooks = SocketHooks.EMPTY;
   }
 }

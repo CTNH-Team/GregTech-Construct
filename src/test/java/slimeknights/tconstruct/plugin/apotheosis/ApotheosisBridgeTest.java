@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ApotheosisBridgeTest extends BaseMcTest {
   @AfterEach
   void resetBridge() {
-    ApotheosisBridge.setSocketHooks(ApotheosisBridge.SocketHooks.EMPTY);
+    ApotheosisBridge.resetSocketHooks();
   }
 
   @Test
@@ -36,7 +36,7 @@ class ApotheosisBridgeTest extends BaseMcTest {
     ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
     ItemStack gem = new ItemStack(Items.EMERALD);
 
-    ApotheosisBridge.setSocketHooks(new ApotheosisBridge.SocketHooks() {
+    ApotheosisBridge.installSocketHooks(new ApotheosisBridge.SocketHooks() {
       @Override
       public boolean hasSocketedGems(ItemStack stack) {
         return true;
