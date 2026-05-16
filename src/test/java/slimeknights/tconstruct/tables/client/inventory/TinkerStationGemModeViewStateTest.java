@@ -34,6 +34,19 @@ class TinkerStationGemModeViewStateTest extends BaseMcTest {
   }
 
   @Test
+  void missingApotheosisHidesGemModeButtonEntirely() {
+    ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
+    ApotheosisBridge.resetSocketHooks();
+
+    TinkerStationGemModeViewState state = TinkerStationGemModeViewState.create(tool, 6, false);
+
+    assertThat(state.buttonVisible()).isFalse();
+    assertThat(state.buttonEnabled()).isFalse();
+    assertThat(state.buttonTooltipKey()).isEmpty();
+    assertThat(state.visibleSockets()).isEmpty();
+  }
+
+  @Test
   void tooManySocketsShowsOverflowDisabledState() {
     ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
     ApotheosisBridge.installSocketHooks(new FakeSocketHooks(6, List.of(
@@ -109,9 +122,9 @@ class TinkerStationGemModeViewStateTest extends BaseMcTest {
 
     TinkerStationGemModeViewState state = TinkerStationGemModeViewState.create(tool, 4, false);
 
-    assertThat(state.buttonVisible()).isTrue();
+    assertThat(state.buttonVisible()).isFalse();
     assertThat(state.buttonEnabled()).isFalse();
-    assertThat(state.buttonTooltipKey()).isEqualTo("gui.tconstruct.tinker_station.gem_mode.help");
+    assertThat(state.buttonTooltipKey()).isEmpty();
     assertThat(state.gemModeActive()).isFalse();
     assertThat(state.socketSlotsVisible()).isFalse();
     assertThat(state.outputLocked()).isFalse();

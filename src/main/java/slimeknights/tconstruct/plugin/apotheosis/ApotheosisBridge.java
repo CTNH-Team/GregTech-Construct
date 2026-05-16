@@ -112,6 +112,10 @@ public final class ApotheosisBridge {
 
   private static SocketHooks socketHooks = SocketHooks.EMPTY;
 
+  public static boolean hasSocketIntegration() {
+    return socketHooks != SocketHooks.EMPTY;
+  }
+
   public static SocketHooks sockets() {
     return socketHooks;
   }
