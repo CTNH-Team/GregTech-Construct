@@ -3636,6 +3636,7 @@
   "stat.tconstruct.slot.prefix.souls": "灵魂槽：",
   "stat.tconstruct.slot.prefix.defense": "防御槽：",
   "stat.tconstruct.slot.prefix.slotless": "无需槽位",
+  "stat.tconstruct.socket_count": "镶孔数：",
 
   "stat.tconstruct.slot.display.upgrades": "升级",
   "stat.tconstruct.slot.display.abilities": "能力",
@@ -3721,6 +3722,12 @@
   "gui.tconstruct.tinker_station.traits": "材料特性",
   "gui.tconstruct.tinker_station.components": "组成部件",
   "gui.tconstruct.tinker_station.info": "修复和改装你工具的主要手段。在左侧放置工具和材料即可开始。",
+  "gui.tconstruct.tinker_station.gem_mode.off": "镶嵌模式：关",
+  "gui.tconstruct.tinker_station.gem_mode.on": "镶嵌模式：开",
+  "gui.tconstruct.tinker_station.gem_mode.help": "切换至镶嵌模式后，可直接通过镶孔镶入或取下宝石。启用镶嵌模式时，输出槽仅用于预览。",
+  "gui.tconstruct.tinker_station.gem_mode.no_sockets": "这个工具没有镶孔。",
+  "gui.tconstruct.tinker_station.gem_mode.too_many_sockets": "这个工具的镶孔太多，无法在这里显示。",
+  "stat.tconstruct.socket_bonus": "镶孔加成",
   "gui.tconstruct.tinker_station.no_traits": "无 :[",
 
   "gui.tconstruct.manual.cycle.recipes": "切换至其它配方",
