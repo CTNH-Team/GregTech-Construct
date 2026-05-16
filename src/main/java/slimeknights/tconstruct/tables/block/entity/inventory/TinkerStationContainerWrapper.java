@@ -130,6 +130,9 @@ public class TinkerStationContainerWrapper implements IMutableTinkerStationConta
     if (index < 0 || index >= station.getInputCount()) {
       return null;
     }
+    if (station.isGemMode()) {
+      return null;
+    }
     if (!searchedMaterial[index]) {
       materials[index] = findMaterialRecipe(getInput(index));
       searchedMaterial[index] = true;
