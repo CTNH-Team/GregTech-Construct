@@ -45,6 +45,7 @@ import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.part.IToolPart;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.library.utils.Util;
+import slimeknights.tconstruct.tables.client.inventory.ToolTableScreen;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 
 import javax.annotation.Nullable;
@@ -177,7 +178,9 @@ public class TooltipUtil {
     } else {
       switch (tooltipKey) {
         case SHIFT:
-          item.getStatInformation(ToolStack.from(stack), player, tooltip, tooltipKey, tooltipFlag);
+          ToolStack shiftTool = ToolStack.from(stack);
+          item.getStatInformation(shiftTool, player, tooltip, tooltipKey, tooltipFlag);
+          ToolTableScreen.appendApotheosisSocketTooltipData(stack, shiftTool, item, player, tooltip, false);
           break;
         case CONTROL:
           if (definition.hasMaterials()) {

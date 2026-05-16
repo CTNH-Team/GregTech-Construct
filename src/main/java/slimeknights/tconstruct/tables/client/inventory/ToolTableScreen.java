@@ -156,9 +156,7 @@ public abstract class ToolTableScreen<T extends BlockEntity, C extends TabbedCon
     ToolStack tool = lazyToolStack.getTool();
     if (tool.getItem() instanceof ITinkerStationDisplay display) {
       List<Component> tooltip = display.getStatInformation(tool, Minecraft.getInstance().player, new ArrayList<>(), SafeClientAccess.getTooltipKey(), TinkerTooltipFlags.TINKER_STATION);
-      appendApotheosisSocketCount(lazyToolStack.getStack(), tooltip);
-      applyApotheosisSocketStatOverrides(lazyToolStack.getStack(), tool, display, this.player, tooltip);
-      appendApotheosisSocketBonuses(lazyToolStack.getStack(), tooltip);
+      appendApotheosisSocketTooltipData(lazyToolStack.getStack(), tool, display, this.player, tooltip, true);
       tinkerInfo.setCaption(display.getLocalizedName());
       tinkerInfo.setText(tooltip);
     }
@@ -172,11 +170,19 @@ public abstract class ToolTableScreen<T extends BlockEntity, C extends TabbedCon
     }
   }
 
-  static void appendApotheosisSocketBonuses(ItemStack stack, List<Component> tooltip) {
+  public static void appendApotheosisSocketTooltipData(ItemStack stack, IToolStackView tool, ITinkerStationDisplay display, @Nullable Player player, List<Component> tooltip, boolean includeBonusLines) {
+    appendApotheosisSocketCount(stack, tooltip);
+    applyApotheosisSocketStatOverrides(stack, tool, display, player, tooltip);
+    if (includeBonusLines) {
+      appendApotheosisSocketBonuses(stack, tooltip);
+    }
+  }
+
+  public static void appendApotheosisSocketBonuses(ItemStack stack, List<Component> tooltip) {
     ApotheosisSocketMode.appendTooltip(stack, tooltip);
   }
 
-  static void appendApotheosisSocketCount(ItemStack stack, List<Component> tooltip) {
+  public static void appendApotheosisSocketCount(ItemStack stack, List<Component> tooltip) {
     int totalSocketCount = ApotheosisBridge.sockets().getSocketCount(stack);
     if (totalSocketCount > 0) {
       int filledSocketCount = (int) ApotheosisBridge.sockets().getSocketedGemData(stack).stream()
@@ -188,7 +194,7 @@ public abstract class ToolTableScreen<T extends BlockEntity, C extends TabbedCon
     }
   }
 
-  static void applyApotheosisSocketStatOverrides(ItemStack stack, IToolStackView tool, ITinkerStationDisplay display, @Nullable Player player, List<Component> tooltip) {
+  public static void applyApotheosisSocketStatOverrides(ItemStack stack, IToolStackView tool, ITinkerStationDisplay display, @Nullable Player player, List<Component> tooltip) {
     EquipmentSlot slot = getDisplayAttributeSlot(display);
     Multimap<Attribute,AttributeModifier> gemModifiers = getSocketAttributeModifiers(stack, slot);
     if (gemModifiers.isEmpty()) {
