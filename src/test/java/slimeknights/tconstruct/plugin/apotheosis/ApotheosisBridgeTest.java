@@ -34,6 +34,7 @@ class ApotheosisBridgeTest extends BaseMcTest {
     ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
     List<Component> tooltip = new ArrayList<>();
 
+    assertThat(ApotheosisBridge.hasSocketIntegration()).isFalse();
     assertThat(ApotheosisBridge.sockets().hasSocketedGems(tool)).isFalse();
     assertThat(ApotheosisBridge.sockets().getSocketCount(tool)).isZero();
     assertThat(ApotheosisBridge.sockets().getSocketedGems(tool)).isEmpty();
@@ -95,6 +96,7 @@ class ApotheosisBridgeTest extends BaseMcTest {
     List<Component> tooltip = new ArrayList<>();
     ApotheosisBridge.sockets().appendTooltip(tool, tooltip::add);
 
+    assertThat(ApotheosisBridge.hasSocketIntegration()).isTrue();
     assertThat(ApotheosisBridge.sockets().hasSocketedGems(tool)).isTrue();
     assertThat(ApotheosisBridge.sockets().getSocketCount(tool)).isEqualTo(1);
     assertThat(ApotheosisBridge.sockets().getSocketedGems(tool)).hasSize(1);

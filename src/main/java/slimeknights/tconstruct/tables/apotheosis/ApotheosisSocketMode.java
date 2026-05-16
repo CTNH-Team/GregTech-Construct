@@ -19,6 +19,9 @@ public final class ApotheosisSocketMode {
     if (tool.isEmpty() || inputCount <= 4) {
       return new ButtonState(false, false, "");
     }
+    if (!ApotheosisBridge.hasSocketIntegration()) {
+      return new ButtonState(false, false, "");
+    }
     int sockets = ApotheosisBridge.sockets().getSocketCount(tool);
     if (sockets <= 0) {
       return new ButtonState(true, false, "no_sockets");

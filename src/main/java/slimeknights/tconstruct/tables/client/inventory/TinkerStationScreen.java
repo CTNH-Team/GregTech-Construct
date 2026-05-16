@@ -951,8 +951,8 @@ record TinkerStationGemModeViewState(boolean buttonVisible,
     }
 
     ApotheosisSocketMode.ButtonState buttonState = ApotheosisSocketMode.buttonState(tool, inputCount);
-    boolean buttonVisible = true;
-    String tooltipKey = "gui.tconstruct.tinker_station.gem_mode.help";
+    boolean buttonVisible = buttonState.visible();
+    String tooltipKey = buttonVisible ? "gui.tconstruct.tinker_station.gem_mode.help" : "";
     if (!buttonState.reasonKey().isEmpty()) {
       tooltipKey = "gui.tconstruct.tinker_station.gem_mode." + buttonState.reasonKey();
     }
