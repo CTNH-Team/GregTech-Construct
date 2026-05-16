@@ -1,5 +1,7 @@
 package slimeknights.tconstruct.tables.client.inventory;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -8,6 +10,9 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -23,14 +28,21 @@ import slimeknights.tconstruct.library.client.GuiUtil;
 import slimeknights.tconstruct.library.modifiers.Modifier;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.tools.item.ITinkerStationDisplay;
+import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.LazyToolStack;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
+import slimeknights.tconstruct.library.tools.stat.FloatToolStat;
+import slimeknights.tconstruct.library.tools.stat.IToolStat;
+import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.library.utils.TinkerTooltipFlags;
+import slimeknights.tconstruct.plugin.apotheosis.ApotheosisBridge;
+import slimeknights.tconstruct.tables.apotheosis.ApotheosisSocketMode;
 import slimeknights.tconstruct.tables.client.inventory.module.InfoPanelScreen;
 import slimeknights.tconstruct.tables.menu.TabbedContainerMenu;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,6 +52,11 @@ public abstract class ToolTableScreen<T extends BlockEntity, C extends TabbedCon
   private static final Component MODIFIERS_TEXT = TConstruct.makeTranslation("gui", "tinker_station.modifiers");
   private static final Component UPGRADES_TEXT = TConstruct.makeTranslation("gui", "tinker_station.upgrades");
   private static final Component TRAITS_TEXT = TConstruct.makeTranslation("gui", "tinker_station.traits");
+  private static final String SOCKET_COUNT_KEY = TConstruct.makeTranslationKey("stat", "socket_count");
+  private static final ResourceLocation ATTRIBUTESLIB_ARROW_DAMAGE = ResourceLocation.tryBuild("attributeslib", "arrow_damage");
+  private static final ResourceLocation ATTRIBUTESLIB_ARROW_VELOCITY = ResourceLocation.tryBuild("attributeslib", "arrow_velocity");
+  private static final ResourceLocation ATTRIBUTESLIB_DRAW_SPEED = ResourceLocation.tryBuild("attributeslib", "draw_speed");
+  private static final ResourceLocation ATTRIBUTESLIB_MINING_SPEED = ResourceLocation.tryBuild("attributeslib", "mining_speed");
 
   private static final ResourceLocation ICON_TEXTURE = TConstruct.getResource("textures/gui/icons.png");
 
@@ -138,16 +155,141 @@ public abstract class ToolTableScreen<T extends BlockEntity, C extends TabbedCon
   protected void updateToolPanel(LazyToolStack lazyToolStack) {
     ToolStack tool = lazyToolStack.getTool();
     if (tool.getItem() instanceof ITinkerStationDisplay display) {
+      List<Component> tooltip = display.getStatInformation(tool, Minecraft.getInstance().player, new ArrayList<>(), SafeClientAccess.getTooltipKey(), TinkerTooltipFlags.TINKER_STATION);
+      appendApotheosisSocketTooltipData(lazyToolStack.getStack(), tool, display, this.player, tooltip, true);
       tinkerInfo.setCaption(display.getLocalizedName());
-      tinkerInfo.setText(display.getStatInformation(tool, Minecraft.getInstance().player, new ArrayList<>(), SafeClientAccess.getTooltipKey(), TinkerTooltipFlags.TINKER_STATION));
+      tinkerInfo.setText(tooltip);
     }
     else {
       ItemStack result = lazyToolStack.getStack();
       tinkerInfo.setCaption(result.getHoverName());
       List<Component> list = new ArrayList<>();
       result.getItem().appendHoverText(result, Minecraft.getInstance().level, list, Default.NORMAL);
+      appendApotheosisSocketBonuses(result, list);
       tinkerInfo.setText(list);
     }
+  }
+
+  public static void appendApotheosisSocketTooltipData(ItemStack stack, IToolStackView tool, ITinkerStationDisplay display, @Nullable Player player, List<Component> tooltip, boolean includeBonusLines) {
+    appendApotheosisSocketCount(stack, tooltip);
+    applyApotheosisSocketStatOverrides(stack, tool, display, player, tooltip);
+    if (includeBonusLines) {
+      appendApotheosisSocketBonuses(stack, tooltip);
+    }
+  }
+
+  public static void appendApotheosisSocketBonuses(ItemStack stack, List<Component> tooltip) {
+    ApotheosisSocketMode.appendTooltip(stack, tooltip);
+  }
+
+  public static void appendApotheosisSocketCount(ItemStack stack, List<Component> tooltip) {
+    int totalSocketCount = ApotheosisBridge.sockets().getSocketCount(stack);
+    if (totalSocketCount > 0) {
+      int filledSocketCount = (int) ApotheosisBridge.sockets().getSocketedGemData(stack).stream()
+        .filter(ApotheosisBridge.SocketGem::isFilled)
+        .count();
+      tooltip.add(Component.translatable(SOCKET_COUNT_KEY)
+        .append(Component.literal(filledSocketCount + "/" + totalSocketCount)
+          .withStyle(style -> style.withColor(ToolStats.ATTACK_SPEED.getColor()))));
+    }
+  }
+
+  public static void applyApotheosisSocketStatOverrides(ItemStack stack, IToolStackView tool, ITinkerStationDisplay display, @Nullable Player player, List<Component> tooltip) {
+    EquipmentSlot slot = getDisplayAttributeSlot(display);
+    Multimap<Attribute,AttributeModifier> gemModifiers = getSocketAttributeModifiers(stack, slot);
+    if (gemModifiers.isEmpty()) {
+      return;
+    }
+
+    replaceAttributeStatLine(tooltip, ToolStats.ATTACK_DAMAGE, tool.getStats().get(ToolStats.ATTACK_DAMAGE), getPlayerBaseAttribute(player, Attributes.ATTACK_DAMAGE), gemModifiers.get(Attributes.ATTACK_DAMAGE));
+    replaceAttributeStatLine(tooltip, ToolStats.ATTACK_SPEED, tool.getStats().get(ToolStats.ATTACK_SPEED), getPlayerBaseAttribute(player, Attributes.ATTACK_SPEED), gemModifiers.get(Attributes.ATTACK_SPEED));
+    replaceScaledMultiplierStatLine(tooltip, ToolStats.MINING_SPEED, tool.getStats().get(ToolStats.MINING_SPEED), findAttribute(ATTRIBUTESLIB_MINING_SPEED), gemModifiers);
+    replaceScaledMultiplierStatLine(tooltip, ToolStats.DRAW_SPEED, tool.getStats().get(ToolStats.DRAW_SPEED), findAttribute(ATTRIBUTESLIB_DRAW_SPEED), gemModifiers);
+    replaceScaledMultiplierStatLine(tooltip, ToolStats.VELOCITY, tool.getStats().get(ToolStats.VELOCITY), findAttribute(ATTRIBUTESLIB_ARROW_VELOCITY), gemModifiers);
+    replaceScaledMultiplierStatLine(tooltip, ToolStats.PROJECTILE_DAMAGE, tool.getStats().get(ToolStats.PROJECTILE_DAMAGE), findAttribute(ATTRIBUTESLIB_ARROW_DAMAGE), gemModifiers);
+    replaceAttributeStatLine(tooltip, ToolStats.ARMOR, tool.getStats().get(ToolStats.ARMOR), (float) Attributes.ARMOR.getDefaultValue(), gemModifiers.get(Attributes.ARMOR));
+    replaceAttributeStatLine(tooltip, ToolStats.ARMOR_TOUGHNESS, tool.getStats().get(ToolStats.ARMOR_TOUGHNESS), (float) Attributes.ARMOR_TOUGHNESS.getDefaultValue(), gemModifiers.get(Attributes.ARMOR_TOUGHNESS));
+    replaceScaledAttributeStatLine(tooltip, ToolStats.KNOCKBACK_RESISTANCE, tool.getStats().get(ToolStats.KNOCKBACK_RESISTANCE), (float) Attributes.KNOCKBACK_RESISTANCE.getDefaultValue(), 10f, gemModifiers.get(Attributes.KNOCKBACK_RESISTANCE));
+  }
+
+  private static void replaceAttributeStatLine(List<Component> tooltip, FloatToolStat stat, float displayedValueWithoutGems, float attributeBaseValue, Collection<AttributeModifier> modifiers) {
+    if (modifiers.isEmpty()) {
+      return;
+    }
+    replaceStatLine(tooltip, stat, stat.formatValue(applyAttributeModifiers(attributeBaseValue, displayedValueWithoutGems - attributeBaseValue, modifiers)));
+  }
+
+  private static void replaceScaledAttributeStatLine(List<Component> tooltip, FloatToolStat stat, float rawValueWithoutGems, float attributeBaseValue, float scale, Collection<AttributeModifier> modifiers) {
+    if (modifiers.isEmpty()) {
+      return;
+    }
+    replaceStatLine(tooltip, stat, stat.formatValue(applyAttributeModifiers(attributeBaseValue, rawValueWithoutGems - attributeBaseValue, modifiers) * scale));
+  }
+
+  private static void replaceScaledMultiplierStatLine(List<Component> tooltip, FloatToolStat stat, float baseValue, @Nullable Attribute attribute, Multimap<Attribute,AttributeModifier> modifiers) {
+    if (attribute == null || !modifiers.containsKey(attribute)) {
+      return;
+    }
+    float multiplier = applyAttributeModifiers((float) attribute.getDefaultValue(), 0, modifiers.get(attribute));
+    replaceStatLine(tooltip, stat, stat.formatValue(baseValue * multiplier));
+  }
+
+  private static void replaceStatLine(List<Component> tooltip, IToolStat<?> stat, Component replacement) {
+    String prefix = stat.getPrefix().getString();
+    for (int i = 0; i < tooltip.size(); i++) {
+      if (tooltip.get(i).getString().startsWith(prefix)) {
+        tooltip.set(i, replacement);
+        return;
+      }
+    }
+  }
+
+  private static Multimap<Attribute,AttributeModifier> getSocketAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
+    Multimap<Attribute,AttributeModifier> modifiers = ArrayListMultimap.create();
+    ApotheosisBridge.sockets().addAttributeModifiers(stack, slot, modifiers::put);
+    return modifiers;
+  }
+
+  private static EquipmentSlot getDisplayAttributeSlot(ITinkerStationDisplay display) {
+    if (display.asItem() instanceof ArmorItem armor) {
+      return armor.getEquipmentSlot();
+    }
+    return EquipmentSlot.MAINHAND;
+  }
+
+  private static float getPlayerBaseAttribute(@Nullable Player player, Attribute attribute) {
+    if (player != null) {
+      return (float) player.getAttributeBaseValue(attribute);
+    }
+    return (float) attribute.getDefaultValue();
+  }
+
+  private static float applyAttributeModifiers(float attributeBaseValue, float coreAddition, Collection<AttributeModifier> modifiers) {
+    double value = attributeBaseValue + coreAddition;
+    for (AttributeModifier modifier : modifiers) {
+      if (modifier.getOperation() == AttributeModifier.Operation.ADDITION) {
+        value += modifier.getAmount();
+      }
+    }
+
+    double multipliedBaseValue = value;
+    for (AttributeModifier modifier : modifiers) {
+      if (modifier.getOperation() == AttributeModifier.Operation.MULTIPLY_BASE) {
+        multipliedBaseValue += attributeBaseValue * modifier.getAmount();
+      }
+    }
+
+    for (AttributeModifier modifier : modifiers) {
+      if (modifier.getOperation() == AttributeModifier.Operation.MULTIPLY_TOTAL) {
+        multipliedBaseValue *= 1.0D + modifier.getAmount();
+      }
+    }
+    return (float) multipliedBaseValue;
+  }
+
+  @Nullable
+  private static Attribute findAttribute(ResourceLocation id) {
+    return net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES.getValue(id);
   }
 
   /** Updates the modifier panel with relevant info */

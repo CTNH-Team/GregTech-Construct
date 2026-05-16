@@ -27,6 +27,12 @@ dependencies {
 
     modCompileOnly("curse.maven:balm-531761:5999476")
     modCompileOnly("curse.maven:crafting-tweaks-233071:5623639")
+    modCompileOnly("curse.maven:apotheosis-313970:${apotheosis_file_id}")
+    modRuntimeOnly("curse.maven:apotheosis-313970:${apotheosis_file_id}")
+    modCompileOnly("dev.shadowsoffire:Placebo:${minecraft_version}-${placebo_version}")
+    modRuntimeOnly("dev.shadowsoffire:Placebo:${minecraft_version}-${placebo_version}")
+    modCompileOnly("dev.shadowsoffire:ApothicAttributes:${minecraft_version}-${apothic_attributes_version}")
+    modRuntimeOnly("dev.shadowsoffire:ApothicAttributes:${minecraft_version}-${apothic_attributes_version}")
 
     modImplementation("dev.latvian.mods:kubejs-forge:${kubejs_version}")
     modImplementation("dev.latvian.mods:rhino-forge:${rhino_version}")

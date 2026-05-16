@@ -51,6 +51,13 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies.tconstruct]]
+modId="apotheosis"
+mandatory=false
+versionRange="[7.4.8,7.5)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.tconstruct]]
 modId="gtceu"
 mandatory=true
 versionRange="[7.1,)"

@@ -2,7 +2,9 @@ package slimeknights.tconstruct.tables.block.entity.table;
 
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,8 +34,10 @@ import slimeknights.tconstruct.library.recipe.TinkerRecipeTypes;
 import slimeknights.tconstruct.library.recipe.tinkerstation.ITinkerStationRecipe;
 import slimeknights.tconstruct.library.tools.helper.TooltipUtil;
 import slimeknights.tconstruct.library.tools.nbt.LazyToolStack;
+import slimeknights.tconstruct.plugin.apotheosis.ApotheosisBridge;
 import slimeknights.tconstruct.shared.inventory.ConfigurableInvWrapperCapability;
 import slimeknights.tconstruct.tables.TinkerTables;
+import slimeknights.tconstruct.tables.apotheosis.ApotheosisSocketMode;
 import slimeknights.tconstruct.tables.block.TinkerStationBlock;
 import slimeknights.tconstruct.tables.block.entity.inventory.LazyResultContainer;
 import slimeknights.tconstruct.tables.block.entity.inventory.LazyResultContainer.ILazyCrafter;
@@ -47,6 +51,8 @@ import java.util.Objects;
 import static slimeknights.tconstruct.library.tools.part.IMaterialItem.MATERIAL_TAG;
 
 public class TinkerStationBlockEntity extends RetexturedTableBlockEntity implements ILazyCrafter {
+  private static final String TAG_GEM_MODE = "gem_mode";
+  private static final String TAG_CACHED_ORDINARY_INPUTS = "cached_ordinary_inputs";
   /** Slot index of the tool slot */
   public static final int TINKER_SLOT = 0;
   /** Slot index of the first input slot */
@@ -73,6 +79,12 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
   /** Current text in the text field */
   @Getter
   private String itemName = "";
+  /** Shared gem mode state for all viewers of this anvil */
+  @Getter
+  private boolean gemMode = false;
+  /** Cached copies of the five ordinary input slots while gem mode is active */
+  @Getter
+  private final NonNullList<ItemStack> cachedOrdinaryInputs = NonNullList.withSize(5, ItemStack.EMPTY);
 
   /** Material variant texture, alterantive to {@link #getTexture()} in the model. */
   @Getter
@@ -135,6 +147,100 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
     inventoryWrapper.resize();
   }
 
+  /** Moves the ordinary inputs into a shared cache and clears the live input slots. */
+  public void enterGemMode() {
+    if (this.gemMode) {
+      return;
+    }
+    this.gemMode = true;
+    for (int i = 0; i < Math.min(5, this.getInputCount()); i++) {
+      ItemStack existing = this.getItem(INPUT_SLOT + i);
+      this.cachedOrdinaryInputs.set(i, existing.copy());
+      if (!existing.isEmpty()) {
+        super.setItem(INPUT_SLOT + i, ItemStack.EMPTY);
+        this.inventoryWrapper.refreshInput(INPUT_SLOT + i);
+      }
+    }
+    this.craftingResult.clearContent();
+    setChanged();
+  }
+
+  /** Restores cached ordinary inputs back into the live input slots and exits gem mode. */
+  public void exitGemMode() {
+    if (!this.gemMode) {
+      return;
+    }
+    this.gemMode = false;
+    for (int i = 0; i < Math.min(5, this.getInputCount()); i++) {
+      super.setItem(INPUT_SLOT + i, this.cachedOrdinaryInputs.get(i));
+      this.cachedOrdinaryInputs.set(i, ItemStack.EMPTY);
+      this.inventoryWrapper.refreshInput(INPUT_SLOT + i);
+    }
+    this.craftingResult.clearContent();
+    setChanged();
+  }
+
+  /** Sends a screen refresh to all viewers currently sharing this station. */
+  public void syncGemModeViewers() {
+    syncScreenToRelevantPlayers();
+  }
+
+  /** Immediately inserts a carried gem into the selected visible socket and returns the carried remainder. */
+  public ItemStack insertGem(int visibleSocketIndex, ItemStack carriedGem) {
+    if (!this.gemMode || carriedGem.isEmpty()) {
+      return carriedGem;
+    }
+
+    ItemStack tool = this.getItem(TINKER_SLOT);
+    var sockets = ApotheosisSocketMode.getVisibleSockets(tool);
+    if (tool.isEmpty() || visibleSocketIndex < 0 || visibleSocketIndex >= sockets.size()) {
+      return carriedGem;
+    }
+
+    ApotheosisBridge.SocketGem socket = sockets.get(visibleSocketIndex);
+    ItemStack singleGem = ItemHandlerHelper.copyStackWithSize(carriedGem, 1);
+    if (!ApotheosisBridge.sockets().canInsertGem(tool, socket.rawSocketIndex(), singleGem)) {
+      return carriedGem;
+    }
+
+    ItemStack updatedTool = ApotheosisSocketMode.insertGem(tool, visibleSocketIndex, singleGem);
+    if (updatedTool.isEmpty()) {
+      return carriedGem;
+    }
+
+    this.setItem(TINKER_SLOT, updatedTool);
+    this.itemName = "";
+    return carriedGem.getCount() <= 1 ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(carriedGem, carriedGem.getCount() - 1);
+  }
+
+  /** Immediately removes a gem from the selected visible socket and returns it to the caller. */
+  public ItemStack removeGem(int visibleSocketIndex) {
+    if (!this.gemMode) {
+      return ItemStack.EMPTY;
+    }
+
+    ItemStack tool = this.getItem(TINKER_SLOT);
+    var sockets = ApotheosisSocketMode.getVisibleSockets(tool);
+    if (tool.isEmpty() || visibleSocketIndex < 0 || visibleSocketIndex >= sockets.size()) {
+      return ItemStack.EMPTY;
+    }
+
+    ApotheosisBridge.SocketGem socket = sockets.get(visibleSocketIndex);
+    if (!socket.isFilled()) {
+      return ItemStack.EMPTY;
+    }
+
+    ItemStack removedGem = ApotheosisBridge.sockets().copyGem(tool, socket.rawSocketIndex());
+    ItemStack updatedTool = ApotheosisSocketMode.removeGem(tool, visibleSocketIndex);
+    if (removedGem.isEmpty() || updatedTool.isEmpty()) {
+      return ItemStack.EMPTY;
+    }
+
+    this.setItem(TINKER_SLOT, updatedTool);
+    this.itemName = "";
+    return removedGem;
+  }
+
   @Nullable
   @Override
   public AbstractContainerMenu createMenu(int menuId, Inventory playerInventory, Player playerEntity) {
@@ -152,6 +258,14 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
     // assume empty unless we learn otherwise
     result = null;
     this.currentError = null;
+
+    if (this.gemMode) {
+      ItemStack tool = this.getItem(TINKER_SLOT).copy();
+      if (!tool.isEmpty()) {
+        result = LazyToolStack.from(tool);
+      }
+      return tool;
+    }
 
     if (!this.level.isClientSide && this.level.getServer() != null) {
       RecipeManager manager = this.level.getServer().getRecipeManager();
@@ -210,6 +324,10 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
 
   @Override
   public void onCraft(Player player, ItemStack resultItem, int amount) {
+    if (this.gemMode) {
+      return;
+    }
+
     // the recipe should match if we got this far, but being null is a problem
     LazyToolStack result = this.result;  // result is going to get cleared as we update things
     if (amount == 0 || this.level == null || this.lastRecipe == null || result == null) {
@@ -344,6 +462,14 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
     if (material != IMaterial.UNKNOWN_ID) {
       tags.putString(MATERIAL_TAG, material.toString());
     }
+    tags.putBoolean(TAG_GEM_MODE, this.gemMode);
+    ListTag cachedInputs = new ListTag();
+    for (ItemStack stack : this.cachedOrdinaryInputs) {
+      CompoundTag itemTag = new CompoundTag();
+      stack.save(itemTag);
+      cachedInputs.add(itemTag);
+    }
+    tags.put(TAG_CACHED_ORDINARY_INPUTS, cachedInputs);
   }
 
   @Override
@@ -352,6 +478,16 @@ public class TinkerStationBlockEntity extends RetexturedTableBlockEntity impleme
     if (tags.contains(MATERIAL_TAG, Tag.TAG_STRING)) {
       material = Objects.requireNonNullElse(MaterialVariantId.tryParse(tags.getString(MATERIAL_TAG)), IMaterial.UNKNOWN_ID);
       RetexturedHelper.onTextureUpdated(this);
+    }
+    this.gemMode = tags.getBoolean(TAG_GEM_MODE);
+    for (int i = 0; i < this.cachedOrdinaryInputs.size(); i++) {
+      this.cachedOrdinaryInputs.set(i, ItemStack.EMPTY);
+    }
+    if (tags.contains(TAG_CACHED_ORDINARY_INPUTS, Tag.TAG_LIST)) {
+      ListTag cachedInputs = tags.getList(TAG_CACHED_ORDINARY_INPUTS, Tag.TAG_COMPOUND);
+      for (int i = 0; i < Math.min(this.cachedOrdinaryInputs.size(), cachedInputs.size()); i++) {
+        this.cachedOrdinaryInputs.set(i, ItemStack.of(cachedInputs.getCompound(i)));
+      }
     }
   }
 }
