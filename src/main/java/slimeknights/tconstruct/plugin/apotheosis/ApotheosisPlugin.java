@@ -6,10 +6,14 @@ import dev.shadowsoffire.apotheosis.adventure.socket.gem.GemInstance;
 import dev.shadowsoffire.apotheosis.adventure.socket.gem.GemItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /** Installs optional Apotheosis socket hooks when Apotheosis is present. */
 public class ApotheosisPlugin {
@@ -44,6 +48,15 @@ public class ApotheosisPlugin {
         for (GemInstance gem : SocketHelper.getGems(stack)) {
           if (gem.isValid()) {
             consumer.accept(Component.translatable("text.apotheosis.dot_prefix", gem.getSocketBonusTooltip()).withStyle(ChatFormatting.GOLD));
+          }
+        }
+      }
+
+      @Override
+      public void addAttributeModifiers(ItemStack stack, EquipmentSlot slot, BiConsumer<Attribute,AttributeModifier> consumer) {
+        for (GemInstance gem : SocketHelper.getGems(stack)) {
+          if (gem.isValid()) {
+            gem.addModifiers(slot, consumer);
           }
         }
       }

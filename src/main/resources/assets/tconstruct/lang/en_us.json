@@ -3626,6 +3626,7 @@
   "stat.tconstruct.slot.prefix.souls": "Soul Slots: ",
   "stat.tconstruct.slot.prefix.defense": "Defense Slots: ",
   "stat.tconstruct.slot.prefix.slotless": "Slotless",
+  "stat.tconstruct.socket_count": "Socket Count: ",
 
   "stat.tconstruct.slot.display.upgrades": "upgrade",
   "stat.tconstruct.slot.display.abilities": "ability",
@@ -3716,6 +3717,7 @@
   "gui.tconstruct.tinker_station.gem_mode.help": "Toggle gem mode, then insert or remove gems directly through the socket slots. Output is preview-only while gem mode is active.",
   "gui.tconstruct.tinker_station.gem_mode.no_sockets": "This tool has no gem sockets.",
   "gui.tconstruct.tinker_station.gem_mode.too_many_sockets": "This tool has too many sockets to show here.",
+  "stat.tconstruct.socket_bonus": "Socket Bonuses",
   "gui.tconstruct.tinker_station.no_traits": "None :[",
 
   "gui.tconstruct.manual.cycle.recipes": "Cycle to other recipes",

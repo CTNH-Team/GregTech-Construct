@@ -119,14 +119,16 @@ class TinkerStationContainerMenuQuickMoveTest extends BaseMcTest {
   }
 
   @Test
-  void quickMoveRejectsPlayerInventoryShiftClickWhileGemModeIsActive() {
+  void quickMoveRejectsNonGemPlayerInventoryShiftClickWhileGemModeIsActive() {
     TinkerStationBlockEntity tile = Mockito.mock(TinkerStationBlockEntity.class);
+    LazyResultContainer craftingResult = Mockito.mock(LazyResultContainer.class);
     Player player = Mockito.mock(Player.class, Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS));
     Slot playerSlot = Mockito.mock(Slot.class);
 
     when(tile.isGemMode()).thenReturn(true);
+    when(tile.getCraftingResult()).thenReturn(craftingResult);
     when(playerSlot.hasItem()).thenReturn(true);
-    when(playerSlot.getItem()).thenReturn(new ItemStack(Items.DIAMOND));
+    when(playerSlot.getItem()).thenReturn(new ItemStack(Items.DIRT));
 
     TestMenu menu = allocateMenu();
     setField(menu, "tile", tile);
@@ -137,12 +139,82 @@ class TinkerStationContainerMenuQuickMoveTest extends BaseMcTest {
     menu.slots.add(playerSlot);
 
     TestMenu spy = Mockito.spy(menu);
+    doReturn(true).when(spy).isPlayerInventorySlotIndex(0);
+    doReturn(1).when(spy).getVisibleSocketCount();
 
     ItemStack moved = spy.quickMoveStack(player, 0);
 
     assertThat(moved.isEmpty()).isTrue();
     verify(spy, never()).testMoveToPlayerInventory(any(ItemStack.class));
     verify(spy, never()).moveToPlayerInventory(any(ItemStack.class));
+  }
+
+  @Test
+  void quickMoveInGemModeInsertsPlayerGemIntoFirstVisibleSocket() {
+    TinkerStationBlockEntity tile = Mockito.mock(TinkerStationBlockEntity.class);
+    LazyResultContainer craftingResult = Mockito.mock(LazyResultContainer.class);
+    Player player = Mockito.mock(Player.class, Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS));
+    Slot playerSlot = Mockito.mock(Slot.class);
+    ItemStack gem = new ItemStack(Items.DIAMOND, 3);
+
+    when(tile.isGemMode()).thenReturn(true);
+    when(tile.getCraftingResult()).thenReturn(craftingResult);
+    when(tile.insertGem(eq(0), argThat(stack -> stack.getItem() == Items.DIAMOND && stack.getCount() == 3)))
+      .thenReturn(new ItemStack(Items.DIAMOND, 2));
+
+    TestMenu menu = allocateMenu();
+    setField(menu, "tile", tile);
+    setField(menu, "slots", NonNullList.create());
+    setField(menu, "subContainers", new ArrayList<>());
+    setField(menu, "slotContainerMap", new java.util.HashMap<>());
+    menu.slots.clear();
+    menu.slots.add(playerSlot);
+
+    TestMenu spy = Mockito.spy(menu);
+    doReturn(true).when(spy).isPlayerInventorySlotIndex(0);
+    doReturn(1).when(spy).getVisibleSocketCount();
+    Mockito.doNothing().when(spy).broadcastChanges();
+    when(playerSlot.hasItem()).thenReturn(true);
+    when(playerSlot.getItem()).thenReturn(gem);
+
+    ItemStack moved = spy.quickMoveStack(player, 0);
+
+    assertThat(moved.getItem()).isEqualTo(Items.DIAMOND);
+    assertThat(moved.getCount()).isEqualTo(3);
+    verify(tile).insertGem(eq(0), argThat(stack -> stack.getItem() == Items.DIAMOND && stack.getCount() == 3));
+    verify(playerSlot).set(argThat(stack -> stack.getItem() == Items.DIAMOND && stack.getCount() == 2));
+  }
+
+  @Test
+  void quickMoveAllowsToolSlotToReturnToPlayerInventoryWhileGemModeIsActive() {
+    TinkerStationBlockEntity tile = Mockito.mock(TinkerStationBlockEntity.class);
+    LazyResultContainer craftingResult = Mockito.mock(LazyResultContainer.class);
+    Player player = Mockito.mock(Player.class, Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS));
+    Slot toolSlot = Mockito.mock(Slot.class);
+    ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
+
+    when(tile.isGemMode()).thenReturn(true);
+    when(tile.getCraftingResult()).thenReturn(craftingResult);
+    when(toolSlot.hasItem()).thenReturn(true);
+    when(toolSlot.getItem()).thenReturn(tool);
+
+    TestMenu menu = allocateMenu();
+    setField(menu, "tile", tile);
+    setField(menu, "slots", NonNullList.create());
+    setField(menu, "subContainers", new ArrayList<>());
+    setField(menu, "slotContainerMap", new java.util.HashMap<>());
+    menu.slots.clear();
+    menu.slots.add(toolSlot);
+
+    TestMenu spy = Mockito.spy(menu);
+    doReturn(false).when(spy).testMoveToPlayerInventory(any(ItemStack.class));
+    doReturn(true).when(spy).isToolSlotIndex(0);
+    Mockito.doNothing().when(spy).broadcastChanges();
+
+    ItemStack moved = spy.quickMoveStack(player, 0);
+
+    assertThat(moved.getItem()).isEqualTo(Items.DIAMOND_PICKAXE);
+    verify(spy).moveToPlayerInventory(any(ItemStack.class));
   }
 
   private static TestMenu allocateMenu() {
@@ -186,5 +258,15 @@ class TinkerStationContainerMenuQuickMoveTest extends BaseMcTest {
     boolean testMoveToPlayerInventory(ItemStack stack) {
       return super.moveToPlayerInventory(stack);
     }
+
+    @Override
+    protected boolean isPlayerInventorySlotIndex(int index) {
+      return super.isPlayerInventorySlotIndex(index);
+    }
+
+    protected boolean isToolSlotIndex(int index) {
+      return super.isToolSlotIndex(index);
+    }
+
   }
 }

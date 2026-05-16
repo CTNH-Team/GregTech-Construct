@@ -1,11 +1,15 @@
 package slimeknights.tconstruct.plugin.apotheosis;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /** No-op bridge around optional Apotheosis socket functionality. */
@@ -52,6 +56,9 @@ public final class ApotheosisBridge {
       public void appendTooltip(ItemStack stack, Consumer<Component> consumer) {}
 
       @Override
+      public void addAttributeModifiers(ItemStack stack, EquipmentSlot slot, BiConsumer<Attribute,AttributeModifier> consumer) {}
+
+      @Override
       public ItemStack removeGem(ItemStack stack, int socketIndex) {
         return ItemStack.EMPTY;
       }
@@ -91,6 +98,8 @@ public final class ApotheosisBridge {
     }
 
     void appendTooltip(ItemStack stack, Consumer<Component> consumer);
+
+    default void addAttributeModifiers(ItemStack stack, EquipmentSlot slot, BiConsumer<Attribute,AttributeModifier> consumer) {}
 
     ItemStack removeGem(ItemStack stack, int socketIndex);
 

@@ -107,6 +107,10 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
 
   @Override
   public void clicked(int slotId, int dragType, ClickType clickType, Player player) {
+    if (this.tile != null && this.tile.isGemMode() && clickType == ClickType.QUICK_MOVE && slotId >= 0 && slotId < this.slots.size()) {
+      this.quickMoveStack(player, slotId);
+      return;
+    }
     if (this.tile != null && this.tile.isGemMode() && slotId >= 0 && slotId < this.slots.size() && this.slots.get(slotId) == this.resultSlot) {
       return;
     }
@@ -149,6 +153,39 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
       return ItemStack.EMPTY;
     }
     if (tile != null && tile.isGemMode()) {
+      if (isToolSlotIndex(index) && slot.hasItem()) {
+        ItemStack original = slot.getItem().copy();
+        ItemStack moved = original.copy();
+        boolean nothingDone = this.moveToPlayerInventory(moved);
+        if (nothingDone) {
+          return ItemStack.EMPTY;
+        }
+        if (moved.isEmpty()) {
+          slot.set(ItemStack.EMPTY);
+        } else {
+          slot.set(moved);
+          slot.setChanged();
+        }
+        invalidateDisplayedResult();
+        this.broadcastChanges();
+        return original;
+      }
+      if (isPlayerInventorySlotIndex(index) && slot.hasItem()) {
+        ItemStack original = slot.getItem().copy();
+        for (int socketIndex = 0; socketIndex < getVisibleSocketCount(); socketIndex++) {
+          ItemStack remainder = this.tile.insertGem(socketIndex, original);
+          if (remainder == null) {
+            remainder = original;
+          }
+          if (!ItemStack.matches(original, remainder)) {
+            slot.set(remainder);
+            slot.setChanged();
+            invalidateDisplayedResult();
+            this.broadcastChanges();
+            return original;
+          }
+        }
+      }
       return ItemStack.EMPTY;
     }
     return super.quickMoveStack(player, index);
@@ -319,5 +356,16 @@ public class TinkerStationContainerMenu extends TabbedContainerMenu<TinkerStatio
     if (this.resultSlot instanceof PlayerSensitiveLazyResultSlot playerSensitive) {
       playerSensitive.invalidatePlayerResult();
     }
+  }
+
+  protected boolean isPlayerInventorySlotIndex(int index) {
+    return index >= this.playerInventoryStart && index < this.slots.size();
+  }
+
+  protected boolean isToolSlotIndex(int index) {
+    return index >= 0
+           && index < this.slots.size()
+           && !isPlayerInventorySlotIndex(index)
+           && this.slots.get(index).getContainerSlot() == TinkerStationBlockEntity.TINKER_SLOT;
   }
 }

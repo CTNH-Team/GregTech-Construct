@@ -1,6 +1,8 @@
 package slimeknights.tconstruct.tables.menu;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -15,6 +17,7 @@ import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 class TinkerStationContainerMenuClickGuardTest extends BaseMcTest {
   @Test
@@ -48,6 +51,26 @@ class TinkerStationContainerMenuClickGuardTest extends BaseMcTest {
     menu.slots.add(new net.minecraft.world.inventory.Slot(new SimpleContainer(1), 0, 0, 0));
 
     assertThat(menu.isGemModeSocketSlot(0)).isFalse();
+  }
+
+  @Test
+  void gemModeQuickMoveClickUsesMenuQuickMoveHandler() {
+    TinkerStationBlockEntity tile = Mockito.mock(TinkerStationBlockEntity.class);
+    Player player = Mockito.mock(Player.class, Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS));
+
+    when(tile.isGemMode()).thenReturn(true);
+
+    TestMenu menu = allocateMenu();
+    setMenuTile(menu, tile);
+    setField(menu, "slots", NonNullList.create());
+    menu.slots.clear();
+    menu.slots.add(new net.minecraft.world.inventory.Slot(new SimpleContainer(1), 0, 0, 0));
+
+    TestMenu spy = Mockito.spy(menu);
+
+    spy.clicked(0, 0, ClickType.QUICK_MOVE, player);
+
+    verify(spy).quickMoveStack(player, 0);
   }
 
   private static TestMenu allocateMenu() {
