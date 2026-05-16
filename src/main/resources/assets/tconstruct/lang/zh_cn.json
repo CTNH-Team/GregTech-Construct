@@ -2347,13 +2347,13 @@
   "material.tconstruct.polyethylene.flavor": "差不多剩下10%的材料科学内容",
   "material.tconstruct.polyethylene.encyclopedia": "每级耐久度-20%，近战伤害-10%",
   "material.tconstruct.polyethylene.ranged": "每级耐久度-20%，弹射物伤害-0.25",
-  "material.tconstruct.polyethylene.armor": "每级耐久度-20%，盔甲韧性-1",
+  "material.tconstruct.polyethylene.armor": "每级耐久度-20%，盔甲防御力-1",
 
   "material.tconstruct.polyvinyl_chloride": "聚氯乙烯",
   "material.tconstruct.polyvinyl_chloride.flavor": "这可不环保",
-  "material.tconstruct.polyvinyl_chloride.encyclopedia": "持有者每次受到火焰伤害时，每级会给予持有者5秒同等级的中毒，并损失20点耐久，直接在火或熔岩中损失得会更快",
-  "material.tconstruct.polyvinyl_chloride.ranged": "持有者每次受到火焰伤害时，每级会给予持有者5秒同等级的中毒，并损失20点耐久，直接在火或熔岩中损失得会更快",
-  "material.tconstruct.polyvinyl_chloride.armor": "穿戴者每次受到火焰伤害时，每级会给予穿戴者5秒同等级的中毒，并损失20点耐久，直接在火或熔岩中损失得会更快",
+  "material.tconstruct.polyvinyl_chloride.encyclopedia": "持有者受到火焰伤害时，会受到5秒同等级的中毒并损失每级20点耐久",
+  "material.tconstruct.polyvinyl_chloride.ranged": "持有者受到火焰伤害时，会受到5秒同等级的中毒并损失每级20点耐久",
+  "material.tconstruct.polyvinyl_chloride.armor": "穿戴者受到火焰伤害时，会受到5秒同等级的中毒并损失每级20点耐久",
 
 
   "_comment": "Tier 4 Integration Materials",
@@ -2650,6 +2650,10 @@
   "modifier.tconstruct.projectile_protection.flavor": "叮叮咚！",
   "modifier.tconstruct.projectile_protection.description": "抵御弹射物伤害",
   "modifier.tconstruct.projectile_protection.resistance": "弹射物抗性",
+  "modifier.tconstruct.insulation": "绝缘",
+  "modifier.tconstruct.insulation.flavor": "电击保护罩！",
+  "modifier.tconstruct.insulation.description": "抵消所有电击伤害",
+  "modifier.tconstruct.insulation.resistance": "电击抗性",
   "modifier.tconstruct.turtle_shell": "海龟壳",
   "modifier.tconstruct.turtle_shell.flavor": "陆上陆龟，海中海龟",
   "modifier.tconstruct.turtle_shell.description": "提升在水下的保护，并加快游泳速度",

@@ -118,7 +118,7 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
         redirect(MaterialIds.whitestoneTin, MaterialIds.whitestoneComposite);
         redirect(MaterialIds.whitestoneZinc, MaterialIds.whitestoneComposite);
         buildRenderInfo(MaterialIds.aluminum);
-        buildRenderInfo(MaterialIds.manaSteel).color(0x67b9ee).fallbacks("metal");
+        buildRenderInfo(MaterialIds.manaSteel).color(0x67B9EE).fallbacks("metal");
 
         // tier 3 compat
         buildRenderInfo(MaterialIds.bronze).color(0xD49765).fallbacks("metal");

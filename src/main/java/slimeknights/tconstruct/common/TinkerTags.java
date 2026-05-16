@@ -859,6 +859,8 @@ public class TinkerTags {
         public static final TagKey<DamageType> BLAST_PROTECTION = local("protection/blast");
         /** Damage types reduced by the magic protection modifier */
         public static final TagKey<DamageType> MAGIC_PROTECTION = local("protection/magic");
+        /** Damage types reduced by the magic protection modifier */
+        public static final TagKey<DamageType> INSULATION = local("protection/insulation");
         /** Damage types reduced by the feather falling modifier */
         public static final TagKey<DamageType> FALL_PROTECTION = local("protection/fall");
 
