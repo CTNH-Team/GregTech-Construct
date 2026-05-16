@@ -118,9 +118,7 @@ public class Util {
   public static String toIndentedStringList(Collection<?> list) {
     return list.stream()
       .map(Object::toString)
-      .collect(Collectors.joining("
-\t", "
-\t", ""));
+      .collect(Collectors.joining("\n\t", "\n\t", ""));
   }
 
   /**
