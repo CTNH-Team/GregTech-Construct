@@ -2,6 +2,7 @@ package slimeknights.tconstruct.tables.client.inventory;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -13,10 +14,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import slimeknights.tconstruct.plugin.apotheosis.ApotheosisBridge;
 import slimeknights.tconstruct.library.tools.item.ITinkerStationDisplay;
+import slimeknights.tconstruct.library.tools.item.IModifiableDisplay;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.StatsNBT;
+import slimeknights.tconstruct.library.tools.nbt.ToolStack;
+import slimeknights.tconstruct.library.tools.helper.TooltipUtil;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
+import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
 import slimeknights.tconstruct.test.BaseMcTest;
+import slimeknights.mantle.client.TooltipKey;
+import slimeknights.tconstruct.library.utils.TinkerTooltipFlags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,12 +108,101 @@ class ToolTableScreenTest extends BaseMcTest {
                        );
   }
 
+  @Test
+  void apotheosisTooltipDataWithBonusesAddsCountOverridesAndBonusLines() {
+    ItemStack stack = new ItemStack(Items.DIAMOND_PICKAXE);
+    IToolStackView tool = Mockito.mock(IToolStackView.class);
+    ITinkerStationDisplay display = new TestDisplay(Items.DIAMOND_PICKAXE);
+    float attackDamage = 5;
+    float attackSpeed = 3;
+    StatsNBT stats = StatsNBT.builder()
+      .set(ToolStats.ATTACK_DAMAGE, attackDamage)
+      .set(ToolStats.ATTACK_SPEED, attackSpeed)
+      .build();
+    Mockito.when(tool.getStats()).thenReturn(stats);
+    List<Component> tooltip = new ArrayList<>(List.of(
+      ToolStats.ATTACK_DAMAGE.formatValue(attackDamage),
+      ToolStats.ATTACK_SPEED.formatValue(attackSpeed),
+      Component.literal("Upgrades: 2")
+    ));
+
+    ApotheosisBridge.installSocketHooks(FakeSocketHooks.withAttributesAndSockets(
+      List.of(Component.literal("+10% speed")),
+      List.of(
+        new AttributeEntry(Attributes.ATTACK_DAMAGE, new AttributeModifier("test_ad", 2, AttributeModifier.Operation.ADDITION)),
+        new AttributeEntry(Attributes.ATTACK_SPEED, new AttributeModifier("test_as", 0.5, AttributeModifier.Operation.MULTIPLY_BASE))
+      ),
+      List.of(new ApotheosisBridge.SocketGem(0, new ItemStack(Items.DIAMOND))),
+      3
+    ));
+
+    ToolTableScreen.appendApotheosisSocketTooltipData(stack, tool, display, null, tooltip, true);
+
+    assertThat(tooltip).extracting(Component::getString)
+      .containsExactly(
+        ToolStats.ATTACK_DAMAGE.formatValue(attackDamage + 2).getString(),
+        ToolStats.ATTACK_SPEED.formatValue(attackSpeed + 2).getString(),
+        "Upgrades: 2",
+        "stat.tconstruct.socket_count1/3",
+        "",
+        "stat.tconstruct.socket_bonus",
+        "+10% speed"
+      );
+  }
+
+  @Test
+  void apotheosisTooltipDataWithoutBonusesSkipsBonusLines() {
+    ItemStack stack = new ItemStack(Items.DIAMOND_PICKAXE);
+    IToolStackView tool = Mockito.mock(IToolStackView.class);
+    ITinkerStationDisplay display = new TestDisplay(Items.DIAMOND_PICKAXE);
+    float attackDamage = 5;
+    float attackSpeed = 3;
+    StatsNBT stats = StatsNBT.builder()
+      .set(ToolStats.ATTACK_DAMAGE, attackDamage)
+      .set(ToolStats.ATTACK_SPEED, attackSpeed)
+      .build();
+    Mockito.when(tool.getStats()).thenReturn(stats);
+    List<Component> tooltip = new ArrayList<>(List.of(
+      ToolStats.ATTACK_DAMAGE.formatValue(attackDamage),
+      ToolStats.ATTACK_SPEED.formatValue(attackSpeed)
+    ));
+
+    ApotheosisBridge.installSocketHooks(FakeSocketHooks.withAttributesAndSockets(
+      List.of(Component.literal("+10% speed")),
+      List.of(
+        new AttributeEntry(Attributes.ATTACK_DAMAGE, new AttributeModifier("test_ad", 2, AttributeModifier.Operation.ADDITION)),
+        new AttributeEntry(Attributes.ATTACK_SPEED, new AttributeModifier("test_as", 0.5, AttributeModifier.Operation.MULTIPLY_BASE))
+      ),
+      List.of(new ApotheosisBridge.SocketGem(0, new ItemStack(Items.DIAMOND))),
+      3
+    ));
+
+    ToolTableScreen.appendApotheosisSocketTooltipData(stack, tool, display, null, tooltip, false);
+
+    assertThat(tooltip).extracting(Component::getString)
+      .containsExactly(
+        ToolStats.ATTACK_DAMAGE.formatValue(attackDamage + 2).getString(),
+        ToolStats.ATTACK_SPEED.formatValue(attackSpeed + 2).getString(),
+        "stat.tconstruct.socket_count1/3"
+      );
+  }
+
   private record AttributeEntry(Attribute attribute, AttributeModifier modifier) {}
 
-  private record TestDisplay(Item item) implements ITinkerStationDisplay {
+  private record TestDisplay(Item item) implements IModifiableDisplay {
     @Override
     public Item asItem() {
       return item;
+    }
+
+    @Override
+    public ToolDefinition getToolDefinition() {
+      return ToolDefinition.EMPTY;
+    }
+
+    @Override
+    public ItemStack getRenderTool() {
+      return new ItemStack(item);
     }
   }
 
@@ -127,6 +223,11 @@ class ToolTableScreenTest extends BaseMcTest {
     private static FakeSocketHooks withSockets(List<Component> tooltip, List<ApotheosisBridge.SocketGem> gems, int socketCount) {
       return new FakeSocketHooks(tooltip, List.of(), gems, socketCount);
     }
+
+    private static FakeSocketHooks withAttributesAndSockets(List<Component> tooltip, List<AttributeEntry> attributes, List<ApotheosisBridge.SocketGem> gems, int socketCount) {
+      return new FakeSocketHooks(tooltip, attributes, gems, socketCount);
+    }
+
 
     private FakeSocketHooks(List<Component> tooltip, List<AttributeEntry> attributes, List<ApotheosisBridge.SocketGem> gems, int socketCount) {
       this.tooltip = tooltip;
