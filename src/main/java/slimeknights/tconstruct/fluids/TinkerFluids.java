@@ -517,41 +517,4 @@ public final class TinkerFluids extends TinkerModule {
         return fluid.getId().getPath().substring(MOLTEN_LENGTH);
     }
 
-    public static FluidObject<?> getCompatMoltenFluid(String name) {
-        return switch (name) {
-            case "tin" -> moltenTin;
-            case "aluminum" -> moltenAluminum;
-            case "lead" -> moltenLead;
-            case "silver" -> moltenSilver;
-            case "nickel" -> moltenNickel;
-            case "zinc" -> moltenZinc;
-            case "platinum" -> moltenPlatinum;
-            case "tungsten" -> moltenTungsten;
-            case "osmium" -> moltenOsmium;
-            case "uranium" -> moltenUranium;
-            case "chromium" -> moltenChromium;
-            case "cadmium" -> moltenCadmium;
-            case "bronze" -> moltenBronze;
-            case "brass" -> moltenBrass;
-            case "electrum" -> moltenElectrum;
-            case "invar" -> moltenInvar;
-            case "constantan" -> moltenConstantan;
-            case "pewter" -> moltenPewter;
-            case "enderium" -> moltenEnderium;
-            case "lumium" -> moltenLumium;
-            case "signalum" -> moltenSignalum;
-            case "refined_glowstone" -> moltenRefinedGlowstone;
-            case "refined_obsidian" -> moltenRefinedObsidian;
-            case "nicrosil" -> moltenNicrosil;
-            case "duralumin" -> moltenDuralumin;
-            case "bendalloy" -> moltenBendalloy;
-            case "steeleaf" -> moltenSteeleaf;
-            case "fiery" -> fieryLiquid;
-            case "polyethylene" -> moltenPolyethylene;
-            case "polyvinylchloride", "polyvinyl_chloride" -> moltenPolyvinylChloride;
-            case "manasteel" -> moltenManaSteel;
-            case "terrasteel" -> moltenTerraSteel;
-            default -> throw new IllegalArgumentException("Unknown compat molten fluid: " + name);
-        };
-    }
 }
