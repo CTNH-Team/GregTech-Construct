@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tools.data.material;
 
 import net.minecraft.data.PackOutput;
+import slimeknights.tconstruct.library.utils.Util;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialTraitDataProvider;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
@@ -140,35 +141,43 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addTraits(MaterialIds.enderslimeVine, ARMOR, ModifierIds.enderclearance);
         addDefaultTraits(MaterialIds.endRod, ModifierIds.hover);
 
-        // tier 2 - mod compat
-        addDefaultTraits(MaterialIds.osmium, ModifierIds.dense);
-        addDefaultTraits(MaterialIds.lead, ModifierIds.heavy);
-        addTraits(MaterialIds.silver, MELEE_HARVEST, ModifierIds.smite);
-        addTraits(MaterialIds.silver, RANGED, ModifierIds.holy);
-        addTraits(MaterialIds.silver, ARMOR, ModifierIds.consecrated);
-        addDefaultTraits(MaterialIds.treatedWood, ModifierIds.preserved);
-        addDefaultTraits(MaterialIds.ironwood, ModifierIds.deciduous);
-        addDefaultTraits(MaterialIds.manaSteel, ModifierIds.manafix);
-        // tier 3 - mod compat
-        addDefaultTraits(MaterialIds.bronze, ModifierIds.maintained);
-        addDefaultTraits(MaterialIds.constantan, ModifierIds.temperate);
-        addDefaultTraits(MaterialIds.invar, ModifierIds.solid);
-        addDefaultTraits(MaterialIds.pewter, ModifierIds.raging);
-        addTraits(MaterialIds.pewter, ARMOR, ModifierIds.vitalProtection);
-        addDefaultTraits(MaterialIds.necronium, TinkerModifiers.decay);
-        addTraits(MaterialIds.necronium, AMMO, new ModifierEntry(TinkerModifiers.decay, 2));
-        addDefaultTraits(MaterialIds.electrum, ModifierIds.shock);
-        addDefaultTraits(MaterialIds.platedSlimewood, TinkerModifiers.overworked, TinkerModifiers.overslime);
-        addDefaultTraits(MaterialIds.steeleaf, ModifierIds.experienced);
-        addTraits(MaterialIds.steeleaf, AMMO, ModifierIds.looting);
-        addDefaultTraits(MaterialIds.terraSteel, ModifierIds.manafix, ModifierIds.terrarecover);
-        addDefaultTraits(MaterialIds.polyethylene, ModifierIds.plastic);
-        addTraits(MaterialIds.polyethylene, ARMOR, ModifierIds.plastic, ModifierIds.insulation);
-        addDefaultTraits(MaterialIds.polyvinylChloride, ModifierIds.thermaldecomposite);
-        addTraits(MaterialIds.polyvinylChloride, ARMOR, ModifierIds.thermaldecomposite, ModifierIds.insulation);
-        // tier 4 - mod compat
-        addDefaultTraits(MaterialIds.fiery, TinkerModifiers.autosmelt);
-        addTraits(MaterialIds.fiery, ARMOR, ModifierIds.temperedProtection);
+    // tier 2 - mod compat
+    addDefaultTraits(MaterialIds.osmium, ModifierIds.dense);
+    addDefaultTraits(MaterialIds.lead, ModifierIds.heavy);
+    addTraits(MaterialIds.silver, MELEE_HARVEST, ModifierIds.smite);
+    addTraits(MaterialIds.silver, RANGED, ModifierIds.holy);
+    addTraits(MaterialIds.silver, ARMOR, ModifierIds.consecrated);
+    addDefaultTraits(MaterialIds.treatedWood, ModifierIds.preserved);
+    addDefaultTraits(MaterialIds.ironwood, ModifierIds.deciduous);
+    if (Util.isModLoaded("botania")) {
+      addDefaultTraits(MaterialIds.manaSteel, TinkerModifiers.manafix);
+    } else {
+      noTraits(MaterialIds.manaSteel);
+    }
+    addDefaultTraits(MaterialIds.polyethylene, ModifierIds.plastic);
+    addTraits(MaterialIds.polyethylene, ARMOR, ModifierIds.plastic, ModifierIds.insulation);
+    // tier 3 - mod compat
+    addDefaultTraits(MaterialIds.bronze, ModifierIds.maintained);
+    addDefaultTraits(MaterialIds.constantan, ModifierIds.temperate);
+    addDefaultTraits(MaterialIds.invar, ModifierIds.solid);
+    addDefaultTraits(MaterialIds.pewter, ModifierIds.raging);
+    addTraits(MaterialIds.pewter, ARMOR, ModifierIds.vitalProtection);
+    addDefaultTraits(MaterialIds.necronium, TinkerModifiers.decay);
+    addTraits(MaterialIds.necronium, AMMO, new ModifierEntry(TinkerModifiers.decay, 2));
+    addDefaultTraits(MaterialIds.electrum, ModifierIds.shock);
+    addDefaultTraits(MaterialIds.platedSlimewood, TinkerModifiers.overworked, TinkerModifiers.overslime);
+    addDefaultTraits(MaterialIds.steeleaf, ModifierIds.experienced);
+    addTraits(MaterialIds.steeleaf, AMMO, ModifierIds.looting);
+    if (Util.isModLoaded("botania")) {
+      addDefaultTraits(MaterialIds.terraSteel, TinkerModifiers.manafix, TinkerModifiers.terrarecover);
+    } else {
+      noTraits(MaterialIds.terraSteel);
+    }
+    addDefaultTraits(MaterialIds.polyvinylChloride, ModifierIds.thermaldecomposite);
+    addTraits(MaterialIds.polyvinylChloride, ARMOR, ModifierIds.thermaldecomposite, ModifierIds.insulation);
+    // tier 4 - mod compat
+    addDefaultTraits(MaterialIds.fiery, TinkerModifiers.autosmelt);
+    addTraits(MaterialIds.fiery, ARMOR, ModifierIds.temperedProtection);
 
         // slimeskull
         addTraits(MaterialIds.glass,        SkullStats.ID, TinkerModifiers.selfDestructive.getId(), ModifierIds.creeperDisguise);

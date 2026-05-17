@@ -60,6 +60,6 @@ side="BOTH"
 [[dependencies.tconstruct]]
 modId="gtceu"
 mandatory=true
-versionRange="[7.1,)"
+    versionRange="[7.1.0,)"
 ordering="BEFORE"
 side="BOTH"

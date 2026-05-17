@@ -1,5 +1,6 @@
 dependencies {
     compileOnly("org.jetbrains:annotations:26.0.1")
+    annotationProcessor('org.spongepowered:mixin:0.8.5:processor')
 
     // would ideally use API for this, but that does not work well with fg.deobf in my understanding
     modImplementation("slimeknights.mantle:Mantle:${minecraft_version}-${mantle_version}")
@@ -40,7 +41,7 @@ dependencies {
 
     modImplementation("curse.maven:curios-309927:6418456")
     modImplementation("curse.maven:patchouli-306770:6164575")
-    modImplementation("curse.maven:botania-225643:6366547")
+    modCompileOnly("curse.maven:botania-225643:6366547")
 
     //deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
 
