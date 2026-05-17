@@ -104,6 +104,7 @@ public class ModifierIds {
     public static final ModifierId projectileProtection = id("projectile_protection");
     public static final ModifierId blastProtection = id("blast_protection");
     public static final ModifierId magicProtection = id("magic_protection");
+    public static final ModifierId insulation = id("insulation");
     public static final ModifierId turtleShell = id("turtle_shell");
     public static final ModifierId shulking = id("shulking");
     public static final ModifierId dragonborn = id("dragonborn");

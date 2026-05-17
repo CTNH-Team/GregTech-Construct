@@ -2348,13 +2348,13 @@
   "material.tconstruct.polyethylene.flavor": "Basically the remaining 10% of materials science",
   "material.tconstruct.polyethylene.encyclopedia": "Grants -20% durability and -10% melee damage per level",
   "material.tconstruct.polyethylene.ranged": "Grants -20% durability and -0.25 projectile power per level",
-  "material.tconstruct.polyethylene.armor": "Grants -20% durability and -1 toughness per level",
+  "material.tconstruct.polyethylene.armor": "Grants -20% durability and -1 armor per level",
 
   "material.tconstruct.polyvinyl_chloride": "Polyvinyl Chloride",
   "material.tconstruct.polyvinyl_chloride.flavor": "This is not environmentally friendly",
-  "material.tconstruct.polyvinyl_chloride.encyclopedia": "Each time the holder is damaged by flames, each level will give them 5 seconds of poison of the same level and lose 20 durability, which will lose more quickly directly in fire or lava",
-  "material.tconstruct.polyvinyl_chloride.ranged": "Each time the holder is damaged by flames, each level will give them 5 seconds of poison of the same level and lose 20 durability, which will lose more quickly directly in fire or lava",
-  "material.tconstruct.polyvinyl_chloride.armor": "Each time the wearer is damaged by flames, each level will give them 5 seconds of poison of the same level and lose 20 durability, which will lose more quickly directly in fire or lava",
+  "material.tconstruct.polyvinyl_chloride.encyclopedia": "When the holder is damaged by flames, they will get 5 seconds of poison at the same level and lose 20 durability per level",
+  "material.tconstruct.polyvinyl_chloride.ranged": "When the holder is damaged by flames, they will get 5 seconds of poison at the same level and lose 20 durability per level",
+  "material.tconstruct.polyvinyl_chloride.armor": "When the wearer is damaged by flames, they will get 5 seconds of poison at the same level and lose 20 durability per level",
 
 
   "_comment": "Tier 4 Integration Materials",
@@ -2652,6 +2652,10 @@
   "modifier.tconstruct.projectile_protection.flavor": "Ding!",
   "modifier.tconstruct.projectile_protection.description": "Protects against damage from projectiles",
   "modifier.tconstruct.projectile_protection.resistance": "Projectile Resistance",
+  "modifier.tconstruct.insulation": "Insulation",
+  "modifier.tconstruct.insulation.flavor": "Electric protection",
+  "modifier.tconstruct.insulation.description": "Neutralizes all electric damage",
+  "modifier.tconstruct.insulation.resistance": "Electric Resistance",
   "modifier.tconstruct.turtle_shell": "Turtle Shell",
   "modifier.tconstruct.turtle_shell.flavor": "Tortoises go on land, turtles in the sea",
   "modifier.tconstruct.turtle_shell.description": "Increases protection underwater, along with swim speed",

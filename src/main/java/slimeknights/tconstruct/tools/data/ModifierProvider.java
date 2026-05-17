@@ -523,6 +523,9 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
         buildModifier(ModifierIds.magicProtection)
                 .addModule(MaxArmorAttributeModule.builder(TinkerAttributes.BAD_EFFECT_DURATION, Operation.MULTIPLY_BASE).heldTag(TinkerTags.Items.HELD).eachLevel(-0.05f))
                 .addModule(ProtectionModule.builder().sources(DamageSourcePredicate.CAN_PROTECT, DamageSourcePredicate.tag(TinkerTags.DamageTypes.MAGIC_PROTECTION)).eachLevel(2.5f));
+        buildModifier(ModifierIds.insulation)
+                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(BlockDamageSourceModule.source(DamageSourcePredicate.tag(TinkerTags.DamageTypes.INSULATION)).build());
         buildModifier(ModifierIds.turtleShell)
                 .addModule(AttributeModule.builder(ForgeMod.SWIM_SPEED.get(), Operation.MULTIPLY_TOTAL).slots(armorSlots).eachLevel(0.05f))
                 .addModule(ProtectionModule.builder()
@@ -922,7 +925,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).eachLevel(-0.2f))
                 .addModule(StatBoostModule.multiplyBase(ToolStats.ATTACK_DAMAGE).eachLevel(-0.1f))
                 .addModule(StatBoostModule.add(ToolStats.PROJECTILE_DAMAGE).eachLevel(-0.25f))
-                .addModule(StatBoostModule.add(ToolStats.ARMOR_TOUGHNESS).eachLevel(-1));
+                .addModule(StatBoostModule.add(ToolStats.ARMOR).eachLevel(-1));
 
         // traits - tier 3
         buildModifier(ModifierIds.overcast)

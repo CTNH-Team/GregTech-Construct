@@ -163,7 +163,9 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addTraits(MaterialIds.steeleaf, AMMO, ModifierIds.looting);
         addDefaultTraits(MaterialIds.terraSteel, ModifierIds.manafix, ModifierIds.terrarecover);
         addDefaultTraits(MaterialIds.polyethylene, ModifierIds.plastic);
+        addTraits(MaterialIds.polyethylene, ARMOR, ModifierIds.plastic, ModifierIds.insulation);
         addDefaultTraits(MaterialIds.polyvinylChloride, ModifierIds.thermaldecomposite);
+        addTraits(MaterialIds.polyvinylChloride, ARMOR, ModifierIds.thermaldecomposite, ModifierIds.insulation);
         // tier 4 - mod compat
         addDefaultTraits(MaterialIds.fiery, TinkerModifiers.autosmelt);
         addTraits(MaterialIds.fiery, ARMOR, ModifierIds.temperedProtection);
