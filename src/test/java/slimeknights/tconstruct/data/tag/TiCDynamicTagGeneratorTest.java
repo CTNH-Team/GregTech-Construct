@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mockito;
@@ -21,6 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -29,6 +31,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 class TiCDynamicTagGeneratorTest extends BaseMcTest {
+    @AfterEach
+    void clearExternalProviders() throws ReflectiveOperationException {
+        Field field = TiCDynamicTagGenerator.class.getDeclaredField("ADDITIONAL_PROVIDER_ENTRIES");
+        field.setAccessible(true);
+        ((ArrayList<?>) field.get(null)).clear();
+    }
+
     @Test
     void registerSendsElevenProviderFactories() {
         RecordingRunner runner = new RecordingRunner();
@@ -54,6 +63,42 @@ class TiCDynamicTagGeneratorTest extends BaseMcTest {
             "MaterialTagProvider",
             "ModifierTagProvider"
         );
+    }
+
+    @Test
+    void addProviderAppendsExternalProviderEntry() {
+        TiCDynamicTagGenerator.addProvider("ExternalTagProvider", output -> new StubProvider("ExternalTagProvider"));
+
+        assertThat(TiCDynamicTagGenerator.createProviderEntries())
+            .extracting(TiCDynamicTagGenerator.TagProviderEntry::name)
+            .containsExactly(
+                "BlockTagProvider",
+                "ItemTagProvider",
+                "FluidTagProvider",
+                "EntityTypeTagProvider",
+                "BlockEntityTypeTagProvider",
+                "EnchantmentTagProvider",
+                "MenuTypeTagProvider",
+                "PotionTagProvider",
+                "DamageTypeTagProvider",
+                "MaterialTagProvider",
+                "ModifierTagProvider",
+                "ExternalTagProvider"
+            );
+    }
+
+    @Test
+    void registerIncludesExternalProviderFactory() {
+        RecordingRunner runner = new RecordingRunner();
+        PackOutput output = new PackOutput(Path.of("build", "test-dynamic-tag-generator"));
+
+        TiCDynamicTagGenerator.addProvider("ExternalTagProvider", ignored -> new StubProvider("ExternalTagProvider"));
+        TiCDynamicTagGenerator.register(runner);
+
+        assertThat(runner.providers).hasSize(12);
+        assertThat(runner.providers)
+            .extracting(factory -> factory.apply(output).getName())
+            .endsWith("ExternalTagProvider");
     }
 
     @Test
@@ -121,6 +166,24 @@ class TiCDynamicTagGeneratorTest extends BaseMcTest {
         assertThat(helper.exists(new ResourceLocation("forge", "ore_rates/dense"), itemTagType)).isTrue();
         assertThat(helper.exists(new ResourceLocation("forge", "ore_rates/sparse"), itemTagType)).isTrue();
         assertThat(helper.exists(new ResourceLocation("forge", "milk"), fluidTagType)).isTrue();
+    }
+
+    private static final class StubProvider implements DataProvider {
+        private final String name;
+
+        private StubProvider(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public CompletableFuture<?> run(CachedOutput output) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
     }
 
     private static Object newTagProviderState() throws ReflectiveOperationException {
