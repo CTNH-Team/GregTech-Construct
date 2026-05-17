@@ -21,23 +21,51 @@ import slimeknights.tconstruct.common.data.tags.MaterialTagProvider;
 import slimeknights.tconstruct.common.data.tags.MenuTypeTagProvider;
 import slimeknights.tconstruct.common.data.tags.ModifierTagProvider;
 import slimeknights.tconstruct.common.data.tags.PotionTagProvider;
+import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.data.pack.DynamicDataProviderRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public final class TiCDynamicTagGenerator {
+    static final List<TagProviderEntry> ADDITIONAL_PROVIDER_ENTRIES = new ArrayList<>();
+
     private TiCDynamicTagGenerator() {}
 
     public static void register() {
         register((owner, providers) -> DynamicDataProviderRunner.run(owner, providers));
     }
 
+    /** Adds an extra runtime tag provider for TiC's dynamic data pack. */
+    public static synchronized void addProvider(String name, Function<PackOutput, ? extends DataProvider> factory) {
+        ADDITIONAL_PROVIDER_ENTRIES.add(new TagProviderEntry(
+            Objects.requireNonNull(name, "name"),
+            Objects.requireNonNull(factory, "factory")
+        ));
+    }
+
     static void register(TagRunner runner) {
         runner.run("tconstruct-tags", createProviders());
+    }
+
+    public static void registerDefaultProviders(DynamicProviderRegistrar registrar) {
+        TagProviderState state = new TagProviderState();
+        registrar.addProvider("BlockTagProvider", state::createBlockTags);
+        registrar.addProvider("ItemTagProvider", state::createItemTags);
+        registrar.addProvider("FluidTagProvider", state::createFluidTags);
+        registrar.addProvider("EntityTypeTagProvider", state::createEntityTypeTags);
+        registrar.addProvider("BlockEntityTypeTagProvider", state::createBlockEntityTypeTags);
+        registrar.addProvider("EnchantmentTagProvider", state::createEnchantmentTags);
+        registrar.addProvider("MenuTypeTagProvider", state::createMenuTypeTags);
+        registrar.addProvider("PotionTagProvider", state::createPotionTags);
+        registrar.addProvider("DamageTypeTagProvider", state::createDamageTypeTags);
+        registrar.addProvider("MaterialTagProvider", state::createMaterialTags);
+        registrar.addProvider("ModifierTagProvider", state::createModifierTags);
     }
 
     static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
@@ -49,23 +77,12 @@ public final class TiCDynamicTagGenerator {
     }
 
     static List<TagProviderEntry> createProviderEntries() {
-        TagProviderState state = new TagProviderState();
-        return List.of(
-            new TagProviderEntry("BlockTagProvider", state::createBlockTags),
-            new TagProviderEntry("ItemTagProvider", state::createItemTags),
-            new TagProviderEntry("FluidTagProvider", state::createFluidTags),
-            new TagProviderEntry("EntityTypeTagProvider", state::createEntityTypeTags),
-            new TagProviderEntry("BlockEntityTypeTagProvider", state::createBlockEntityTypeTags),
-            new TagProviderEntry("EnchantmentTagProvider", state::createEnchantmentTags),
-            new TagProviderEntry("MenuTypeTagProvider", state::createMenuTypeTags),
-            new TagProviderEntry("PotionTagProvider", state::createPotionTags),
-            new TagProviderEntry("DamageTypeTagProvider", state::createDamageTypeTags),
-            // Biome tags are not supported in the dynamic data pack path on Forge 1.20.1.
-            // Keep them in normal datagen instead.
-            // new TagProviderEntry("BiomeTagProvider", state::createBiomeTags),
-            new TagProviderEntry("MaterialTagProvider", state::createMaterialTags),
-            new TagProviderEntry("ModifierTagProvider", state::createModifierTags)
-        );
+        List<TagProviderEntry> entries = new ArrayList<>();
+        TiCAddonRegistry.collectTagProviders((name, factory) -> entries.add(new TagProviderEntry(name, factory)));
+        synchronized (TiCDynamicTagGenerator.class) {
+            entries.addAll(ADDITIONAL_PROVIDER_ENTRIES);
+        }
+        return List.copyOf(entries);
     }
 
     @FunctionalInterface

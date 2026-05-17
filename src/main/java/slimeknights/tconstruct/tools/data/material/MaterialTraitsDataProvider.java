@@ -155,6 +155,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
       noTraits(MaterialIds.manaSteel);
     }
     addDefaultTraits(MaterialIds.polyethylene, ModifierIds.plastic);
+    addTraits(MaterialIds.polyethylene, ARMOR, ModifierIds.plastic, ModifierIds.insulation);
     // tier 3 - mod compat
     addDefaultTraits(MaterialIds.bronze, ModifierIds.maintained);
     addDefaultTraits(MaterialIds.constantan, ModifierIds.temperate);
@@ -173,6 +174,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
       noTraits(MaterialIds.terraSteel);
     }
     addDefaultTraits(MaterialIds.polyvinylChloride, ModifierIds.thermaldecomposite);
+    addTraits(MaterialIds.polyvinylChloride, ARMOR, ModifierIds.thermaldecomposite, ModifierIds.insulation);
     // tier 4 - mod compat
     addDefaultTraits(MaterialIds.fiery, TinkerModifiers.autosmelt);
     addTraits(MaterialIds.fiery, ARMOR, ModifierIds.temperedProtection);

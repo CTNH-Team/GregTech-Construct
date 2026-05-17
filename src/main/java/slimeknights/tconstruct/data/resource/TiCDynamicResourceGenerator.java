@@ -18,6 +18,8 @@ import slimeknights.tconstruct.fluids.data.FluidBlockstateModelProvider;
 import slimeknights.tconstruct.fluids.data.FluidBucketModelProvider;
 import slimeknights.tconstruct.fluids.data.FluidTextureProvider;
 import slimeknights.tconstruct.fluids.data.FluidTooltipProvider;
+import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.client.data.material.MaterialPaletteDebugGenerator;
 import slimeknights.tconstruct.library.client.data.material.MaterialPartTextureGenerator;
 import slimeknights.tconstruct.library.client.data.material.TrimMaterialPaletteGenerator;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Objects;
 import java.util.function.Function;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,38 +46,61 @@ import slimeknights.tconstruct.library.client.data.spritetransformer.RecolorSpri
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 
 public final class TiCDynamicResourceGenerator {
+  static final List<Function<PackOutput, ? extends DataProvider>> ADDITIONAL_PROVIDERS = new ArrayList<>();
+
   private TiCDynamicResourceGenerator() {}
 
   public static void register() {
     register(DynamicResourceProviderRunner::run);
   }
 
+  /** Adds an extra runtime resource provider for TiC's dynamic resource pack. */
+  public static synchronized void addProvider(Function<PackOutput, ? extends DataProvider> factory) {
+    ADDITIONAL_PROVIDERS.add(Objects.requireNonNull(factory, "factory"));
+  }
+
   static void register(ResourceRunner runner) {
     runner.run("tconstruct-client-resources", createProviders());
   }
 
-  static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
+  /**
+   * Creates an existing file helper configured the same way as TiC's dynamic resource generation path.
+   * External addons can use this when registering custom dynamic resource providers such as
+   * {@code AbstractMaterialRenderInfoProvider} implementations.
+   */
+  public static ExistingFileHelper createExistingFileHelperForAddons() {
+    return ResourceProviderState.createExistingFileHelper();
+  }
+
+  public static void registerDefaultProviders(DynamicProviderRegistrar registrar) {
     ResourceProviderStateHolder stateHolder = new ResourceProviderStateHolder();
-    return List.of(
-      output -> stateHolder.get(output).createModelSpriteProvider(output),
-      output -> stateHolder.get(output).createSpriteSourceProvider(output),
-      output -> stateHolder.get(output).createItemModelProvider(output),
-      output -> stateHolder.get(output).createBlockStateProvider(output),
-      RenderFluidProvider::new,
-      RenderItemProvider::new,
-      FluidTooltipProvider::new,
-      output -> stateHolder.get(output).createFluidTextureProvider(output),
-      output -> stateHolder.get(output).createFluidTextureCameraProvider(output),
-      output -> new FluidBucketModelProvider(output, TConstruct.MOD_ID),
-      output -> new FluidBlockstateModelProvider(output, TConstruct.MOD_ID),
-      output -> stateHolder.get(output).createToolItemModelProvider(output),
-      output -> stateHolder.get(output).createMaterialRenderInfoProvider(output),
-      output -> stateHolder.get(output).createGeneratorPartTextureJsonGenerator(output),
-      output -> stateHolder.get(output).createMaterialPartTextureGenerator(output),
-      output -> stateHolder.get(output).createMaterialPaletteDebugGenerator(output),
-      ArmorModelProvider::new,
-      output -> stateHolder.get(output).createTrimMaterialPaletteGenerator(output)
-    );
+    registrar.addProvider("ModelSpriteProvider", output -> stateHolder.get(output).createModelSpriteProvider(output));
+    registrar.addProvider("TinkerSpriteSourceProvider", output -> stateHolder.get(output).createSpriteSourceProvider(output));
+    registrar.addProvider("TinkerItemModelProvider", output -> stateHolder.get(output).createItemModelProvider(output));
+    registrar.addProvider("TinkerBlockStateProvider", output -> stateHolder.get(output).createBlockStateProvider(output));
+    registrar.addProvider("RenderFluidProvider", RenderFluidProvider::new);
+    registrar.addProvider("RenderItemProvider", RenderItemProvider::new);
+    registrar.addProvider("FluidTooltipProvider", FluidTooltipProvider::new);
+    registrar.addProvider("FluidTextureProvider", output -> stateHolder.get(output).createFluidTextureProvider(output));
+    registrar.addProvider("FluidTextureCameraProvider", output -> stateHolder.get(output).createFluidTextureCameraProvider(output));
+    registrar.addProvider("FluidBucketModelProvider", output -> new FluidBucketModelProvider(output, TConstruct.MOD_ID));
+    registrar.addProvider("FluidBlockstateModelProvider", output -> new FluidBlockstateModelProvider(output, TConstruct.MOD_ID));
+    registrar.addProvider("ToolItemModelProvider", output -> stateHolder.get(output).createToolItemModelProvider(output));
+    registrar.addProvider("MaterialRenderInfoProvider", output -> stateHolder.get(output).createMaterialRenderInfoProvider(output));
+    registrar.addProvider("GeneratorPartTextureJsonGenerator", output -> stateHolder.get(output).createGeneratorPartTextureJsonGenerator(output));
+    registrar.addProvider("MaterialPartTextureGenerator", output -> stateHolder.get(output).createMaterialPartTextureGenerator(output));
+    registrar.addProvider("MaterialPaletteDebugGenerator", output -> stateHolder.get(output).createMaterialPaletteDebugGenerator(output));
+    registrar.addProvider("ArmorModelProvider", ArmorModelProvider::new);
+    registrar.addProvider("TrimMaterialPaletteGenerator", output -> stateHolder.get(output).createTrimMaterialPaletteGenerator(output));
+  }
+
+  static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
+    List<Function<PackOutput, ? extends DataProvider>> providers = new ArrayList<>();
+    TiCAddonRegistry.collectResourceProviders((name, factory) -> providers.add(factory));
+    synchronized (TiCDynamicResourceGenerator.class) {
+      providers.addAll(ADDITIONAL_PROVIDERS);
+    }
+    return List.copyOf(providers);
   }
 
   @FunctionalInterface

@@ -496,8 +496,8 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addArmorShieldStats(MaterialIds.electrum,          PlatingMaterialStats.builder().durabilityFactor(14).armor(1, 3, 4, 2), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.steeleaf,          PlatingMaterialStats.builder().durabilityFactor(10).armor(2, 5, 7, 2), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.terraSteel,        PlatingMaterialStats.builder().durabilityFactor(50).armor(3, 6, 8, 4).toughness(3).knockbackResistance(0.15f), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.polyethylene,      PlatingMaterialStats.builder().durabilityFactor(50).armor(4, 5, 7, 4).toughness(4).knockbackResistance(0.25f), StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.polyvinylChloride, PlatingMaterialStats.builder().durabilityFactor(60).armor(4, 6, 8, 4).toughness(4).knockbackResistance(0.35f), StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.polyethylene,      PlatingMaterialStats.builder().durabilityFactor(50).armor(3, 5, 8, 4).toughness(4).knockbackResistance(0.25f), StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.polyvinylChloride, PlatingMaterialStats.builder().durabilityFactor(60).armor(3, 5, 8, 4).toughness(4).knockbackResistance(0.35f), StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
         // tier 4
         addMaterialStats(MaterialIds.blazewood, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.blazingBone, StatlessMaterialStats.SHIELD_CORE);
