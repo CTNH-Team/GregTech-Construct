@@ -63,6 +63,15 @@ public final class TiCDynamicResourceGenerator {
     runner.run("tconstruct-client-resources", createProviders());
   }
 
+  /**
+   * Creates an existing file helper configured the same way as TiC's dynamic resource generation path.
+   * External addons can use this when registering custom dynamic resource providers such as
+   * {@code AbstractMaterialRenderInfoProvider} implementations.
+   */
+  public static ExistingFileHelper createExistingFileHelperForAddons() {
+    return ResourceProviderState.createExistingFileHelper();
+  }
+
   public static void registerDefaultProviders(DynamicProviderRegistrar registrar) {
     ResourceProviderStateHolder stateHolder = new ResourceProviderStateHolder();
     registrar.addProvider("ModelSpriteProvider", output -> stateHolder.get(output).createModelSpriteProvider(output));
