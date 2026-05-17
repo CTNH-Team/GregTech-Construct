@@ -122,7 +122,6 @@ public class MaterialDataProvider extends AbstractMaterialDataProvider {
         addCompatMetalMaterial(MaterialIds.lead,     2, ORDER_COMPAT + ORDER_HARVEST);
         addCompatMetalMaterial(MaterialIds.silver,   2, ORDER_COMPAT + ORDER_WEAPON);
         addCompatMetalMaterial(MaterialIds.aluminum, 2, ORDER_COMPAT + ORDER_RANGED);
-        addCompatMetalMaterial(MaterialIds.manaSteel, 2, ORDER_COMPAT + ORDER_GENERAL);
         // ironwood works in a part builder even though its ingots
         addCompatMaterial(MaterialIds.ironwood, 2, ORDER_COMPAT + ORDER_GENERAL, true, "ingots/ironwood");
         // treated wood comes from treated wood or creosote oil
@@ -141,7 +140,6 @@ public class MaterialDataProvider extends AbstractMaterialDataProvider {
         addCompatMaterial(MaterialIds.polyvinylChloride, 3, ORDER_COMPAT + ORDER_GENERAL, true, "ingots/polyvinyl_chloride");
 
         addCompatMetalMaterial(MaterialIds.steeleaf,   3, ORDER_COMPAT + ORDER_SPECIAL);
-        addCompatMetalMaterial(MaterialIds.terraSteel, 3, ORDER_COMPAT + ORDER_GENERAL);
         // tier 4 (mod integration)
         addCompatMetalMaterial(MaterialIds.fiery,           4, ORDER_COMPAT + ORDER_END);
 

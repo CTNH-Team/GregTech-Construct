@@ -12,7 +12,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
-import slimeknights.tconstruct.library.utils.Util;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.Tags.Fluids;
 import net.minecraftforge.common.crafting.CompoundIngredient;
@@ -77,7 +76,6 @@ import slimeknights.tconstruct.tools.recipe.ToggleInteractionWorktableRecipeBuil
 import slimeknights.tconstruct.world.TinkerHeadType;
 import slimeknights.tconstruct.world.TinkerWorld;
 import slimeknights.tconstruct.world.block.FoliageType;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -287,14 +285,6 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .setSlots(SlotType.UPGRADE, 1)
                 .setTools(ingredientFromTags(TinkerTags.Items.MELEE_WEAPON, TinkerTags.Items.HARVEST))
                 .save(consumer, prefix(TinkerModifiers.magnetic, upgradeFolder));
-        if (Util.isModLoaded("botania")) {
-            ModifierRecipeBuilder.modifier(TinkerModifiers.manafix)
-                    .addInput(vazkii.botania.common.block.BotaniaBlocks.spawnerClaw)
-                    .setMaxLevel(5)
-                    .setSlots(SlotType.UPGRADE, 1)
-                    .setTools(ingredientFromTags(TinkerTags.Items.MODIFIABLE))
-                    .save(withCondition(consumer, new ModLoadedCondition("botania")), prefix(TinkerModifiers.manafix, upgradeFolder));
-        }
         // armor has a max level of 1 per piece, so 4 total
         ModifierRecipeBuilder.modifier(TinkerModifiers.magnetic)
                 .addInput(Items.COMPASS)

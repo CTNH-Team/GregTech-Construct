@@ -118,7 +118,6 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
         redirect(MaterialIds.whitestoneTin, MaterialIds.whitestoneComposite);
         redirect(MaterialIds.whitestoneZinc, MaterialIds.whitestoneComposite);
         buildRenderInfo(MaterialIds.aluminum);
-        buildRenderInfo(MaterialIds.manaSteel).color(0x67B9EE).fallbacks("metal");
 
         // tier 3 compat
         buildRenderInfo(MaterialIds.bronze).color(0xD49765).fallbacks("metal");
@@ -129,7 +128,6 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
         buildRenderInfo(MaterialIds.electrum).color(0xFFEA65).fallbacks("metal");
         buildRenderInfo(MaterialIds.platedSlimewood).color(0xFFE170).fallbacks("slime_metal", "metal");
         buildRenderInfo(MaterialIds.steeleaf);
-        buildRenderInfo(MaterialIds.terraSteel).color(0x6ae862).fallbacks("metal");
         buildRenderInfo(MaterialIds.polyethylene).color(0xD8D8D8).fallbacks("metal");;
         buildRenderInfo(MaterialIds.polyvinylChloride).color(0xE77C56).fallbacks("metal");
 

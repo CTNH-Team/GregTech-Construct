@@ -4,6 +4,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.data.tinkering.AbstractMaterialTagProvider;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 
@@ -81,10 +82,10 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
         tag(TinkerTags.Materials.COMPATABILITY_METALS).addOptional(
                 // tier 2
                 MaterialIds.silver, MaterialIds.lead, MaterialIds.aluminum,
-                MaterialIds.osmium, MaterialIds.ironwood, MaterialIds.manaSteel,
+                MaterialIds.osmium, MaterialIds.ironwood,
                 MaterialIds.polyethylene, MaterialIds.polyvinylChloride,
                 // tier 3
-                MaterialIds.steeleaf, MaterialIds.terraSteel,
+                MaterialIds.steeleaf,
                 // tier 4
                 MaterialIds.fiery
         ).addTag(TinkerTags.Materials.COMPATABILITY_BLOCKS);
@@ -102,12 +103,12 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 2
                 MaterialIds.iron,
                 MaterialIds.osmium, MaterialIds.lead, MaterialIds.silver,
-                MaterialIds.aluminum,MaterialIds.manaSteel,
+                MaterialIds.aluminum,
                 // tier 3
                 MaterialIds.slimesteel, MaterialIds.amethystBronze, MaterialIds.pigIron,
                 MaterialIds.cobalt, MaterialIds.steel, MaterialIds.bronze,
                 MaterialIds.constantan, MaterialIds.invar,MaterialIds.electrum,
-                MaterialIds.pewter, MaterialIds.terraSteel,
+                MaterialIds.pewter,
 
                 // tier 4
                 MaterialIds.manyullyn, MaterialIds.hepatizon,
@@ -218,10 +219,10 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 MaterialIds.hepatizon, MaterialIds.queensSlime, MaterialIds.knightmetal
         ).addOptional(
                 // tier 2
-                MaterialIds.aluminum, MaterialIds.manaSteel,
+                MaterialIds.aluminum,
                 // tier 3
                 MaterialIds.necronium, MaterialIds.constantan, MaterialIds.platedSlimewood,
-                MaterialIds.terraSteel, MaterialIds.polyethylene, MaterialIds.polyvinylChloride
+                MaterialIds.polyethylene, MaterialIds.polyvinylChloride
         );
         tag(TinkerTags.Materials.HEAVY).add(
                 // tier 1
@@ -256,10 +257,24 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // misc
                 MaterialIds.blazingBone, MaterialIds.enderPearl
         );
+
+        TiCAddonRegistry.collectMaterialTagHooks(new MaterialTagRegistrar());
     }
 
     @Override
     public String getName() {
         return "Tinkers' Construct Material Tag Provider";
+    }
+
+    private final class MaterialTagRegistrar implements slimeknights.tconstruct.library.addon.ITiCTagAddon.MaterialTagRegistrar {
+        @Override
+        public void add(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.materials.definition.IMaterial> tag, net.minecraft.resources.ResourceLocation... ids) {
+            MaterialTagProvider.this.tag(tag).add(ids);
+        }
+
+        @Override
+        public void addOptional(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.materials.definition.IMaterial> tag, net.minecraft.resources.ResourceLocation... ids) {
+            MaterialTagProvider.this.tag(tag).addOptional(ids);
+        }
     }
 }

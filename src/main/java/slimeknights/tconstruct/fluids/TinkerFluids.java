@@ -202,7 +202,6 @@ public final class TinkerFluids extends TinkerModule {
     // twilight
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenSteeleaf = FLUIDS.registerMetal("steeleaf").type(hot("steeleaf").temperature(1234).lightLevel(10)).block(createBurning(MapColor.COLOR_GREEN, 10, 10, 6f)).bucket().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> fieryLiquid = FLUIDS.register("fiery_liquid").type(hot("fiery_liquid").temperature(1800).lightLevel(15)).block(createBurning(MapColor.CRIMSON_HYPHAE, 15, 20, 6f)).tickRate(30).bucket().flowing();
-
     // fluid data serializer
     public static final FluidDataSerializer FLUID_DATA_SERIALIZER = new FluidDataSerializer();
     public static final RegistryObject<EntityDataSerializer<?>> FLUID_DATA_SERIALIZER_REGISTRY = DATA_SERIALIZERS.register("fluid", () -> FLUID_DATA_SERIALIZER);
@@ -513,4 +512,5 @@ public final class TinkerFluids extends TinkerModule {
     public static String withoutMolten(FluidObject<?> fluid) {
         return fluid.getId().getPath().substring(MOLTEN_LENGTH);
     }
+
 }

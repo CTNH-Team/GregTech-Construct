@@ -5,6 +5,7 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import slimeknights.tconstruct.library.modifiers.Modifier;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.lang.reflect.Field;
@@ -14,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,6 +73,20 @@ class TiCAddonIntegrationTest extends BaseMcTest {
       .endsWith("AddonResourceProvider");
   }
 
+  @Test
+  void addonRegistryInvokesStaticModifierHook() throws ReflectiveOperationException {
+    injectAddon(new TestAddon());
+
+    AtomicBoolean modifierRegistered = new AtomicBoolean(false);
+    TiCAddonRegistry.registerStaticModifiers((name, supplier) -> {
+      if ("addon_static_modifier".equals(name)) {
+        modifierRegistered.set(true);
+      }
+    });
+
+    assertThat(modifierRegistered).isTrue();
+  }
+
   private static List<String> entryNames(String className) throws ReflectiveOperationException {
     Class<?> generator = Class.forName(className);
     Method createProviderEntries = generator.getDeclaredMethod("createProviderEntries");
@@ -104,7 +120,7 @@ class TiCAddonIntegrationTest extends BaseMcTest {
     modIdMap.set(null, addonsById);
   }
 
-  private static final class TestAddon implements ITiCAddon {
+  private static final class TestAddon implements ITiCAddon, ITiCStaticModifierAddon {
     @Override
     public String addonModId() {
       return "testaddon";
@@ -139,6 +155,11 @@ class TiCAddonIntegrationTest extends BaseMcTest {
     public void registerDynamicResourceProviders(DynamicProviderRegistrar registrar) {
       registrar.addProvider("AddonResourceProvider", output -> new StubProvider("AddonResourceProvider"));
     }
+
+    @Override
+    public void registerStaticModifiers(StaticModifierRegistrar registrar) {
+      registrar.register("addon_static_modifier", StubModifier::new);
+    }
   }
 
   private static final class StubProvider implements DataProvider {
@@ -158,4 +179,6 @@ class TiCAddonIntegrationTest extends BaseMcTest {
       return name;
     }
   }
+
+  private static final class StubModifier extends Modifier {}
 }
