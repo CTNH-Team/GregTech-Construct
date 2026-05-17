@@ -62,11 +62,15 @@ import slimeknights.tconstruct.shared.TinkerEffects;
 import slimeknights.tconstruct.shared.TinkerFood;
 import slimeknights.tconstruct.shared.block.SlimeType;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
+import slimeknights.tconstruct.smeltery.data.SmelteryCompat;
 import slimeknights.tconstruct.smeltery.item.CopperCanItem;
 import slimeknights.tconstruct.smeltery.item.TankItem;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 import slimeknights.tconstruct.tools.network.FluidDataSerializer;
 import slimeknights.tconstruct.world.TinkerWorld;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static slimeknights.mantle.Mantle.commonResource;
 import static slimeknights.tconstruct.fluids.block.BurningLiquidBlock.createBurning;
@@ -202,7 +206,6 @@ public final class TinkerFluids extends TinkerModule {
     // twilight
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenSteeleaf = FLUIDS.registerMetal("steeleaf").type(hot("steeleaf").temperature(1234).lightLevel(10)).block(createBurning(MapColor.COLOR_GREEN, 10, 10, 6f)).bucket().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> fieryLiquid = FLUIDS.register("fiery_liquid").type(hot("fiery_liquid").temperature(1800).lightLevel(15)).block(createBurning(MapColor.CRIMSON_HYPHAE, 15, 20, 6f)).tickRate(30).bucket().flowing();
-
     // fluid data serializer
     public static final FluidDataSerializer FLUID_DATA_SERIALIZER = new FluidDataSerializer();
     public static final RegistryObject<EntityDataSerializer<?>> FLUID_DATA_SERIALIZER_REGISTRY = DATA_SERIALIZERS.register("fluid", () -> FLUID_DATA_SERIALIZER);
@@ -512,5 +515,43 @@ public final class TinkerFluids extends TinkerModule {
     /** Removes the "molten_" prefix from the fluids ID */
     public static String withoutMolten(FluidObject<?> fluid) {
         return fluid.getId().getPath().substring(MOLTEN_LENGTH);
+    }
+
+    public static FluidObject<?> getCompatMoltenFluid(String name) {
+        return switch (name) {
+            case "tin" -> moltenTin;
+            case "aluminum" -> moltenAluminum;
+            case "lead" -> moltenLead;
+            case "silver" -> moltenSilver;
+            case "nickel" -> moltenNickel;
+            case "zinc" -> moltenZinc;
+            case "platinum" -> moltenPlatinum;
+            case "tungsten" -> moltenTungsten;
+            case "osmium" -> moltenOsmium;
+            case "uranium" -> moltenUranium;
+            case "chromium" -> moltenChromium;
+            case "cadmium" -> moltenCadmium;
+            case "bronze" -> moltenBronze;
+            case "brass" -> moltenBrass;
+            case "electrum" -> moltenElectrum;
+            case "invar" -> moltenInvar;
+            case "constantan" -> moltenConstantan;
+            case "pewter" -> moltenPewter;
+            case "enderium" -> moltenEnderium;
+            case "lumium" -> moltenLumium;
+            case "signalum" -> moltenSignalum;
+            case "refined_glowstone" -> moltenRefinedGlowstone;
+            case "refined_obsidian" -> moltenRefinedObsidian;
+            case "nicrosil" -> moltenNicrosil;
+            case "duralumin" -> moltenDuralumin;
+            case "bendalloy" -> moltenBendalloy;
+            case "steeleaf" -> moltenSteeleaf;
+            case "fiery" -> fieryLiquid;
+            case "polyethylene" -> moltenPolyethylene;
+            case "polyvinylchloride", "polyvinyl_chloride" -> moltenPolyvinylChloride;
+            case "manasteel" -> moltenManaSteel;
+            case "terrasteel" -> moltenTerraSteel;
+            default -> throw new IllegalArgumentException("Unknown compat molten fluid: " + name);
+        };
     }
 }

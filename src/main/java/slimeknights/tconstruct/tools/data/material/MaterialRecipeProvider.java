@@ -211,7 +211,6 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         metalMaterialRecipe(consumer, MaterialIds.lead,     folder, "lead", true);
         metalMaterialRecipe(consumer, MaterialIds.aluminum, folder, "aluminum", true);
         materialRecipe(withCondition(consumer, tagCondition("treated_wood")),  MaterialIds.treatedWood, Ingredient.of(getItemTag(COMMON, "treated_wood")), 1, 1, folder + "treated_wood");
-        metalMaterialRecipe(consumer, MaterialIds.manaSteel, folder, "manasteel", true);
         // no whitestone, use repair kits
         // tier 3 (mod integration)
         metalMaterialRecipe(consumer, MaterialIds.bronze, folder, "bronze", true);
@@ -223,7 +222,6 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
                 MaterialIds.necronium, Ingredient.of(TinkerMaterials.necroniumBone), 1, 1, folder + "necronium");
         metalMaterialRecipe(consumer, MaterialIds.electrum,          folder, "electrum",           true);
         metalMaterialRecipe(consumer, MaterialIds.steeleaf,          folder, "steeleaf",           true);
-        metalMaterialRecipe(consumer, MaterialIds.terraSteel,        folder, "terrasteel",         true);
         metalMaterialRecipe(consumer, MaterialIds.polyethylene,      folder, "polyethylene",       true);
         metalMaterialRecipe(consumer, MaterialIds.polyvinylChloride, folder, "polyvinyl_chloride", true);
         // no plated slimewood, use repair kits
@@ -304,8 +302,6 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         compatMeltingCasting(consumer, MaterialIds.silver,   TinkerFluids.moltenSilver,   folder);
         compatMeltingCasting(consumer, MaterialIds.lead,     TinkerFluids.moltenLead,     folder);
         compatMeltingCasting(consumer, MaterialIds.aluminum, TinkerFluids.moltenAluminum, folder);
-        compatMeltingCasting(consumer, MaterialIds.manaSteel, TinkerFluids.moltenManaSteel, folder);
-        compatMeltingCasting(consumer, MaterialIds.terraSteel, TinkerFluids.moltenTerraSteel, folder);
         whitestoneCasting(consumer, TinkerFluids.moltenAluminum, folder);
         whitestoneCasting(consumer, TinkerFluids.moltenTin,      folder);
         whitestoneCasting(consumer, TinkerFluids.moltenZinc,     folder);

@@ -23,4 +23,9 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface TiCAddon {}
+public @interface TiCAddon {
+  /**
+   * Optional list of mods that must be loaded before this addon is instantiated.
+   */
+  String[] requiredMods() default {};
+}

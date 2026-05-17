@@ -3,8 +3,8 @@ package slimeknights.tconstruct.common.data.tags;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import slimeknights.tconstruct.library.utils.Util;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.data.tinkering.AbstractModifierTagProvider;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.data.ModifierIds;
@@ -76,9 +76,6 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
       ModifierIds.experienced,ModifierIds.magnetic, ModifierIds.scope, ModifierIds.zoom,
       ModifierIds.tank, ModifierIds.smelting, TinkerModifiers.fireprimer.getId())
         .addOptional(ModifierIds.theOneProbe);
-    if (Util.isModLoaded("botania")) {
-      this.tag(GENERAL_UPGRADES).add(ModifierIds.manafix, ModifierIds.terrarecover);
-    }
 
     this.tag(MELEE_UPGRADES).add(
       TinkerModifiers.knockback.getId(), TinkerModifiers.padded.getId(),
@@ -154,11 +151,25 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
       ModifierIds.shiny,
       TinkerModifiers.dyed.getId(), TinkerModifiers.embellishment.getId(), TinkerModifiers.trim.getId(),
       TinkerModifiers.farsighted.getId(), TinkerModifiers.nearsighted.getId());
+
+    TiCAddonRegistry.collectModifierTagHooks(new ModifierTagRegistrar());
   }
 
   @Override
   public String getName() {
     return "Tinkers' Construct Modifier Tag Provider";
+  }
+
+  private final class ModifierTagRegistrar implements slimeknights.tconstruct.library.addon.ITiCTagAddon.ModifierTagRegistrar {
+    @Override
+    public void add(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.modifiers.Modifier> tag, net.minecraft.resources.ResourceLocation... ids) {
+      ModifierTagProvider.this.tag(tag).add(ids);
+    }
+
+    @Override
+    public void addOptional(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.modifiers.Modifier> tag, net.minecraft.resources.ResourceLocation... ids) {
+      ModifierTagProvider.this.tag(tag).addOptional(ids);
+    }
   }
 
 }

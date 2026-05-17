@@ -5,9 +5,11 @@ import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.Type;
+import slimeknights.tconstruct.library.utils.Util;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -56,6 +58,9 @@ public final class TiCAddonFinder {
     for (ModFileScanData scanData : allScanData) {
       for (ModFileScanData.AnnotationData annotation : scanData.getAnnotations()) {
         if (Objects.equals(annotation.annotationType(), annotationType)) {
+          if (missingRequiredMod(annotation)) {
+            continue;
+          }
           addonClassNames.add(annotation.memberName());
         }
       }
@@ -74,5 +79,23 @@ public final class TiCAddonFinder {
       }
     }
     return instances;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static boolean missingRequiredMod(ModFileScanData.AnnotationData annotation) {
+    Object requiredMods = annotation.annotationData().get("requiredMods");
+    if (!(requiredMods instanceof List<?> mods) || mods.isEmpty()) {
+      return false;
+    }
+    for (Object mod : mods) {
+      if (mod instanceof String modId && !Util.isModLoaded(modId)) {
+        LOGGER.debug("Skipping TiC addon {} because required mod {} is not loaded", annotation.memberName(), modId);
+        return true;
+      }
+    }
+    if (!mods.stream().allMatch(String.class::isInstance)) {
+      LOGGER.warn("Ignoring malformed requiredMods on TiC addon {}: {}", annotation.memberName(), Arrays.toString(mods.toArray()));
+    }
+    return false;
   }
 }

@@ -18,7 +18,6 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import slimeknights.tconstruct.library.utils.Util;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
@@ -74,9 +73,11 @@ import slimeknights.tconstruct.library.modifiers.modules.technical.ArmorLevelMod
 import slimeknights.tconstruct.library.modifiers.modules.technical.ArmorStatModule;
 import slimeknights.tconstruct.library.modifiers.modules.technical.MaxArmorStatModule;
 import slimeknights.tconstruct.library.modifiers.util.DynamicModifier;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.modifiers.util.ModifierDeferredRegister;
 import slimeknights.tconstruct.library.modifiers.util.ModifierLevelDisplay;
 import slimeknights.tconstruct.library.modifiers.util.ModifierLevelDisplay.UniqueForLevels;
+import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.util.StaticModifier;
 import slimeknights.tconstruct.library.module.ModuleHookMap;
 import slimeknights.tconstruct.library.recipe.modifiers.ModifierSalvage;
@@ -201,18 +202,8 @@ public final class TinkerModifiers extends TinkerModule {
      * Modifiers
      */
     public static final StaticModifier<OverslimeModifier> overslime = MODIFIERS.register("overslime", OverslimeModifier::new);
-    public static final StaticModifier<?> manafix;
-    public static final StaticModifier<?> terrarecover;
-    static {
-        if (Util.isModLoaded("botania")) {
-            manafix = MODIFIERS.register("manafix", slimeknights.tconstruct.tools.modifiers.Botania.ManaFixModifier::new);
-            terrarecover = MODIFIERS.register("terrarecover", slimeknights.tconstruct.tools.modifiers.Botania.TerraRecoverModifier::new);
-        } else {
-            manafix = null;
-            terrarecover = null;
-        }
-    }
-
+    public static final StaticModifier<?> manafix = new StaticModifier<>(new ModifierId(TConstruct.MOD_ID, "manafix"));
+    public static final StaticModifier<?> terrarecover = new StaticModifier<>(new ModifierId(TConstruct.MOD_ID, "terrarecover"));
     public static final StaticModifier<ThermalDecompositeModifier> thermaldecomposite = MODIFIERS.register("thermaldecomposite", ThermalDecompositeModifier::new);
     public static final StaticModifier<MagneticModifier> magnetic = MODIFIERS.register("magnetic", MagneticModifier::new);
     public static final StaticModifier<FarsightedModifier> farsighted = MODIFIERS.register("farsighted", FarsightedModifier::new);
@@ -754,5 +745,9 @@ public final class TinkerModifiers extends TinkerModule {
         output.accept(obsidianReinforcement);
         creativeSlotItem.get().addVariants(output::accept);
         // modifier crystal is handled by tool parts tab
+    }
+
+    static {
+        TiCAddonRegistry.registerStaticModifiers(MODIFIERS::register);
     }
 }

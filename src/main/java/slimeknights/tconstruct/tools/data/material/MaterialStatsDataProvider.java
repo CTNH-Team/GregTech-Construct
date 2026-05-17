@@ -119,10 +119,6 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(510, 6.5f, IRON, 2f),
                 HandleMaterialStats.multipliers().durability(1.15f).attackSpeed(0.95f).build(),
                 StatlessMaterialStats.BINDING);
-        addMaterialStats(MaterialIds.manaSteel,
-                new HeadMaterialStats(400, 6.5f, IRON, 2.5f),
-                HandleMaterialStats.multipliers().durability(1.15f).miningSpeed(1.05f).attackSpeed(1.05f).attackDamage(1.1f).build(),
-                StatlessMaterialStats.BINDING);
 
         // tier 3
         // vanilla diamond: 1561, 8f, DIAMOND, 3f
@@ -191,10 +187,6 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.steeleaf,
                 new HeadMaterialStats(200, 8, DIAMOND, 3),
                 HandleMaterialStats.multipliers().durability(0.65f).attackSpeed(1.15f).miningSpeed(1.15f).build(),
-                StatlessMaterialStats.BINDING);
-        addMaterialStats(MaterialIds.terraSteel,
-                new HeadMaterialStats(750, 7.5f, DIAMOND, 3.5f),
-                HandleMaterialStats.multipliers().durability(1.35f).miningSpeed(1.2f).attackSpeed(1.2f).attackDamage(1.3f).build(),
                 StatlessMaterialStats.BINDING);
         addMaterialStats(MaterialIds.polyethylene,
                 new HeadMaterialStats(600, 9f, WOOD, 0.5f),
@@ -307,9 +299,6 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.ironwood,
                 new LimbMaterialStats(512, 0.05f, 0.05f, -0.15f),
                 new GripMaterialStats(0.15f, -0.15f, 2f));
-        addMaterialStats(MaterialIds.manaSteel,
-                new LimbMaterialStats(350, 0.15f, 0.1f, 0.1f),
-                new GripMaterialStats(0.15f, 0.1f, 2.5f));
 
         // tier 3
         addMaterialStats(MaterialIds.slimesteel,
@@ -362,9 +351,6 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.steeleaf,
                 new LimbMaterialStats(200, 0, 0, 0.15f),
                 new GripMaterialStats(-0.35f, 0, 2.75f));
-        addMaterialStats(MaterialIds.terraSteel,
-                new LimbMaterialStats(750, 0.2f, 0.3f, 0.3f),
-                new GripMaterialStats(0.35f, 0.3f, 3.5f));
         addMaterialStats(MaterialIds.polyethylene,
                 new LimbMaterialStats(600, 0.2f, 0.0f, 0.1f),
                 new GripMaterialStats(0.5f, 0.1f, 0.5f));
@@ -476,7 +462,6 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addArmorShieldStats(MaterialIds.aluminum,  PlatingMaterialStats.builder().durabilityFactor(13).armor(2, 4, 6, 2), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.silver,    PlatingMaterialStats.builder().durabilityFactor(18).armor(1, 4, 5, 2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.lead,      PlatingMaterialStats.builder().durabilityFactor(12).armor(1, 3, 4, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.manaSteel, PlatingMaterialStats.builder().durabilityFactor(20).armor(3, 5, 6, 3).toughness(2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
         // tier 3
         addMaterialStats(MaterialIds.nahuatl, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.ichorskin, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS);
@@ -495,7 +480,6 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addArmorShieldStats(MaterialIds.pewter,            PlatingMaterialStats.builder().durabilityFactor(16).armor(2, 5, 7, 2), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.electrum,          PlatingMaterialStats.builder().durabilityFactor(14).armor(1, 3, 4, 2), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.steeleaf,          PlatingMaterialStats.builder().durabilityFactor(10).armor(2, 5, 7, 2), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.terraSteel,        PlatingMaterialStats.builder().durabilityFactor(50).armor(3, 6, 8, 4).toughness(3).knockbackResistance(0.15f), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.polyethylene,      PlatingMaterialStats.builder().durabilityFactor(50).armor(3, 5, 8, 4).toughness(4).knockbackResistance(0.25f), StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.polyvinylChloride, PlatingMaterialStats.builder().durabilityFactor(60).armor(3, 5, 8, 4).toughness(4).knockbackResistance(0.35f), StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
         // tier 4
