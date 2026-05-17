@@ -209,6 +209,7 @@ public class ModifierIds {
     public static final ModifierId preserved = id("preserved");
     public static final ModifierId holy = id("holy");
     public static final ModifierId manafix = id("manafix");
+  public static final ModifierId magnetic = id("magnetic");
     // traits - tier 3
     public static final ModifierId overcast = id("overcast");
     public static final ModifierId overshield = id("overshield");
