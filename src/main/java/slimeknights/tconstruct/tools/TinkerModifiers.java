@@ -18,6 +18,7 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import slimeknights.tconstruct.library.utils.Util;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
@@ -102,8 +103,6 @@ import slimeknights.tconstruct.tools.entity.FluidEffectProjectile;
 import slimeknights.tconstruct.tools.item.CreativeSlotItem;
 import slimeknights.tconstruct.tools.item.DragonScaleItem;
 import slimeknights.tconstruct.tools.item.ModifierCrystalItem;
-import slimeknights.tconstruct.tools.modifiers.Botania.ManaFixModifier;
-import slimeknights.tconstruct.tools.modifiers.Botania.TerraRecoverModifier;
 import slimeknights.tconstruct.tools.modifiers.EnergyHandlerModifier;
 import slimeknights.tconstruct.tools.modifiers.ModifierLootModifier;
 import slimeknights.tconstruct.tools.modifiers.ability.armor.AmbidextrousModifier;
@@ -202,8 +201,18 @@ public final class TinkerModifiers extends TinkerModule {
      * Modifiers
      */
     public static final StaticModifier<OverslimeModifier> overslime = MODIFIERS.register("overslime", OverslimeModifier::new);
-    public static final StaticModifier<ManaFixModifier> manafix = MODIFIERS.register("manafix", ManaFixModifier::new);
-    public static final StaticModifier<TerraRecoverModifier> terrarecover = MODIFIERS.register("terrarecover", TerraRecoverModifier::new);
+    public static final StaticModifier<?> manafix;
+    public static final StaticModifier<?> terrarecover;
+    static {
+        if (Util.isModLoaded("botania")) {
+            manafix = MODIFIERS.register("manafix", slimeknights.tconstruct.tools.modifiers.Botania.ManaFixModifier::new);
+            terrarecover = MODIFIERS.register("terrarecover", slimeknights.tconstruct.tools.modifiers.Botania.TerraRecoverModifier::new);
+        } else {
+            manafix = null;
+            terrarecover = null;
+        }
+    }
+
     public static final StaticModifier<ThermalDecompositeModifier> thermaldecomposite = MODIFIERS.register("thermaldecomposite", ThermalDecompositeModifier::new);
     public static final StaticModifier<MagneticModifier> magnetic = MODIFIERS.register("magnetic", MagneticModifier::new);
     public static final StaticModifier<FarsightedModifier> farsighted = MODIFIERS.register("farsighted", FarsightedModifier::new);
