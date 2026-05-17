@@ -62,15 +62,11 @@ import slimeknights.tconstruct.shared.TinkerEffects;
 import slimeknights.tconstruct.shared.TinkerFood;
 import slimeknights.tconstruct.shared.block.SlimeType;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
-import slimeknights.tconstruct.smeltery.data.SmelteryCompat;
 import slimeknights.tconstruct.smeltery.item.CopperCanItem;
 import slimeknights.tconstruct.smeltery.item.TankItem;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 import slimeknights.tconstruct.tools.network.FluidDataSerializer;
 import slimeknights.tconstruct.world.TinkerWorld;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static slimeknights.mantle.Mantle.commonResource;
 import static slimeknights.tconstruct.fluids.block.BurningLiquidBlock.createBurning;
