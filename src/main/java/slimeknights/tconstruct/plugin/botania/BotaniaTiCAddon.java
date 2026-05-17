@@ -38,8 +38,8 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCStaticModifierAddon, ITiC
   @Override
   public void registerDynamicMaterialProviders(DynamicProviderRegistrar registrar) {
     registrar.addProvider("BotaniaMaterialDataProvider", BotaniaMaterialDataProvider::new);
-    registrar.addProvider("BotaniaMaterialStatsDataProvider", output -> new BotaniaMaterialStatsDataProvider(output, new BotaniaMaterialDataProvider(output)));
-    registrar.addProvider("BotaniaMaterialTraitsDataProvider", output -> new BotaniaMaterialTraitsDataProvider(output, new BotaniaMaterialDataProvider(output)));
+    registrar.addProvider("BotaniaMaterialStatsDataProvider", BotaniaMaterialStatsDataProvider::new);
+    registrar.addProvider("BotaniaMaterialTraitsDataProvider", BotaniaMaterialTraitsDataProvider::new);
   }
 
   @Override

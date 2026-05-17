@@ -10,6 +10,10 @@ import slimeknights.tconstruct.tools.data.material.MaterialIds;
  * Botania-owned material traits.
  */
 public class BotaniaMaterialTraitsDataProvider extends AbstractMaterialTraitDataProvider {
+  public BotaniaMaterialTraitsDataProvider(PackOutput packOutput) {
+    this(packOutput, new BotaniaMaterialDataProvider(packOutput));
+  }
+
   public BotaniaMaterialTraitsDataProvider(PackOutput packOutput, AbstractMaterialDataProvider materials) {
     super(packOutput, materials);
   }

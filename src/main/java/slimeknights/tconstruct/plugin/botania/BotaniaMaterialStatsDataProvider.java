@@ -18,6 +18,10 @@ import static net.minecraft.world.item.Tiers.IRON;
  * Botania-owned material stats.
  */
 public class BotaniaMaterialStatsDataProvider extends AbstractMaterialStatsDataProvider {
+  public BotaniaMaterialStatsDataProvider(PackOutput packOutput) {
+    this(packOutput, new BotaniaMaterialDataProvider(packOutput));
+  }
+
   public BotaniaMaterialStatsDataProvider(PackOutput packOutput, AbstractMaterialDataProvider materials) {
     super(packOutput, materials);
   }
