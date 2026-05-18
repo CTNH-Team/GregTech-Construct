@@ -80,6 +80,42 @@ class DynamicDataProviderRunnerTest extends BaseMcTest {
   }
 
   @Test
+  void failingNamedProviderConstructionIncludesProviderEntryName() {
+    assertThatThrownBy(() -> DynamicDataProviderRunner.run(
+        "test",
+        List.of(new DynamicProviderFactory("NamedConstructionProvider", output -> {
+          throw new IllegalStateException("expected provider construction failure");
+        }))
+    ))
+      .isInstanceOf(IllegalStateException.class)
+      .hasMessageContaining("NamedConstructionProvider")
+      .hasRootCauseMessage("expected provider construction failure");
+  }
+
+  @Test
+  void namedNullProviderIncludesProviderEntryName() {
+    assertThatThrownBy(() -> DynamicDataProviderRunner.run(
+        "test",
+        List.of(new DynamicProviderFactory("NamedNullProvider", output -> null))
+    ))
+      .isInstanceOf(IllegalStateException.class)
+      .hasMessageContaining("NamedNullProvider")
+      .hasMessageContaining("returned null");
+  }
+
+  @Test
+  void namedRunFailureIncludesProviderEntryNameAndProviderName() {
+    assertThatThrownBy(() -> DynamicDataProviderRunner.run(
+        "test",
+        List.of(new DynamicProviderFactory("RegisteredRunProvider", output -> new FailingRunProvider()))
+    ))
+      .isInstanceOf(IllegalStateException.class)
+      .hasMessageContaining("RegisteredRunProvider")
+      .hasMessageContaining("Failing Run Provider")
+      .hasRootCauseMessage("expected provider run failure");
+  }
+
+  @Test
   void failingProviderRunStopsLaterProviders() {
     assertThatThrownBy(() -> DynamicDataProviderRunner.run(
         "test",

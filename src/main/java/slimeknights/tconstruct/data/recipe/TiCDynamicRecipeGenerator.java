@@ -2,6 +2,7 @@ package slimeknights.tconstruct.data.recipe;
 
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import slimeknights.tconstruct.data.pack.DynamicProviderFactory;
 import slimeknights.tconstruct.gadgets.data.GadgetRecipeProvider;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
@@ -63,7 +64,7 @@ public final class TiCDynamicRecipeGenerator {
   static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
     List<Function<PackOutput, ? extends DataProvider>> providers = new ArrayList<>();
     for (RecipeProviderEntry entry : createProviderEntries()) {
-      providers.add(entry.factory());
+      providers.add(new DynamicProviderFactory(entry.name(), entry.factory()));
     }
     return providers;
   }

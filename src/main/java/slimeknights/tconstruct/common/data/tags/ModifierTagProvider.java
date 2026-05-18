@@ -4,16 +4,25 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.tconstruct.TConstruct;
-import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
+import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 import slimeknights.tconstruct.library.data.tinkering.AbstractModifierTagProvider;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.data.ModifierIds;
 
+import java.util.function.Consumer;
+
 import static slimeknights.tconstruct.common.TinkerTags.Modifiers.*;
 
 public class ModifierTagProvider extends AbstractModifierTagProvider {
+  private final Consumer<DynamicTagProviderRegistrar.ModifierTagRegistrar> addonTags;
+
   public ModifierTagProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
+    this(packOutput, existingFileHelper, hook -> {});
+  }
+
+  public ModifierTagProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper, Consumer<DynamicTagProviderRegistrar.ModifierTagRegistrar> addonTags) {
     super(packOutput, TConstruct.MOD_ID, existingFileHelper);
+    this.addonTags = addonTags;
   }
 
   @Override
@@ -73,7 +82,7 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
     this.tag(GENERAL_UPGRADES).add(
       ModifierIds.diamond, ModifierIds.emerald, ModifierIds.netherite,
       ModifierIds.reinforced, ModifierIds.overforced, ModifierIds.soulbound,
-      ModifierIds.experienced, ModifierIds.manafix, ModifierIds.terrarecover, ModifierIds.magnetic, ModifierIds.scope, ModifierIds.zoom,
+      ModifierIds.experienced, ModifierIds.magnetic, ModifierIds.scope, ModifierIds.zoom,
       ModifierIds.tank, ModifierIds.smelting, TinkerModifiers.fireprimer.getId())
         .addOptional(ModifierIds.theOneProbe);
 
@@ -152,7 +161,7 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
       TinkerModifiers.dyed.getId(), TinkerModifiers.embellishment.getId(), TinkerModifiers.trim.getId(),
       TinkerModifiers.farsighted.getId(), TinkerModifiers.nearsighted.getId());
 
-    TiCAddonRegistry.collectModifierTagHooks(new ModifierTagRegistrar());
+    addonTags.accept(new ModifierTagRegistrar());
   }
 
   @Override
@@ -160,7 +169,7 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
     return "Tinkers' Construct Modifier Tag Provider";
   }
 
-  private final class ModifierTagRegistrar implements slimeknights.tconstruct.library.addon.ITiCTagAddon.ModifierTagRegistrar {
+  private final class ModifierTagRegistrar implements DynamicTagProviderRegistrar.ModifierTagRegistrar {
     @Override
     public void add(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.modifiers.Modifier> tag, net.minecraft.resources.ResourceLocation... ids) {
       ModifierTagProvider.this.tag(tag).add(ids);

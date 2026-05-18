@@ -21,9 +21,10 @@ import slimeknights.tconstruct.common.data.tags.MaterialTagProvider;
 import slimeknights.tconstruct.common.data.tags.MenuTypeTagProvider;
 import slimeknights.tconstruct.common.data.tags.ModifierTagProvider;
 import slimeknights.tconstruct.common.data.tags.PotionTagProvider;
-import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.data.pack.DynamicDataProviderRunner;
+import slimeknights.tconstruct.data.pack.DynamicProviderFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public final class TiCDynamicTagGenerator {
     private TiCDynamicTagGenerator() {}
 
     public static void register() {
-        register((owner, providers) -> DynamicDataProviderRunner.run(owner, providers));
+        register(DynamicDataProviderRunner::run);
     }
 
     /** Adds an extra runtime tag provider for TiC's dynamic data pack. */
@@ -53,8 +54,8 @@ public final class TiCDynamicTagGenerator {
         runner.run("tconstruct-tags", createProviders());
     }
 
-    public static void registerDefaultProviders(DynamicProviderRegistrar registrar) {
-        TagProviderState state = new TagProviderState();
+    public static void registerDefaultProviders(DynamicTagProviderRegistrar registrar) {
+        TagProviderState state = new TagProviderState(registrar);
         registrar.addProvider("BlockTagProvider", state::createBlockTags);
         registrar.addProvider("ItemTagProvider", state::createItemTags);
         registrar.addProvider("FluidTagProvider", state::createFluidTags);
@@ -71,14 +72,15 @@ public final class TiCDynamicTagGenerator {
     static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
         List<Function<PackOutput, ? extends DataProvider>> providers = new ArrayList<>();
         for (TagProviderEntry entry : createProviderEntries()) {
-            providers.add(entry.factory());
+            providers.add(new DynamicProviderFactory(entry.name(), entry.factory()));
         }
         return providers;
     }
 
     static List<TagProviderEntry> createProviderEntries() {
         List<TagProviderEntry> entries = new ArrayList<>();
-        TiCAddonRegistry.collectTagProviders((name, factory) -> entries.add(new TagProviderEntry(name, factory)));
+        DynamicTagProviderRegistrar registrar = new DynamicTagProviderRegistrar((name, factory) -> entries.add(new TagProviderEntry(name, factory)));
+        TiCAddonRegistry.collectTagProviders(registrar);
         synchronized (TiCDynamicTagGenerator.class) {
             entries.addAll(ADDITIONAL_PROVIDER_ENTRIES);
         }
@@ -93,10 +95,15 @@ public final class TiCDynamicTagGenerator {
     record TagProviderEntry(String name, Function<PackOutput, ? extends DataProvider> factory) {}
 
     private static final class TagProviderState {
+        private final DynamicTagProviderRegistrar registrar;
         private CompletableFuture<Provider> lookupProvider;
         private final ExistingFileHelper existingFileHelper = createExistingFileHelper();
         private BlockTagProvider blockTags;
         private DatapackBuiltinEntriesProvider datapackRegistryProvider;
+
+        private TagProviderState(DynamicTagProviderRegistrar registrar) {
+            this.registrar = registrar;
+        }
 
         private CompletableFuture<Provider> lookupProvider() {
             if (lookupProvider == null) {
@@ -115,7 +122,7 @@ public final class TiCDynamicTagGenerator {
         }
 
         private FluidTagProvider createFluidTags(PackOutput output) {
-            return new FluidTagProvider(output, lookupProvider(), existingFileHelper);
+            return new FluidTagProvider(output, lookupProvider(), existingFileHelper, registrar::applyFluidTags);
         }
 
         private EntityTypeTagProvider createEntityTypeTags(PackOutput output) {
@@ -143,11 +150,11 @@ public final class TiCDynamicTagGenerator {
         }
 
         private MaterialTagProvider createMaterialTags(PackOutput output) {
-            return new MaterialTagProvider(output, existingFileHelper);
+            return new MaterialTagProvider(output, existingFileHelper, registrar::applyMaterialTags);
         }
 
         private ModifierTagProvider createModifierTags(PackOutput output) {
-            return new ModifierTagProvider(output, existingFileHelper);
+            return new ModifierTagProvider(output, existingFileHelper, registrar::applyModifierTags);
         }
 
         private DatapackBuiltinEntriesProvider registryProvider(PackOutput output) {

@@ -65,6 +65,7 @@ import slimeknights.tconstruct.plugin.ImmersiveEngineeringPlugin;
 import slimeknights.tconstruct.plugin.apotheosis.ApotheosisPlugin;
 import slimeknights.tconstruct.plugin.craftingtweaks.CraftingTweaksPlugin;
 import slimeknights.tconstruct.plugin.jsonthings.JsonThingsPlugin;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.shared.TinkerAttributes;
 import slimeknights.tconstruct.shared.TinkerClient;
 import slimeknights.tconstruct.shared.TinkerCommons;
@@ -129,6 +130,7 @@ public class TConstruct {
         bus.register(new TinkerTools());
         // smeltery
         bus.register(new TinkerSmeltery());
+        TiCAddonRegistry.initFluidContent();
         bus.register(new TinkerFluids());
 
         // init deferred registers

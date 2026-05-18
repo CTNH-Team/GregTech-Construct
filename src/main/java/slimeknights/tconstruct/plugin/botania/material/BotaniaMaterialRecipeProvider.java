@@ -1,12 +1,12 @@
-package slimeknights.tconstruct.plugin.botania;
+package slimeknights.tconstruct.plugin.botania.material;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import slimeknights.tconstruct.common.data.BaseRecipeProvider;
-import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.library.data.recipe.IMaterialRecipeHelper;
-import slimeknights.tconstruct.tools.data.material.MaterialIds;
+import slimeknights.tconstruct.plugin.botania.BotaniaTiCAddon;
+import slimeknights.tconstruct.plugin.botania.smeltery.BotaniaSmelteryCompat;
 
 import java.util.function.Consumer;
 
@@ -22,10 +22,10 @@ public class BotaniaMaterialRecipeProvider extends BaseRecipeProvider implements
   protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
     Consumer<FinishedRecipe> wrapped = withCondition(consumer, new ModLoadedCondition(BotaniaTiCAddon.MOD_ID));
     String folder = "tools/materials/";
-    metalMaterialRecipe(wrapped, MaterialIds.manaSteel, folder, "manasteel", true);
-    metalMaterialRecipe(wrapped, MaterialIds.terraSteel, folder, "terrasteel", true);
-    compatMeltingCasting(wrapped, MaterialIds.manaSteel, TinkerFluids.moltenManaSteel, folder);
-    compatMeltingCasting(wrapped, MaterialIds.terraSteel, TinkerFluids.moltenTerraSteel, folder);
+    metalMaterialRecipe(wrapped, BotaniaMaterialIds.manaSteel, folder, "manasteel", true);
+    metalMaterialRecipe(wrapped, BotaniaMaterialIds.terraSteel, folder, "terrasteel", true);
+    compatMeltingCasting(wrapped, BotaniaMaterialIds.manaSteel, BotaniaSmelteryCompat.moltenManaSteel, folder);
+    compatMeltingCasting(wrapped, BotaniaMaterialIds.terraSteel, BotaniaSmelteryCompat.moltenTerraSteel, folder);
   }
 
   @Override

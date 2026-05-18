@@ -1,8 +1,7 @@
-package slimeknights.tconstruct.plugin.botania;
+package slimeknights.tconstruct.plugin.botania.material;
 
 import slimeknights.tconstruct.library.client.data.material.AbstractMaterialSpriteProvider;
 import slimeknights.tconstruct.library.client.data.spritetransformer.GreyToColorMapping;
-import slimeknights.tconstruct.tools.data.material.MaterialIds;
 
 /**
  * Botania-owned material sprite definitions.
@@ -15,7 +14,7 @@ public class BotaniaMaterialSpriteProvider extends AbstractMaterialSpriteProvide
 
   @Override
   protected void addAllMaterials() {
-    buildMaterial(MaterialIds.manaSteel)
+    buildMaterial(BotaniaMaterialIds.manaSteel)
       .meleeHarvest().ranged().armor()
       .fallbacks("metal")
       .colorMapper(GreyToColorMapping.builderFromBlack()
@@ -26,7 +25,7 @@ public class BotaniaMaterialSpriteProvider extends AbstractMaterialSpriteProvide
         .addARGB(216, 0xFF3a63da)
         .addARGB(255, 0xFF67b9ee).build());
 
-    buildMaterial(MaterialIds.terraSteel)
+    buildMaterial(BotaniaMaterialIds.terraSteel)
       .meleeHarvest().ranged().armor()
       .fallbacks("metal")
       .colorMapper(GreyToColorMapping.builderFromBlack()

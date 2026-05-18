@@ -208,7 +208,6 @@ public class ModifierIds {
     public static final ModifierId consecrated = id("consecrated");
     public static final ModifierId preserved = id("preserved");
     public static final ModifierId holy = id("holy");
-    public static final ModifierId manafix = id("manafix");
   public static final ModifierId magnetic = id("magnetic");
     // traits - tier 3
     public static final ModifierId overcast = id("overcast");
@@ -227,7 +226,6 @@ public class ModifierIds {
     // traits - tier 3 compat
     public static final ModifierId maintained = id("maintained");
     public static final ModifierId temperate = id("temperate");
-    public static final ModifierId terrarecover = id("terrarecover");
     public static final ModifierId plastic = id("plastic");
     public static final ModifierId thermaldecomposite = id("thermaldecomposite");
     /** @deprecated no longer used. Make a copy if you need it */

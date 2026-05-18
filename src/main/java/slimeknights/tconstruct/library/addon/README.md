@@ -21,7 +21,7 @@ example:
 
 ```java
 @TiCAddon(requiredMods = "examplemod")
-public class ExampleTiCAddon implements ITiCAddon, ITiCStaticModifierAddon, ITiCTagAddon {
+public class ExampleTiCAddon implements ITiCAddon, ITiCStaticModifierAddon {
   public static final String MOD_ID = "examplemod";
 
   @Override
@@ -42,10 +42,13 @@ Register addon-owned providers from the entrypoint:
 - `registerDynamicMaterialProviders`
 - `registerDynamicResourceProviders`
 - `registerDynamicTinkeringProviders` if needed
-- `registerDynamicTagProviders` only if you truly need standalone tag providers
+- `registerDynamicTagProviders` for standalone tag providers and TiC-owned
+  fluid/material/modifier tag appends
 
-For TiC-owned material/modifier tags, prefer `ITiCTagAddon` append hooks instead
-of replacing entire tag providers.
+For TiC-owned fluid/material/modifier tags, prefer
+`DynamicTagProviderRegistrar#addFluidTags`, `addMaterialTags`, and
+`addModifierTags` from `registerDynamicTagProviders` instead of replacing
+entire tag providers.
 
 ### 4. Register Static Modifier Implementations Through The Addon
 
@@ -69,14 +72,17 @@ related symbol can leave the core path.
 
 Before removing anything from core, check whether the compat also needs:
 
-- stable entries in `MaterialIds`
-- stable entries in `ModifierIds`
-- placeholder references in `TinkerModifiers`
-- molten fluid registration in `TinkerFluids`
-- entries in `SmelteryCompat`
+- addon-owned ID holder classes for integration-owned material/modifier IDs
+- truly shared entries in core `MaterialIds` or `ModifierIds`
+- addon-owned placeholder holders for integration-owned static modifiers
+- addon-owned smeltery compat via `AddonSmelteryCompat` for
+  integration-owned fluids
+- shared/core fluid or `SmelteryCompat` definitions that other TiC systems
+  still depend on
 - base client metadata such as colors, translations, or modifier display config
 
-If another shared TiC system depends on those symbols, keep them in core.
+Keep only the shared registry primitives in core when other TiC systems depend
+on them; integration-owned IDs should stay with the addon holder class.
 
 ### 6. Resource Provider Rule
 
@@ -107,8 +113,10 @@ entrypoint.
 Use this rule when deciding where code belongs:
 
 - addon owns optional behavior and generated compat content
-- core owns shared IDs, registry primitives, and symbols used across multiple
-  TiC systems
+- addon-owned ID holder classes may own stable IDs for integration-owned
+  materials/modifiers
+- core owns shared registry primitives and symbols used across multiple TiC
+  systems, which may still reference those stable IDs
 
 If you are unsure whether something belongs in addon or core, read the section
 below: **Why Some Compat Pieces Still Live In The Core Path**.
@@ -133,7 +141,7 @@ below: **Why Some Compat Pieces Still Live In The Core Path**.
 
 ```java
 @TiCAddon(requiredMods = "examplemod")
-public class ExampleTiCAddon implements ITiCAddon, ITiCStaticModifierAddon, ITiCTagAddon {
+public class ExampleTiCAddon implements ITiCAddon, ITiCStaticModifierAddon {
   public static final String MOD_ID = "examplemod";
 
   @Override
@@ -153,9 +161,13 @@ public class ExampleTiCAddon implements ITiCAddon, ITiCStaticModifierAddon, ITiC
 - `registerDynamicMaterialProviders`
 - `registerDynamicResourceProviders`
 - 如果需要，再用 `registerDynamicTinkeringProviders`
-- 只有确实需要独立 tag provider 时，才使用 `registerDynamicTagProviders`
+- 使用 `registerDynamicTagProviders` 注册独立 tag provider，以及追加 TiC 自有
+  fluid/material/modifier tag 条目
 
-对于 TiC 自有的材质/modifier tag，优先使用 `ITiCTagAddon` 的追加 hook，而不是去替换整个 tag provider。
+对于 TiC 自有的 fluid/material/modifier tag，优先在
+`registerDynamicTagProviders` 中通过
+`DynamicTagProviderRegistrar#addFluidTags`、`addMaterialTags` 和
+`addModifierTags` 追加条目，而不是替换整个 tag provider。
 
 ### 4. 通过 Addon 注册静态 Modifier 实现
 
@@ -176,14 +188,14 @@ public void registerStaticModifiers(StaticModifierRegistrar registrar) {
 
 在删除 core 中的内容之前，先确认该联动是否还需要：
 
-- `MaterialIds` 中的稳定条目
-- `ModifierIds` 中的稳定条目
-- `TinkerModifiers` 中的占位引用
-- `TinkerFluids` 中的熔融流体注册
-- `SmelteryCompat` 中的条目
+- 用 addon 自有 ID holder 类保存联动自有的材质/modifier ID
+- core `MaterialIds` 或 `ModifierIds` 中真正共享的条目
+- 联动自有静态 modifier 的 addon-owned 占位 holder
+- 对联动自有流体，通过 `AddonSmelteryCompat` 持有的 addon 冶炼兼容定义
+- 其他 TiC 系统仍然依赖的共享/core 流体或 `SmelteryCompat` 定义
 - 基础客户端元数据，例如颜色、翻译、modifier 显示配置
 
-如果其他共享 TiC 系统仍然依赖这些符号，那它们就应该继续保留在 core。
+如果其他 TiC 系统仍然依赖某些共享注册级原语，就把这些原语留在 core；联动自有 ID 则应留在 addon 的 holder 类中。
 
 ### 6. 资源 Provider 规则
 
@@ -230,89 +242,107 @@ For integrations such as Botania, the following split is intentional:
   - resource/render providers
   - TiC-owned tag appends
   - static modifier implementation binding
+  - integration-owned smeltery compat, molten fluids, fluid tags, and fluid
+    textures routed through `AddonSmelteryCompat`
 - Core-owned:
-  - stable material IDs
-  - stable modifier IDs
-  - runtime modifier placeholders
-  - molten fluid registrations
-  - smeltery compat enum entries
+  - shared registry primitives that may reference addon-owned IDs
+  - runtime modifier placeholders for truly core or shared modifiers
+  - shared/core molten fluid registrations
+  - shared/core smeltery compat enum entries
   - base client metadata such as colors/translations/modifier model mapping
 
-This means Botania compat is only partially "moved out of the main path" by
-design. The addon owns the optional behavior and generated content, while the
-core still owns the symbols and registries that other TiC systems depend on.
+This means addonization is about ownership, not just moving files. Botania owns
+its optional behavior, generated content, IDs, placeholders, and smeltery compat
+entries; core still owns shared registry primitives and generic hooks that other
+TiC systems depend on.
 
-## Why The Core-Owned Pieces Are Necessary
+## Why Ownership Still Matters
 
 ### 1. IDs Must Be Stable And Globally Addressable
 
-`MaterialIds` and `ModifierIds` remain in core because a large part of TiC
-communicates through stable `ResourceLocation` identifiers. Once a compat
-material or modifier participates in shared systems, multiple places need to be
-able to refer to that ID without requiring the addon package itself.
+Stable material and modifier IDs do not automatically belong in core
+`MaterialIds` or `ModifierIds`. When an integration owns those IDs, they can
+live in addon-owned ID holder classes while still using stable
+`ResourceLocation` values.
 
 Current Botania examples:
 
-- `MaterialIds.manaSteel`
-- `MaterialIds.terraSteel`
-- `ModifierIds.manafix`
-- `ModifierIds.terrarecover`
+- `BotaniaMaterialIds`: `manaSteel`, `terraSteel`
+- `BotaniaModifierIds`: `manafix`, `terrarecover`
 
-If these IDs only existed inside the addon package, every core system that
-needs to refer to them would either:
+Those constants resolve to stable `tconstruct:*` IDs owned by the Botania
+integration. Shared core registry primitives may still reference those IDs when
+they participate in common TiC systems.
 
-- gain a hard dependency on addon classes, or
+If a shared core system needs one of these IDs, it should depend on the
+addon-owned holder class instead of:
+
 - start reconstructing raw strings such as `"tconstruct:manasteel"` in many
-  places.
+  places, or
+- moving the ID back into core `MaterialIds`/`ModifierIds` just because a core
+  registry primitive references it.
 
 Neither option is desirable.
 
 ### 2. Runtime Placeholder Modifiers Must Exist Before Addon Binding
 
-`TinkerModifiers` keeps `StaticModifier` placeholders for optional compat
-modifiers even though the concrete implementations are now registered through
-`ITiCStaticModifierAddon`.
+Integration-owned `StaticModifier` placeholders should live in the addon
+package beside the addon-owned modifier IDs, while the concrete
+implementations are registered through `ITiCStaticModifierAddon`.
 
-This is necessary because core code and JSON-facing systems still need a stable
-runtime handle for those modifier IDs. The addon supplies the implementation;
-the core keeps the placeholder identity.
+This is necessary because code and JSON-facing systems still need a stable
+runtime handle for those modifier IDs before static registration completes.
+The addon owns both that placeholder identity and the implementation binding.
 
 For Botania:
 
-- `TinkerModifiers.manafix`
-- `TinkerModifiers.terrarecover`
+- `BotaniaModifiers.manafix`
+- `BotaniaModifiers.terrarecover`
 
 The important distinction is:
 
-- the core no longer directly binds these to Botania classes
-- the addon now provides that binding
-- the placeholder remains core-owned so the modifier identity is still stable
+- Botania-specific IDs and placeholders are addon-owned
+- the addon provides the concrete modifier binding
+- core `TinkerModifiers` placeholders are only for truly core or shared
+  modifiers
 
-### 3. Fluids Are Registered In Core Registries
+### 3. Integration Fluids Can Be Addon-Owned
 
-Molten compat metals currently live in `TinkerFluids` because they participate
-in TiC's normal fluid registration pipeline:
+Integration-owned molten compat metals should live behind
+`AddonSmelteryCompat` when they do not need a core `SmelteryCompat` enum entry.
+The compat implementation owns the whole optional fluid path:
 
 - fluid object registration
+- creative tab insertion
 - tags
-- generated textures
+- generated textures and camera metadata
 - bucket/block registration
-- lookups by fluid name
+- material/compat metadata entries
 
 For Botania this includes:
 
 - `moltenManaSteel`
 - `moltenTerraSteel`
 
-As long as compat molten metals are treated as first-class TiC fluids, the core
-registry layer still needs to own them.
+Those fields live in `BotaniaSmelteryCompat`, which implements
+`AddonSmelteryCompat`. Core `TinkerFluids` only calls the generic addon hook for
+creative tab items, and the core fluid tag/texture providers do not mention
+Botania fluids directly.
 
-### 4. Smeltery Compat Uses A Shared Core Table
+If a future fluid is truly shared by multiple core systems, keeping that fluid
+in `TinkerFluids` can still be correct. The key rule is to document whether the
+owner is the addon compat implementation or a shared core registry.
 
-`SmelteryCompat` is still core-owned because it acts as a shared compat
-definition table for smeltery-related logic. Botania entries still appear there
-for the same reason molten fluids do: they participate in a common core system
-instead of a fully isolated addon-local pipeline.
+### 4. Smeltery Compat Uses Core And Addon Tables
+
+`SmelteryCompat` remains the core-owned table for shared smeltery compat
+definitions. Integration-owned entries can instead be represented by
+`AddonSmelteryCompat.Entry` and supplied by the addon.
+
+For Botania, `BotaniaSmelteryCompat.INSTANCE.entries()` replaces the old core
+enum entries. This keeps Botania-specific names, materials, and fluids out of
+`SmelteryCompat` while preserving a single addon hook for smeltery-related
+metadata.
 
 ### 5. Client Metadata Still Needs Core Visibility
 
@@ -335,32 +365,37 @@ Within this codebase, "moved to TiCAddon" should be read as:
 
 It does **not** necessarily mean:
 
-> The core no longer contains any ID, placeholder, fluid, enum, or metadata
-> entry related to that compat.
+> The core no longer contains any shared registry primitive, fluid, enum, or
+> metadata entry related to that compat.
 
-That stronger form would require a deeper architectural change, such as a
-single compat contract/manifest that can drive IDs, fluids, placeholders, and
-shared metadata from one source of truth.
+That stronger form requires every affected system to have an addon-facing
+contract, such as `AddonSmelteryCompat` for integration-owned smeltery fluids
+and metadata.
 
 ## Guidance For Future Internal Addons
 
 When adding another internal addon like Botania, use this rule:
 
 - move optional content generation and registration wiring into the addon
-- keep shared identifiers and registry-level primitives in core when other TiC
-  systems already depend on them
+- use addon-owned ID holder classes for integration-owned stable
+  materials/modifiers
+- use addon-owned compat contracts, such as `AddonSmelteryCompat`, for
+  integration-owned fluids and smeltery metadata
+- keep shared registry-level primitives in core only when other TiC systems
+  already depend on them, even if those primitives reference addon-owned IDs
 
 Before deciding a compat piece can leave the core path entirely, verify whether
 it is required by any of the following:
 
-- shared ID constants
+- addon-owned or shared ID constants
 - runtime placeholder references
-- fluid registration
-- smeltery compat tables
+- addon-owned or shared fluid registration
+- addon-owned or core smeltery compat tables
 - base client metadata
 
-If yes, keeping that piece in core is intentional and should be documented
-rather than treated as an incomplete migration.
+If yes, choose the narrowest owner that fits the shared behavior and document
+that choice. For integration-owned fluid compat, prefer an addon contract before
+falling back to core ownership.
 
 ---
 
@@ -379,73 +414,76 @@ rather than treated as an incomplete migration.
   - 资源/渲染 provider
   - 对 TiC 自有 tag 的追加
   - 静态 modifier 的具体实现绑定
+  - 通过 `AddonSmelteryCompat` 接入的联动自有冶炼兼容、熔融流体、fluid tag 和流体贴图
 - 由 core 持有：
-  - 稳定的材质 ID
-  - 稳定的 modifier ID
-  - 运行时 modifier 占位
-  - 熔融流体注册
-  - 冶炼兼容枚举项
+  - 可能引用 addon 自有 ID 的共享注册级原语
+  - 真正属于 core 或共享系统的运行时 modifier 占位
+  - 共享/core 熔融流体注册
+  - 共享/core 冶炼兼容枚举项
   - 基础客户端元数据，例如颜色、翻译、modifier 模型映射
 
-这意味着，按设计来说，Botania 联动只是**部分脱离主链路**。addon 持有可选行为和生成内容，而 core 仍然持有其他 TiC 系统依赖的符号和注册项。
+这意味着，addon 化关注的是所有权，而不只是移动文件。Botania 持有自己的可选行为、生成内容、ID、占位和冶炼兼容条目；core 仍然持有其他 TiC 系统依赖的共享注册级原语和通用 hook。
 
-## 为什么这些 core 持有的部分仍然是必要的
+## 为什么所有权仍然重要
 
 ### 1. ID 必须稳定且可被全局引用
 
-`MaterialIds` 和 `ModifierIds` 仍然保留在 core 中，因为 TiC 很多系统都是通过稳定的 `ResourceLocation` 标识符协作的。一旦某个联动材质或 modifier 参与共享系统，多个位置都需要能引用这个 ID，而不能要求它们反向依赖 addon 包。
+稳定的材质和 modifier ID 并不一定要放在 core 的 `MaterialIds` 或 `ModifierIds` 中。当某个联动拥有这些 ID 时，它们可以放在 addon 自有的 ID holder 类里，同时继续使用稳定的 `ResourceLocation` 值。
 
 当前 Botania 对应的例子有：
 
-- `MaterialIds.manaSteel`
-- `MaterialIds.terraSteel`
-- `ModifierIds.manafix`
-- `ModifierIds.terrarecover`
+- `BotaniaMaterialIds`：`manaSteel`、`terraSteel`
+- `BotaniaModifierIds`：`manafix`、`terrarecover`
 
-如果这些 ID 只存在于 addon 包中，那么所有需要引用它们的 core 系统最终只能走两条路：
+这些常量解析出来的仍然是稳定的 `tconstruct:*` ID，只是所有权属于 Botania 联动。共享的 core 注册级原语在参与公共 TiC 系统时，仍然可以引用这些 ID。
 
-- 直接对 addon 类形成硬依赖，或者
-- 到处手写 `"tconstruct:manasteel"` 这类字符串
+如果某个共享 core 系统需要这些 ID，应该依赖 addon 自有的 holder 类，而不是：
 
-这两种都不是理想方案。
+- 到处手写 `"tconstruct:manasteel"` 这类字符串，或者
+- 仅仅因为某个 core 注册级原语引用了这个 ID，就把它移回 core 的 `MaterialIds`/`ModifierIds`
 
 ### 2. 运行时 modifier 占位必须先于 addon 绑定存在
 
-`TinkerModifiers` 仍然保留这些可选联动 modifier 的 `StaticModifier` 占位，即使具体实现现在已经通过 `ITiCStaticModifierAddon` 注册。
+联动自有的 `StaticModifier` 占位应与联动自有的 modifier ID 一起放在 addon 包中，而具体实现仍然通过 `ITiCStaticModifierAddon` 注册。
 
-原因是 core 代码和面向 JSON 的系统仍然需要一个稳定的运行时引用来表示这些 modifier ID。addon 提供实现，core 保留占位身份。
+原因是代码和面向 JSON 的系统在静态注册完成前仍然需要一个稳定的运行时引用来表示这些 modifier ID。addon 同时持有这个占位身份和具体实现绑定。
 
 对于 Botania：
 
-- `TinkerModifiers.manafix`
-- `TinkerModifiers.terrarecover`
+- `BotaniaModifiers.manafix`
+- `BotaniaModifiers.terrarecover`
 
 这里真正重要的区别是：
 
-- core 不再直接把它们绑定到 Botania 类
-- addon 现在负责提供这种绑定
-- 但占位仍然由 core 持有，以保证 modifier 身份稳定
+- Botania 专属 ID 和占位都由 addon 持有
+- addon 负责提供具体 modifier 绑定
+- core `TinkerModifiers` 的占位只用于真正属于 core 或共享系统的 modifier
 
-### 3. 流体仍然注册在核心流体注册表中
+### 3. 联动流体可以由 addon 持有
 
-熔融兼容金属目前仍然放在 `TinkerFluids` 中，因为它们参与的是 TiC 标准流体注册链：
+联动自有的熔融兼容金属，如果不需要 core `SmelteryCompat` 枚举项，就应通过 `AddonSmelteryCompat` 持有。这个兼容实现负责整条可选流体链路：
 
 - 流体对象注册
+- 创造模式栏插入
 - tag
-- 贴图生成
+- 贴图和 camera 元数据生成
 - 桶/方块注册
-- 按流体名进行查找
+- 材质/兼容元数据条目
 
 对于 Botania，这包括：
 
 - `moltenManaSteel`
 - `moltenTerraSteel`
 
-只要这些兼容熔融金属仍然被视为 TiC 的一等流体，core 注册层就仍然需要持有它们。
+这些字段现在位于实现 `AddonSmelteryCompat` 的 `BotaniaSmelteryCompat` 中。core `TinkerFluids` 只调用通用 addon hook 来插入创造模式栏物品，core 的 fluid tag/texture provider 不再直接提到 Botania 流体。
 
-### 4. 冶炼兼容仍然依赖共享的 core 表
+如果未来某个流体确实被多个 core 系统共享，继续放在 `TinkerFluids` 中仍然可以是正确选择。关键是明确记录它的所有者是 addon 兼容实现，还是共享 core 注册表。
 
-`SmelteryCompat` 仍然由 core 持有，因为它本质上是冶炼相关逻辑的共享兼容定义表。Botania 项目还出现在这里，原因和熔融流体一样：它们参与的是公共核心系统，而不是一个完全隔离的 addon 本地流程。
+### 4. 冶炼兼容分为 core 表和 addon 表
+
+`SmelteryCompat` 仍然是 core 持有的共享冶炼兼容定义表。联动自有条目可以改由 `AddonSmelteryCompat.Entry` 表示，并由 addon 提供。
+
+对于 Botania，`BotaniaSmelteryCompat.INSTANCE.entries()` 取代了原来的 core 枚举条目。这样可以让 Botania 专属名称、材质和流体离开 `SmelteryCompat`，同时保留一个统一的 addon hook 来暴露冶炼相关元数据。
 
 ### 5. 客户端基础元数据仍然需要 core 可见
 
@@ -465,23 +503,25 @@ rather than treated as an incomplete migration.
 
 它**不一定**表示：
 
-> core 中从此不再包含任何与该联动有关的 ID、占位、流体、枚举项或元数据。
+> core 中从此不再包含任何与该联动有关的共享注册级原语、流体、枚举项或元数据。
 
-如果想达到后者那种更彻底的形态，就需要更深的架构调整，例如引入单一 compat contract/manifest，由一处事实源统一驱动 ID、流体、占位和共享元数据。
+后者要求每个相关系统都有面向 addon 的 contract，例如 `AddonSmelteryCompat` 负责联动自有冶炼流体和元数据。
 
 ## 对未来内部 addon 的建议
 
 以后继续添加类似 Botania 的内部 addon 时，建议遵循这个规则：
 
 - 把可选内容生成与注册接线迁入 addon
-- 如果某些共享标识或注册级原语已经被多个 TiC 系统依赖，则继续保留在 core
+- 对联动自有的稳定材质/modifier 使用 addon 自有 ID holder 类
+- 对联动自有流体和冶炼元数据，优先使用 `AddonSmelteryCompat` 这类 addon 自有兼容 contract
+- 只有当某些共享注册级原语已经被多个 TiC 系统依赖时，才继续保留在 core，即使这些原语引用 addon 自有 ID
 
 在决定某个联动内容是否可以彻底离开主链路前，先确认它是否被以下任一项需要：
 
-- 共享 ID 常量
+- addon 自有或共享 ID 常量
 - 运行时占位引用
-- 流体注册
-- 冶炼兼容表
+- addon 自有或共享流体注册
+- addon 自有或 core 冶炼兼容表
 - 基础客户端元数据
 
-如果答案是需要，那么把它保留在 core 是有意设计，应该被文档化说明，而不应简单视为“迁移没做完”。
+如果答案是需要，就选择能承载该共享行为的最窄所有者，并把这个选择写清楚。对于联动自有流体兼容，优先尝试 addon contract，再退回 core 持有。

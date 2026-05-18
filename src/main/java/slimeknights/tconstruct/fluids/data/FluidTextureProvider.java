@@ -7,6 +7,7 @@ import slimeknights.mantle.fluid.texture.FluidTexture;
 import slimeknights.mantle.registration.object.FluidObject;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.fluids.TinkerFluids;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 
 import static slimeknights.tconstruct.TConstruct.getResource;
 import static slimeknights.tconstruct.fluids.TinkerFluids.withoutMolten;
@@ -88,8 +89,6 @@ public class FluidTextureProvider extends AbstractFluidTextureProvider {
         compatOre(TinkerFluids.moltenTungsten);
         compatOre(TinkerFluids.moltenUranium);
         compatOre(TinkerFluids.moltenZinc);
-        compatOre(TinkerFluids.moltenManaSteel);
-        compatOre(TinkerFluids.moltenTerraSteel);
         compatOre(TinkerFluids.moltenPolyethylene);
         compatOre(TinkerFluids.moltenPolyvinylChloride);
         tintedMolten(TinkerFluids.moltenChromium).color(0xFFC4B180);
@@ -115,6 +114,8 @@ public class FluidTextureProvider extends AbstractFluidTextureProvider {
         // twilight
         compatOre(TinkerFluids.moltenSteeleaf);
         slime(TinkerFluids.fieryLiquid, "fiery");
+
+        TiCAddonRegistry.collectSmelteryCompat(compat -> compat.skipFluidTextures(this));
     }
 
 

@@ -61,9 +61,6 @@ public enum SmelteryCompat {
     // twilight
     STEELEAF(TinkerFluids.moltenSteeleaf, CompatType.NONE,  MaterialIds.steeleaf),
     FIERY   (TinkerFluids.fieryLiquid,    CompatType.ALLOY, MaterialIds.fiery),
-    // botania
-    MANASTEEL (TinkerFluids.moltenManaSteel, CompatType.NONE,  MaterialIds.manaSteel),
-    TERRASTEEL(TinkerFluids.moltenTerraSteel, CompatType.NONE,  MaterialIds.terraSteel),
     //gt
     POLYETHYLENE(TinkerFluids.moltenPolyethylene, CompatType.NONE,  MaterialIds.polyethylene),
     POLYVINYLCHLORIDE(TinkerFluids.moltenPolyvinylChloride, CompatType.NONE,  MaterialIds.polyvinylChloride)

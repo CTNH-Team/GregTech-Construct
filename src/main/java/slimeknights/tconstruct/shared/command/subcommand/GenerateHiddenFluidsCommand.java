@@ -19,6 +19,7 @@ import slimeknights.mantle.registration.object.FlowingFluidObject;
 import slimeknights.mantle.registration.object.FluidObject;
 import slimeknights.mantle.util.JsonHelper;
 import slimeknights.tconstruct.common.TinkerTags.Fluids;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.smeltery.data.SmelteryCompat;
 
 import java.io.BufferedWriter;
@@ -55,14 +56,14 @@ public class GenerateHiddenFluidsCommand {
     List<TagEntry> add = new ArrayList<>();
     for (SmelteryCompat compat : SmelteryCompat.values()) {
       if (!compat.isPresent()) {
-        FluidObject<?> fluid = compat.getFluid();
-        if (fluid instanceof FlowingFluidObject<?> flowing) {
-          add.add(TagEntry.tag(flowing.getLocalTag().location()));
-        } else {
-          add.add(TagEntry.element(compat.getFluid().getId()));
-        }
+        addFluid(add, compat.getFluid());
       }
     }
+    TiCAddonRegistry.collectSmelteryCompat(compat -> compat.entries().forEach(entry -> {
+      if (!entry.isPresent()) {
+        addFluid(add, entry.fluid());
+      }
+    }));
     // save the new tag
     saveTag(tagPath, tag, new TagFile(add, false, List.of()));
 
@@ -73,6 +74,15 @@ public class GenerateHiddenFluidsCommand {
       GeneratePackHelper.getPathComponent(Component.literal(tag.toString()), tagPath.toString()),
       GeneratePackHelper.getOutputComponent(pack)), true);
     return add.size();
+  }
+
+  /** Adds a fluid object to the hidden fluids tag, using the local tag for flowing fluids. */
+  private static void addFluid(List<TagEntry> add, FluidObject<?> fluid) {
+    if (fluid instanceof FlowingFluidObject<?> flowing) {
+      add.add(TagEntry.tag(flowing.getLocalTag().location()));
+    } else {
+      add.add(TagEntry.element(fluid.getId()));
+    }
   }
 
   /** Saves the passed tag */

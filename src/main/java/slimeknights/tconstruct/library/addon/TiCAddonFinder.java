@@ -33,11 +33,23 @@ public final class TiCAddonFinder {
       List<ITiCAddon> addons = new ArrayList<>();
       addons.add(BUILTIN_ADDON);
       addons.addAll(getInstances(TiCAddon.class, ITiCAddon.class));
-      cache = List.copyOf(addons);
-      modIdMap = new LinkedHashMap<>();
-      for (ITiCAddon addon : cache) {
-        modIdMap.put(addon.addonModId(), addon);
+      List<ITiCAddon> builtAddons = List.copyOf(addons);
+      Map<String, ITiCAddon> builtModIdMap = new LinkedHashMap<>();
+      for (ITiCAddon addon : builtAddons) {
+        String modId = addon.addonModId();
+        if (modId == null) {
+          throw new IllegalStateException("TiC addon " + addon.getClass().getName() + " has a null addon mod ID");
+        }
+        if (modId.isBlank()) {
+          throw new IllegalStateException("TiC addon " + addon.getClass().getName() + " has a blank addon mod ID");
+        }
+        ITiCAddon duplicate = builtModIdMap.putIfAbsent(modId, addon);
+        if (duplicate != null) {
+          throw new IllegalStateException("Duplicate TiC addon mod ID '" + modId + "' for " + duplicate.getClass().getName() + " and " + addon.getClass().getName());
+        }
       }
+      cache = builtAddons;
+      modIdMap = builtModIdMap;
     }
     return cache;
   }

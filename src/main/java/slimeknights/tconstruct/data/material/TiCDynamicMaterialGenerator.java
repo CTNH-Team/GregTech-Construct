@@ -4,6 +4,7 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.data.DynamicConditionSerializerRegistrar;
 import slimeknights.tconstruct.data.pack.DynamicDataProviderRunner;
+import slimeknights.tconstruct.data.pack.DynamicProviderFactory;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.tools.data.material.MaterialDataProvider;
@@ -22,7 +23,7 @@ public final class TiCDynamicMaterialGenerator {
 
   public static void register() {
     DynamicConditionSerializerRegistrar.registerCommonSerializers();
-    register((owner, providers) -> DynamicDataProviderRunner.run(owner, providers));
+    register(DynamicDataProviderRunner::run);
   }
 
   /** Adds an extra runtime material provider for TiC's dynamic data pack. */
@@ -56,7 +57,7 @@ public final class TiCDynamicMaterialGenerator {
   static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
     List<Function<PackOutput, ? extends DataProvider>> providers = new ArrayList<>();
     for (MaterialProviderEntry entry : createProviderEntries()) {
-      providers.add(entry.factory());
+      providers.add(new DynamicProviderFactory(entry.name(), entry.factory()));
     }
     return providers;
   }

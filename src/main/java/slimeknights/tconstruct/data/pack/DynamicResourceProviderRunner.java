@@ -28,23 +28,28 @@ public class DynamicResourceProviderRunner {
   private DynamicResourceProviderRunner() {}
 
   public static void run(String owner, List<Function<PackOutput, ? extends DataProvider>> providers) {
+    runNamed(owner, providers.stream().map(DynamicResourceProviderRunner::toProviderFactory).toList());
+  }
+
+  public static void runNamed(String owner, List<DynamicProviderFactory> providers) {
     Path outputRoot = prepareOutputRoot();
     PackOutput output = new PackOutput(outputRoot);
     long startTime = System.nanoTime();
     int completedProviders = 0;
     int capturedResources = 0;
 
-    for (Function<PackOutput, ? extends DataProvider> providerFactory : providers) {
+    for (DynamicProviderFactory providerFactory : providers) {
+      String providerEntry = providerFactory.name();
       DataProvider provider;
       try {
         provider = providerFactory.apply(output);
       } catch (Exception exception) {
-        log.error("Failed to create dynamic resource provider for {}", owner, exception);
-        throw new IllegalStateException("Failed to create dynamic resource provider for " + owner, exception);
+        log.error("Failed to create dynamic resource provider{} for {}", providerEntrySuffix(providerEntry), owner, exception);
+        throw new IllegalStateException("Failed to create dynamic resource provider" + providerEntrySuffix(providerEntry) + " for " + owner, exception);
       }
       if (provider == null) {
-        log.error("Dynamic resource provider factory returned null for {}", owner);
-        throw new IllegalStateException("Dynamic resource provider factory returned null for " + owner);
+        log.error("Dynamic resource provider{} factory returned null for {}", providerEntrySuffix(providerEntry), owner);
+        throw new IllegalStateException("Dynamic resource provider" + providerEntrySuffix(providerEntry) + " factory returned null for " + owner);
       }
 
       CapturingOutput cache = new CapturingOutput(outputRoot);
@@ -53,13 +58,29 @@ public class DynamicResourceProviderRunner {
         completedProviders++;
         capturedResources += cache.capturedResources.get();
       } catch (Exception exception) {
-        log.error("Failed to run dynamic resource provider '{}' for {}", provider.getName(), owner, exception);
-        throw new IllegalStateException("Failed to run dynamic resource provider '" + provider.getName() + "' for " + owner, exception);
+        String providerName = provider.getName();
+        log.error("Failed to run dynamic resource provider '{}'{} for {}", providerName, differentProviderEntrySuffix(providerEntry, providerName), owner, exception);
+        throw new IllegalStateException("Failed to run dynamic resource provider '" + providerName + "'" + differentProviderEntrySuffix(providerEntry, providerName) + " for " + owner, exception);
       }
     }
 
     log.info("Captured {} dynamic client resources from {} providers for {} in {} ms",
       capturedResources, completedProviders, owner, (System.nanoTime() - startTime) / 1000000f);
+  }
+
+  private static String providerEntrySuffix(String providerEntry) {
+    return providerEntry.isBlank() ? "" : " '" + providerEntry + "'";
+  }
+
+  private static String differentProviderEntrySuffix(String providerEntry, String providerName) {
+    return providerEntry.isBlank() || providerEntry.equals(providerName) ? "" : " registered as '" + providerEntry + "'";
+  }
+
+  private static DynamicProviderFactory toProviderFactory(Function<PackOutput, ? extends DataProvider> factory) {
+    if (factory instanceof DynamicProviderFactory providerFactory) {
+      return providerFactory;
+    }
+    return DynamicProviderFactory.unnamed(factory);
   }
 
   private static class CapturingOutput implements CachedOutput {

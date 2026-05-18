@@ -4,12 +4,14 @@ import com.google.common.hash.HashCode;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fluids.FluidType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import slimeknights.tconstruct.common.data.tags.MaterialTagProvider;
-import slimeknights.tconstruct.common.data.tags.ModifierTagProvider;
+import slimeknights.mantle.fluid.texture.AbstractFluidTextureProvider;
+import slimeknights.mantle.registration.object.FlowingFluidObject;
 import slimeknights.tconstruct.library.client.data.spritetransformer.FramesSpriteTransformer;
 import slimeknights.tconstruct.library.client.data.spritetransformer.GreyToColorMapping;
 import slimeknights.tconstruct.library.client.data.spritetransformer.GreyToSpriteTransformer;
@@ -17,10 +19,17 @@ import slimeknights.tconstruct.library.client.data.spritetransformer.IColorMappi
 import slimeknights.tconstruct.library.client.data.spritetransformer.ISpriteTransformer;
 import slimeknights.tconstruct.library.client.data.spritetransformer.OffsettingSpriteTransformer;
 import slimeknights.tconstruct.library.client.data.spritetransformer.RecolorSpriteTransformer;
-import slimeknights.tconstruct.plugin.botania.BotaniaMaterialDataProvider;
-import slimeknights.tconstruct.plugin.botania.BotaniaMaterialRenderInfoProvider;
-import slimeknights.tconstruct.plugin.botania.BotaniaMaterialTraitsDataProvider;
+import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.plugin.botania.fluid.BotaniaFluidTextureProvider;
+import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialDataProvider;
+import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialRenderInfoProvider;
+import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialTraitsDataProvider;
+import slimeknights.tconstruct.plugin.botania.smeltery.BotaniaSmelteryCompat;
 import slimeknights.tconstruct.plugin.botania.BotaniaTiCAddon;
+import slimeknights.tconstruct.plugin.botania.tag.BotaniaFluidTagProvider;
+import slimeknights.tconstruct.plugin.botania.tag.BotaniaMaterialTagProvider;
+import slimeknights.tconstruct.plugin.botania.tag.BotaniaModifierTagProvider;
+import slimeknights.tconstruct.smeltery.data.SmelteryCompat;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.lang.reflect.Field;
@@ -31,6 +40,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -75,6 +85,8 @@ class BotaniaTiCAddonIntegrationTest extends BaseMcTest {
       .extracting(factory -> factory.apply(output).getName())
       .anyMatch("Tinkers' Construct Botania Material Render Info"::equals)
       .anyMatch(name -> name.contains("Botania Materials"))
+      .anyMatch("Tinkers' Construct Botania Fluid Texture Providers"::equals)
+      .anyMatch("Tinkers' Construct Botania Fluid Texture Cameras"::equals)
       .anyMatch(name -> name.contains("Material Palette Debug"));
   }
 
@@ -95,24 +107,109 @@ class BotaniaTiCAddonIntegrationTest extends BaseMcTest {
       } catch (ReflectiveOperationException exception) {
         throw new AssertionError(exception);
       }
-    }).toList()).doesNotContain("BotaniaModifierTagProvider", "BotaniaMaterialTagProvider");
+    }).toList())
+      .doesNotContain("BotaniaFluidTagProvider", "BotaniaModifierTagProvider", "BotaniaMaterialTagProvider");
   }
 
   @Test
-  void coreTagProvidersIncludeAddonEntries() {
+  void botaniaSmelteryCompatIsAddonOwned() {
+    assertThat(BotaniaSmelteryCompat.INSTANCE.entries())
+      .extracting(slimeknights.tconstruct.library.addon.AddonSmelteryCompat.Entry::name)
+      .containsExactly("manasteel", "terrasteel");
+    assertThat(BotaniaSmelteryCompat.INSTANCE.entries())
+      .extracting(entry -> entry.fluid().getId().getPath())
+      .containsExactly("manasteel", "terrasteel");
+    assertThat(SmelteryCompat.values())
+      .extracting(SmelteryCompat::getName)
+      .doesNotContain("manasteel", "terrasteel");
+  }
+
+  @Test
+  void coreTagProvidersIncludeAddonEntries() throws ReflectiveOperationException {
     injectAddonUnchecked(new BotaniaTiCAddon());
 
     CapturingOutput materialOutput = new CapturingOutput();
-    new MaterialTagProvider(new PackOutput(Path.of("build", "test-botania-material-tags")), new ExistingFileHelper(List.of(), java.util.Set.of(), false, null, null))
+    dynamicTagProvider("MaterialTagProvider", new PackOutput(Path.of("build", "test-botania-material-tags")))
       .run(materialOutput)
       .join();
     assertThat(readFile(materialOutput, "tinkering/tags/materials/ranged/light.json")).contains("manasteel", "terrasteel");
 
     CapturingOutput modifierOutput = new CapturingOutput();
-    new ModifierTagProvider(new PackOutput(Path.of("build", "test-botania-modifier-tags")), new ExistingFileHelper(List.of(), java.util.Set.of(), false, null, null))
+    dynamicTagProvider("ModifierTagProvider", new PackOutput(Path.of("build", "test-botania-modifier-tags")))
       .run(modifierOutput)
       .join();
     assertThat(readFile(modifierOutput, "tinkering/tags/modifiers/upgrades/general.json")).contains("manafix", "terrarecover");
+  }
+
+  @Test
+  void dynamicFluidTagHookIncludesBotaniaFluidEntries() {
+    injectAddonUnchecked(new BotaniaTiCAddon());
+
+    DynamicTagProviderRegistrar registrar = new DynamicTagProviderRegistrar((name, factory) -> {});
+    TiCAddonRegistry.collectTagProviders(registrar);
+
+    CapturingFluidTags fluidTags = new CapturingFluidTags();
+    registrar.applyFluidTags(fluidTags);
+
+    assertThat(fluidTags.names).containsExactly("manasteel", "terrasteel");
+  }
+
+  @Test
+  void botaniaTagHelpersExposeAddonTagEntries() {
+    CapturingFluidTags fluidTags = new CapturingFluidTags();
+    BotaniaFluidTagProvider.addTags(fluidTags);
+    assertThat(fluidTags.names).containsExactly("manasteel", "terrasteel");
+
+    CapturingMaterialTags materialTags = new CapturingMaterialTags();
+    BotaniaMaterialTagProvider.addTags(materialTags);
+    assertThat(materialTags.optional.get(TinkerTags.Materials.COMPATABILITY_METALS.location()))
+      .containsExactly("tconstruct:manasteel", "tconstruct:terrasteel");
+    assertThat(materialTags.optional.get(TinkerTags.Materials.HARD_METALS.location()))
+      .containsExactly("tconstruct:manasteel", "tconstruct:terrasteel");
+    assertThat(materialTags.optional.get(TinkerTags.Materials.LIGHT.location()))
+      .containsExactly("tconstruct:manasteel", "tconstruct:terrasteel");
+
+    CapturingModifierTags modifierTags = new CapturingModifierTags();
+    BotaniaModifierTagProvider.addTags(modifierTags);
+    assertThat(modifierTags.required.get(TinkerTags.Modifiers.GENERAL_UPGRADES.location()))
+      .containsExactly("tconstruct:manafix", "tconstruct:terrarecover");
+  }
+
+  @Test
+  void botaniaFluidTextureProviderIsAddonOwned() {
+    assertThat(new BotaniaFluidTextureProvider(new PackOutput(Path.of("build", "test-botania-fluid-textures"))).getName())
+      .isEqualTo("Tinkers' Construct Botania Fluid Texture Providers");
+  }
+
+  @Test
+  void botaniaFluidTextureProviderDoesNotValidateAllTconstructFluids() throws ReflectiveOperationException {
+    Field modId = AbstractFluidTextureProvider.class.getDeclaredField("modId");
+    modId.setAccessible(true);
+
+    assertThat(modId.get(new BotaniaFluidTextureProvider(new PackOutput(Path.of("build", "test-botania-fluid-texture-validation")))))
+      .isNull();
+  }
+
+  @Test
+  void registeredSmelteryCompatSkipsAddonFluidsForNamespaceValidation() throws ReflectiveOperationException {
+    FluidType manaSteel = new FluidType(FluidType.Properties.create()) {};
+    FluidType terraSteel = new FluidType(FluidType.Properties.create()) {};
+    injectAddonUnchecked(new TestFluidAddon("test-botania-fluid-addon", List.of(
+      addonEntry("manasteel", manaSteel),
+      addonEntry("terrasteel", terraSteel)
+    )));
+
+    CapturingFluidTextureProvider provider = new CapturingFluidTextureProvider();
+    TiCAddonRegistry.collectSmelteryCompat(compat -> compat.skipFluidTextures(provider));
+
+    Field ignoredFluidTypes = AbstractFluidTextureProvider.class.getDeclaredField("ignore");
+    ignoredFluidTypes.setAccessible(true);
+    @SuppressWarnings("unchecked")
+    Set<FluidType> ignored = (Set<FluidType>) ignoredFluidTypes.get(provider);
+
+    assertThat(provider.getAllTextures()).isEmpty();
+    assertThat(ignored)
+      .containsExactlyInAnyOrder(manaSteel, terraSteel);
   }
 
   @Test
@@ -184,6 +281,37 @@ class BotaniaTiCAddonIntegrationTest extends BaseMcTest {
     }
   }
 
+  private static DataProvider dynamicTagProvider(String name, PackOutput output) throws ReflectiveOperationException {
+    Class<?> generator = Class.forName("slimeknights.tconstruct.data.tag.TiCDynamicTagGenerator");
+    Method createProviderEntries = generator.getDeclaredMethod("createProviderEntries");
+    createProviderEntries.setAccessible(true);
+    List<?> entries = (List<?>) createProviderEntries.invoke(null);
+    Method nameMethod = entries.get(0).getClass().getDeclaredMethod("name");
+    Method factoryMethod = entries.get(0).getClass().getDeclaredMethod("factory");
+    nameMethod.setAccessible(true);
+    factoryMethod.setAccessible(true);
+
+    for (Object entry : entries) {
+      if (name.equals(nameMethod.invoke(entry))) {
+        @SuppressWarnings("unchecked")
+        Function<PackOutput, ? extends DataProvider> factory = (Function<PackOutput, ? extends DataProvider>) factoryMethod.invoke(entry);
+        return factory.apply(output);
+      }
+    }
+    throw new AssertionError("Missing dynamic tag provider " + name);
+  }
+
+  private static AddonSmelteryCompat.Entry addonEntry(String name, FluidType type) {
+    return new AddonSmelteryCompat.Entry(name, new FlowingFluidObject<>(
+      ResourceLocation.tryBuild("tconstruct", name),
+      null,
+      () -> type,
+      () -> null,
+      () -> null,
+      null
+    ), AddonSmelteryCompat.CompatType.NONE, null);
+  }
+
   private static String readFile(CapturingOutput output, String suffix) {
     return output.contents().entrySet().stream()
       .filter(entry -> entry.getKey().toString().replace('\\', '/').endsWith(suffix))
@@ -212,4 +340,65 @@ class BotaniaTiCAddonIntegrationTest extends BaseMcTest {
       return new ArrayList<>(contents.keySet());
     }
   }
+
+  private static final class CapturingFluidTags implements DynamicTagProviderRegistrar.FluidTagRegistrar {
+    private final List<String> names = new ArrayList<>();
+
+    @Override
+    public void add(slimeknights.mantle.registration.object.FlowingFluidObject<?> fluid) {
+      names.add(fluid.getId().getPath());
+    }
+  }
+
+  private static final class CapturingMaterialTags implements DynamicTagProviderRegistrar.MaterialTagRegistrar {
+    private final Map<net.minecraft.resources.ResourceLocation, List<String>> required = new LinkedHashMap<>();
+    private final Map<net.minecraft.resources.ResourceLocation, List<String>> optional = new LinkedHashMap<>();
+
+    @Override
+    public void add(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.materials.definition.IMaterial> tag, net.minecraft.resources.ResourceLocation... ids) {
+      required.put(tag.location(), java.util.Arrays.stream(ids).map(net.minecraft.resources.ResourceLocation::toString).toList());
+    }
+
+    @Override
+    public void addOptional(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.materials.definition.IMaterial> tag, net.minecraft.resources.ResourceLocation... ids) {
+      optional.put(tag.location(), java.util.Arrays.stream(ids).map(net.minecraft.resources.ResourceLocation::toString).toList());
+    }
+  }
+
+  private static final class CapturingModifierTags implements DynamicTagProviderRegistrar.ModifierTagRegistrar {
+    private final Map<net.minecraft.resources.ResourceLocation, List<String>> required = new LinkedHashMap<>();
+    private final Map<net.minecraft.resources.ResourceLocation, List<String>> optional = new LinkedHashMap<>();
+
+    @Override
+    public void add(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.modifiers.Modifier> tag, net.minecraft.resources.ResourceLocation... ids) {
+      required.put(tag.location(), java.util.Arrays.stream(ids).map(net.minecraft.resources.ResourceLocation::toString).toList());
+    }
+
+    @Override
+    public void addOptional(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.modifiers.Modifier> tag, net.minecraft.resources.ResourceLocation... ids) {
+      optional.put(tag.location(), java.util.Arrays.stream(ids).map(net.minecraft.resources.ResourceLocation::toString).toList());
+    }
+  }
+
+  private static final class CapturingFluidTextureProvider extends AbstractFluidTextureProvider {
+    private CapturingFluidTextureProvider() {
+      super(new PackOutput(Path.of("build", "test-addon-fluid-texture-skips")), "tconstruct");
+    }
+
+    @Override
+    public void addTextures() {}
+
+    @Override
+    public String getName() {
+      return "Capturing Fluid Texture Provider";
+    }
+  }
+
+  private record TestFluidAddon(String addonModId, List<AddonSmelteryCompat.Entry> entries) implements ITiCAddon, ITiCFluidAddon {
+    @Override
+    public void registerSmelteryCompat(java.util.function.Consumer<AddonSmelteryCompat> registrar) {
+      registrar.accept(() -> entries);
+    }
+  }
+
 }

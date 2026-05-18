@@ -8,15 +8,8 @@ import java.lang.annotation.Target;
 /**
  * Marks an addon implementation for discovery by Tinkers' Construct.
  *
- * <p>License note: this addon discovery model is inspired by GregTech Modern's
- * {@code @GTAddon + IGTAddon} pattern. GregTech Modern is distributed under the
- * GNU Lesser General Public License v3.0, while this annotation and its
- * surrounding TiC addon API are an original implementation in this MIT-licensed
- * codebase.</p>
- *
  * <p>Annotate a concrete, zero-argument class that implements {@link ITiCAddon},
- * and {@link TiCAddonFinder} will discover and instantiate it during addon
- * collection.</p>
+ * and {@link TiCAddonFinder} will instantiate it during addon collection.</p>
  *
  * @see ITiCAddon
  * @see TiCAddonFinder
@@ -25,7 +18,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface TiCAddon {
   /**
-   * Optional list of mods that must be loaded before this addon is instantiated.
+   * Mods that must be loaded before this addon is instantiated.
    */
   String[] requiredMods() default {};
 }

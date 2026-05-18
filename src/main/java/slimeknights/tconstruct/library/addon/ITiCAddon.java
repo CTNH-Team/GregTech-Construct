@@ -1,12 +1,12 @@
 package slimeknights.tconstruct.library.addon;
 
 /**
- * Optional addon integration hooks for Tinkers' Construct runtime dynamic data.
+ * Addon hooks for Tinkers' Construct dynamic data.
  */
 @SuppressWarnings("unused")
 public interface ITiCAddon {
   /**
-   * @return addon mod ID used for bookkeeping and diagnostics.
+   * @return mod ID used for bookkeeping and diagnostics.
    */
   String addonModId();
 
@@ -14,18 +14,18 @@ public interface ITiCAddon {
 
   default void registerDynamicTinkeringProviders(DynamicProviderRegistrar registrar) {}
 
-  default void registerDynamicTagProviders(DynamicProviderRegistrar registrar) {}
+  default void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {}
 
   default void registerDynamicAdvancementProviders(DynamicProviderRegistrar registrar) {}
 
   default void registerDynamicMaterialProviders(DynamicProviderRegistrar registrar) {}
 
   /**
-   * Registers client resource providers for TiC's dynamic resource pack.
+   * Registers client resource providers.
    *
    * <p>For providers that need an {@code ExistingFileHelper}, prefer using
    * {@link slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator#createExistingFileHelperForAddons()}.
-   * That keeps external addons aligned with TiC's own dynamic resource generation setup.</p>
+   * That keeps addons aligned with TiC's resource generation setup.</p>
    */
   default void registerDynamicResourceProviders(DynamicProviderRegistrar registrar) {}
 }

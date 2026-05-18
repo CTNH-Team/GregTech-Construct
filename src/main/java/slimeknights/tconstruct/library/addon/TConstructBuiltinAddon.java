@@ -28,7 +28,7 @@ final class TConstructBuiltinAddon implements ITiCAddon {
   }
 
   @Override
-  public void registerDynamicTagProviders(DynamicProviderRegistrar registrar) {
+  public void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {
     TiCDynamicTagGenerator.registerDefaultProviders(registrar);
   }
 

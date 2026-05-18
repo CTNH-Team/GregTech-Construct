@@ -5,7 +5,7 @@ import slimeknights.tconstruct.library.modifiers.Modifier;
 import java.util.function.Supplier;
 
 /**
- * Optional addon hook for registering static runtime modifiers.
+ * Addon hook for static modifiers.
  */
 @SuppressWarnings("unused")
 public interface ITiCStaticModifierAddon {

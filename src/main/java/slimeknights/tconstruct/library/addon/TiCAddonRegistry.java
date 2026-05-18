@@ -1,5 +1,7 @@
 package slimeknights.tconstruct.library.addon;
 
+import net.minecraft.world.item.CreativeModeTab;
+
 /**
  * Internal helper for wiring addon callbacks into dynamic generators.
  */
@@ -13,6 +15,21 @@ public final class TiCAddonRegistry {
       .forEach(addon -> addon.registerStaticModifiers(registrar));
   }
 
+  public static void initFluidContent() {
+    collectSmelteryCompat(AddonSmelteryCompat::init);
+  }
+
+  public static void addFluidTabItems(CreativeModeTab.Output output) {
+    collectSmelteryCompat(compat -> compat.addCreativeTabItems(output));
+  }
+
+  public static void collectSmelteryCompat(java.util.function.Consumer<AddonSmelteryCompat> registrar) {
+    TiCAddonFinder.getAddons().stream()
+      .filter(ITiCFluidAddon.class::isInstance)
+      .map(ITiCFluidAddon.class::cast)
+      .forEach(addon -> addon.registerSmelteryCompat(registrar));
+  }
+
   public static void collectRecipeProviders(DynamicProviderRegistrar registrar) {
     TiCAddonFinder.getAddons().forEach(addon -> addon.registerDynamicRecipeProviders(registrar));
   }
@@ -21,7 +38,7 @@ public final class TiCAddonRegistry {
     TiCAddonFinder.getAddons().forEach(addon -> addon.registerDynamicTinkeringProviders(registrar));
   }
 
-  public static void collectTagProviders(DynamicProviderRegistrar registrar) {
+  public static void collectTagProviders(DynamicTagProviderRegistrar registrar) {
     TiCAddonFinder.getAddons().forEach(addon -> addon.registerDynamicTagProviders(registrar));
   }
 
@@ -37,17 +54,4 @@ public final class TiCAddonRegistry {
     TiCAddonFinder.getAddons().forEach(addon -> addon.registerDynamicResourceProviders(registrar));
   }
 
-  public static void collectMaterialTagHooks(ITiCTagAddon.MaterialTagRegistrar registrar) {
-    TiCAddonFinder.getAddons().stream()
-      .filter(ITiCTagAddon.class::isInstance)
-      .map(ITiCTagAddon.class::cast)
-      .forEach(addon -> addon.registerMaterialTags(registrar));
-  }
-
-  public static void collectModifierTagHooks(ITiCTagAddon.ModifierTagRegistrar registrar) {
-    TiCAddonFinder.getAddons().stream()
-      .filter(ITiCTagAddon.class::isInstance)
-      .map(ITiCTagAddon.class::cast)
-      .forEach(addon -> addon.registerModifierTags(registrar));
-  }
 }

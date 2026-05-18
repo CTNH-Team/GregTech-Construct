@@ -13,6 +13,10 @@ public class DynamicAdvancementProviderRunner {
   private DynamicAdvancementProviderRunner() {}
 
   public static void run(String owner, List<Function<PackOutput, ? extends DataProvider>> providers) {
+    runNamed(owner, providers.stream().map(DynamicAdvancementProviderRunner::toProviderFactory).toList());
+  }
+
+  public static void runNamed(String owner, List<DynamicProviderFactory> providers) {
     DynamicServerDataRunner.run(
       log,
       owner,
@@ -29,5 +33,12 @@ public class DynamicAdvancementProviderRunner {
     if (path.startsWith("advancements/") && path.endsWith(".json")) {
       TiCDynamicDataPack.addFilter(location);
     }
+  }
+
+  private static DynamicProviderFactory toProviderFactory(Function<PackOutput, ? extends DataProvider> factory) {
+    if (factory instanceof DynamicProviderFactory providerFactory) {
+      return providerFactory;
+    }
+    return DynamicProviderFactory.unnamed(factory);
   }
 }

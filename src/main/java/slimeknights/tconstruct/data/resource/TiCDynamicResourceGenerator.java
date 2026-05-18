@@ -13,6 +13,7 @@ import slimeknights.tconstruct.common.data.model.TinkerItemModelProvider;
 import slimeknights.tconstruct.common.data.model.TinkerSpriteSourceProvider;
 import slimeknights.tconstruct.common.data.render.RenderFluidProvider;
 import slimeknights.tconstruct.common.data.render.RenderItemProvider;
+import slimeknights.tconstruct.data.pack.DynamicProviderFactory;
 import slimeknights.tconstruct.data.pack.DynamicResourceProviderRunner;
 import slimeknights.tconstruct.fluids.data.FluidBlockstateModelProvider;
 import slimeknights.tconstruct.fluids.data.FluidBucketModelProvider;
@@ -46,7 +47,7 @@ import slimeknights.tconstruct.library.client.data.spritetransformer.RecolorSpri
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 
 public final class TiCDynamicResourceGenerator {
-  static final List<Function<PackOutput, ? extends DataProvider>> ADDITIONAL_PROVIDERS = new ArrayList<>();
+  static final List<DynamicProviderFactory> ADDITIONAL_PROVIDERS = new ArrayList<>();
 
   private TiCDynamicResourceGenerator() {}
 
@@ -56,7 +57,15 @@ public final class TiCDynamicResourceGenerator {
 
   /** Adds an extra runtime resource provider for TiC's dynamic resource pack. */
   public static synchronized void addProvider(Function<PackOutput, ? extends DataProvider> factory) {
-    ADDITIONAL_PROVIDERS.add(Objects.requireNonNull(factory, "factory"));
+    ADDITIONAL_PROVIDERS.add(DynamicProviderFactory.unnamed(Objects.requireNonNull(factory, "factory")));
+  }
+
+  /** Adds an extra runtime resource provider for TiC's dynamic resource pack. */
+  public static synchronized void addProvider(String name, Function<PackOutput, ? extends DataProvider> factory) {
+    ADDITIONAL_PROVIDERS.add(new DynamicProviderFactory(
+      Objects.requireNonNull(name, "name"),
+      Objects.requireNonNull(factory, "factory")
+    ));
   }
 
   static void register(ResourceRunner runner) {
@@ -95,8 +104,8 @@ public final class TiCDynamicResourceGenerator {
   }
 
   static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
-    List<Function<PackOutput, ? extends DataProvider>> providers = new ArrayList<>();
-    TiCAddonRegistry.collectResourceProviders((name, factory) -> providers.add(factory));
+    List<DynamicProviderFactory> providers = new ArrayList<>();
+    TiCAddonRegistry.collectResourceProviders((name, factory) -> providers.add(new DynamicProviderFactory(name, factory)));
     synchronized (TiCDynamicResourceGenerator.class) {
       providers.addAll(ADDITIONAL_PROVIDERS);
     }

@@ -14,15 +14,23 @@ import slimeknights.mantle.registration.object.FluidObject;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.fluids.TinkerFluids;
+import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
 public class FluidTagProvider extends FluidTagsProvider {
+    private final Consumer<DynamicTagProviderRegistrar.FluidTagRegistrar> addonTags;
 
     public FluidTagProvider(PackOutput packOutput, CompletableFuture<Provider> lookupProvider, ExistingFileHelper helper) {
+        this(packOutput, lookupProvider, helper, hook -> {});
+    }
+
+    public FluidTagProvider(PackOutput packOutput, CompletableFuture<Provider> lookupProvider, ExistingFileHelper helper, Consumer<DynamicTagProviderRegistrar.FluidTagRegistrar> addonTags) {
         super(packOutput, lookupProvider, TConstruct.MOD_ID, helper);
+        this.addonTags = addonTags;
     }
 
     @Override
@@ -85,8 +93,6 @@ public class FluidTagProvider extends FluidTagsProvider {
         fluidTag(TinkerFluids.moltenUranium);
         fluidTag(TinkerFluids.moltenChromium);
         fluidTag(TinkerFluids.moltenCadmium);
-        fluidTag(TinkerFluids.moltenManaSteel);
-        fluidTag(TinkerFluids.moltenTerraSteel);
         fluidTag(TinkerFluids.moltenPolyethylene);
         fluidTag(TinkerFluids.moltenPolyvinylChloride);
         // compat alloys
@@ -234,6 +240,8 @@ public class FluidTagProvider extends FluidTagsProvider {
         tag(TinkerTags.Fluids.HIDDEN_IN_RECIPE_VIEWERS).add(TinkerFluids.moltenKnightslime.get(), TinkerFluids.moltenSoulsteel.get());
         // hide upcoming fluids that require NBT. Can expand this list if other mods report problems
         tag(TinkerTags.Fluids.HIDE_IN_CREATIVE_TANKS).add(TinkerFluids.potion.get()).addTag(TinkerTags.Fluids.HIDDEN_IN_RECIPE_VIEWERS);
+
+        addonTags.accept(new FluidTagRegistrar());
     }
 
     @Override
@@ -252,6 +260,13 @@ public class FluidTagProvider extends FluidTagsProvider {
         TagKey<Fluid> tag = fluid.getCommonTag();
         if (tag != null) {
             tag(tag).addTag(fluid.getLocalTag());
+        }
+    }
+
+    private final class FluidTagRegistrar implements DynamicTagProviderRegistrar.FluidTagRegistrar {
+        @Override
+        public void add(FlowingFluidObject<?> fluid) {
+            FluidTagProvider.this.fluidTag(fluid);
         }
     }
 }

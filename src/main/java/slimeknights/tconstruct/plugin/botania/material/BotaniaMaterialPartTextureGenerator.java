@@ -1,4 +1,4 @@
-package slimeknights.tconstruct.plugin.botania;
+package slimeknights.tconstruct.plugin.botania.material;
 
 import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator;

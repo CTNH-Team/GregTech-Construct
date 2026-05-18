@@ -6,7 +6,7 @@ import net.minecraft.data.PackOutput;
 import java.util.function.Function;
 
 /**
- * Registrar for addon dynamic providers.
+ * Registers addon data providers.
  */
 @FunctionalInterface
 public interface DynamicProviderRegistrar {

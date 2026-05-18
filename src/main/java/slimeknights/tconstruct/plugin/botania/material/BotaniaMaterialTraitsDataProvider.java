@@ -1,10 +1,9 @@
-package slimeknights.tconstruct.plugin.botania;
+package slimeknights.tconstruct.plugin.botania.material;
 
 import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialTraitDataProvider;
-import slimeknights.tconstruct.tools.data.ModifierIds;
-import slimeknights.tconstruct.tools.data.material.MaterialIds;
+import slimeknights.tconstruct.plugin.botania.modifier.BotaniaModifierIds;
 
 /**
  * Botania-owned material traits.
@@ -25,7 +24,7 @@ public class BotaniaMaterialTraitsDataProvider extends AbstractMaterialTraitData
 
   @Override
   protected void addMaterialTraits() {
-    addDefaultTraits(MaterialIds.manaSteel, ModifierIds.manafix);
-    addDefaultTraits(MaterialIds.terraSteel, ModifierIds.manafix, ModifierIds.terrarecover);
+    addDefaultTraits(BotaniaMaterialIds.manaSteel, BotaniaModifierIds.manafix);
+    addDefaultTraits(BotaniaMaterialIds.terraSteel, BotaniaModifierIds.manafix, BotaniaModifierIds.terrarecover);
   }
 }

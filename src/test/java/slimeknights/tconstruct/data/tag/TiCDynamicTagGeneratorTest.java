@@ -16,6 +16,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mockito;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
+import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.lang.reflect.Constructor;
@@ -188,9 +189,9 @@ class TiCDynamicTagGeneratorTest extends BaseMcTest {
 
     private static Object newTagProviderState() throws ReflectiveOperationException {
         Class<?> stateClass = Class.forName("slimeknights.tconstruct.data.tag.TiCDynamicTagGenerator$TagProviderState");
-        Constructor<?> constructor = stateClass.getDeclaredConstructor();
+        Constructor<?> constructor = stateClass.getDeclaredConstructor(DynamicTagProviderRegistrar.class);
         constructor.setAccessible(true);
-        return constructor.newInstance();
+        return constructor.newInstance(new DynamicTagProviderRegistrar((name, factory) -> {}));
     }
 
     private static ExistingFileHelper existingFileHelper(Object state) throws ReflectiveOperationException {

@@ -56,6 +56,7 @@ import slimeknights.tconstruct.fluids.util.BottleBrewingRecipe;
 import slimeknights.tconstruct.fluids.util.EmptyBottleIntoEmpty;
 import slimeknights.tconstruct.fluids.util.EmptyBottleIntoWater;
 import slimeknights.tconstruct.fluids.util.FillBottle;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.recipe.FluidValues;
 import slimeknights.tconstruct.shared.TinkerEffects;
@@ -173,8 +174,6 @@ public final class TinkerFluids extends TinkerModule {
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenUranium  = FLUIDS.registerMetal("uranium").type(hot("uranium").temperature(1130).lightLevel(15)).block(createBurning(MapColor.TERRACOTTA_GREEN, 15, 10, 5f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenChromium = FLUIDS.registerMetal("chromium").type(hot("chromium").temperature(1200).lightLevel(13)).block(createBurning(MapColor.COLOR_CYAN, 13, 10, 5f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenCadmium  = FLUIDS.registerMetal("cadmium").type(hot("cadmium").temperature(594).lightLevel(10)).block(createBurning(MapColor.COLOR_BROWN, 10, 10, 5f)).bucket().commonTag().flowing();
-    public static final FlowingFluidObject<ForgeFlowingFluid> moltenManaSteel = FLUIDS.registerMetal("manasteel").type(hot("manasteel").temperature(1100).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
-    public static final FlowingFluidObject<ForgeFlowingFluid> moltenTerraSteel = FLUIDS.registerMetal("terrasteel").type(hot("terrasteel").temperature(1500).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
     // gt
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenPolyethylene = FLUIDS.registerMetal("polyethylene").type(cool("polyethylene").temperature(445)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenPolyvinylChloride = FLUIDS.registerMetal("polyvinyl_chloride").type(cool("polyvinyl_chloride").temperature(470)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
@@ -444,8 +443,7 @@ public final class TinkerFluids extends TinkerModule {
         acceptMolten(output, moltenUranium, MaterialIds.necronium);
         acceptMolten(output, moltenChromium);
         acceptMolten(output, moltenCadmium);
-        acceptCompat(output, moltenManaSteel, MaterialIds.manaSteel);
-        acceptCompat(output, moltenTerraSteel, MaterialIds.terraSteel);
+        TiCAddonRegistry.addFluidTabItems(output);
         acceptCompat(output, moltenPolyethylene, MaterialIds.polyethylene);
         acceptCompat(output, moltenPolyvinylChloride, MaterialIds.polyvinylChloride);
         // compat alloys

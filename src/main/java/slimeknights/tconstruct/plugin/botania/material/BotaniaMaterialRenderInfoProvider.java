@@ -1,9 +1,8 @@
-package slimeknights.tconstruct.plugin.botania;
+package slimeknights.tconstruct.plugin.botania.material;
 
 import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator;
 import slimeknights.tconstruct.library.client.data.material.AbstractMaterialRenderInfoProvider;
-import slimeknights.tconstruct.tools.data.material.MaterialIds;
 
 /**
  * Botania-owned material render info.
@@ -15,8 +14,8 @@ public class BotaniaMaterialRenderInfoProvider extends AbstractMaterialRenderInf
 
   @Override
   protected void addMaterialRenderInfo() {
-    buildRenderInfo(MaterialIds.manaSteel).color(0x67B9EE).fallbacks("metal");
-    buildRenderInfo(MaterialIds.terraSteel).color(0x6ae862).fallbacks("metal");
+    buildRenderInfo(BotaniaMaterialIds.manaSteel).color(0x67B9EE).fallbacks("metal");
+    buildRenderInfo(BotaniaMaterialIds.terraSteel).color(0x6ae862).fallbacks("metal");
   }
 
   @Override

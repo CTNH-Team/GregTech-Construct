@@ -5,6 +5,7 @@ import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.common.data.AdvancementsProvider;
 import slimeknights.tconstruct.data.DynamicConditionSerializerRegistrar;
 import slimeknights.tconstruct.data.pack.DynamicAdvancementProviderRunner;
+import slimeknights.tconstruct.data.pack.DynamicProviderFactory;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 
@@ -51,7 +52,7 @@ public final class TiCDynamicAdvancementGenerator {
   static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
     List<Function<PackOutput, ? extends DataProvider>> providers = new ArrayList<>();
     for (AdvancementProviderEntry entry : createProviderEntries()) {
-      providers.add(entry.factory());
+      providers.add(new DynamicProviderFactory(entry.name(), entry.factory()));
     }
     return providers;
   }

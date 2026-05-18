@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 final class DynamicServerDataRunner {
   private DynamicServerDataRunner() {}
@@ -23,24 +22,25 @@ final class DynamicServerDataRunner {
                   String owner,
                   String providerDescription,
                   String resourceDescription,
-                  List<Function<PackOutput, ? extends DataProvider>> providers,
+                  List<DynamicProviderFactory> providers,
                   CapturedResourceConsumer resourceConsumer) {
     Path outputRoot = getOutputRoot();
     PackOutput output = new PackOutput(outputRoot);
     long startTime = System.nanoTime();
     int completedProviders = 0;
     int capturedResources = 0;
-    for (Function<PackOutput, ? extends DataProvider> providerFactory : providers) {
+    for (DynamicProviderFactory providerFactory : providers) {
+      String providerEntry = providerFactory.name();
       DataProvider provider;
       try {
         provider = providerFactory.apply(output);
       } catch (Exception exception) {
-        log.error("Failed to create {} for {}", providerDescription, owner, exception);
-        throw new IllegalStateException("Failed to create " + providerDescription + " for " + owner, exception);
+        log.error("Failed to create {}{} for {}", providerDescription, providerEntrySuffix(providerEntry), owner, exception);
+        throw new IllegalStateException("Failed to create " + providerDescription + providerEntrySuffix(providerEntry) + " for " + owner, exception);
       }
       if (provider == null) {
-        log.error("{} factory returned null for {}", capitalize(providerDescription), owner);
-        throw new IllegalStateException(capitalize(providerDescription) + " factory returned null for " + owner);
+        log.error("{}{} factory returned null for {}", capitalize(providerDescription), providerEntrySuffix(providerEntry), owner);
+        throw new IllegalStateException(capitalize(providerDescription) + providerEntrySuffix(providerEntry) + " factory returned null for " + owner);
       }
       CapturingOutput cache = new CapturingOutput(outputRoot, resourceConsumer);
       try {
@@ -48,12 +48,21 @@ final class DynamicServerDataRunner {
         completedProviders++;
         capturedResources += cache.capturedResources.get();
       } catch (Exception exception) {
-        log.error("Failed to run {} '{}' for {}", providerDescription, provider.getName(), owner, exception);
-        throw new IllegalStateException("Failed to run " + providerDescription + " '" + provider.getName() + "' for " + owner, exception);
+        String providerName = provider.getName();
+        log.error("Failed to run {} '{}'{} for {}", providerDescription, providerName, differentProviderEntrySuffix(providerEntry, providerName), owner, exception);
+        throw new IllegalStateException("Failed to run " + providerDescription + " '" + providerName + "'" + differentProviderEntrySuffix(providerEntry, providerName) + " for " + owner, exception);
       }
     }
     log.info("Captured {} {} from {} providers for {} in {} ms",
       capturedResources, resourceDescription, completedProviders, owner, (System.nanoTime() - startTime) / 1000000f);
+  }
+
+  private static String providerEntrySuffix(String providerEntry) {
+    return providerEntry.isBlank() ? "" : " '" + providerEntry + "'";
+  }
+
+  private static String differentProviderEntrySuffix(String providerEntry, String providerName) {
+    return providerEntry.isBlank() || providerEntry.equals(providerName) ? "" : " registered as '" + providerEntry + "'";
   }
 
   private static String capitalize(String text) {

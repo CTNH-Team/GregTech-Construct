@@ -22,8 +22,26 @@ public class DynamicDataProviderRunner {
             owner,
             "dynamic datagen provider",
             "dynamic data resources",
+            providers.stream().map(DynamicDataProviderRunner::toProviderFactory).toList(),
+            TiCDynamicDataPack::addData
+        );
+    }
+
+    public static void runNamed(String owner, List<DynamicProviderFactory> providers) {
+        DynamicServerDataRunner.run(
+            log,
+            owner,
+            "dynamic datagen provider",
+            "dynamic data resources",
             providers,
             TiCDynamicDataPack::addData
         );
+    }
+
+    private static DynamicProviderFactory toProviderFactory(Function<PackOutput, ? extends DataProvider> factory) {
+        if (factory instanceof DynamicProviderFactory providerFactory) {
+            return providerFactory;
+        }
+        return DynamicProviderFactory.unnamed(factory);
     }
 }

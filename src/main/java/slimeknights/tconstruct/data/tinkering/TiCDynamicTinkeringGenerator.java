@@ -4,6 +4,7 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.data.DynamicConditionSerializerRegistrar;
 import slimeknights.tconstruct.data.pack.DynamicDataProviderRunner;
+import slimeknights.tconstruct.data.pack.DynamicProviderFactory;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.tools.data.EnchantmentToModifierProvider;
@@ -61,7 +62,7 @@ public final class TiCDynamicTinkeringGenerator {
   static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
     List<Function<PackOutput, ? extends DataProvider>> providers = new ArrayList<>();
     for (TinkeringProviderEntry entry : createProviderEntries()) {
-      providers.add(entry.factory());
+      providers.add(new DynamicProviderFactory(entry.name(), entry.factory()));
     }
     return providers;
   }

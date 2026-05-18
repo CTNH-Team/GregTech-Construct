@@ -53,6 +53,7 @@ import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.fluids.fluids.PotionFluidType;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.recipe.TinkerRecipeTypes;
@@ -524,6 +525,11 @@ public class JEIPlugin implements IModPlugin {
         removeFluid(manager, compat.getFluid().get());
       }
     }
+    TiCAddonRegistry.collectSmelteryCompat(compat -> compat.entries().forEach(entry -> {
+      if (!entry.isPresent()) {
+        removeFluid(manager, entry.fluid().get());
+      }
+    }));
     if (!ModList.get().isLoaded("ceramics")) {
       removeFluid(manager, TinkerFluids.moltenPorcelain.get());
     }

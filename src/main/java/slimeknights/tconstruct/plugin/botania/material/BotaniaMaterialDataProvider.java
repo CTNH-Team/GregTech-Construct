@@ -1,8 +1,7 @@
-package slimeknights.tconstruct.plugin.botania;
+package slimeknights.tconstruct.plugin.botania.material;
 
 import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
-import slimeknights.tconstruct.tools.data.material.MaterialIds;
 
 /**
  * Botania-owned material definitions.
@@ -19,7 +18,7 @@ public class BotaniaMaterialDataProvider extends AbstractMaterialDataProvider {
 
   @Override
   protected void addMaterials() {
-    addCompatMetalMaterial(MaterialIds.manaSteel, 2, ORDER_COMPAT + ORDER_GENERAL);
-    addCompatMetalMaterial(MaterialIds.terraSteel, 3, ORDER_COMPAT + ORDER_GENERAL);
+    addCompatMetalMaterial(BotaniaMaterialIds.manaSteel, 2, ORDER_COMPAT + ORDER_GENERAL);
+    addCompatMetalMaterial(BotaniaMaterialIds.terraSteel, 3, ORDER_COMPAT + ORDER_GENERAL);
   }
 }
