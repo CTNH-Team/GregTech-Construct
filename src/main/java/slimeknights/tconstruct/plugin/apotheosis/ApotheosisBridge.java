@@ -110,7 +110,7 @@ public final class ApotheosisBridge {
     ItemStack copyGem(ItemStack stack, int socketIndex);
   }
 
-  private static SocketHooks socketHooks = SocketHooks.EMPTY;
+  private static volatile SocketHooks socketHooks = SocketHooks.EMPTY;
 
   public static boolean hasSocketIntegration() {
     return socketHooks != SocketHooks.EMPTY;

@@ -80,7 +80,6 @@ import slimeknights.tconstruct.library.modifiers.util.ModifierLevelDisplay.Uniqu
 import slimeknights.tconstruct.library.modifiers.util.StaticModifier;
 import slimeknights.tconstruct.library.module.ModuleHookMap;
 import slimeknights.tconstruct.library.recipe.modifiers.ModifierSalvage;
-import slimeknights.tconstruct.plugin.botania.modifier.BotaniaModifiers;
 import slimeknights.tconstruct.library.recipe.modifiers.adding.*;
 import slimeknights.tconstruct.library.recipe.modifiers.severing.AgeableSeveringRecipe;
 import slimeknights.tconstruct.library.recipe.modifiers.severing.SeveringRecipe;
@@ -202,12 +201,6 @@ public final class TinkerModifiers extends TinkerModule {
      * Modifiers
      */
     public static final StaticModifier<OverslimeModifier> overslime = MODIFIERS.register("overslime", OverslimeModifier::new);
-    /** @deprecated use {@link BotaniaModifiers#manafix} */
-    @Deprecated
-    public static final StaticModifier<?> manafix = BotaniaModifiers.manafix;
-    /** @deprecated use {@link BotaniaModifiers#terrarecover} */
-    @Deprecated
-    public static final StaticModifier<?> terrarecover = BotaniaModifiers.terrarecover;
     public static final StaticModifier<ThermalDecompositeModifier> thermaldecomposite = MODIFIERS.register("thermaldecomposite", ThermalDecompositeModifier::new);
     public static final StaticModifier<MagneticModifier> magnetic = MODIFIERS.register("magnetic", MagneticModifier::new);
     public static final StaticModifier<FarsightedModifier> farsighted = MODIFIERS.register("farsighted", FarsightedModifier::new);
