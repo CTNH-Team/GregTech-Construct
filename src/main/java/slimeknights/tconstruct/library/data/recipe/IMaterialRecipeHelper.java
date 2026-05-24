@@ -4,12 +4,9 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.crafting.conditions.OrCondition;
-import net.minecraftforge.fluids.FluidStack;
 import slimeknights.mantle.recipe.data.IRecipeHelper;
 import slimeknights.mantle.recipe.helper.ItemOutput;
-import slimeknights.mantle.recipe.ingredient.FluidIngredient;
 import slimeknights.mantle.registration.object.FluidObject;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
@@ -28,7 +25,6 @@ import static slimeknights.tconstruct.library.recipe.melting.IMeltingRecipe.getT
  * Interface for adding recipes for tool materials
  */
 public interface IMaterialRecipeHelper extends IRecipeHelper {
-
     /**
      * Registers a material recipe
      * @param consumer  Recipe consumer
@@ -82,8 +78,6 @@ public interface IMaterialRecipeHelper extends IRecipeHelper {
         materialRecipe(wrapped, material, Ingredient.of(getItemTag(COMMON, "storage_blocks/" + name)), 9, 1, ItemOutput.fromTag(ingotTag), folder + matName + "/block");
     }
 
-    // ---------- 使用 FluidObject 的方法 (dev 分支) ----------
-
     /** Adds recipes to melt a material */
     default void materialMelting(Consumer<FinishedRecipe> consumer, MaterialVariantId material, FluidObject<?> fluid, int fluidAmount, String folder) {
         MaterialMeltingRecipeBuilder.material(material, fluid, fluidAmount)
@@ -119,6 +113,7 @@ public interface IMaterialRecipeHelper extends IRecipeHelper {
         materialMeltingCasting(consumer, material, fluid, FluidValues.INGOT, folder);
     }
 
+
     /** Adds recipes to melt a compat material of ingot size with a second tag allowed to make the material exist */
     default void compatMelting(Consumer<FinishedRecipe> consumer, MaterialId material, FluidObject<?> fluid, String altTag, String folder) {
         materialMelting(withCondition(consumer, new OrCondition(tagCondition("ingots/" + material.getPath()), tagCondition("ingots/" + altTag))), material, fluid, folder);
@@ -129,6 +124,7 @@ public interface IMaterialRecipeHelper extends IRecipeHelper {
         materialMelting(withCondition(consumer, tagCondition("ingots/" + material.getPath())), material, fluid, folder);
     }
 
+
     /** Adds recipes to cast a compat material of ingot size with a second tag allowed to make the material exist */
     default void compatCasting(Consumer<FinishedRecipe> consumer, MaterialId material, FluidObject<?> fluid, String altTag, String folder) {
         materialCasting(withCondition(consumer, new OrCondition(tagCondition("ingots/" + material.getPath()), tagCondition("ingots/" + altTag))), material, fluid, folder);
@@ -138,6 +134,7 @@ public interface IMaterialRecipeHelper extends IRecipeHelper {
     default void compatCasting(Consumer<FinishedRecipe> consumer, MaterialId material, FluidObject<?> fluid, String folder) {
         materialCasting(withCondition(consumer, tagCondition("ingots/" + material.getPath())), material, fluid, folder);
     }
+
 
     /** Adds recipes to melt and cast a compat material of ingot size with a second tag allowed to make the material exist */
     default void compatMeltingCasting(Consumer<FinishedRecipe> consumer, MaterialId material, FluidObject<?> fluid, String altTag, String folder) {
@@ -167,42 +164,5 @@ public interface IMaterialRecipeHelper extends IRecipeHelper {
     /** Adds recipes to melt and cast a material of ingot size */
     default void materialComposite(Consumer<FinishedRecipe> consumer, MaterialVariantId input, MaterialVariantId output, FluidObject<?> fluid, int amount, String folder) {
         materialComposite(consumer, input, output, fluid, amount, folder, output.getLocation('_').getPath());
-    }
-
-    // ---------- 直接使用 Fluid 的便利方法 (从旧分支补充) ----------
-
-    /** Adds recipes to melt a material (direct Fluid) */
-    default void materialMelting(Consumer<FinishedRecipe> consumer, MaterialVariantId material, Fluid fluid, int fluidAmount, String folder) {
-        MaterialMeltingRecipeBuilder.material(material, fluid, fluidAmount)
-                .save(consumer, location(folder + fluid.getRegistryName().getPath() + "/melting/" + material.getLocation('_').getPath()));
-    }
-
-    /** Adds recipes to melt a material of ingot size (direct Fluid) */
-    default void materialMelting(Consumer<FinishedRecipe> consumer, MaterialVariantId material, Fluid fluid, String folder) {
-        materialMelting(consumer, material, fluid, FluidValues.INGOT, folder);
-    }
-
-    /** Adds recipes to cast a material (direct Fluid) */
-    default void materialCasting(Consumer<FinishedRecipe> consumer, MaterialVariantId material, Fluid fluid, int fluidAmount, String folder) {
-        MaterialFluidRecipeBuilder.material(material)
-                .setFluid(FluidIngredient.of(new FluidStack(fluid, fluidAmount)))
-                .setTemperature(getTemperature(new FluidStack(fluid, fluidAmount)))
-                .save(consumer, location(folder + fluid.getRegistryName().getPath() + "/casting/" + material.getLocation('_').getPath()));
-    }
-
-    /** Adds recipes to cast a material of ingot size (direct Fluid) */
-    default void materialCasting(Consumer<FinishedRecipe> consumer, MaterialVariantId material, Fluid fluid, String folder) {
-        materialCasting(consumer, material, fluid, FluidValues.INGOT, folder);
-    }
-
-    /** Adds recipes to melt and cast a material (direct Fluid) */
-    default void materialMeltingCasting(Consumer<FinishedRecipe> consumer, MaterialVariantId material, Fluid fluid, int fluidAmount, String folder) {
-        materialCasting(consumer, material, fluid, fluidAmount, folder);
-        materialMelting(consumer, material, fluid, fluidAmount, folder);
-    }
-
-    /** Adds recipes to melt and cast a material of ingot size (direct Fluid) */
-    default void materialMeltingCasting(Consumer<FinishedRecipe> consumer, MaterialVariantId material, Fluid fluid, String folder) {
-        materialMeltingCasting(consumer, material, fluid, FluidValues.INGOT, folder);
     }
 }
