@@ -4,12 +4,22 @@ import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 import slimeknights.tconstruct.library.data.tinkering.AbstractMaterialTagProvider;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 
+import java.util.function.Consumer;
+
 public class MaterialTagProvider extends AbstractMaterialTagProvider {
+    private final Consumer<DynamicTagProviderRegistrar.MaterialTagRegistrar> addonTags;
+
     public MaterialTagProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
+        this(packOutput, existingFileHelper, hook -> {});
+    }
+
+    public MaterialTagProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper, Consumer<DynamicTagProviderRegistrar.MaterialTagRegistrar> addonTags) {
         super(packOutput, TConstruct.MOD_ID, existingFileHelper);
+        this.addonTags = addonTags;
     }
 
     @Override
@@ -81,9 +91,10 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
         tag(TinkerTags.Materials.COMPATABILITY_METALS).addOptional(
                 // tier 2
                 MaterialIds.silver, MaterialIds.lead, MaterialIds.aluminum,
-                MaterialIds.osmium, MaterialIds.ironwood, MaterialIds.manaSteel,
+                MaterialIds.osmium, MaterialIds.ironwood,
+                MaterialIds.polyethylene, MaterialIds.polyvinylChloride,
                 // tier 3
-                MaterialIds.steeleaf, MaterialIds.terraSteel,
+                MaterialIds.steeleaf,
                 // tier 4
                 MaterialIds.fiery
         ).addTag(TinkerTags.Materials.COMPATABILITY_BLOCKS);
@@ -100,12 +111,14 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 MaterialIds.copper,
                 // tier 2
                 MaterialIds.iron,
-                MaterialIds.osmium, MaterialIds.lead, MaterialIds.silver, MaterialIds.aluminum,
+                MaterialIds.osmium, MaterialIds.lead, MaterialIds.silver,
+                MaterialIds.aluminum,
                 // tier 3
                 MaterialIds.slimesteel, MaterialIds.amethystBronze, MaterialIds.pigIron,
-                MaterialIds.cobalt, MaterialIds.steel,
-                MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter,
-                MaterialIds.manaSteel, MaterialIds.terraSteel,
+                MaterialIds.cobalt, MaterialIds.steel, MaterialIds.bronze,
+                MaterialIds.constantan, MaterialIds.invar,MaterialIds.electrum,
+                MaterialIds.pewter,
+
                 // tier 4
                 MaterialIds.manyullyn, MaterialIds.hepatizon,
                 MaterialIds.cinderslime, MaterialIds.queensSlime,
@@ -116,7 +129,8 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
 
         tag(TinkerTags.Materials.HARD).addOptional(
                 // tier 1
-                MaterialIds.rock, MaterialIds.flint, MaterialIds.bone, MaterialIds.whitestone,
+                MaterialIds.rock, MaterialIds.flint, MaterialIds.bone,
+                MaterialIds.whitestone,
                 // tier 2
                 MaterialIds.scorchedStone, MaterialIds.necroticBone, MaterialIds.venombone,
                 // tier 3
@@ -129,11 +143,13 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
         // melee harvest
         tag(TinkerTags.Materials.GENERAL).add(
                 // tier 1
-                MaterialIds.wood, MaterialIds.string, MaterialIds.vine, MaterialIds.leather,
+                MaterialIds.wood, MaterialIds.string, MaterialIds.vine,
+                MaterialIds.leather,
                 // tier 2
                 MaterialIds.iron, MaterialIds.slimewood,
                 // tier 3
-                MaterialIds.slimesteel, MaterialIds.pigIron, MaterialIds.roseGold, MaterialIds.cobalt,
+                MaterialIds.slimesteel, MaterialIds.pigIron, MaterialIds.roseGold,
+                MaterialIds.cobalt,
                 // tier 4
                 MaterialIds.cinderslime, MaterialIds.queensSlime, MaterialIds.enderslimeVine
         ).addOptional(
@@ -143,6 +159,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 MaterialIds.osmium, MaterialIds.ironwood,
                 // tier 3
                 MaterialIds.platedSlimewood, MaterialIds.electrum, MaterialIds.steeleaf,
+                MaterialIds.polyethylene, MaterialIds.polyvinylChloride,
                 // tier 4
                 MaterialIds.fiery
         );
@@ -150,7 +167,8 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 1
                 MaterialIds.rock, MaterialIds.copper,
                 // tier 2
-                MaterialIds.searedStone, MaterialIds.whitestone, MaterialIds.skyslimeVine, MaterialIds.twistingVine,
+                MaterialIds.searedStone, MaterialIds.whitestone, MaterialIds.skyslimeVine,
+                MaterialIds.twistingVine,
                 // tier 3
                 MaterialIds.amethystBronze,
                 // tier 4
@@ -165,7 +183,8 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 1
                 MaterialIds.flint, MaterialIds.bone, MaterialIds.chorus,
                 // tier 2
-                MaterialIds.scorchedStone, MaterialIds.necroticBone, MaterialIds.venombone, MaterialIds.weepingVine,
+                MaterialIds.scorchedStone, MaterialIds.necroticBone, MaterialIds.venombone,
+                MaterialIds.weepingVine,
                 // tier 3
                 MaterialIds.nahuatl, MaterialIds.steel, MaterialIds.darkthread,
                 // tier 4
@@ -185,7 +204,8 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 2
                 MaterialIds.slimewood, MaterialIds.necroticBone, MaterialIds.skyslimeVine,
                 // tier 3
-                MaterialIds.slimesteel, MaterialIds.roseGold, MaterialIds.darkthread, MaterialIds.cobalt,
+                MaterialIds.slimesteel, MaterialIds.roseGold, MaterialIds.darkthread,
+                MaterialIds.cobalt,
                 // tier 4
                 MaterialIds.blazingBone, MaterialIds.ancientHide, MaterialIds.enderslimeVine
         ).addOptional(
@@ -194,7 +214,8 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 2
                 MaterialIds.silver, MaterialIds.ironwood,
                 // tier 3
-                MaterialIds.invar, MaterialIds.pewter, MaterialIds.steeleaf
+                MaterialIds.invar, MaterialIds.pewter, MaterialIds.steeleaf,
+                MaterialIds.polyethylene, MaterialIds.polyvinylChloride
         );
         tag(TinkerTags.Materials.LIGHT).add(
                 // tier 1
@@ -207,9 +228,10 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 MaterialIds.hepatizon, MaterialIds.queensSlime, MaterialIds.knightmetal
         ).addOptional(
                 // tier 2
-                MaterialIds.aluminum, MaterialIds.manaSteel,
+                MaterialIds.aluminum,
                 // tier 3
-                MaterialIds.necronium, MaterialIds.constantan, MaterialIds.platedSlimewood, MaterialIds.terraSteel
+                MaterialIds.necronium, MaterialIds.constantan, MaterialIds.platedSlimewood,
+                MaterialIds.polyethylene, MaterialIds.polyvinylChloride
         );
         tag(TinkerTags.Materials.HEAVY).add(
                 // tier 1
@@ -244,10 +266,24 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // misc
                 MaterialIds.blazingBone, MaterialIds.enderPearl
         );
+
+        addonTags.accept(new MaterialTagRegistrar());
     }
 
     @Override
     public String getName() {
         return "Tinkers' Construct Material Tag Provider";
+    }
+
+    private final class MaterialTagRegistrar implements DynamicTagProviderRegistrar.MaterialTagRegistrar {
+        @Override
+        public void add(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.materials.definition.IMaterial> tag, net.minecraft.resources.ResourceLocation... ids) {
+            MaterialTagProvider.this.tag(tag).add(ids);
+        }
+
+        @Override
+        public void addOptional(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.materials.definition.IMaterial> tag, net.minecraft.resources.ResourceLocation... ids) {
+            MaterialTagProvider.this.tag(tag).addOptional(ids);
+        }
     }
 }

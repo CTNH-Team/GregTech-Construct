@@ -240,6 +240,16 @@ public class Util {
     return IS_NEO_FORGE;
   }
 
+  /**
+   * Checks if a specific mod is loaded (catches exceptions for early access)
+   * @param modId  Mod ID to check
+   * @return  True if the mod is loaded, false if mod list is not yet available
+   */
+  public static boolean isModLoaded(String modId) {
+    try { return ModList.get().isLoaded(modId); }
+    catch (Exception e) { return false; }
+  }
+
   /** Checks if we are currently running on Forge as opposed to NeoForge. Allows branching solutions for each loader if needed */
   public static boolean isForge() {
     return !isNeo();

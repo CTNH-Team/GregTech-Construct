@@ -6,13 +6,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
@@ -30,17 +28,18 @@ import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.Sounds;
 import slimeknights.tconstruct.common.TinkerDamageTypes;
 import slimeknights.tconstruct.common.TinkerTags;
-import slimeknights.tconstruct.common.data.FakeRegistryEntry;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.library.data.tinkering.AbstractFluidEffectProvider;
 import slimeknights.tconstruct.library.json.LevelingInt;
 import slimeknights.tconstruct.library.json.LevelingValue;
 import slimeknights.tconstruct.library.json.predicate.HarvestTierPredicate;
+import slimeknights.tconstruct.library.modifiers.fluid.CompatFluidMobEffect;
 import slimeknights.tconstruct.library.json.predicate.TinkerPredicate;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidMobEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.GroupCost;
 import slimeknights.tconstruct.library.modifiers.fluid.TimeAction;
+import slimeknights.tconstruct.library.modifiers.fluid.block.CompatMobEffectCloudFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.block.BlockInteractFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.block.BreakBlockFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.block.MeltBlockFluidEffect;
@@ -56,6 +55,7 @@ import slimeknights.tconstruct.library.modifiers.fluid.entity.DamageFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.entity.EntityInteractFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.entity.FireFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.entity.FreezeFluidEffect;
+import slimeknights.tconstruct.library.modifiers.fluid.entity.CompatMobEffectFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.entity.MobEffectFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.entity.PotionFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.entity.PushEntityFluidEffect;
@@ -63,9 +63,11 @@ import slimeknights.tconstruct.library.modifiers.fluid.entity.RandomTeleportFlui
 import slimeknights.tconstruct.library.modifiers.fluid.entity.RemoveEffectFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.entity.RestoreHungerFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.general.AreaMobEffectFluidEffect;
+import slimeknights.tconstruct.library.modifiers.fluid.general.CompatAreaMobEffectFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.general.ConditionalFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.general.DropItemFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.general.ExplosionFluidEffect;
+import slimeknights.tconstruct.library.modifiers.fluid.general.CompatSetBlockFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.general.ScalingFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.general.SequenceFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.general.SetBlockFluidEffect;
@@ -295,25 +297,30 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
       .addEntityEffects(FluidMobEffect.builder().effect(MobEffects.CONFUSION, 5 * 20, 1).buildEntity(TimeAction.ADD));
     {
       String ie = "immersiveengineering";
-      MobEffect flammable = FakeRegistryEntry.effect(ResourceLocation.tryBuild(ie, "flammable"));
+      ResourceLocation flammable = ResourceLocation.tryBuild(ie, "flammable");
       compatFluid(ie, "creosote",  50)
-        .addEffect(FluidMobEffect.builder().effect(flammable, 8 * 20, 1), TimeAction.ADD)
+        .addEntityEffect(new CompatMobEffectFluidEffect(new CompatFluidMobEffect(flammable, 8 * 20, 1), TimeAction.ADD))
+        .addBlockEffect(new CompatMobEffectCloudFluidEffect(java.util.List.of(new CompatFluidMobEffect(flammable, 8 * 20, 1))))
         .addEntityEffect(new FireFluidEffect(TimeAction.ADD, 8));
       compatFluid(ie, "biodiesel", 50)
-        .addEffect(FluidMobEffect.builder().effect(flammable, 8 * 20, 2), TimeAction.ADD)
+        .addEntityEffect(new CompatMobEffectFluidEffect(new CompatFluidMobEffect(flammable, 8 * 20, 2), TimeAction.ADD))
+        .addBlockEffect(new CompatMobEffectCloudFluidEffect(java.util.List.of(new CompatFluidMobEffect(flammable, 8 * 20, 2))))
         .addEntityEffect(new FireFluidEffect(TimeAction.ADD, 8));
-      FluidMobEffect conductive = new FluidMobEffect(FakeRegistryEntry.effect(ResourceLocation.tryBuild(ie, "conductive")), 8 * 20, 2);
+      CompatFluidMobEffect conductive = new CompatFluidMobEffect(ResourceLocation.tryBuild(ie, "conductive"), 8 * 20, 2);
       compatFluid(ie, "redstone_acid",  50)
-        .addEntityEffect(new MobEffectFluidEffect(conductive, TimeAction.ADD))
-        .addBlockEffect(new MobEffectCloudFluidEffect(conductive))
+        .addEntityEffect(new CompatMobEffectFluidEffect(conductive, TimeAction.ADD))
+        .addBlockEffect(new CompatMobEffectCloudFluidEffect(java.util.List.of(conductive)))
         .addBlockEffect(FluidEffect.WEATHER);
-      compatFluid(ie, "phenolic_resin", 50).addEffect(FluidMobEffect.builder().effect(FakeRegistryEntry.effect(ResourceLocation.tryBuild(ie, "sticky")), 8 * 20, 2), TimeAction.ADD);
-      Block concreteSprayed = FakeRegistryEntry.block(ResourceLocation.tryBuild(ie, "concrete_sprayed"));
-      AreaMobEffectFluidEffect concreteFeet = new AreaMobEffectFluidEffect(new FluidMobEffect(FakeRegistryEntry.effect(ResourceLocation.tryBuild(ie, "concrete_feet")), MobEffectInstance.INFINITE_DURATION, 1), TimeAction.SET, GroupCost.MAX);
+      compatFluid(ie, "phenolic_resin", 50)
+        .addEntityEffect(new CompatMobEffectFluidEffect(new CompatFluidMobEffect(ResourceLocation.tryBuild(ie, "sticky"), 8 * 20, 2), TimeAction.ADD))
+        .addBlockEffect(new CompatMobEffectCloudFluidEffect(java.util.List.of(new CompatFluidMobEffect(ResourceLocation.tryBuild(ie, "sticky"), 8 * 20, 2))));
+      CompatSetBlockFluidEffect concreteSprayed = new CompatSetBlockFluidEffect(ResourceLocation.tryBuild(ie, "concrete_sprayed"));
+      CompatAreaMobEffectFluidEffect concreteFeet = new CompatAreaMobEffectFluidEffect(new CompatFluidMobEffect(ResourceLocation.tryBuild(ie, "concrete_feet"), MobEffectInstance.INFINITE_DURATION, 1), TimeAction.SET, GroupCost.MAX);
       compatFluid(ie, "concrete", 100)
-        .addEntityEffect(new BlockAtEntityPredicate(BlockPredicate.CAN_BE_REPLACED, 0), new SetBlockFluidEffect(concreteSprayed))
-        .offsetBlockEffect(BlockPredicate.CAN_BE_REPLACED, new SetBlockFluidEffect(concreteSprayed))
-        .addEntityEffect(concreteFeet).offsetBlockEffect(concreteFeet);
+        .addEntityEffect(new BlockAtEntityPredicate(BlockPredicate.CAN_BE_REPLACED, 0), concreteSprayed)
+        .offsetBlockEffect(BlockPredicate.CAN_BE_REPLACED, concreteSprayed)
+        .addEntityEffect(concreteFeet)
+        .offsetBlockEffect(concreteFeet);
     }
 
     // twilight forest compat

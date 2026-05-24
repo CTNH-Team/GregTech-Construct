@@ -104,6 +104,7 @@ public class ModifierIds {
     public static final ModifierId projectileProtection = id("projectile_protection");
     public static final ModifierId blastProtection = id("blast_protection");
     public static final ModifierId magicProtection = id("magic_protection");
+    public static final ModifierId insulation = id("insulation");
     public static final ModifierId turtleShell = id("turtle_shell");
     public static final ModifierId shulking = id("shulking");
     public static final ModifierId dragonborn = id("dragonborn");
@@ -180,8 +181,6 @@ public class ModifierIds {
     public static final ModifierId spiny = id("spiny");
     // traits - tier 2
     public static final ModifierId overgrowth = id("overgrowth");
-    public static final ModifierId manafix = id("manafix");
-    public static final ModifierId terrarecover = id("terrarecover");
     public static final ModifierId searing = id("searing");
     public static final ModifierId scorching = id("scorching");
     public static final ModifierId scorchProtection = id("scorch_protection");
@@ -209,6 +208,7 @@ public class ModifierIds {
     public static final ModifierId consecrated = id("consecrated");
     public static final ModifierId preserved = id("preserved");
     public static final ModifierId holy = id("holy");
+  public static final ModifierId magnetic = id("magnetic");
     // traits - tier 3
     public static final ModifierId overcast = id("overcast");
     public static final ModifierId overshield = id("overshield");
@@ -226,6 +226,8 @@ public class ModifierIds {
     // traits - tier 3 compat
     public static final ModifierId maintained = id("maintained");
     public static final ModifierId temperate = id("temperate");
+    public static final ModifierId plastic = id("plastic");
+    public static final ModifierId thermaldecomposite = id("thermaldecomposite");
     /** @deprecated no longer used. Make a copy if you need it */
     @Deprecated
     public static final ModifierId invariant = id("invariant");

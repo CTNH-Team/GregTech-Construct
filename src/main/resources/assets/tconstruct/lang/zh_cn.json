@@ -883,6 +883,16 @@
   "item.tconstruct.cadmium_bucket": "熔融镉桶",
   "fluid.tconstruct.cadmium.fluid_effect": "深水作战的最好选择。",
 
+  "block.tconstruct.polyethylene_fluid": "熔融聚乙烯",
+  "fluid.tconstruct.polyethylene": "熔融聚乙烯",
+  "fluid.tconstruct.flowing_polyethylene": "流动的熔融聚乙烯",
+  "item.tconstruct.polyethylene_bucket": "熔融聚乙烯桶",
+
+  "block.tconstruct.polyvinyl_chloride_fluid": "熔融聚氯乙烯",
+  "fluid.tconstruct.polyvinyl_chloride": "熔融聚氯乙烯",
+  "fluid.tconstruct.flowing_polyvinyl_chloride": "流动的熔融聚氯乙烯",
+  "item.tconstruct.polyvinyl_chloride_bucket": "熔融聚氯乙烯桶",
+
 
   "_comment": "Compat Alloys",
 
@@ -2267,20 +2277,15 @@
   "material.tconstruct.ironwood.armor": "每损失1点耐久值，额外损失1点耐久值（无视其他升级）分享给任一当前穿戴的盔甲。目标获得1+等级的树皮覆层。",
 
   "material.tconstruct.manasteel": "魔力钢",
-  "material.tconstruct.manasteel.flavor": "魔法，神奇吧?",
+  "material.tconstruct.manasteel.flavor": "魔法，很神奇吧?",
   "material.tconstruct.manasteel.encyclopedia": "每级每游戏刻可以消耗200点Mana为工具修复1点耐久。",
   "material.tconstruct.manasteel.armor": "每1等级每游戏刻可以消耗200点Mana为装备修复1点耐久。",
-
-  "material.tconstruct.terrasteel": "泰拉钢",
-  "material.tconstruct.terrasteel.flavor": "魔法，神奇吧?",
-  "material.tconstruct.terrasteel.encyclopedia": "拿在手上时，每级每2秒可以消耗200点Mana恢复玩家1点生命值。",
-  "material.tconstruct.terrasteel.armor": "穿在身上时，每级每2秒可以消耗200点Mana恢复玩家1点生命值。",
 
   "__comment": "Tier 3 Integration Materials",
   "material.tconstruct.steel": "钢",
   "material.tconstruct.steel.flavor": "差不多90%的材料科学内容都是它",
-  "material.tconstruct.steel.encyclopedia": "每级耐久度+10%，近战伤害+8%",
-  "material.tconstruct.steel.ranged": "每级耐久度+10%，弹射物力量+5%",
+  "material.tconstruct.steel.encyclopedia": "每级耐久度+10%，近战伤害+5%",
+  "material.tconstruct.steel.ranged": "每级耐久度+10%，弹射物伤害+0.25",
   "material.tconstruct.steel.armor": "每级耐久度+10%，盔甲韧性+1",
 
   "material.tconstruct.magnetite": "磁铁",
@@ -2332,6 +2337,23 @@
   "material.tconstruct.steeleaf.encyclopedia": "每级使从方块或怪物处获得的经验+50%",
   "material.tconstruct.steeleaf.ranged": "每级使被箭矢射杀的怪物掉落的经验+50%",
   "material.tconstruct.steeleaf.armor": "每级使从方块或怪物处获得的经验+25%",
+
+  "material.tconstruct.terrasteel": "泰拉钢",
+  "material.tconstruct.terrasteel.flavor": "吸取大地之精华",
+  "material.tconstruct.terrasteel.encyclopedia": "拿在手上时，每级每2秒可以消耗200点Mana恢复玩家1点生命值。",
+  "material.tconstruct.terrasteel.armor": "穿在身上时，每级每2秒可以消耗200点Mana恢复玩家1点生命值。",
+
+  "material.tconstruct.polyethylene": "聚乙烯",
+  "material.tconstruct.polyethylene.flavor": "差不多剩下10%的材料科学内容",
+  "material.tconstruct.polyethylene.encyclopedia": "每级耐久度-20%，近战伤害-10%",
+  "material.tconstruct.polyethylene.ranged": "每级耐久度-20%，弹射物伤害-0.25",
+  "material.tconstruct.polyethylene.armor": "每级耐久度-20%，盔甲防御力-1",
+
+  "material.tconstruct.polyvinyl_chloride": "聚氯乙烯",
+  "material.tconstruct.polyvinyl_chloride.flavor": "这可不环保",
+  "material.tconstruct.polyvinyl_chloride.encyclopedia": "持有者受到火焰伤害时，会受到5秒同等级的中毒并损失每级20点耐久",
+  "material.tconstruct.polyvinyl_chloride.ranged": "持有者受到火焰伤害时，会受到5秒同等级的中毒并损失每级20点耐久",
+  "material.tconstruct.polyvinyl_chloride.armor": "穿戴者受到火焰伤害时，会受到5秒同等级的中毒并损失每级20点耐久",
 
 
   "_comment": "Tier 4 Integration Materials",
@@ -2628,6 +2650,10 @@
   "modifier.tconstruct.projectile_protection.flavor": "叮叮咚！",
   "modifier.tconstruct.projectile_protection.description": "抵御弹射物伤害",
   "modifier.tconstruct.projectile_protection.resistance": "弹射物抗性",
+  "modifier.tconstruct.insulation": "绝缘",
+  "modifier.tconstruct.insulation.flavor": "电击保护罩！",
+  "modifier.tconstruct.insulation.description": "抵消所有电击伤害",
+  "modifier.tconstruct.insulation.resistance": "电击抗性",
   "modifier.tconstruct.turtle_shell": "海龟壳",
   "modifier.tconstruct.turtle_shell.flavor": "陆上陆龟，海中海龟",
   "modifier.tconstruct.turtle_shell.description": "提升在水下的保护，并加快游泳速度",
@@ -3331,6 +3357,12 @@
   "modifier.tconstruct.terrarecover": "泰拉恢复",
   "modifier.tconstruct.terrarecover.flavor": "魔法担架",
   "modifier.tconstruct.terrarecover.description": "用魔力恢复生命",
+  "modifier.tconstruct.plastic": "塑料",
+  "modifier.tconstruct.plastic.flavor": "虚有其表！",
+  "modifier.tconstruct.plastic.description": "工具更不耐用，伤害更低，韧性更低",
+  "modifier.tconstruct.thermaldecomposite": "热解",
+  "modifier.tconstruct.thermaldecomposite.flavor": "小心火焰！",
+  "modifier.tconstruct.thermaldecomposite.description": "受到火焰伤害时工具会迅速损失耐久并释放毒气",
 
   "_comment": "Slimeskull traits",
   "modifier.tconstruct.self_destructive": "自毁",
@@ -3608,6 +3640,7 @@
   "stat.tconstruct.slot.prefix.souls": "灵魂槽：",
   "stat.tconstruct.slot.prefix.defense": "防御槽：",
   "stat.tconstruct.slot.prefix.slotless": "无需槽位",
+  "stat.tconstruct.socket_count": "镶孔数：",
 
   "stat.tconstruct.slot.display.upgrades": "升级",
   "stat.tconstruct.slot.display.abilities": "能力",
@@ -3693,6 +3726,12 @@
   "gui.tconstruct.tinker_station.traits": "材料特性",
   "gui.tconstruct.tinker_station.components": "组成部件",
   "gui.tconstruct.tinker_station.info": "修复和改装你工具的主要手段。在左侧放置工具和材料即可开始。",
+  "gui.tconstruct.tinker_station.gem_mode.off": "镶嵌模式：关",
+  "gui.tconstruct.tinker_station.gem_mode.on": "镶嵌模式：开",
+  "gui.tconstruct.tinker_station.gem_mode.help": "切换至镶嵌模式后，可直接通过镶孔镶入或取下宝石。启用镶嵌模式时，输出槽仅用于预览。",
+  "gui.tconstruct.tinker_station.gem_mode.no_sockets": "这个工具没有镶孔。",
+  "gui.tconstruct.tinker_station.gem_mode.too_many_sockets": "这个工具的镶孔太多，无法在这里显示。",
+  "stat.tconstruct.socket_bonus": "镶孔加成",
   "gui.tconstruct.tinker_station.no_traits": "无 :[",
 
   "gui.tconstruct.manual.cycle.recipes": "切换至其它配方",

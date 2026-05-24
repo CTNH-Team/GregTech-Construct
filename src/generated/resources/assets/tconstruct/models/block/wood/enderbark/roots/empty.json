@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/mangrove_roots",
-  "render_type": "minecraft:cutout",
-  "textures": {
-    "side": "tconstruct:block/wood/enderbark/roots",
-    "top": "tconstruct:block/wood/enderbark/roots_top"
-  }
-}

@@ -883,6 +883,16 @@
   "item.tconstruct.cadmium_bucket": "Molten Cadmium Bucket",
   "fluid.tconstruct.cadmium.fluid_effect": "Perfect for underwater fights.",
 
+  "block.tconstruct.polyethylene_fluid": "Molten Polyethylene",
+  "fluid.tconstruct.polyethylene": "Molten Polyethylene",
+  "fluid.tconstruct.flowing_polyethylene": "Flowing Molten Polyethylene",
+  "item.tconstruct.polyethylene_bucket": "Molten Polyethylene Bucket",
+
+  "block.tconstruct.polyvinyl_chloride_fluid": "Molten Polyvinyl Chloride",
+  "fluid.tconstruct.polyvinyl_chloride": "Molten Polyvinyl Chloride",
+  "fluid.tconstruct.flowing_polyvinyl_chloride": "Flowing Molten Polyvinyl Chloride",
+  "item.tconstruct.polyvinyl_chloride_bucket": "Molten Polyvinyl Chloride Bucket",
+
 
   "_comment": "Compat Alloys",
 
@@ -2271,16 +2281,12 @@
   "material.tconstruct.manasteel.flavor": "Magic, isn't it amazing?",
   "material.tconstruct.manasteel.encyclopedia": "Each level can consume 200 Mana every game tick to repair 1 durability for the tool.",
   "material.tconstruct.manasteel.armor": "Each level can consume 200 Mana every game tick to repair 1 durability for the armor.",
-  "material.tconstruct.terrasteel": "Terra Steel",
-  "material.tconstruct.terrasteel.flavor": "Magic, isn't it amazing?",
-  "material.tconstruct.terrasteel.encyclopedia": "When held in hand, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
-  "material.tconstruct.terrasteel.armor": "When worn, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
 
   "__comment": "Tier 3 Integration Materials",
   "material.tconstruct.steel": "Steel",
   "material.tconstruct.steel.flavor": "Basically 90% of material science",
-  "material.tconstruct.steel.encyclopedia": "Grants +10% durability and +8% melee damage per level",
-  "material.tconstruct.steel.ranged": "Grants +10% durability and +5% projectile power per level",
+  "material.tconstruct.steel.encyclopedia": "Grants +10% durability and +5% melee damage per level",
+  "material.tconstruct.steel.ranged": "Grants +10% durability and -0.25 projectile power per level",
   "material.tconstruct.steel.armor": "Grants +10% durability and +1 toughness per level",
 
   "material.tconstruct.magnetite": "Magnetite",
@@ -2332,6 +2338,23 @@
   "material.tconstruct.steeleaf.encyclopedia": "Grants +50% XP per level from blocks and monsters",
   "material.tconstruct.steeleaf.ranged": "Grants +50% XP per level from monsters killed by arrows",
   "material.tconstruct.steeleaf.armor": "Grants +25% XP per level from blocks and monsters",
+
+  "material.tconstruct.terrasteel": "Terra Steel",
+  "material.tconstruct.terrasteel.flavor": "Absorb the essence of the earth.",
+  "material.tconstruct.terrasteel.encyclopedia": "When held in hand, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
+  "material.tconstruct.terrasteel.armor": "When worn, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
+
+  "material.tconstruct.polyethylene": "Polyethylene",
+  "material.tconstruct.polyethylene.flavor": "Basically the remaining 10% of materials science",
+  "material.tconstruct.polyethylene.encyclopedia": "Grants -20% durability and -10% melee damage per level",
+  "material.tconstruct.polyethylene.ranged": "Grants -20% durability and -0.25 projectile power per level",
+  "material.tconstruct.polyethylene.armor": "Grants -20% durability and -1 armor per level",
+
+  "material.tconstruct.polyvinyl_chloride": "Polyvinyl Chloride",
+  "material.tconstruct.polyvinyl_chloride.flavor": "This is not environmentally friendly",
+  "material.tconstruct.polyvinyl_chloride.encyclopedia": "When the holder is damaged by flames, they will get 5 seconds of poison at the same level and lose 20 durability per level",
+  "material.tconstruct.polyvinyl_chloride.ranged": "When the holder is damaged by flames, they will get 5 seconds of poison at the same level and lose 20 durability per level",
+  "material.tconstruct.polyvinyl_chloride.armor": "When the wearer is damaged by flames, they will get 5 seconds of poison at the same level and lose 20 durability per level",
 
 
   "_comment": "Tier 4 Integration Materials",
@@ -2629,6 +2652,10 @@
   "modifier.tconstruct.projectile_protection.flavor": "Ding!",
   "modifier.tconstruct.projectile_protection.description": "Protects against damage from projectiles",
   "modifier.tconstruct.projectile_protection.resistance": "Projectile Resistance",
+  "modifier.tconstruct.insulation": "Insulation",
+  "modifier.tconstruct.insulation.flavor": "Electric protection",
+  "modifier.tconstruct.insulation.description": "Neutralizes all electric damage",
+  "modifier.tconstruct.insulation.resistance": "Electric Resistance",
   "modifier.tconstruct.turtle_shell": "Turtle Shell",
   "modifier.tconstruct.turtle_shell.flavor": "Tortoises go on land, turtles in the sea",
   "modifier.tconstruct.turtle_shell.description": "Increases protection underwater, along with swim speed",
@@ -3334,6 +3361,12 @@
   "modifier.tconstruct.terrarecover": "Terra Recover",
   "modifier.tconstruct.terrarecover.flavor": "Magic stretcher",
   "modifier.tconstruct.terrarecover.description": "Use mana to recover health",
+  "modifier.tconstruct.plastic": "Plastic",
+  "modifier.tconstruct.plastic.flavor": "Mere Show!",
+  "modifier.tconstruct.plastic.description": "Tool is shorter lasting, damages less and not tougher",
+  "modifier.tconstruct.thermaldecomposite": "Thermal Decomposite",
+  "modifier.tconstruct.thermaldecomposite.flavor": "Be careful of flames!",
+  "modifier.tconstruct.thermaldecomposite.description": "When damaged by flames, the tool will quickly lose durability and release toxic gas",
 
   "_comment": "Slimeskull traits",
   "modifier.tconstruct.self_destructive": "Self Destructive",
@@ -3611,6 +3644,7 @@
   "stat.tconstruct.slot.prefix.souls": "Soul Slots: ",
   "stat.tconstruct.slot.prefix.defense": "Defense Slots: ",
   "stat.tconstruct.slot.prefix.slotless": "Slotless",
+  "stat.tconstruct.socket_count": "Socket Count: ",
 
   "stat.tconstruct.slot.display.upgrades": "upgrade",
   "stat.tconstruct.slot.display.abilities": "ability",
@@ -3696,6 +3730,12 @@
   "gui.tconstruct.tinker_station.traits": "Traits",
   "gui.tconstruct.tinker_station.components": "Components",
   "gui.tconstruct.tinker_station.info": "The main way to repair or change your tools. Place a tool and a material on the left to get started.",
+  "gui.tconstruct.tinker_station.gem_mode.off": "Gem Mode: Off",
+  "gui.tconstruct.tinker_station.gem_mode.on": "Gem Mode: On",
+  "gui.tconstruct.tinker_station.gem_mode.help": "Toggle gem mode, then insert or remove gems directly through the socket slots. Output is preview-only while gem mode is active.",
+  "gui.tconstruct.tinker_station.gem_mode.no_sockets": "This tool has no gem sockets.",
+  "gui.tconstruct.tinker_station.gem_mode.too_many_sockets": "This tool has too many sockets to show here.",
+  "stat.tconstruct.socket_bonus": "Socket Bonuses",
   "gui.tconstruct.tinker_station.no_traits": "None :[",
 
   "gui.tconstruct.manual.cycle.recipes": "Cycle to other recipes",

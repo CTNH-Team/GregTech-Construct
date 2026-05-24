@@ -12,11 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -56,11 +52,7 @@ import slimeknights.tconstruct.library.json.predicate.tool.PersistentDataPredica
 import slimeknights.tconstruct.library.json.predicate.tool.ToolContextPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.ToolStackPredicate;
 import slimeknights.tconstruct.library.json.variable.block.BlockVariable;
-import slimeknights.tconstruct.library.json.variable.entity.AttributeEntityVariable;
-import slimeknights.tconstruct.library.json.variable.entity.ConditionalEntityVariable;
-import slimeknights.tconstruct.library.json.variable.entity.EntityEffectLevelVariable;
-import slimeknights.tconstruct.library.json.variable.entity.EntityVariable;
-import slimeknights.tconstruct.library.json.variable.entity.EquipmentCountEntityVariable;
+import slimeknights.tconstruct.library.json.variable.entity.*;
 import slimeknights.tconstruct.library.json.variable.melee.EntityMeleeVariable;
 import slimeknights.tconstruct.library.json.variable.melee.EntityMeleeVariable.WhichEntity;
 import slimeknights.tconstruct.library.json.variable.mining.BlockLightVariable;
@@ -70,62 +62,19 @@ import slimeknights.tconstruct.library.json.variable.power.EntityPowerVariable;
 import slimeknights.tconstruct.library.json.variable.power.PersistentDataPowerVariable;
 import slimeknights.tconstruct.library.json.variable.protection.EntityProtectionVariable;
 import slimeknights.tconstruct.library.json.variable.stat.EntityConditionalStatVariable;
-import slimeknights.tconstruct.library.json.variable.tool.ModDataSource;
-import slimeknights.tconstruct.library.json.variable.tool.ModDataVariable;
-import slimeknights.tconstruct.library.json.variable.tool.ModifierLevelVariable;
-import slimeknights.tconstruct.library.json.variable.tool.StatMultiplierVariable;
-import slimeknights.tconstruct.library.json.variable.tool.ToolStatVariable;
-import slimeknights.tconstruct.library.json.variable.tool.ToolVariable;
+import slimeknights.tconstruct.library.json.variable.tool.*;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.EntityInteractionModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.ranged.BowAmmoModifierHook;
 import slimeknights.tconstruct.library.modifiers.impl.BasicModifier.TooltipDisplay;
-import slimeknights.tconstruct.library.modifiers.modules.armor.BlockDamageSourceModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.CoverGroundWalkerModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.EffectImmunityModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.MaxArmorAttributeModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.MobDisguiseModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.ProtectionModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.ReplaceBlockWalkerModule;
-import slimeknights.tconstruct.library.modifiers.modules.armor.ToolActionWalkerTransformModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.AttributeModule;
+import slimeknights.tconstruct.library.modifiers.modules.armor.*;
+import slimeknights.tconstruct.library.modifiers.modules.behavior.*;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.AttributeModule.TooltipStyle;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.ConditionalStatModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.InfinityModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.MaterialRepairModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.ReduceToolDamageModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.RepairModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.ShowOffhandModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.ToolActionTransformModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.ToolActionsModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.EnchantmentModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.ModifierRequirementsModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.ModifierSlotModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.ModifierTraitModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.RarityModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.SetStatModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.StatBoostModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.StatCopyModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.SwappableSlotModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.SwappableToolTraitsModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.VolatileFlagModule;
-import slimeknights.tconstruct.library.modifiers.modules.build.VolatileIntModule;
-import slimeknights.tconstruct.library.modifiers.modules.capacity.CapacityBarModule;
-import slimeknights.tconstruct.library.modifiers.modules.capacity.DamageToCapacityModule;
-import slimeknights.tconstruct.library.modifiers.modules.capacity.DurabilityShieldModule;
-import slimeknights.tconstruct.library.modifiers.modules.capacity.LaunchCapacityModule;
-import slimeknights.tconstruct.library.modifiers.modules.capacity.LootToCapacityModule;
-import slimeknights.tconstruct.library.modifiers.modules.capacity.MiningCapacityModule;
-import slimeknights.tconstruct.library.modifiers.modules.capacity.OverslimeModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.ConditionalMeleeDamageModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.ConditionalPowerModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.KnockbackModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.LootingModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.MobEffectModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.ProjectileExplosionModule;
-import slimeknights.tconstruct.library.modifiers.modules.combat.SlingForceModule;
+import slimeknights.tconstruct.library.modifiers.modules.build.*;
+import slimeknights.tconstruct.library.modifiers.modules.capacity.*;
+import slimeknights.tconstruct.library.modifiers.modules.combat.*;
 import slimeknights.tconstruct.library.modifiers.modules.display.DurabilityBarColorModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.MaterialVariantColorModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.ModifierVariantColorModule;
@@ -163,33 +112,10 @@ import slimeknights.tconstruct.tools.entity.ThrownTool;
 import slimeknights.tconstruct.tools.item.CrystalshotItem;
 import slimeknights.tconstruct.tools.logic.ModifierEvents;
 import slimeknights.tconstruct.tools.modules.*;
-import slimeknights.tconstruct.tools.modules.armor.DepthProtectionModule;
-import slimeknights.tconstruct.tools.modules.armor.EnderclearanceModule;
-import slimeknights.tconstruct.tools.modules.armor.FieryCounterModule;
-import slimeknights.tconstruct.tools.modules.armor.FlameBarrierModule;
-import slimeknights.tconstruct.tools.modules.armor.FreezingCounterModule;
-import slimeknights.tconstruct.tools.modules.armor.GlowWalkerModule;
-import slimeknights.tconstruct.tools.modules.armor.KineticModule;
-import slimeknights.tconstruct.tools.modules.armor.KnockbackCounterModule;
-import slimeknights.tconstruct.tools.modules.armor.LightspeedAttributeModule;
-import slimeknights.tconstruct.tools.modules.armor.MinimapModule;
-import slimeknights.tconstruct.tools.modules.armor.OvershieldModule;
-import slimeknights.tconstruct.tools.modules.armor.RecurrentProtectionModule;
-import slimeknights.tconstruct.tools.modules.armor.ShieldStrapModule;
-import slimeknights.tconstruct.tools.modules.armor.SleevesModule;
-import slimeknights.tconstruct.tools.modules.armor.ThornsModule;
-import slimeknights.tconstruct.tools.modules.armor.ToolBeltModule;
-import slimeknights.tconstruct.tools.modules.combat.ChannelingModule;
-import slimeknights.tconstruct.tools.modules.combat.DamageOnShootModule;
-import slimeknights.tconstruct.tools.modules.combat.FieryAttackModule;
-import slimeknights.tconstruct.tools.modules.combat.FreezingAttackModule;
-import slimeknights.tconstruct.tools.modules.combat.SpillingModule;
+import slimeknights.tconstruct.tools.modules.armor.*;
+import slimeknights.tconstruct.tools.modules.combat.*;
 import slimeknights.tconstruct.tools.modules.durability.ShareDurabilityModule;
-import slimeknights.tconstruct.tools.modules.interaction.BrushModule;
-import slimeknights.tconstruct.tools.modules.interaction.ExtinguishCampfireModule;
-import slimeknights.tconstruct.tools.modules.interaction.FishingModule;
-import slimeknights.tconstruct.tools.modules.interaction.PlaceGlowModule;
-import slimeknights.tconstruct.tools.modules.interaction.ThrowingModule;
+import slimeknights.tconstruct.tools.modules.interaction.*;
 import slimeknights.tconstruct.tools.modules.ranged.BulkQuiverModule;
 import slimeknights.tconstruct.tools.modules.ranged.RestrictAngleModule;
 import slimeknights.tconstruct.tools.modules.ranged.TrickQuiverModule;
@@ -198,20 +124,10 @@ import slimeknights.tconstruct.tools.modules.ranged.ammo.ProjectileGravityModule
 import slimeknights.tconstruct.tools.modules.ranged.ammo.SmashingModule;
 import slimeknights.tconstruct.tools.modules.ranged.ammo.TippedModule;
 import slimeknights.tconstruct.tools.modules.ranged.bow.QuiverInventoryModule;
-import slimeknights.tconstruct.tools.modules.ranged.common.ArrowPierceModule;
-import slimeknights.tconstruct.tools.modules.ranged.common.ProjectileAttractMobsModule;
-import slimeknights.tconstruct.tools.modules.ranged.common.ProjectileBounceModule;
-import slimeknights.tconstruct.tools.modules.ranged.common.ProjectilePlaceGlowModule;
-import slimeknights.tconstruct.tools.modules.ranged.common.PunchModule;
-import slimeknights.tconstruct.tools.modules.ranged.common.ReversePunchModule;
+import slimeknights.tconstruct.tools.modules.ranged.common.*;
 
-import static slimeknights.tconstruct.common.TinkerTags.Items.ARMOR;
-import static slimeknights.tconstruct.common.TinkerTags.Items.HARVEST;
-import static slimeknights.tconstruct.common.TinkerTags.Items.MELEE;
-import static slimeknights.tconstruct.common.TinkerTags.Items.WORN_ARMOR;
-import static slimeknights.tconstruct.library.json.math.ModifierFormula.LEVEL;
-import static slimeknights.tconstruct.library.json.math.ModifierFormula.MULTIPLIER;
-import static slimeknights.tconstruct.library.json.math.ModifierFormula.VALUE;
+import static slimeknights.tconstruct.common.TinkerTags.Items.*;
+import static slimeknights.tconstruct.library.json.math.ModifierFormula.*;
 import static slimeknights.tconstruct.library.modifiers.modules.behavior.RepairModule.FACTOR;
 import static slimeknights.tconstruct.library.tools.definition.ModifiableArmorMaterial.ARMOR_SLOTS;
 
@@ -607,6 +523,9 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
         buildModifier(ModifierIds.magicProtection)
                 .addModule(MaxArmorAttributeModule.builder(TinkerAttributes.BAD_EFFECT_DURATION, Operation.MULTIPLY_BASE).heldTag(TinkerTags.Items.HELD).eachLevel(-0.05f))
                 .addModule(ProtectionModule.builder().sources(DamageSourcePredicate.CAN_PROTECT, DamageSourcePredicate.tag(TinkerTags.DamageTypes.MAGIC_PROTECTION)).eachLevel(2.5f));
+        buildModifier(ModifierIds.insulation)
+                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(BlockDamageSourceModule.source(DamageSourcePredicate.tag(TinkerTags.DamageTypes.INSULATION)).build());
         buildModifier(ModifierIds.turtleShell)
                 .addModule(AttributeModule.builder(ForgeMod.SWIM_SPEED.get(), Operation.MULTIPLY_TOTAL).slots(armorSlots).eachLevel(0.05f))
                 .addModule(ProtectionModule.builder()
@@ -996,9 +915,17 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                         .constant(1.5f).variable(LEVEL).power()
                         .divide()
                         .subtract().build());
-        buildModifier(ModifierIds.consecrated).addModule(ProtectionModule.builder().attacker(new MobTypePredicate(MobType.UNDEAD)).eachLevel(1.25f));
-        buildModifier(ModifierIds.preserved).addModules(StatBoostModule.multiplyBase(ToolStats.DURABILITY).eachLevel(0.15f), RepairModule.builder().eachLevel(0.15f));
-        buildModifier(ModifierIds.holy).addModule(ConditionalPowerModule.builder().target(new MobTypePredicate(MobType.UNDEAD)).eachLevel(0.75f));
+        buildModifier(ModifierIds.consecrated)
+                .addModule(ProtectionModule.builder().attacker(new MobTypePredicate(MobType.UNDEAD)).eachLevel(1.25f));
+        buildModifier(ModifierIds.preserved)
+                .addModules(StatBoostModule.multiplyBase(ToolStats.DURABILITY).eachLevel(0.15f), RepairModule.builder().eachLevel(0.15f));
+        buildModifier(ModifierIds.holy)
+                .addModule(ConditionalPowerModule.builder().target(new MobTypePredicate(MobType.UNDEAD)).eachLevel(0.75f));
+        buildModifier(ModifierIds.plastic)
+                .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).eachLevel(-0.2f))
+                .addModule(StatBoostModule.multiplyBase(ToolStats.ATTACK_DAMAGE).eachLevel(-0.1f))
+                .addModule(StatBoostModule.add(ToolStats.PROJECTILE_DAMAGE).eachLevel(-0.25f))
+                .addModule(StatBoostModule.add(ToolStats.ARMOR).eachLevel(-1));
 
         // traits - tier 3
         buildModifier(ModifierIds.overcast)

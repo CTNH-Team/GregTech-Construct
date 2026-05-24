@@ -59,6 +59,8 @@ public class Config {
     public final BooleanValue disableSideInventoryWhitelist;
     public final BooleanValue quickApplyToolModifiersSurvival;
     public final BooleanValue isEnhanceAble;
+    public final BooleanValue dumpRecipes;
+    public final BooleanValue dumpAssets;
     public final EnumValue<LogInvalidToolStack> logInvalidToolStack;
     public enum LogInvalidToolStack { STACKTRACE, WARNING, IGNORED }
 
@@ -214,6 +216,14 @@ public class Config {
         .comment("If true, modifier crystals and creative slots can be applied to tools in the inventory on right click for operators in survival. If false, this only works for players in creative mode.",
                  "This option makes testing of tools and modifiers easier, but may cause misleading assumptions about how these items will function for non-operators.")
         .define("quickApplyToolModifiersSurvival", false);
+      this.dumpRecipes = builder
+        .comment("Dump all dynamically generated Tinkers' Construct server data?",
+                 "This includes recipes, advancements, tags, materials, tinkering data, and other JSON added to the dynamic data pack.")
+        .define("dumpRecipes", false);
+      this.dumpAssets = builder
+        .comment("Dump all dynamically generated Tinkers' Construct assets?",
+                 "This includes models, blockstates, textures, atlases, and other resources added to the dynamic resource pack.")
+        .define("dumpAssets", false);
       this.logInvalidToolStack = builder
         .comment("If STACKTRACE, logs the stacktrace whenever a tool stack is created from a non-modifiable item. If WARNING (default), logs a shorter but more efficient error. If IGNORE, disables logging (useful for modpacks/players *after* they reported the issue). The stacktrace helps debug which mod is causing it, but is rather expensive on the chance they are doing it a lot.")
         .defineEnum("logInvalidToolStack", LogInvalidToolStack.WARNING);

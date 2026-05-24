@@ -1,64 +1,28 @@
 package slimeknights.tconstruct.common.data.tags;
 
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 import slimeknights.tconstruct.library.data.tinkering.AbstractModifierTagProvider;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.data.ModifierIds;
 
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.AOE_INTERACTION;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.ARMOR_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.ARMOR_UPGRADES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.BLOCK_WHILE_CHARGING;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.BONUS_SLOTLESS;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.BOOT_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.BOOT_UPGRADES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.CHARGE_EMPTY_BOW_WITHOUT_DRAWTIME;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.CHARGE_EMPTY_BOW_WITH_DRAWTIME;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.CHESTPLATE_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.CHESTPLATE_UPGRADES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.COSMETIC_SLOTLESS;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.DAMAGE_UPGRADES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.DEFENSE;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.DRILL_ATTACKS;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.DUAL_INTERACTION;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.EXTRACT_MODIFIER_BLACKLIST;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.EXTRACT_SLOTLESS_BLACKLIST;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.EXTRACT_UPGRADE_BLACKLIST;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.GEMS;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.GENERAL_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.GENERAL_ARMOR_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.GENERAL_ARMOR_UPGRADES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.GENERAL_SLOTLESS;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.GENERAL_UPGRADES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.HARVEST_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.HARVEST_UPGRADES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.HELMET_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.HELMET_UPGRADES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.INTERACTION_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.INVISIBLE_INK_BLACKLIST;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.LEGGING_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.LEGGING_UPGRADES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.MELEE_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.MELEE_UPGRADES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.OVERSLIME_FRIEND;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.PROTECTION_DEFENSE;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.RANGED_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.RANGED_UPGRADES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.REMOVE_MODIFIER_BLACKLIST;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.SELF_KNOCKBACK_SLINGS;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.SHIELD_ABILITIES;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.SLIME_DEFENSE;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.SLOTLESS;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.SPECIAL_DEFENSE;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.TARGET_KNOCKBACK_SLINGS;
-import static slimeknights.tconstruct.common.TinkerTags.Modifiers.UPGRADES;
+import java.util.function.Consumer;
+
+import static slimeknights.tconstruct.common.TinkerTags.Modifiers.*;
 
 public class ModifierTagProvider extends AbstractModifierTagProvider {
+  private final Consumer<DynamicTagProviderRegistrar.ModifierTagRegistrar> addonTags;
+
   public ModifierTagProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
+    this(packOutput, existingFileHelper, hook -> {});
+  }
+
+  public ModifierTagProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper, Consumer<DynamicTagProviderRegistrar.ModifierTagRegistrar> addonTags) {
     super(packOutput, TConstruct.MOD_ID, existingFileHelper);
+    this.addonTags = addonTags;
   }
 
   @Override
@@ -118,7 +82,7 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
     this.tag(GENERAL_UPGRADES).add(
       ModifierIds.diamond, ModifierIds.emerald, ModifierIds.netherite,
       ModifierIds.reinforced, ModifierIds.overforced, ModifierIds.soulbound,
-      ModifierIds.experienced, TinkerModifiers.manafix.getId(), TinkerModifiers.terrarecover.getId(), TinkerModifiers.magnetic.getId(), ModifierIds.scope, ModifierIds.zoom,
+      ModifierIds.experienced, ModifierIds.magnetic, ModifierIds.scope, ModifierIds.zoom,
       ModifierIds.tank, ModifierIds.smelting, TinkerModifiers.fireprimer.getId())
         .addOptional(ModifierIds.theOneProbe);
 
@@ -196,10 +160,25 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
       ModifierIds.shiny,
       TinkerModifiers.dyed.getId(), TinkerModifiers.embellishment.getId(), TinkerModifiers.trim.getId(),
       TinkerModifiers.farsighted.getId(), TinkerModifiers.nearsighted.getId());
+
+    addonTags.accept(new ModifierTagRegistrar());
   }
 
   @Override
   public String getName() {
     return "Tinkers' Construct Modifier Tag Provider";
   }
+
+  private final class ModifierTagRegistrar implements DynamicTagProviderRegistrar.ModifierTagRegistrar {
+    @Override
+    public void add(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.modifiers.Modifier> tag, net.minecraft.resources.ResourceLocation... ids) {
+      ModifierTagProvider.this.tag(tag).add(ids);
+    }
+
+    @Override
+    public void addOptional(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.modifiers.Modifier> tag, net.minecraft.resources.ResourceLocation... ids) {
+      ModifierTagProvider.this.tag(tag).addOptional(ids);
+    }
+  }
+
 }

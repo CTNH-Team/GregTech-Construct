@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material_melting",
-  "input": "tconstruct:knightmetal",
-  "result": {
-    "amount": 144,
-    "fluid": "tconstruct:knightmetal"
-  },
-  "temperature": 1300
-}

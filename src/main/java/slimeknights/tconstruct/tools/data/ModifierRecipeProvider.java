@@ -76,7 +76,6 @@ import slimeknights.tconstruct.tools.recipe.ToggleInteractionWorktableRecipeBuil
 import slimeknights.tconstruct.world.TinkerHeadType;
 import slimeknights.tconstruct.world.TinkerWorld;
 import slimeknights.tconstruct.world.block.FoliageType;
-import vazkii.botania.common.block.BotaniaBlocks;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -286,12 +285,6 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .setSlots(SlotType.UPGRADE, 1)
                 .setTools(ingredientFromTags(TinkerTags.Items.MELEE_WEAPON, TinkerTags.Items.HARVEST))
                 .save(consumer, prefix(TinkerModifiers.magnetic, upgradeFolder));
-        ModifierRecipeBuilder.modifier(TinkerModifiers.manafix)
-                .addInput(BotaniaBlocks.spawnerClaw)
-                .setMaxLevel(5)
-                .setSlots(SlotType.UPGRADE, 1)
-                .setTools(ingredientFromTags(TinkerTags.Items.MODIFIABLE))
-                .save(consumer, prefix(TinkerModifiers.manafix, upgradeFolder));
         // armor has a max level of 1 per piece, so 4 total
         ModifierRecipeBuilder.modifier(TinkerModifiers.magnetic)
                 .addInput(Items.COMPASS)

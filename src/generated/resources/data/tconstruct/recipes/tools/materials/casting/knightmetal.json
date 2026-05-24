@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material_fluid",
-  "fluid": {
-    "amount": 144,
-    "tag": "tconstruct:knightmetal"
-  },
-  "output": "tconstruct:knightmetal",
-  "temperature": 1300
-}

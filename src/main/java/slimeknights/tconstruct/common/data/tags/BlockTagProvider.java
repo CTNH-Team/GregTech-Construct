@@ -24,6 +24,8 @@ import slimeknights.tconstruct.common.registration.GeodeItemObject;
 import slimeknights.tconstruct.common.registration.GeodeItemObject.BudSize;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
+import slimeknights.tconstruct.library.addon.AddonSmelteryCompat;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.shared.TinkerCommons;
 import slimeknights.tconstruct.shared.TinkerMaterials;
 import slimeknights.tconstruct.shared.block.ClearStainedGlassBlock.GlassColor;
@@ -150,6 +152,11 @@ public class BlockTagProvider extends BlockTagsProvider {
         builder.addOptionalTag(commonResource("storage_blocks/" + compat.getName()));
       }
     }
+    TiCAddonRegistry.collectSmelteryCompat(addon -> addon.entries().forEach(entry -> {
+      if (entry.type() == AddonSmelteryCompat.CompatType.ALLOY) {
+        builder.addOptionalTag(commonResource("storage_blocks/" + entry.name()));
+      }
+    }));
 
     // allow using wood variants to make tables
     this.tag(TinkerTags.Blocks.PLANKLIKE)

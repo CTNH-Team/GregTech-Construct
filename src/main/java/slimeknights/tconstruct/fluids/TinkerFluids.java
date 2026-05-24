@@ -6,20 +6,14 @@ import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import net.minecraft.world.item.CreativeModeTab.Output;
-import net.minecraft.world.item.DispensibleContainerItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -34,7 +28,6 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
@@ -44,7 +37,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.RegistryObject;
 import slimeknights.mantle.fluid.InvertedFluid;
 import slimeknights.mantle.fluid.UnplaceableFluid;
-import slimeknights.mantle.fluid.texture.FluidTextureCameraProvider;
 import slimeknights.mantle.registration.RegistrationHelper;
 import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.FlowingFluidObject;
@@ -53,10 +45,6 @@ import slimeknights.mantle.registration.object.ItemObject;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerModule;
 import slimeknights.tconstruct.common.TinkerTags;
-import slimeknights.tconstruct.fluids.data.FluidBlockstateModelProvider;
-import slimeknights.tconstruct.fluids.data.FluidBucketModelProvider;
-import slimeknights.tconstruct.fluids.data.FluidTextureProvider;
-import slimeknights.tconstruct.fluids.data.FluidTooltipProvider;
 import slimeknights.tconstruct.fluids.fluids.PotionFluidType;
 import slimeknights.tconstruct.fluids.fluids.SlimeFluid;
 import slimeknights.tconstruct.fluids.item.BottleItem;
@@ -68,6 +56,7 @@ import slimeknights.tconstruct.fluids.util.BottleBrewingRecipe;
 import slimeknights.tconstruct.fluids.util.EmptyBottleIntoEmpty;
 import slimeknights.tconstruct.fluids.util.EmptyBottleIntoWater;
 import slimeknights.tconstruct.fluids.util.FillBottle;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.recipe.FluidValues;
 import slimeknights.tconstruct.shared.TinkerEffects;
@@ -185,8 +174,9 @@ public final class TinkerFluids extends TinkerModule {
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenUranium  = FLUIDS.registerMetal("uranium").type(hot("uranium").temperature(1130).lightLevel(15)).block(createBurning(MapColor.TERRACOTTA_GREEN, 15, 10, 5f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenChromium = FLUIDS.registerMetal("chromium").type(hot("chromium").temperature(1200).lightLevel(13)).block(createBurning(MapColor.COLOR_CYAN, 13, 10, 5f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenCadmium  = FLUIDS.registerMetal("cadmium").type(hot("cadmium").temperature(594).lightLevel(10)).block(createBurning(MapColor.COLOR_BROWN, 10, 10, 5f)).bucket().commonTag().flowing();
-    public static final FlowingFluidObject<ForgeFlowingFluid> moltenManaSteel = FLUIDS.registerMetal("manasteel").type(hot("manasteel").temperature(1100).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
-    public static final FlowingFluidObject<ForgeFlowingFluid> moltenTerraSteel = FLUIDS.registerMetal("terrasteel").type(hot("terrasteel").temperature(1500).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
+    // gt
+    public static final FlowingFluidObject<ForgeFlowingFluid> moltenPolyethylene = FLUIDS.registerMetal("polyethylene").type(cool("polyethylene").temperature(445)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
+    public static final FlowingFluidObject<ForgeFlowingFluid> moltenPolyvinylChloride = FLUIDS.registerMetal("polyvinyl_chloride").type(cool("polyvinyl_chloride").temperature(470)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
 
     // compat alloys
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenBronze     = FLUIDS.registerMetal("bronze").type(hot("bronze").temperature(1000).lightLevel(10)).block(createBurning(MapColor.TERRACOTTA_ORANGE, 10, 10, 6f)).bucket().commonTag().flowing();
@@ -211,7 +201,6 @@ public final class TinkerFluids extends TinkerModule {
     // twilight
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenSteeleaf = FLUIDS.registerMetal("steeleaf").type(hot("steeleaf").temperature(1234).lightLevel(10)).block(createBurning(MapColor.COLOR_GREEN, 10, 10, 6f)).bucket().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> fieryLiquid = FLUIDS.register("fiery_liquid").type(hot("fiery_liquid").temperature(1800).lightLevel(15)).block(createBurning(MapColor.CRIMSON_HYPHAE, 15, 20, 6f)).tickRate(30).bucket().flowing();
-
     // fluid data serializer
     public static final FluidDataSerializer FLUID_DATA_SERIALIZER = new FluidDataSerializer();
     public static final RegistryObject<EntityDataSerializer<?>> FLUID_DATA_SERIALIZER_REGISTRY = DATA_SERIALIZERS.register("fluid", () -> FLUID_DATA_SERIALIZER);
@@ -256,19 +245,6 @@ public final class TinkerFluids extends TinkerModule {
                 .motionScale(0.0023333333333333335D)
                 .canSwim(false).canDrown(false)
                 .pathType(BlockPathTypes.LAVA).adjacentPathType(null);
-    }
-
-    @SubscribeEvent
-    void gatherData(final GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput packOutput = generator.getPackOutput();
-        boolean client = event.includeClient();
-        generator.addProvider(client, new FluidTooltipProvider(packOutput));
-        FluidTextureProvider textureProvider = new FluidTextureProvider(packOutput);
-        generator.addProvider(client, textureProvider);
-        generator.addProvider(client, new FluidTextureCameraProvider(packOutput, event.getExistingFileHelper(), textureProvider));
-        generator.addProvider(client, new FluidBucketModelProvider(packOutput, TConstruct.MOD_ID));
-        generator.addProvider(client, new FluidBlockstateModelProvider(packOutput, TConstruct.MOD_ID));
     }
 
     @SubscribeEvent
@@ -467,8 +443,9 @@ public final class TinkerFluids extends TinkerModule {
         acceptMolten(output, moltenUranium, MaterialIds.necronium);
         acceptMolten(output, moltenChromium);
         acceptMolten(output, moltenCadmium);
-        acceptCompat(output, moltenManaSteel, MaterialIds.manaSteel);
-        acceptCompat(output, moltenTerraSteel, MaterialIds.terraSteel);
+        TiCAddonRegistry.addFluidTabItems(output);
+        acceptCompat(output, moltenPolyethylene, MaterialIds.polyethylene);
+        acceptCompat(output, moltenPolyvinylChloride, MaterialIds.polyvinylChloride);
         // compat alloys
         acceptCompat(output, moltenBronze, MaterialIds.bronze);
         acceptMolten(output, moltenBrass, MaterialIds.platedSlimewood);
@@ -533,4 +510,5 @@ public final class TinkerFluids extends TinkerModule {
     public static String withoutMolten(FluidObject<?> fluid) {
         return fluid.getId().getPath().substring(MOLTEN_LENGTH);
     }
+
 }

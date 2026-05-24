@@ -24,6 +24,8 @@ import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.json.BlockOrEntityCondition;
 import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
+import slimeknights.tconstruct.library.addon.AddonSmelteryCompat;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.shared.TinkerMaterials;
 import slimeknights.tconstruct.smeltery.data.SmelteryCompat;
 import slimeknights.tconstruct.smeltery.data.SmelteryCompat.CompatType;
@@ -73,6 +75,11 @@ public class GlobalLootModifiersProvider extends GlobalLootModifierProvider {
         addLustrous(compat.getName(), true);
       }
     }
+    TiCAddonRegistry.collectSmelteryCompat(addon -> addon.entries().forEach(entry -> {
+      if (entry.type() == AddonSmelteryCompat.CompatType.ORE) {
+        addLustrous(entry.name(), true);
+      }
+    }));
   }
 
   /** Adds lustrous for an ore */

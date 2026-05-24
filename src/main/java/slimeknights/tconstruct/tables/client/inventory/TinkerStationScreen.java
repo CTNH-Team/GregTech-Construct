@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -12,17 +13,22 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
+import net.minecraftforge.registries.RegistryObject;
 import slimeknights.mantle.client.screen.ElementScreen;
 import slimeknights.mantle.client.screen.ModuleScreen;
 import slimeknights.mantle.client.screen.ScalableElementScreen;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.network.TinkerNetwork;
+import slimeknights.tconstruct.library.client.Icons;
 import slimeknights.tconstruct.library.client.GuiUtil;
 import slimeknights.tconstruct.library.recipe.partbuilder.Pattern;
 import slimeknights.tconstruct.library.tools.layout.LayoutIcon;
@@ -31,6 +37,8 @@ import slimeknights.tconstruct.library.tools.layout.StationSlotLayout;
 import slimeknights.tconstruct.library.tools.layout.StationSlotLayoutLoader;
 import slimeknights.tconstruct.library.tools.nbt.LazyToolStack;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
+import slimeknights.tconstruct.plugin.apotheosis.ApotheosisBridge;
+import slimeknights.tconstruct.tables.apotheosis.ApotheosisSocketMode;
 import slimeknights.tconstruct.tables.block.entity.table.TinkerStationBlockEntity;
 import slimeknights.tconstruct.tables.client.inventory.widget.SlotButtonItem;
 import slimeknights.tconstruct.tables.client.inventory.widget.TinkerStationButtonsWidget;
@@ -38,9 +46,11 @@ import slimeknights.tconstruct.tables.menu.TinkerStationContainerMenu;
 import slimeknights.tconstruct.tables.menu.slot.TinkerStationSlot;
 import slimeknights.tconstruct.tables.network.TinkerStationRenamePacket;
 import slimeknights.tconstruct.tables.network.TinkerStationSelectionPacket;
+import slimeknights.tconstruct.tables.network.TinkerStationSocketSelectionPacket;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.ArrayList;
 
 import static slimeknights.tconstruct.tables.block.entity.table.TinkerStationBlockEntity.INPUT_SLOT;
 import static slimeknights.tconstruct.tables.block.entity.table.TinkerStationBlockEntity.TINKER_SLOT;
@@ -80,6 +90,12 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
   private static final ScalableElementScreen CENTER_BEAM = new ScalableElementScreen(TINKER_TEXTURE, 2, 202, 129, 7, 256, 256);
   // text boxes
   private static final ElementScreen TEXT_BOX = ACTIVE_TEXT_FIELD.move(0, 244, 90, 12);
+  private static final Component GEM_MODE_ON = TConstruct.makeTranslation("gui", "tinker_station.gem_mode.on");
+  private static final Component GEM_MODE_OFF = TConstruct.makeTranslation("gui", "tinker_station.gem_mode.off");
+  private static final int RESULT_SLOT_X = 114;
+  private static final int RESULT_SLOT_Y = 38;
+  private static final int GEM_MODE_BUTTON_SIZE = 16;
+  private static final int GEM_MODE_BUTTON_GAP = 2;
 
   /** Number of button columns in the UI */
   public static final int COLUMN_COUNT = 6;
@@ -109,6 +125,8 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
   // components
   protected EditBox textField;
   protected TinkerStationButtonsWidget buttonsScreen;
+  protected Button extractionToggleButton;
+  protected TinkerStationGemModeViewState gemModeViewState = TinkerStationGemModeViewState.hidden();
 
   /** Maximum available slots */
   @Getter
@@ -182,6 +200,17 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     textField.visible = false;
     textField.setEditable(false);
 
+    GemModeButtonSpec buttonSpec = createGemModeButtonSpec();
+    GemModeButtonPosition buttonPosition = resolveGemModeButtonPosition(this.cornerX, this.cornerY, buttonSpec);
+    this.extractionToggleButton = this.addRenderableWidget(new GemModeIconButton(
+      buttonPosition.x(),
+      buttonPosition.y(),
+      buttonSpec.size(),
+      button -> toggleGemMode()
+    ));
+    this.extractionToggleButton.visible = false;
+    this.extractionToggleButton.active = false;
+
     int buttonsStyle = this.maxInputs > 3 ? TinkerStationButtonsWidget.METAL_STYLE : TinkerStationButtonsWidget.WOOD_STYLE;
 
     List<StationSlotLayout> layouts = Lists.newArrayList();
@@ -203,6 +232,9 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
 
     // init after we set the enable boolean
     super.init();
+    buttonPosition = resolveGemModeButtonPosition(this.cornerX, this.cornerY, buttonSpec);
+    this.extractionToggleButton.setX(buttonPosition.x());
+    this.extractionToggleButton.setY(buttonPosition.y());
     this.buttonsScreen = new TinkerStationButtonsWidget(this, this.cornerX - TinkerStationButtonsWidget.width(COLUMN_COUNT) - 2,
       this.cornerY + this.centerBeam.h + this.buttonDecorationTop.h, layouts, buttonsStyle);
 
@@ -213,10 +245,11 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
 
   /** Updates all slots for the current slot layout */
   public void updateLayout() {
+    this.activeInputs = getDisplayedInputCount();
     int stillFilled = 0;
     for (int i = 0; i <= maxInputs; i++) {
       Slot slot = this.getMenu().getSlot(i);
-      LayoutSlot layoutSlot = currentLayout.getSlot(i);
+      LayoutSlot layoutSlot = getDisplayedLayoutSlot(i);
       if (layoutSlot.isHidden()) {
         // put the position in the still filled line
         slot.x = STILL_FILLED_X - STILL_FILLED_SPACING * stillFilled;
@@ -243,8 +276,10 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
       return;
     }
 
+    this.refreshGemModeControls();
+
     // fetch the tool version of the result for the screen
-    LazyToolStack lazyResult = tile.getResult();
+    LazyToolStack lazyResult = LazyToolStack.from(this.getMenu().getDisplayedResult());
 
     // if we have a message, display instead of refreshing the tool
     Component currentError = tile.getCurrentError();
@@ -255,7 +290,7 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
 
     // only get to rename new tool in the station
     // anvil can rename on any tool change
-    if (lazyResult == null || (tile.getInputCount() <= 4 && this.getMenu().getSlot(TINKER_SLOT).hasItem())) {
+    if (this.gemModeViewState.gemModeActive() || lazyResult == null || (tile.getInputCount() <= 4 && this.getMenu().getSlot(TINKER_SLOT).hasItem())) {
       textField.setEditable(false);
       textField.setValue("");
       textField.visible = false;
@@ -269,7 +304,7 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     }
 
     // if there is no result, use the input
-    if (lazyResult == null) {
+    if (lazyResult == null || lazyResult.getStack().isEmpty()) {
       lazyResult = tile.getTool();
     }
     updateArmorStandPreview(lazyResult.getStack());
@@ -290,7 +325,7 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
       MutableComponent fullText = Component.literal("");
       boolean hasComponents = false;
       for (int i = 0; i <= activeInputs; i++) {
-        LayoutSlot layout = currentLayout.getSlot(i);
+        LayoutSlot layout = getDisplayedLayoutSlot(i);
         String key = layout.getTranslationKey();
         if (!layout.isHidden() && !key.isEmpty()) {
           hasComponents = true;
@@ -415,7 +450,7 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     for (int i = 0; i <= maxInputs; i++) {
       Slot slot = this.getMenu().getSlot(i);
       if (!slot.hasItem()) {
-        Pattern icon = currentLayout.getSlot(i).getIcon();
+        Pattern icon = getDisplayedLayoutSlot(i).getIcon();
         if (icon != null) {
           GuiUtil.renderPattern(graphics, icon, this.cornerX + slot.x, this.cornerY + slot.y);
         }
@@ -437,6 +472,42 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     renderArmorStand(graphics);
   }
 
+  @Override
+  protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    super.renderTooltip(graphics, mouseX, mouseY);
+
+    if (this.extractionToggleButton != null && shouldShowGemModeTooltip(this.extractionToggleButton.visible, isGemModeButtonHovered(this.extractionToggleButton, mouseX, mouseY))) {
+      String tooltipKey = this.gemModeViewState.buttonTooltipKey();
+      if (!tooltipKey.isEmpty()) {
+        graphics.renderTooltip(this.font, formatGemModeTooltipLines(this.font, this.gemModeViewState.gemModeActive(), tooltipKey), mouseX, mouseY);
+      }
+    }
+  }
+
+  static List<Component> createGemModeTooltipLines(boolean gemModeActive, String detailTooltipKey) {
+    List<Component> lines = new ArrayList<>();
+    lines.add(gemModeActive ? GEM_MODE_ON : GEM_MODE_OFF);
+    if (!detailTooltipKey.isEmpty()) {
+      lines.add(Component.translatable(detailTooltipKey).withStyle(ChatFormatting.GRAY));
+    }
+    return lines;
+  }
+
+  static List<FormattedCharSequence> formatGemModeTooltipLines(net.minecraft.client.gui.Font font, boolean gemModeActive, String detailTooltipKey) {
+    List<FormattedCharSequence> lines = new ArrayList<>();
+    for (Component component : createGemModeTooltipLines(gemModeActive, detailTooltipKey)) {
+      lines.addAll(font.split(component, 180));
+    }
+    return lines;
+  }
+
+  static boolean isGemModeButtonHovered(Button button, int mouseX, int mouseY) {
+    return mouseX >= button.getX()
+      && mouseX < button.getX() + button.getWidth()
+      && mouseY >= button.getY()
+      && mouseY < button.getY() + button.getHeight();
+  }
+
 
 
   @Override
@@ -451,6 +522,10 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     
     if(this.buttonsScreen.handleMouseClicked(mouseX, mouseY, mouseButton)) {
       return false;
+    }
+
+    if ((mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT || mouseButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT) && handleGemModeSocketClick(mouseX, mouseY)) {
+      return true;
     }
 
     return super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -656,5 +731,283 @@ public class TinkerStationScreen extends ToolTableScreen<TinkerStationBlockEntit
     super.onClose();
 
     assert this.minecraft != null;
+  }
+
+  private void refreshGemModeControls() {
+    ItemStack currentTool = this.getMenu().getSlot(TINKER_SLOT).getItem();
+    TinkerStationGemModeResolution resolution = TinkerStationGemModeResolution.create(
+      currentTool,
+      this.maxInputs,
+      this.getMenu().isGemMode()
+    );
+    if (resolution.shouldExitGemMode()) {
+      exitGemModeForUnsupportedTool();
+      return;
+    }
+    applyGemModeScreenState(resolution.viewState());
+  }
+
+  private void toggleGemMode() {
+    if (!this.gemModeViewState.buttonVisible() || !this.gemModeViewState.buttonEnabled()) {
+      return;
+    }
+    boolean enabled = !this.getMenu().isGemMode();
+    this.getMenu().setGemMode(enabled);
+    this.refreshGemModeControls();
+    this.updateDisplay();
+    TinkerNetwork.getInstance().sendToServer(createTogglePacket(enabled));
+  }
+
+  private void exitGemModeForUnsupportedTool() {
+    if (!this.getMenu().isGemMode()) {
+      return;
+    }
+    this.getMenu().setGemMode(false);
+    applyGemModeScreenState(TinkerStationGemModeResolution.create(
+      this.getMenu().getSlot(TINKER_SLOT).getItem(),
+      this.maxInputs,
+      false
+    ).viewState());
+    TinkerNetwork.getInstance().sendToServer(createTogglePacket(false));
+  }
+
+  private void applyGemModeScreenState(TinkerStationGemModeViewState nextViewState) {
+    TinkerStationGemModeScreenState screenState = TinkerStationGemModeScreenState.create(
+      this.gemModeViewState,
+      nextViewState,
+      this.currentLayout.getInputCount(),
+      this.maxInputs
+    );
+    this.gemModeViewState = screenState.viewState();
+    this.activeInputs = screenState.displayedInputCount();
+    if (screenState.shouldUpdateLayout()) {
+      updateLayout();
+    }
+    this.extractionToggleButton.visible = screenState.toggleVisible();
+    this.extractionToggleButton.active = screenState.toggleActive();
+    this.extractionToggleButton.setMessage(this.gemModeViewState.gemModeActive() ? GEM_MODE_ON : GEM_MODE_OFF);
+  }
+
+  private boolean handleGemModeSocketClick(double mouseX, double mouseY) {
+    if (!this.getMenu().isGemMode()) {
+      return false;
+    }
+
+    for (Slot slot : this.menu.slots) {
+      if (!(slot instanceof TinkerStationSlot stationSlot)) {
+        continue;
+      }
+      int socketIndex = slot.index - INPUT_SLOT;
+      if (socketIndex < 0 || socketIndex >= this.getMenu().getVisibleSocketCount()) {
+        continue;
+      }
+      if (!this.isHovering(slot, mouseX, mouseY)) {
+        continue;
+      }
+
+      TinkerStationSocketSelectionPacket packet = createSocketInteractionPacket(socketIndex, this.menu.getCarried(), slot.hasItem());
+      if (packet == null) {
+        return true;
+      }
+      TinkerNetwork.getInstance().sendToServer(packet);
+      return true;
+    }
+
+    return false;
+  }
+
+  static TinkerStationSocketSelectionPacket createTogglePacket(boolean enabled) {
+    return TinkerStationSocketSelectionPacket.toggleMode(enabled);
+  }
+
+  static Item resolveGemModeButtonIconItem() {
+    try {
+      Class<?> itemsClass = Class.forName("dev.shadowsoffire.apotheosis.adventure.Adventure$Items");
+      Object fieldValue = itemsClass.getField("SIGIL_OF_SOCKETING").get(null);
+      if (fieldValue instanceof RegistryObject<?> registryObject) {
+        Object value = registryObject.get();
+        if (value instanceof net.minecraft.world.level.ItemLike itemLike) {
+          return itemLike.asItem();
+        }
+      }
+    } catch (ReflectiveOperationException | LinkageError ignored) {
+      // Fall back cleanly in test/bootstrap environments where Apotheosis registries are unavailable.
+    }
+    return Items.DIAMOND;
+  }
+
+  static GemModeButtonSpec createGemModeButtonSpec() {
+    return new GemModeButtonSpec(RESULT_SLOT_X - 32, RESULT_SLOT_Y + GEM_MODE_BUTTON_SIZE + GEM_MODE_BUTTON_GAP + 6, GEM_MODE_BUTTON_SIZE, resolveGemModeButtonIconItem());
+  }
+
+  static GemModeButtonPosition resolveGemModeButtonPosition(int cornerX, int cornerY, GemModeButtonSpec spec) {
+    return new GemModeButtonPosition(cornerX + spec.x(), cornerY + spec.y());
+  }
+
+  static GemModeButtonIconInset createGemModeButtonIconInset(int buttonSize) {
+    return new GemModeButtonIconInset(Math.max(0, (buttonSize - 16) / 2), Math.max(0, (buttonSize - 16) / 2));
+  }
+
+  static boolean shouldShowGemModeTooltip(boolean buttonVisible, boolean buttonHovered) {
+    return buttonVisible && buttonHovered;
+  }
+
+  static GemModeButtonVisualState getGemModeButtonVisualState(boolean gemModeActive, boolean buttonEnabled) {
+    if (!buttonEnabled) {
+      return GemModeButtonVisualState.DISABLED;
+    }
+    if (gemModeActive) {
+      return GemModeButtonVisualState.HIGHLIGHTED;
+    }
+    return GemModeButtonVisualState.NORMAL;
+  }
+
+  static TinkerStationSocketSelectionPacket createTogglePacketForCurrentMode(boolean gemModeActive) {
+    return createTogglePacket(!gemModeActive);
+  }
+
+  static TinkerStationSocketSelectionPacket createSocketInteractionPacket(int selectedSocket, ItemStack carriedStack, boolean socketFilled) {
+    if (!carriedStack.isEmpty()) {
+      return TinkerStationSocketSelectionPacket.insertFromCarried(selectedSocket);
+    }
+    if (socketFilled) {
+      return TinkerStationSocketSelectionPacket.removeToPlayer(selectedSocket);
+    }
+    return null;
+  }
+
+  private int getDisplayedInputCount() {
+    if (this.gemModeViewState.socketSlotsVisible()) {
+      return this.gemModeViewState.visibleSockets().size();
+    }
+    return Math.min(this.currentLayout.getInputCount(), this.maxInputs);
+  }
+
+  private LayoutSlot getDisplayedLayoutSlot(int slotIndex) {
+    if (!this.gemModeViewState.socketSlotsVisible()) {
+      return this.currentLayout.getSlot(slotIndex);
+    }
+    if (slotIndex == TINKER_SLOT) {
+      return this.currentLayout.getSlot(slotIndex);
+    }
+    int inputIndex = slotIndex - INPUT_SLOT;
+    if (inputIndex >= 0 && inputIndex < this.gemModeViewState.visibleSockets().size()) {
+      return this.defaultLayout.getSlot(slotIndex);
+    }
+    return LayoutSlot.EMPTY;
+  }
+
+  record GemModeButtonSpec(int x, int y, int size, net.minecraft.world.item.Item iconItem) {}
+  record GemModeButtonPosition(int x, int y) {}
+  record GemModeButtonIconInset(int x, int y) {}
+
+  enum GemModeButtonVisualState {
+    NORMAL,
+    HIGHLIGHTED,
+    DISABLED
+  }
+
+  private static class GemModeIconButton extends Button {
+    private static final ElementScreen BUTTON_PRESSED_GUI = new ElementScreen(Icons.ICONS, 144, 216, GEM_MODE_BUTTON_SIZE, GEM_MODE_BUTTON_SIZE, 256, 256);
+    private static final ElementScreen BUTTON_NORMAL_GUI = new ElementScreen(Icons.ICONS, 180, 216, GEM_MODE_BUTTON_SIZE, GEM_MODE_BUTTON_SIZE, 256, 256);
+    private static final ElementScreen BUTTON_DISABLED_GUI = new ElementScreen(Icons.ICONS, 216, 216, GEM_MODE_BUTTON_SIZE, GEM_MODE_BUTTON_SIZE, 256, 256);
+    private final int size;
+
+    private GemModeIconButton(int x, int y, int size, OnPress onPress) {
+      super(x, y, size, size, Component.empty(), onPress, DEFAULT_NARRATION);
+      this.size = size;
+    }
+
+    @Override
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+      int x = getX();
+      int y = getY();
+      GemModeButtonIconInset inset = createGemModeButtonIconInset(this.size);
+      GemModeButtonVisualState visualState = getGemModeButtonVisualState(GEM_MODE_ON.equals(this.getMessage()), this.active);
+      switch (visualState) {
+        case HIGHLIGHTED -> BUTTON_PRESSED_GUI.draw(graphics, x, y);
+        case DISABLED -> BUTTON_PRESSED_GUI.draw(graphics, x, y);
+        case NORMAL -> BUTTON_NORMAL_GUI.draw(graphics, x, y);
+      }
+      graphics.renderItem(new ItemStack(resolveGemModeButtonIconItem()), x + inset.x(), y + inset.y());
+    }
+  }
+}
+
+record TinkerStationGemModeViewState(boolean buttonVisible,
+                                     boolean buttonEnabled,
+                                     String buttonTooltipKey,
+                                     boolean gemModeActive,
+                                     boolean socketSlotsVisible,
+                                     boolean outputLocked,
+                                     List<ApotheosisBridge.SocketGem> visibleSockets) {
+  static TinkerStationGemModeViewState hidden() {
+    return new TinkerStationGemModeViewState(false, false, "", false, false, false, List.of());
+  }
+
+  static TinkerStationGemModeViewState create(ItemStack tool, int inputCount, boolean gemModeActive) {
+    if (tool.isEmpty()) {
+      return hidden();
+    }
+
+    ApotheosisSocketMode.ButtonState buttonState = ApotheosisSocketMode.buttonState(tool, inputCount);
+    boolean buttonVisible = buttonState.visible();
+    String tooltipKey = buttonVisible ? "gui.tconstruct.tinker_station.gem_mode.help" : "";
+    if (!buttonState.reasonKey().isEmpty()) {
+      tooltipKey = "gui.tconstruct.tinker_station.gem_mode." + buttonState.reasonKey();
+    }
+
+    boolean socketSlotsVisible = gemModeActive && buttonState.enabled();
+    return new TinkerStationGemModeViewState(
+      buttonVisible,
+      buttonState.enabled(),
+      tooltipKey,
+      gemModeActive,
+      socketSlotsVisible,
+      socketSlotsVisible,
+      ApotheosisSocketMode.getVisibleSockets(tool)
+    );
+  }
+}
+
+record TinkerStationGemModeResolution(TinkerStationGemModeViewState viewState, boolean shouldExitGemMode) {
+  static TinkerStationGemModeResolution create(ItemStack tool, int inputCount, boolean gemModeActive) {
+    TinkerStationGemModeViewState viewState = TinkerStationGemModeViewState.create(tool, inputCount, gemModeActive);
+    boolean unsupportedWhileActive = gemModeActive && !viewState.buttonEnabled();
+    if (unsupportedWhileActive) {
+      viewState = TinkerStationGemModeViewState.create(tool, inputCount, false);
+    }
+    return new TinkerStationGemModeResolution(viewState, unsupportedWhileActive);
+  }
+}
+
+record TinkerStationGemModeScreenState(TinkerStationGemModeViewState viewState,
+                                       int displayedInputCount,
+                                       boolean shouldUpdateLayout,
+                                       boolean toggleVisible,
+                                       boolean toggleActive) {
+  static TinkerStationGemModeScreenState create(TinkerStationGemModeViewState currentViewState,
+                                                TinkerStationGemModeViewState nextViewState,
+                                                int currentLayoutInputCount,
+                                                int maxInputs) {
+    int displayedInputCount = nextViewState.socketSlotsVisible()
+      ? nextViewState.visibleSockets().size()
+      : Math.min(currentLayoutInputCount, maxInputs);
+    boolean shouldUpdateLayout = hasLayoutChange(currentViewState, nextViewState);
+    return new TinkerStationGemModeScreenState(
+      nextViewState,
+      displayedInputCount,
+      shouldUpdateLayout,
+      nextViewState.buttonVisible(),
+      nextViewState.buttonEnabled()
+    );
+  }
+
+  private static boolean hasLayoutChange(TinkerStationGemModeViewState currentViewState,
+                                         TinkerStationGemModeViewState nextViewState) {
+    if (currentViewState.socketSlotsVisible() != nextViewState.socketSlotsVisible()) {
+      return true;
+    }
+    return currentViewState.visibleSockets().size() != nextViewState.visibleSockets().size();
   }
 }

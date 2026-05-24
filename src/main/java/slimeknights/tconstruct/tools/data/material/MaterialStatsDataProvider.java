@@ -3,20 +3,9 @@ package slimeknights.tconstruct.tools.data.material;
 import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialStatsDataProvider;
-import slimeknights.tconstruct.tools.stats.GripMaterialStats;
-import slimeknights.tconstruct.tools.stats.HandleMaterialStats;
-import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
-import slimeknights.tconstruct.tools.stats.LimbMaterialStats;
-import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
-import slimeknights.tconstruct.tools.stats.SkullStats;
-import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
+import slimeknights.tconstruct.tools.stats.*;
 
-import static net.minecraft.world.item.Tiers.DIAMOND;
-import static net.minecraft.world.item.Tiers.GOLD;
-import static net.minecraft.world.item.Tiers.IRON;
-import static net.minecraft.world.item.Tiers.NETHERITE;
-import static net.minecraft.world.item.Tiers.STONE;
-import static net.minecraft.world.item.Tiers.WOOD;
+import static net.minecraft.world.item.Tiers.*;
 
 public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider {
     public MaterialStatsDataProvider(PackOutput packOutput, AbstractMaterialDataProvider materials) {
@@ -130,10 +119,6 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(510, 6.5f, IRON, 2f),
                 HandleMaterialStats.multipliers().durability(1.15f).attackSpeed(0.95f).build(),
                 StatlessMaterialStats.BINDING);
-        addMaterialStats(MaterialIds.manaSteel,
-                new HeadMaterialStats(400, 6.5f, IRON, 2.5f),
-                HandleMaterialStats.multipliers().durability(1.15f).miningSpeed(1.05f).attackSpeed(1.05f).attackDamage(1.1f).build(),
-                StatlessMaterialStats.BINDING);
 
         // tier 3
         // vanilla diamond: 1561, 8f, DIAMOND, 3f
@@ -203,9 +188,13 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(200, 8, DIAMOND, 3),
                 HandleMaterialStats.multipliers().durability(0.65f).attackSpeed(1.15f).miningSpeed(1.15f).build(),
                 StatlessMaterialStats.BINDING);
-        addMaterialStats(MaterialIds.terraSteel,
-                new HeadMaterialStats(750, 7.5f, DIAMOND, 3.5f),
-                HandleMaterialStats.multipliers().durability(1.35f).miningSpeed(1.2f).attackSpeed(1.2f).attackDamage(1.3f).build(),
+        addMaterialStats(MaterialIds.polyethylene,
+                new HeadMaterialStats(600, 9f, WOOD, 0.5f),
+                HandleMaterialStats.multipliers().durability(1.5f).miningSpeed(1.25f).attackSpeed(1.25f).attackDamage(1.0f).build(),
+                StatlessMaterialStats.BINDING);
+        addMaterialStats(MaterialIds.polyvinylChloride,
+                new HeadMaterialStats(900, 10f, WOOD, 0.5f),
+                HandleMaterialStats.multipliers().durability(1.75f).miningSpeed(1.35f).attackSpeed(1.35f).attackDamage(1.0f).build(),
                 StatlessMaterialStats.BINDING);
 
         // tier 4
@@ -310,9 +299,6 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.ironwood,
                 new LimbMaterialStats(512, 0.05f, 0.05f, -0.15f),
                 new GripMaterialStats(0.15f, -0.15f, 2f));
-        addMaterialStats(MaterialIds.manaSteel,
-                new LimbMaterialStats(350, 0.15f, 0.1f, 0.1f),
-                new GripMaterialStats(0.15f, 0.1f, 2.5f));
 
         // tier 3
         addMaterialStats(MaterialIds.slimesteel,
@@ -365,9 +351,12 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.steeleaf,
                 new LimbMaterialStats(200, 0, 0, 0.15f),
                 new GripMaterialStats(-0.35f, 0, 2.75f));
-        addMaterialStats(MaterialIds.terraSteel,
-                new LimbMaterialStats(750, 0.2f, 0.3f, 0.3f),
-                new GripMaterialStats(0.35f, 0.3f, 3.5f));
+        addMaterialStats(MaterialIds.polyethylene,
+                new LimbMaterialStats(600, 0.2f, 0.0f, 0.1f),
+                new GripMaterialStats(0.5f, 0.1f, 0.5f));
+        addMaterialStats(MaterialIds.polyvinylChloride,
+                new LimbMaterialStats(900, 0.25f, 0.0f, 0.2f),
+                new GripMaterialStats(0.5f, 0.2f, 0.5f));
 
 
         // tier 4
@@ -467,13 +456,12 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addArmorShieldStats(MaterialIds.searedStone,   PlatingMaterialStats.builder().durabilityFactor(14).armor(1, 3, 4, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.scorchedStone, PlatingMaterialStats.builder().durabilityFactor(10).armor(1, 4, 5, 2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
         // tier 2 - compat
-        addArmorShieldStats(MaterialIds.osmium,   PlatingMaterialStats.builder().durabilityFactor(25).armor(1, 3, 5, 2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.aluminum, PlatingMaterialStats.builder().durabilityFactor(13).armor(2, 4, 6, 2), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.silver,   PlatingMaterialStats.builder().durabilityFactor(18).armor(1, 4, 5, 2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.lead,     PlatingMaterialStats.builder().durabilityFactor(12).armor(1, 3, 4, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
         addMaterialStats(MaterialIds.treatedWood, StatlessMaterialStats.SHIELD_CORE);
-        addMaterialStats(MaterialIds.ironwood, StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.manaSteel, PlatingMaterialStats.builder().durabilityFactor(20).armor(3, 5, 6, 3).toughness(2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addMaterialStats(MaterialIds.ironwood,    StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.osmium,    PlatingMaterialStats.builder().durabilityFactor(25).armor(1, 3, 5, 2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.aluminum,  PlatingMaterialStats.builder().durabilityFactor(13).armor(2, 4, 6, 2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.silver,    PlatingMaterialStats.builder().durabilityFactor(18).armor(1, 4, 5, 2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.lead,      PlatingMaterialStats.builder().durabilityFactor(12).armor(1, 3, 4, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
         // tier 3
         addMaterialStats(MaterialIds.nahuatl, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.ichorskin, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS);
@@ -486,13 +474,14 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addArmorShieldStats(MaterialIds.steel,          PlatingMaterialStats.builder().durabilityFactor(29).armor(2, 5, 7, 2).toughness(2), StatlessMaterialStats.MAILLE);
         // tier 3 - compat
         addMaterialStats(MaterialIds.necronium, StatlessMaterialStats.SHIELD_CORE);
-        addArmorShieldStats(MaterialIds.bronze,     PlatingMaterialStats.builder().durabilityFactor(28).armor(2, 5, 6, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.constantan, PlatingMaterialStats.builder().durabilityFactor(25).armor(1, 4, 5, 2).toughness(2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.invar,      PlatingMaterialStats.builder().durabilityFactor(24).armor(1, 3, 5, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.pewter,     PlatingMaterialStats.builder().durabilityFactor(16).armor(2, 5, 7, 2), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.electrum,   PlatingMaterialStats.builder().durabilityFactor(14).armor(1, 3, 4, 2), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.steeleaf,   PlatingMaterialStats.builder().durabilityFactor(10).armor(2, 5, 7, 2), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.terraSteel, PlatingMaterialStats.builder().durabilityFactor(50).armor(3, 6, 8, 4).toughness(3).knockbackResistance(0.15f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.bronze,            PlatingMaterialStats.builder().durabilityFactor(28).armor(2, 5, 6, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.constantan,        PlatingMaterialStats.builder().durabilityFactor(25).armor(1, 4, 5, 2).toughness(2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.invar,             PlatingMaterialStats.builder().durabilityFactor(24).armor(1, 3, 5, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.pewter,            PlatingMaterialStats.builder().durabilityFactor(16).armor(2, 5, 7, 2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.electrum,          PlatingMaterialStats.builder().durabilityFactor(14).armor(1, 3, 4, 2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.steeleaf,          PlatingMaterialStats.builder().durabilityFactor(10).armor(2, 5, 7, 2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.polyethylene,      PlatingMaterialStats.builder().durabilityFactor(50).armor(3, 5, 8, 4).toughness(4).knockbackResistance(0.25f), StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.polyvinylChloride, PlatingMaterialStats.builder().durabilityFactor(60).armor(3, 5, 8, 4).toughness(4).knockbackResistance(0.35f), StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
         // tier 4
         addMaterialStats(MaterialIds.blazewood, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.blazingBone, StatlessMaterialStats.SHIELD_CORE);

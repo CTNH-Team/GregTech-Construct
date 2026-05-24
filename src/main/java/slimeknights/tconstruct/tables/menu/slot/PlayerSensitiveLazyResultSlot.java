@@ -30,6 +30,12 @@ public class PlayerSensitiveLazyResultSlot extends LazyResultSlot {
     return lastPlayerResult;
   }
 
+  /** Clears the cached player-specific result so it recomputes even if the base result reference is unchanged. */
+  public void invalidatePlayerResult() {
+    this.lastNormalResult = null;
+    this.lastPlayerResult = null;
+  }
+
   @Override
   public ItemStack remove(int amount) {
     ItemStack result = getItem().copy();

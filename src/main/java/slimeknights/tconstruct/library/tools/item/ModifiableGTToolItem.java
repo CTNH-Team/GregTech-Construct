@@ -33,6 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +43,7 @@ import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.InteractionSource;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
+import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
@@ -190,12 +192,28 @@ public class ModifiableGTToolItem extends ModifiableItem implements IGTTool {
 
     @Override
     public boolean hasCraftingRemainingItem(ItemStack stack) {
-        return super.hasCraftingRemainingItem(stack);
+        // 如果工具损坏了，不能作为合成材料
+        if (ToolDamageUtil.isBroken(stack)) {
+            return false;
+        }
+        return definition$hasCraftingRemainingItem(stack);
     }
 
     @Override
-    public ItemStack getCraftingRemainingItem(ItemStack stack) {
-        return super.getCraftingRemainingItem(stack);
+    public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
+        // 如果工具损坏了，返回空物品堆
+        if (ToolDamageUtil.isBroken(itemStack)) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack stack = itemStack.copy();
+        ToolStack tool = ToolStack.from(stack);
+        Player player = ForgeHooks.getCraftingPlayer();
+
+        ToolDamageUtil.damage(tool, 1, player, stack);
+
+        this.playCraftingSound(player, stack);
+
+        return stack;
     }
 
     @Override
