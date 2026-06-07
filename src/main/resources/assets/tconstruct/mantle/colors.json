@@ -470,6 +470,8 @@
     "ironwood":     "#B9B3AC",
     "manasteel":    "#67B9EE",
     "terrasteel":   "#6AE862",
+    "mana_steel":   "#67B9EE",
+    "terra_steel":  "#6AE862",
     "polyethylene": "#D8D8D8",
     "polyvinyl_chloride":   "#E77C56",
     "whitestone.composite": "#E0E9EC",

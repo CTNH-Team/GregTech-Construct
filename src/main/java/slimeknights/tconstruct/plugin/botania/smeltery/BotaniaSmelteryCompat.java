@@ -16,12 +16,12 @@ import static slimeknights.tconstruct.library.addon.AddonSmelteryCompat.hot;
  * Botania-owned smeltery and molten-fluid compat.
  */
 public final class BotaniaSmelteryCompat extends TinkerModule implements AddonSmelteryCompat {
-  public static final FlowingFluidObject<ForgeFlowingFluid> moltenManaSteel = FLUIDS.registerMetal("manasteel").type(hot("manasteel").temperature(1100).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
-  public static final FlowingFluidObject<ForgeFlowingFluid> moltenTerraSteel = FLUIDS.registerMetal("terrasteel").type(hot("terrasteel").temperature(1500).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
+  public static final FlowingFluidObject<ForgeFlowingFluid> moltenManaSteel = FLUIDS.registerMetal("mana_steel").type(hot("mana_steel").temperature(1100).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
+  public static final FlowingFluidObject<ForgeFlowingFluid> moltenTerraSteel = FLUIDS.registerMetal("terra_steel").type(hot("terra_steel").temperature(1500).lightLevel(12)).block(createBurning(MapColor.METAL, 12, 10, 5f)).bucket().commonTag().flowing();
 
   private static final List<Entry> ENTRIES = List.of(
-    new Entry("manasteel", moltenManaSteel, CompatType.NONE, BotaniaMaterialIds.manaSteel),
-    new Entry("terrasteel", moltenTerraSteel, CompatType.NONE, BotaniaMaterialIds.terraSteel)
+    new Entry("mana_steel", moltenManaSteel, CompatType.NONE, BotaniaMaterialIds.manaSteel),
+    new Entry("terra_steel", moltenTerraSteel, CompatType.NONE, BotaniaMaterialIds.terraSteel)
   );
 
   public static final BotaniaSmelteryCompat INSTANCE = new BotaniaSmelteryCompat();

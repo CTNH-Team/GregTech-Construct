@@ -115,13 +115,13 @@ class BotaniaTiCAddonIntegrationTest extends BaseMcTest {
   void botaniaSmelteryCompatIsAddonOwned() {
     assertThat(BotaniaSmelteryCompat.INSTANCE.entries())
       .extracting(slimeknights.tconstruct.library.addon.AddonSmelteryCompat.Entry::name)
-      .containsExactly("manasteel", "terrasteel");
+      .containsExactly("mana_steel", "terra_steel");
     assertThat(BotaniaSmelteryCompat.INSTANCE.entries())
       .extracting(entry -> entry.fluid().getId().getPath())
-      .containsExactly("manasteel", "terrasteel");
+      .containsExactly("mana_steel", "terra_steel");
     assertThat(SmelteryCompat.values())
       .extracting(SmelteryCompat::getName)
-      .doesNotContain("manasteel", "terrasteel");
+      .doesNotContain("mana_steel", "terra_steel");
   }
 
   @Test
@@ -151,14 +151,14 @@ class BotaniaTiCAddonIntegrationTest extends BaseMcTest {
     CapturingFluidTags fluidTags = new CapturingFluidTags();
     registrar.applyFluidTags(fluidTags);
 
-    assertThat(fluidTags.names).containsExactly("manasteel", "terrasteel");
+    assertThat(fluidTags.names).containsExactly("mana_steel", "terra_steel");
   }
 
   @Test
   void botaniaTagHelpersExposeAddonTagEntries() {
     CapturingFluidTags fluidTags = new CapturingFluidTags();
     BotaniaFluidTagProvider.addTags(fluidTags);
-    assertThat(fluidTags.names).containsExactly("manasteel", "terrasteel");
+    assertThat(fluidTags.names).containsExactly("mana_steel", "terra_steel");
 
     CapturingMaterialTags materialTags = new CapturingMaterialTags();
     BotaniaMaterialTagProvider.addTags(materialTags);

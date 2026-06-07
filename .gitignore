@@ -58,3 +58,4 @@ options.txt
 /whitelist.json
 src/generated/resources/.cache/*
 .claude/settings.local.json
+.omo/
