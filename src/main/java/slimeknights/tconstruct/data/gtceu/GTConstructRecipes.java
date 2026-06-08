@@ -51,9 +51,7 @@ public class GTConstructRecipes {
   private static final Map<String, String> OUTPUT_MATERIAL_ALIASES = Map.of(
     "aluminium", "aluminum",
     "ender", "ender_pearl",
-    "fiery_liquid", "fiery",
-    "mana_steel", "manasteel",
-    "terra_steel", "terrasteel"
+    "fiery_liquid", "fiery"
   );
 
   private static final List<SolidifierPart> DEFAULT_SOLIDIFIER_PARTS = List.of(

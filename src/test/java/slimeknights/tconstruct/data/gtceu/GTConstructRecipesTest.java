@@ -6,7 +6,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
-import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialIds;
 import slimeknights.tconstruct.test.BaseMcTest;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 
@@ -30,8 +29,6 @@ class GTConstructRecipesTest extends BaseMcTest {
     assertThat(GTConstructRecipes.resolveOutputMaterial("aluminium")).isEqualTo(MaterialIds.aluminum);
     assertThat(GTConstructRecipes.resolveOutputMaterial("ender")).isEqualTo(MaterialIds.enderPearl);
     assertThat(GTConstructRecipes.resolveOutputMaterial("fiery_liquid")).isEqualTo(MaterialIds.fiery);
-    assertThat(GTConstructRecipes.resolveOutputMaterial("mana_steel")).isEqualTo(BotaniaMaterialIds.manaSteel);
-    assertThat(GTConstructRecipes.resolveOutputMaterial("terra_steel")).isEqualTo(BotaniaMaterialIds.terraSteel);
   }
 
   @Test

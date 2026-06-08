@@ -117,7 +117,6 @@ public class MagneticModifier extends Modifier implements PlantHarvestModifierHo
 
   /** Performs the magnetic effect */
   public static <T extends Entity> void applyVelocity(Level level, Vec3 origin, int amplifier, Class<T> targetClass, int minRange, float speed, int maxPush) {
-    // super magnetic - inspired by botanias code
     double x = origin.x;
     double y = origin.y;
     double z = origin.z;

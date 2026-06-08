@@ -1005,26 +1005,6 @@
   "item.tconstruct.fiery_liquid_bucket": "炽热的液体桶",
   "fluid.tconstruct.fiery_liquid.fluid_effect": "这么多金属！你可能认为这划算极了。但别忘了，炽热的液体本身就很难得。",
 
-
-  "_comment": "Botina Alloys",
-
-  "block.tconstruct.manasteel": "熔融魔力钢",
-  "fluid.tconstruct.manasteel": "熔融魔力钢",
-  "fluid.tconstruct.flowing_manasteel": "流动的熔融魔力钢",
-  "item.tconstruct.manasteel_bucket": "魔力钢桶",
-  "block.tconstruct.mana_steel": "熔融魔力钢",
-  "fluid.tconstruct.mana_steel": "熔融魔力钢",
-  "fluid.tconstruct.flowing_mana_steel": "流动的熔融魔力钢",
-  "item.tconstruct.mana_steel_bucket": "魔力钢桶",
-  "block.tconstruct.terrasteel": "熔融泰拉钢",
-  "fluid.tconstruct.terrasteel": "熔融泰拉钢",
-  "fluid.tconstruct.flowing_terrasteel": "流动的熔融泰拉钢",
-  "item.tconstruct.terrasteel_bucket": "泰拉钢桶",
-  "block.tconstruct.terra_steel": "熔融泰拉钢",
-  "fluid.tconstruct.terra_steel": "熔融泰拉钢",
-  "fluid.tconstruct.flowing_terra_steel": "流动的熔融泰拉钢",
-  "item.tconstruct.terra_steel_bucket": "泰拉钢桶",
-  
   "_comment": "Fluid effect contents",
   "fluid_effect.tconstruct.separator": "%s；%s",
 
@@ -2284,11 +2264,6 @@
   "material.tconstruct.ironwood.encyclopedia": "每损失1点耐久值，额外损失1点耐久值（无视其他升级）分享给任一位于快捷栏或副手栏的工具。目标获得1+等级的树皮覆层。",
   "material.tconstruct.ironwood.armor": "每损失1点耐久值，额外损失1点耐久值（无视其他升级）分享给任一当前穿戴的盔甲。目标获得1+等级的树皮覆层。",
 
-  "material.tconstruct.manasteel": "魔力钢",
-  "material.tconstruct.manasteel.flavor": "魔法，很神奇吧?",
-  "material.tconstruct.manasteel.encyclopedia": "每级每游戏刻可以消耗200点Mana为工具修复1点耐久。",
-  "material.tconstruct.manasteel.armor": "每1等级每游戏刻可以消耗200点Mana为装备修复1点耐久。",
-
   "__comment": "Tier 3 Integration Materials",
   "material.tconstruct.steel": "钢",
   "material.tconstruct.steel.flavor": "差不多90%的材料科学内容都是它",
@@ -2345,11 +2320,6 @@
   "material.tconstruct.steeleaf.encyclopedia": "每级使从方块或怪物处获得的经验+50%",
   "material.tconstruct.steeleaf.ranged": "每级使被箭矢射杀的怪物掉落的经验+50%",
   "material.tconstruct.steeleaf.armor": "每级使从方块或怪物处获得的经验+25%",
-
-  "material.tconstruct.terrasteel": "泰拉钢",
-  "material.tconstruct.terrasteel.flavor": "吸取大地之精华",
-  "material.tconstruct.terrasteel.encyclopedia": "拿在手上时，每级每2秒可以消耗200点Mana恢复玩家1点生命值。",
-  "material.tconstruct.terrasteel.armor": "穿在身上时，每级每2秒可以消耗200点Mana恢复玩家1点生命值。",
 
   "material.tconstruct.polyethylene": "聚乙烯",
   "material.tconstruct.polyethylene.flavor": "差不多剩下10%的材料科学内容",
@@ -3317,11 +3287,6 @@
   "modifier.tconstruct.barkskin": "树皮覆层",
   "modifier.tconstruct.barkskin.flavor":  "穿上树皮",
   "modifier.tconstruct.barkskin.description": "工具优先消耗树皮覆层而不是耐久度",
-  "modifier.tconstruct.manafix": "魔力修复",
-  "modifier.tconstruct.manafix.flavor": "魔力机器！小子！",
-  "modifier.tconstruct.manafix.description": "消耗魔力修复受损的工具",
-
-
   "__comment": "Tier 3 Mod Compat Traits",
   "modifier.tconstruct.ductile": "可塑",
   "modifier.tconstruct.ductile.flavor": "延展性出众！",
@@ -3362,9 +3327,6 @@
   "modifier.tconstruct.overworked": "过劳",
   "modifier.tconstruct.overworked.flavor": "低薪",
   "modifier.tconstruct.overworked.description": "增加所有来源的黏液覆层回复量",
-  "modifier.tconstruct.terrarecover": "泰拉恢复",
-  "modifier.tconstruct.terrarecover.flavor": "魔法担架",
-  "modifier.tconstruct.terrarecover.description": "用魔力恢复生命",
   "modifier.tconstruct.plastic": "塑料",
   "modifier.tconstruct.plastic.flavor": "虚有其表！",
   "modifier.tconstruct.plastic.description": "工具更不耐用，伤害更低，韧性更低",

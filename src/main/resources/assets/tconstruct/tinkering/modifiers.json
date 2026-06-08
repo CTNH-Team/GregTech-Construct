@@ -5,8 +5,6 @@
   "tconstruct:netherite":  "tconstruct:normal",
   "tconstruct:overforced": "tconstruct:normal",
   "tconstruct:overslime":  "tconstruct:overslime",
-  "tconstruct:manafix":    "tconstruct:normal",
-  "tconstruct:terrarecover": "tconstruct:normal",
 
   "tconstruct:haste":      { "type": "tconstruct:normal", "luminosity": 7 },
   "tconstruct:blasting":   "tconstruct:normal",

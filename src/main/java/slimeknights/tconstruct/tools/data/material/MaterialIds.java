@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
-import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialIds;
 
 import static slimeknights.tconstruct.library.materials.definition.MaterialVariantId.create;
 

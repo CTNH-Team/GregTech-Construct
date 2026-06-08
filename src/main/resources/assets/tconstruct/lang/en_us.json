@@ -1005,26 +1005,6 @@
   "item.tconstruct.fiery_liquid_bucket": "Fiery Liquid Bucket",
   "fluid.tconstruct.fiery_liquid.fluid_effect": "You might think this is a fantastic deal, so many extra ingots! But remember, fiery is really hard to get.",
 
-  "_comment": "Botina Alloys",
-
-  "block.tconstruct.manasteel": "Molten Manasteel",
-  "fluid.tconstruct.manasteel": "Molten Manasteel",
-  "fluid.tconstruct.flowing_manasteel": "Flowing Molten Manasteel",
-  "item.tconstruct.manasteel_bucket": "Molten Manasteel Bucket",
-  "block.tconstruct.mana_steel": "Molten Manasteel",
-  "fluid.tconstruct.mana_steel": "Molten Manasteel",
-  "fluid.tconstruct.flowing_mana_steel": "Flowing Molten Manasteel",
-  "item.tconstruct.mana_steel_bucket": "Molten Manasteel Bucket",
-
-  "block.tconstruct.terrasteel": "Molten Terrasteel",
-  "fluid.tconstruct.terrasteel": "Molten Terrasteel",
-  "fluid.tconstruct.flowing_terrasteel": "Flowing Molten Terrasteel",
-  "item.tconstruct.terrasteel_bucket": "Molten Terrasteel Bucket",
-  "block.tconstruct.terra_steel": "Molten Terrasteel",
-  "fluid.tconstruct.terra_steel": "Molten Terrasteel",
-  "fluid.tconstruct.flowing_terra_steel": "Flowing Molten Terrasteel",
-  "item.tconstruct.terra_steel_bucket": "Molten Terrasteel Bucket",
-
   "_comment": "Fluid effect contents",
   "fluid_effect.tconstruct.separator": "%s and %s",
 
@@ -2285,11 +2265,6 @@
   "material.tconstruct.ironwood.encyclopedia": "When losing 1 durability, tool loses 1 extra durability (bypassing modifiers) to share durability with a random tool in the hotbar or offhand. Target gains 1 barkskin plus 1 per level.",
   "material.tconstruct.ironwood.armor": "When losing 1 durability, tool loses 1 extra durability (bypassing modifiers) to share durability with a random equipped armor. Target gains 1 barkskin plus 1 per level.",
 
-  "material.tconstruct.manasteel": "Mana Steel",
-  "material.tconstruct.manasteel.flavor": "Magic, isn't it amazing?",
-  "material.tconstruct.manasteel.encyclopedia": "Each level can consume 200 Mana every game tick to repair 1 durability for the tool.",
-  "material.tconstruct.manasteel.armor": "Each level can consume 200 Mana every game tick to repair 1 durability for the armor.",
-
   "__comment": "Tier 3 Integration Materials",
   "material.tconstruct.steel": "Steel",
   "material.tconstruct.steel.flavor": "Basically 90% of material science",
@@ -2346,11 +2321,6 @@
   "material.tconstruct.steeleaf.encyclopedia": "Grants +50% XP per level from blocks and monsters",
   "material.tconstruct.steeleaf.ranged": "Grants +50% XP per level from monsters killed by arrows",
   "material.tconstruct.steeleaf.armor": "Grants +25% XP per level from blocks and monsters",
-
-  "material.tconstruct.terrasteel": "Terra Steel",
-  "material.tconstruct.terrasteel.flavor": "Absorb the essence of the earth.",
-  "material.tconstruct.terrasteel.encyclopedia": "When held in hand, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
-  "material.tconstruct.terrasteel.armor": "When worn, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
 
   "material.tconstruct.polyethylene": "Polyethylene",
   "material.tconstruct.polyethylene.flavor": "Basically the remaining 10% of materials science",
@@ -3320,12 +3290,6 @@
   "modifier.tconstruct.barkskin": "Barkskin",
   "modifier.tconstruct.barkskin.flavor":  "Shed bark",
   "modifier.tconstruct.barkskin.description": "Tool uses barkskin instead of durability until it runs out",
-  "modifier.tconstruct.manafix": "Mana Fix",
-  "modifier.tconstruct.manafix.flavor": "Manamechine! son!",
-  "modifier.tconstruct.manafix.description": "Use mana to repair damaged tools",
-
-
-
   "__comment": "Tier 3 Mod Compat Traits",
   "modifier.tconstruct.ductile": "Ductile",
   "modifier.tconstruct.ductile.flavor": "Reshapes well!",
@@ -3366,9 +3330,6 @@
   "modifier.tconstruct.overworked": "Overworked",
   "modifier.tconstruct.overworked.flavor": "Underpaid",
   "modifier.tconstruct.overworked.description": "Increases amount of overslime restored from all sources",
-  "modifier.tconstruct.terrarecover": "Terra Recover",
-  "modifier.tconstruct.terrarecover.flavor": "Magic stretcher",
-  "modifier.tconstruct.terrarecover.description": "Use mana to recover health",
   "modifier.tconstruct.plastic": "Plastic",
   "modifier.tconstruct.plastic.flavor": "Mere Show!",
   "modifier.tconstruct.plastic.description": "Tool is shorter lasting, damages less and not tougher",
