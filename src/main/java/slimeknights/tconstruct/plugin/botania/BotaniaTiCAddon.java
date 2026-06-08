@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.plugin.botania;
 
+import net.minecraftforge.common.MinecraftForge;
 import slimeknights.tconstruct.plugin.botania.fluid.BotaniaFluidTextureCameraProvider;
 import slimeknights.tconstruct.plugin.botania.fluid.BotaniaFluidTextureProvider;
 import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialDataProvider;
@@ -9,7 +10,9 @@ import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialRecipeProv
 import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialRenderInfoProvider;
 import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialStatsDataProvider;
 import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialTraitsDataProvider;
+import slimeknights.tconstruct.plugin.botania.modifier.AncientWillModifier;
 import slimeknights.tconstruct.plugin.botania.modifier.BotaniaModifierIds;
+import slimeknights.tconstruct.plugin.botania.modifier.BotaniaModifiersProvider;
 import slimeknights.tconstruct.plugin.botania.modifier.BotaniaModifierRecipeProvider;
 import slimeknights.tconstruct.plugin.botania.modifier.ManaFixModifier;
 import slimeknights.tconstruct.plugin.botania.modifier.TerraRecoverModifier;
@@ -37,6 +40,11 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
 
     public static final String MOD_ID = "botania";
 
+    public BotaniaTiCAddon() {
+        MinecraftForge.EVENT_BUS.addListener(AncientWillModifier::onManaDiscount);
+        MinecraftForge.EVENT_BUS.addListener(AncientWillModifier::onPlayerTick);
+    }
+
     @Override
     public String addonModId() {
         return MOD_ID;
@@ -51,6 +59,8 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
     public void registerStaticModifiers(StaticModifierRegistrar registrar) {
         registrar.register(BotaniaModifierIds.manafix.getPath(), ManaFixModifier::new);
         registrar.register(BotaniaModifierIds.terrarecover.getPath(), TerraRecoverModifier::new);
+        registrar.register(BotaniaModifierIds.ancientWill.getPath(), AncientWillModifier::new);
+        BotaniaModifiersProvider.registerSetBonuses();
     }
 
     @Override

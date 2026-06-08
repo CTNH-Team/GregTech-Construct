@@ -249,6 +249,7 @@
     "war_charge":    "#A1A1A1",
     "manafix":       "#67B9EE",
     "terrarecover":  "#6AE862",
+    "ancient_will":  "#39D85E",
 
     "__traits_melee__": null,
     "airborne":     "#00F4DA",
