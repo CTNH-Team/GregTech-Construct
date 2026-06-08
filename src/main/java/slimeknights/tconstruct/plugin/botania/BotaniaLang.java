@@ -119,5 +119,10 @@ public final class BotaniaLang {
     @CN("用魔力恢复生命")
     @Key("modifier.tconstruct.terrarecover.description")
     public static Lang terrarecoverDescription;
+
+    @EN("Ancient Will")
+    @CN("远古意志")
+    @Key("modifier.tconstruct.ancient_will")
+    public static Lang ancientWillModifier;
 }
 */

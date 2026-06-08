@@ -31,6 +31,9 @@ import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.ModifierId;
+import slimeknights.tconstruct.library.modifiers.ModifierManager;
+import slimeknights.tconstruct.library.modifiers.ModifierSetBonusHelper;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.EntityInteractionModifierHook;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
 import slimeknights.tconstruct.library.tools.definition.module.display.ToolNameHook;
@@ -207,11 +210,24 @@ public class TooltipUtil {
   @SuppressWarnings("deprecation")
   public static void addModifierNames(ItemStack stack, IToolStackView tool, @Nullable Player player, List<Component> tooltips, TooltipFlag flag) {
     RegistryAccess access = player == null ? null : player.level().registryAccess();
+    boolean showSetBonus = player != null && ModifierSetBonusHelper.isEquippedArmorStack(player, stack);
     for (ModifierEntry entry : tool.getModifierList()) {
       if (entry.getModifier().shouldDisplay(false)) {
+        ModifierId advancedId = entry.getId();
         Component name = entry.getModifier().getDisplayName(tool, entry, access);
+        if (showSetBonus) {
+          ModifierId bonusModifier = ModifierSetBonusHelper.getBonusDisplayModifier(entry.getId());
+          if (bonusModifier != null) {
+            int count = ModifierSetBonusHelper.getEquippedSetCount(player, entry.getId());
+            if (count == ModifierSetBonusHelper.FULL_SET_COUNT) {
+              name = ModifierManager.getValue(bonusModifier).getDisplayName(1);
+              advancedId = bonusModifier;
+            }
+            name = name.copy().append(Component.literal(" (" + count + '/' + ModifierSetBonusHelper.FULL_SET_COUNT + ')').withStyle(ChatFormatting.GRAY));
+          }
+        }
         if (flag.isAdvanced() && Config.CLIENT.modifiersIDsInAdvancedTooltips.get()) {
-          tooltips.add(Component.translatable(KEY_ID_FORMAT, name, Component.literal(entry.getModifier().getId().toString())).withStyle(ChatFormatting.DARK_GRAY));
+          tooltips.add(Component.translatable(KEY_ID_FORMAT, name, Component.literal(advancedId.toString())).withStyle(ChatFormatting.DARK_GRAY));
         } else {
           tooltips.add(name);
         }

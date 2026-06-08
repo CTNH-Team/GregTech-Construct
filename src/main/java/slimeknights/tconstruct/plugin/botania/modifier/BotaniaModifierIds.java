@@ -7,6 +7,7 @@ public final class BotaniaModifierIds {
 
     public static final ModifierId manafix = id("manafix");
     public static final ModifierId terrarecover = id("terrarecover");
+    public static final ModifierId ancientWill = id("ancient_will");
 
     private BotaniaModifierIds() {}
 
