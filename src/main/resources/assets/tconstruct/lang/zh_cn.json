@@ -3654,6 +3654,10 @@
   "tooltip.tconstruct.missing_data": "缺少工具数据",
   "tooltip.tconstruct.uninitialized": "放入物品栏来初始化",
   "tooltip.tconstruct.random_materials": "随机材料",
+  "create.tooltip.tconstruct.tinker_stats": "工匠装置状态：",
+  "create.tooltip.tconstruct.tinker_stats.fluid": "流体：",
+  "create.tooltip.tconstruct.progress": "进度：",
+  "create.tooltip.tconstruct.output": "结果：",
 
   "tooltip.tconstruct.part.added_by": "材料由%s添加",
   "tooltip.tconstruct.part.missing_material": "缺失材料：%s",

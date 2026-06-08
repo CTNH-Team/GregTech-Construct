@@ -3657,6 +3657,10 @@
   "tooltip.tconstruct.missing_data": "Missing tool data",
   "tooltip.tconstruct.uninitialized": "Place in inventory to initialize",
   "tooltip.tconstruct.random_materials": "Randomized materials",
+  "create.tooltip.tconstruct.tinker_stats": "Tinker Stats:",
+  "create.tooltip.tconstruct.tinker_stats.fluid": "Fluid:",
+  "create.tooltip.tconstruct.progress": "Progress:",
+  "create.tooltip.tconstruct.output": "Output:",
 
   "tooltip.tconstruct.part.added_by": "Material added by %s",
   "tooltip.tconstruct.part.missing_material": "Missing material: %s",

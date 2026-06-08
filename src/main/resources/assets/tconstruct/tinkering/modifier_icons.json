@@ -173,5 +173,11 @@
   "tconstruct:shiny":       "tconstruct:gui/modifiers/shiny",
 
   "tconstruct:the_one_probe": ["theoneprobe:item/probe", "tconstruct:gui/modifiers/book"],
-  "tconstruct:headlight":     ["headlight:item/headlight", "tconstruct:gui/modifiers/book"]
+  "tconstruct:headlight":     ["headlight:item/headlight", "tconstruct:gui/modifiers/book"],
+
+  "tconstruct:crushing":       "create:item/crushed_raw_iron",
+  "tconstruct:extendo":        "create:item/brass_hand",
+  "tconstruct:goggles":        "create:item/goggles",
+  "tconstruct:wrench":         "create:item/wrench",
+  "tconstruct:diving_weights": "create:item/copper_diving_boots"
 }

@@ -247,6 +247,8 @@
     "flamestance":   "#C53439",
     "entangled":     "#14B485",
     "war_charge":    "#A1A1A1",
+    "manafix":       "#67B9EE",
+    "terrarecover":  "#6AE862",
 
     "__traits_melee__": null,
     "airborne":     "#00F4DA",
@@ -482,9 +484,13 @@
     "electrum":         "#D9C25F",
     "plated_slimewood": "#E6D08D",
     "steeleaf":         "#6DA25E",
+    "mana_steel":       "#67B9EE",
+    "manasteel":        "#67B9EE",
 
     "__tier_4_integration__": null,
     "fiery": "#893D14",
+    "terra_steel": "#6AE862",
+    "terrasteel":  "#6AE862",
 
     "__plate__": null,
     "obsidian":  "#9277B2",

@@ -5,11 +5,14 @@
   "tconstruct:netherite":  "tconstruct:normal",
   "tconstruct:overforced": "tconstruct:normal",
   "tconstruct:overslime":  "tconstruct:overslime",
+  "tconstruct:manafix":    "tconstruct:normal",
+  "tconstruct:terrarecover": "tconstruct:normal",
 
   "tconstruct:haste":      { "type": "tconstruct:normal", "luminosity": 7 },
   "tconstruct:blasting":   "tconstruct:normal",
   "tconstruct:lightspeed": { "type": "tconstruct:normal", "luminosity": 15 },
   "tconstruct:hydraulic":  "tconstruct:normal",
+  "tconstruct:crushing":   "tconstruct:normal",
 
   "tconstruct:knockback":   "tconstruct:normal",
   "tconstruct:fiery":       { "type": "tconstruct:normal", "luminosity": 10 },
@@ -37,5 +40,9 @@
   "tconstruct:golden":        "tconstruct:normal",
   "tconstruct:embellishment": "tconstruct:material",
   "tconstruct:dyed":          "tconstruct:dyed",
-  "tconstruct:trim":          "tconstruct:trim"
+  "tconstruct:trim":          "tconstruct:trim",
+  "tconstruct:extendo":       "tconstruct:normal",
+  "tconstruct:goggles":       "tconstruct:normal",
+  "tconstruct:wrench":        "tconstruct:normal",
+  "tconstruct:diving_weights": "tconstruct:normal"
 }
