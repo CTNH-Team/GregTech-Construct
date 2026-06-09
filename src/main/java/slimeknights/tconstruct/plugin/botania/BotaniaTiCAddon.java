@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.plugin.botania;
 
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.EventPriority;
 import slimeknights.tconstruct.plugin.botania.fluid.BotaniaFluidTextureCameraProvider;
 import slimeknights.tconstruct.plugin.botania.fluid.BotaniaFluidTextureProvider;
@@ -45,6 +44,7 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
     public static final String MOD_ID = "botania";
 
     public BotaniaTiCAddon() {
+        TerrasteelHelmetPlatingIngredient.register();
         MinecraftForge.EVENT_BUS.addListener(TerraSetBonusModifier::onManaDiscount);
         MinecraftForge.EVENT_BUS.addListener(TerraSetBonusModifier::onPlayerTick);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, AncientWillModifier::onCriticalHit);
@@ -79,7 +79,6 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
     public void registerDynamicRecipeProviders(DynamicProviderRegistrar registrar) {
         registrar.addProvider("BotaniaModifierRecipeProvider", BotaniaModifierRecipeProvider::new);
         registrar.addProvider("BotaniaMaterialRecipeProvider", BotaniaMaterialRecipeProvider::new);
-        CraftingHelper.register(TerrasteelHelmetPlatingIngredient.Serializer.ID, TerrasteelHelmetPlatingIngredient.Serializer.INSTANCE);
     }
 
     @Override

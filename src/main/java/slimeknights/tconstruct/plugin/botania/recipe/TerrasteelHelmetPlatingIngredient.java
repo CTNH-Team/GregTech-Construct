@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.crafting.AbstractIngredient;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
@@ -27,8 +28,17 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class TerrasteelHelmetPlatingIngredient extends AbstractIngredient {
+    private static boolean registered = false;
+
     protected TerrasteelHelmetPlatingIngredient() {
         super(Stream.of(Value.INSTANCE));
+    }
+
+    public static synchronized void register() {
+        if (!registered) {
+            CraftingHelper.register(Serializer.ID, Serializer.INSTANCE);
+            registered = true;
+        }
     }
 
     public static TerrasteelHelmetPlatingIngredient of() {
