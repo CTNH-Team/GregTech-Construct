@@ -2651,7 +2651,7 @@
   "modifier.tconstruct.projectile_protection.resistance": "Projectile Resistance",
   "modifier.tconstruct.insulation": "Insulation",
   "modifier.tconstruct.insulation.flavor": "Electric protection",
-  "modifier.tconstruct.insulation.description": "Neutralizes all electric damage",
+  "modifier.tconstruct.insulation.description": "Reduces electric damage by 25% per worn piece; a full armor set blocks it completely",
   "modifier.tconstruct.insulation.resistance": "Electric Resistance",
   "modifier.tconstruct.turtle_shell": "Turtle Shell",
   "modifier.tconstruct.turtle_shell.flavor": "Tortoises go on land, turtles in the sea",

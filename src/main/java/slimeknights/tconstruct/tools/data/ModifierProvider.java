@@ -525,7 +525,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .addModule(ProtectionModule.builder().sources(DamageSourcePredicate.CAN_PROTECT, DamageSourcePredicate.tag(TinkerTags.DamageTypes.MAGIC_PROTECTION)).eachLevel(2.5f));
         buildModifier(ModifierIds.insulation)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
-                .addModule(BlockDamageSourceModule.source(DamageSourcePredicate.tag(TinkerTags.DamageTypes.INSULATION)).build());
+                .addModule(ArmorPieceDamageReductionModule.perPiece(DamageSourcePredicate.tag(TinkerTags.DamageTypes.INSULATION), 0.25f));
         buildModifier(ModifierIds.turtleShell)
                 .addModule(AttributeModule.builder(ForgeMod.SWIM_SPEED.get(), Operation.MULTIPLY_TOTAL).slots(armorSlots).eachLevel(0.05f))
                 .addModule(ProtectionModule.builder()

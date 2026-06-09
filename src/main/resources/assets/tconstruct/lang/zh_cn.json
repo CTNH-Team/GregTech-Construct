@@ -2649,7 +2649,7 @@
   "modifier.tconstruct.projectile_protection.resistance": "弹射物抗性",
   "modifier.tconstruct.insulation": "绝缘",
   "modifier.tconstruct.insulation.flavor": "电击保护罩！",
-  "modifier.tconstruct.insulation.description": "抵消所有电击伤害",
+  "modifier.tconstruct.insulation.description": "每件护甲降低25%电击伤害，穿满四件时完全抵消",
   "modifier.tconstruct.insulation.resistance": "电击抗性",
   "modifier.tconstruct.turtle_shell": "海龟壳",
   "modifier.tconstruct.turtle_shell.flavor": "陆上陆龟，海中海龟",

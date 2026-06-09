@@ -541,6 +541,7 @@ public final class TinkerModifiers extends TinkerModule {
             ModifierModule.LOADER.register(getResource("mob_disguise"), MobDisguiseModule.LOADER);
             ModifierModule.LOADER.register(getResource("block_damage"), BlockDamageSourceModule.LOADER);
             ModifierModule.LOADER.register(getResource("cover_ground"), CoverGroundWalkerModule.LOADER);
+            ModifierModule.LOADER.register(getResource("armor_piece_damage_reduction"), ArmorPieceDamageReductionModule.LOADER);
             ModifierModule.LOADER.register(getResource("protection"), ProtectionModule.LOADER);
             ModifierModule.LOADER.register(getResource("replace_fluid"), ReplaceBlockWalkerModule.LOADER);
             ModifierModule.LOADER.register(getResource("tool_action_walk_transform"), ToolActionWalkerTransformModule.LOADER);
