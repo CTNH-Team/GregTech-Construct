@@ -1,6 +1,8 @@
 package slimeknights.tconstruct.plugin.botania;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.eventbus.api.EventPriority;
 import slimeknights.tconstruct.plugin.botania.fluid.BotaniaFluidTextureCameraProvider;
 import slimeknights.tconstruct.plugin.botania.fluid.BotaniaFluidTextureProvider;
 import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialDataProvider;
@@ -16,6 +18,8 @@ import slimeknights.tconstruct.plugin.botania.modifier.BotaniaModifiersProvider;
 import slimeknights.tconstruct.plugin.botania.modifier.BotaniaModifierRecipeProvider;
 import slimeknights.tconstruct.plugin.botania.modifier.ManaFixModifier;
 import slimeknights.tconstruct.plugin.botania.modifier.TerraRecoverModifier;
+import slimeknights.tconstruct.plugin.botania.modifier.TerraSetBonusModifier;
+import slimeknights.tconstruct.plugin.botania.recipe.TerrasteelHelmetPlatingIngredient;
 import slimeknights.tconstruct.plugin.botania.smeltery.BotaniaSmelteryCompat;
 import slimeknights.tconstruct.plugin.botania.tag.BotaniaFluidTagProvider;
 import slimeknights.tconstruct.plugin.botania.tag.BotaniaMaterialTagProvider;
@@ -41,8 +45,10 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
     public static final String MOD_ID = "botania";
 
     public BotaniaTiCAddon() {
-        MinecraftForge.EVENT_BUS.addListener(AncientWillModifier::onManaDiscount);
-        MinecraftForge.EVENT_BUS.addListener(AncientWillModifier::onPlayerTick);
+        MinecraftForge.EVENT_BUS.addListener(TerraSetBonusModifier::onManaDiscount);
+        MinecraftForge.EVENT_BUS.addListener(TerraSetBonusModifier::onPlayerTick);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, AncientWillModifier::onCriticalHit);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, AncientWillModifier::onLivingAttack);
     }
 
     @Override
@@ -59,7 +65,13 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
     public void registerStaticModifiers(StaticModifierRegistrar registrar) {
         registrar.register(BotaniaModifierIds.manafix.getPath(), ManaFixModifier::new);
         registrar.register(BotaniaModifierIds.terrarecover.getPath(), TerraRecoverModifier::new);
-        registrar.register(BotaniaModifierIds.ancientWill.getPath(), AncientWillModifier::new);
+        registrar.register(BotaniaModifierIds.ancientWill.getPath(), TerraSetBonusModifier::new);
+        registrar.register(BotaniaModifierIds.ancientWillAhrim.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.AHRIM));
+        registrar.register(BotaniaModifierIds.ancientWillDharok.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.DHAROK));
+        registrar.register(BotaniaModifierIds.ancientWillGuthan.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.GUTHAN));
+        registrar.register(BotaniaModifierIds.ancientWillTorag.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.TORAG));
+        registrar.register(BotaniaModifierIds.ancientWillVerac.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.VERAC));
+        registrar.register(BotaniaModifierIds.ancientWillKaril.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.KARIL));
         BotaniaModifiersProvider.registerSetBonuses();
     }
 
@@ -67,6 +79,7 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
     public void registerDynamicRecipeProviders(DynamicProviderRegistrar registrar) {
         registrar.addProvider("BotaniaModifierRecipeProvider", BotaniaModifierRecipeProvider::new);
         registrar.addProvider("BotaniaMaterialRecipeProvider", BotaniaMaterialRecipeProvider::new);
+        CraftingHelper.register(TerrasteelHelmetPlatingIngredient.Serializer.ID, TerrasteelHelmetPlatingIngredient.Serializer.INSTANCE);
     }
 
     @Override

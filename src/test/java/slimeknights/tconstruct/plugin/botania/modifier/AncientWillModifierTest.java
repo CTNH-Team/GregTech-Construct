@@ -3,19 +3,30 @@ package slimeknights.tconstruct.plugin.botania.modifier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.library.materials.definition.MaterialVariant;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
+import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
+import slimeknights.tconstruct.library.tools.nbt.IToolContext;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
+import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialIds;
 import slimeknights.tconstruct.test.BaseMcTest;
 import vazkii.botania.api.mana.ManaDiscountEvent;
+
+import java.util.EnumSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +49,7 @@ class AncientWillModifierTest extends BaseMcTest {
     equip(EquipmentSlot.FEET, 1);
     ManaDiscountEvent event = new ManaDiscountEvent(player, 0.15F, ItemStack.EMPTY);
 
-    AncientWillModifier.onManaDiscount(event);
+    TerraSetBonusModifier.onManaDiscount(event);
 
     assertThat(event.getDiscount()).isCloseTo(0.35F, TOLERANCE);
   }
@@ -50,7 +61,7 @@ class AncientWillModifierTest extends BaseMcTest {
     equip(EquipmentSlot.LEGS, 1);
     ManaDiscountEvent event = new ManaDiscountEvent(player, 0.15F, ItemStack.EMPTY);
 
-    AncientWillModifier.onManaDiscount(event);
+    TerraSetBonusModifier.onManaDiscount(event);
 
     assertThat(event.getDiscount()).isCloseTo(0.15F, TOLERANCE);
   }
@@ -60,9 +71,57 @@ class AncientWillModifierTest extends BaseMcTest {
     equip(EquipmentSlot.HEAD, 4);
     ManaDiscountEvent event = new ManaDiscountEvent(player, 0.15F, ItemStack.EMPTY);
 
-    AncientWillModifier.onManaDiscount(event);
+    TerraSetBonusModifier.onManaDiscount(event);
 
     assertThat(event.getDiscount()).isCloseTo(0.15F, TOLERANCE);
+  }
+
+  @Test
+  void terrasteelHelmetPlatingRequiresPlateHelmetDefinitionAndFirstMaterial() {
+    IToolContext tool = Mockito.mock(IToolContext.class);
+    Mockito.when(tool.getDefinition()).thenReturn(new ToolDefinition(BotaniaModifierIds.PLATE_HELMET));
+    Mockito.when(tool.getMaterial(0)).thenReturn(MaterialVariant.of(BotaniaMaterialIds.terraSteel, ""));
+
+    assertThat(AncientWillModifier.hasTerrasteelHelmetPlating(tool)).isTrue();
+
+    Mockito.when(tool.getDefinition()).thenReturn(new ToolDefinition(new slimeknights.tconstruct.library.modifiers.ModifierId("tconstruct", "travelers_helmet")));
+    assertThat(AncientWillModifier.hasTerrasteelHelmetPlating(tool)).isFalse();
+
+    Mockito.when(tool.getDefinition()).thenReturn(new ToolDefinition(BotaniaModifierIds.PLATE_HELMET));
+    Mockito.when(tool.getMaterial(0)).thenReturn(MaterialVariant.UNKNOWN);
+    assertThat(AncientWillModifier.hasTerrasteelHelmetPlating(tool)).isFalse();
+  }
+
+  @Test
+  void dharokMultiplierMatchesBotaniaFormula() {
+    assertThat(AncientWillModifier.getDharokCritDamageMult(20F, 20F)).isCloseTo(1F, TOLERANCE);
+    assertThat(AncientWillModifier.getDharokCritDamageMult(10F, 20F)).isCloseTo(1.25F, TOLERANCE);
+    assertThat(AncientWillModifier.getDharokCritDamageMult(1F, 20F)).isCloseTo(1.475F, TOLERANCE);
+  }
+
+  @Test
+  void willEffectsMatchBotaniaDurationsAndAmounts() {
+    Player attacker = Mockito.mock(Player.class);
+    LivingEntity target = Mockito.mock(LivingEntity.class);
+
+    AncientWillModifier.applyEffects(EnumSet.of(
+            AncientWillModifier.Will.AHRIM,
+            AncientWillModifier.Will.GUTHAN,
+            AncientWillModifier.Will.TORAG,
+            AncientWillModifier.Will.KARIL), 8F, attacker, target);
+
+    Mockito.verify(attacker).heal(2F);
+    ArgumentCaptor<MobEffectInstance> effects = ArgumentCaptor.forClass(MobEffectInstance.class);
+    Mockito.verify(target, Mockito.times(3)).addEffect(effects.capture());
+    assertEffect(effects.getAllValues().get(0), MobEffects.WEAKNESS, 20, 1);
+    assertEffect(effects.getAllValues().get(1), MobEffects.MOVEMENT_SLOWDOWN, 60, 1);
+    assertEffect(effects.getAllValues().get(2), MobEffects.WITHER, 60, 1);
+  }
+
+  private static void assertEffect(MobEffectInstance instance, MobEffect effect, int duration, int amplifier) {
+    assertThat(instance.getEffect()).isSameAs(effect);
+    assertThat(instance.getDuration()).isEqualTo(duration);
+    assertThat(instance.getAmplifier()).isEqualTo(amplifier);
   }
 
   private void equip(EquipmentSlot slot, int level) {

@@ -250,6 +250,12 @@
     "manafix":       "#67B9EE",
     "terrarecover":  "#6AE862",
     "ancient_will":  "#39D85E",
+    "ancient_will_ahrim":  "#8A4FD6",
+    "ancient_will_dharok": "#B80000",
+    "ancient_will_guthan": "#39D85E",
+    "ancient_will_torag":  "#8A8A8A",
+    "ancient_will_verac":  "#EAE5DE",
+    "ancient_will_karil":  "#4D4D4D",
 
     "__traits_melee__": null,
     "airborne":     "#00F4DA",

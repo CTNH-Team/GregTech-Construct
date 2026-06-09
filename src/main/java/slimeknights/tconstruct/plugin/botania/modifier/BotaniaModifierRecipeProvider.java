@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.plugin.botania.modifier;
 
 import slimeknights.tconstruct.plugin.botania.BotaniaTiCAddon;
+import slimeknights.tconstruct.plugin.botania.recipe.TerrasteelHelmetPlatingIngredient;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -36,6 +37,19 @@ public class BotaniaModifierRecipeProvider extends BaseRecipeProvider {
                 .setTools(ingredientFromTags(TinkerTags.Items.MODIFIABLE))
                 .save(withCondition(consumer, new ModLoadedCondition(BotaniaTiCAddon.MOD_ID)),
                         location(upgradeFolder + "manafix"));
+
+        String slotlessFolder = "tools/modifiers/botania/slotless/";
+        Ingredient terrasteelHelmet = TerrasteelHelmetPlatingIngredient.of();
+        for (AncientWillModifier.Will will : AncientWillModifier.Will.values()) {
+            ModifierRecipeBuilder.modifier(will.modifierId())
+                    .addInput(will.item())
+                    .exactLevel(1)
+                    .checkTraitLevel()
+                    .setTools(terrasteelHelmet)
+                    .disallowCrystal()
+                    .save(withCondition(consumer, new ModLoadedCondition(BotaniaTiCAddon.MOD_ID)),
+                            location(slotlessFolder + "ancient_will_" + will.key()));
+        }
     }
 
     @Override

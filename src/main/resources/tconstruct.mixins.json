@@ -11,6 +11,7 @@
     "ShapedRecipeMixin",
     "ShapelessRecipeMixin",
     "ToolHelperMixin",
+    "botania.PlayerAncientWillMixin",
     "create.AirCurrentFanProcessingMixin",
     "create.BlazeBurnerBlockEntityTargetMixin",
     "create.BlazeBurnerBlockHeatSourceMixin",

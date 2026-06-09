@@ -8,6 +8,12 @@
   "tconstruct:manafix":    "tconstruct:normal",
   "tconstruct:terrarecover": "tconstruct:normal",
   "tconstruct:ancient_will": "tconstruct:normal",
+  "tconstruct:ancient_will_ahrim": "tconstruct:normal",
+  "tconstruct:ancient_will_dharok": "tconstruct:normal",
+  "tconstruct:ancient_will_guthan": "tconstruct:normal",
+  "tconstruct:ancient_will_torag": "tconstruct:normal",
+  "tconstruct:ancient_will_verac": "tconstruct:normal",
+  "tconstruct:ancient_will_karil": "tconstruct:normal",
 
   "tconstruct:haste":      { "type": "tconstruct:normal", "luminosity": 7 },
   "tconstruct:blasting":   "tconstruct:normal",

@@ -12,8 +12,10 @@ import java.util.Set;
 public class TConstructMixinPlugin implements IMixinConfigPlugin {
   private static final String CREATE_MIXIN_PACKAGE = "slimeknights.tconstruct.mixin.create.";
   private static final String TCONSTRUCT_CREATE_MIXIN_PACKAGE = "slimeknights.tconstruct.mixin.tconstruct.create.";
+  private static final String BOTANIA_MIXIN_PACKAGE = "slimeknights.tconstruct.mixin.botania.";
 
   private final boolean createLoaded = LoadingModList.get().getModFileById("create") != null;
+  private final boolean botaniaLoaded = LoadingModList.get().getModFileById("botania") != null;
 
   @Override
   public void onLoad(String mixinPackage) {}
@@ -28,6 +30,9 @@ public class TConstructMixinPlugin implements IMixinConfigPlugin {
   public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
     if (mixinClassName.startsWith(CREATE_MIXIN_PACKAGE) || mixinClassName.startsWith(TCONSTRUCT_CREATE_MIXIN_PACKAGE)) {
       return createLoaded;
+    }
+    if (mixinClassName.startsWith(BOTANIA_MIXIN_PACKAGE)) {
+      return botaniaLoaded;
     }
     return true;
   }
