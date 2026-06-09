@@ -938,6 +938,16 @@
   "item.tconstruct.steel_bucket": "Molten Steel Bucket",
   "fluid.tconstruct.steel.fluid_effect": "Molten steel lets you clear out enemies around you, or spread out bunched up enemies.",
 
+  "_comment": "Botania Metals",
+  "block.tconstruct.mana_steel": "Molten Manasteel",
+  "fluid.tconstruct.mana_steel": "Molten Manasteel",
+  "fluid.tconstruct.flowing_mana_steel": "Flowing Molten Manasteel",
+  "item.tconstruct.mana_steel_bucket": "Molten Manasteel Bucket",
+  "block.tconstruct.terra_steel": "Molten Terrasteel",
+  "fluid.tconstruct.terra_steel": "Molten Terrasteel",
+  "fluid.tconstruct.flowing_terra_steel": "Flowing Molten Terrasteel",
+  "item.tconstruct.terra_steel_bucket": "Molten Terrasteel Bucket",
+
   "_comment": "Thermal Alloys",
 
   "block.tconstruct.enderium_fluid": "Molten Enderium",
@@ -2227,6 +2237,15 @@
 
 
   "__comment": "Tier 2 Integration Materials",
+  "material.tconstruct.manasteel": "Mana Steel",
+  "material.tconstruct.manasteel.flavor": "Magic, isn't it amazing?",
+  "material.tconstruct.manasteel.encyclopedia": "Each level can consume 200 Mana every game tick to repair 1 durability for the tool.",
+  "material.tconstruct.manasteel.armor": "Each level can consume 200 Mana every game tick to repair 1 durability for the armor.",
+  "material.tconstruct.terrasteel": "Terra Steel",
+  "material.tconstruct.terrasteel.flavor": "Absorb the essence of the earth.",
+  "material.tconstruct.terrasteel.encyclopedia": "When held in hand, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
+  "material.tconstruct.terrasteel.armor": "When worn, each level can consume 200 Mana every 2 seconds to recover 1 point health for player.",
+
   "material.tconstruct.osmium": "Osmium",
   "material.tconstruct.osmium.flavor": "Too dense to get most jokes",
   "material.tconstruct.osmium.encyclopedia": "Prevents 33% of damage at the cost of an extra 25% repair cost at first level",
@@ -3433,6 +3452,24 @@
   "modifier.tconstruct.headlight.flavor": "Lit!",
   "modifier.tconstruct.headlight.variant": "Light Level %s",
   "modifier.tconstruct.headlight.description": "Visually lights up the world.",
+
+  "modifier.tconstruct.manafix": "Mana Fix",
+  "modifier.tconstruct.manafix.flavor": "Manamechine! son!",
+  "modifier.tconstruct.manafix.description": "Use mana to repair damaged tools",
+  "modifier.tconstruct.terrarecover": "Terra Recover",
+  "modifier.tconstruct.terrarecover.flavor": "Magic stretcher",
+  "modifier.tconstruct.terrarecover.description": "Use mana to recover health",
+  "modifier.tconstruct.ancient_will": "Ancient Will",
+  "modifier.tconstruct.crushing": "Crushing",
+  "modifier.tconstruct.crushing.description": "Crushes block drops through Create crushing or milling recipes.",
+  "modifier.tconstruct.extendo": "Engineer's Extendo Grip",
+  "modifier.tconstruct.extendo.description": "Increases block and entity reach while worn.",
+  "modifier.tconstruct.goggles": "Engineer's Goggles",
+  "modifier.tconstruct.goggles.description": "Counts a helmet as Create goggles.",
+  "modifier.tconstruct.wrench": "Engineer's Wrench",
+  "modifier.tconstruct.wrench.description": "Lets a held tool use Create wrench logic.",
+  "modifier.tconstruct.diving_weights": "Diving Weights",
+  "modifier.tconstruct.diving_weights.description": "Counts boots as Create diving boots.",
 
   "_comment": "Internal modifiers",
   "modifier.tconstruct.overslime_friend": "Overslime Friend",
