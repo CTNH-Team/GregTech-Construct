@@ -15,6 +15,7 @@ import slimeknights.tconstruct.library.tools.SlotType;
 import slimeknights.tconstruct.library.tools.SlotType.SlotCount;
 import slimeknights.tconstruct.library.tools.context.ToolRebuildContext;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
+import slimeknights.tconstruct.library.tools.helper.TooltipUtil;
 import slimeknights.tconstruct.library.tools.item.IModifiableDisplay;
 import slimeknights.tconstruct.library.tools.nbt.MaterialNBT;
 import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
@@ -109,7 +110,17 @@ public interface IDisplayModifierRecipe extends IModifierRecipe {
   /** Maps the stream from tool items to applicable tool stacks */
   Function<Item,ItemStack> MAP_TOOL_FOR_RENDERING = IModifiableDisplay::getDisplayStack;
   /** Maps the stream from tool items to applicable tool stacks */
-  Function<ItemStack,ItemStack> MAP_TOOL_STACK_FOR_RENDERING = stack -> stack.getItem() instanceof IModifiableDisplay display ? display.getRenderTool() : stack;
+  Function<ItemStack,ItemStack> MAP_TOOL_STACK_FOR_RENDERING = stack -> {
+    if (stack.getItem() instanceof IModifiableDisplay display) {
+      if (ToolStack.isInitialized(stack)) {
+        ItemStack copy = stack.copy();
+        copy.getOrCreateTag().putBoolean(TooltipUtil.KEY_DISPLAY, true);
+        return copy;
+      }
+      return display.getRenderTool();
+    }
+    return stack;
+  };
 
   /**
    * Gets the list of modifiers to display for the given result
