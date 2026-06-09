@@ -77,6 +77,11 @@ class AncientWillModifierTest extends BaseMcTest {
   }
 
   @Test
+  void terraSetBonusGeneratesFourManaPerTick() {
+    assertThat(TerraSetBonusModifier.MANA_GENERATION).isEqualTo(4);
+  }
+
+  @Test
   void terrasteelHelmetPlatingRequiresPlateHelmetDefinitionAndFirstMaterial() {
     IToolContext tool = Mockito.mock(IToolContext.class);
     Mockito.when(tool.getDefinition()).thenReturn(new ToolDefinition(BotaniaModifierIds.PLATE_HELMET));

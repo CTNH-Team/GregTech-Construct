@@ -14,7 +14,7 @@ import vazkii.botania.common.item.equipment.bauble.BandOfManaItem;
 import vazkii.botania.xplat.XplatAbstractions;
 
 public class TerraSetBonusModifier extends SingleLevelModifier {
-    private static final int MANA_GENERATION = 1;
+    static final int MANA_GENERATION = 4;
     private static final float MANA_DISCOUNT = 0.2F;
 
     public static boolean isActive(Player player) {
