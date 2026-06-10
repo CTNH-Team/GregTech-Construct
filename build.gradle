@@ -160,6 +160,7 @@ sourceSets {
     test {
         java.srcDir 'src/test/java'
         resources.srcDir 'src/test/resources'
+        compileClasspath += sourceSets.main.compileClasspath
         compileClasspath += sourceSets.main.runtimeClasspath
         runtimeClasspath += sourceSets.main.runtimeClasspath
     }

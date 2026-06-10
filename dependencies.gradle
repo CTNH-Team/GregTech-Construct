@@ -39,10 +39,10 @@ dependencies {
     modImplementation("dev.latvian.mods:rhino-forge:${rhino_version}")
     modImplementation("dev.architectury:architectury-forge:${architectury_version}")
 
-    modImplementation("com.simibubi.create:create-${minecraft_version}:${create_version}:slim")
-    modImplementation("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
-    modImplementation("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
-    modImplementation("vazkii.botania:Botania:${botania_version}")
+    modCompileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}:slim")
+    modCompileOnly("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
+    modCompileOnly("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
+    modCompileOnly("vazkii.botania:Botania:${botania_version}")
 
     modImplementation("curse.maven:curios-309927:6418456")
     modImplementation("curse.maven:patchouli-306770:6164575")
@@ -52,4 +52,5 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     testImplementation 'org.mockito:mockito-inline:4.2.0'
     testImplementation 'org.assertj:assertj-core:3.21.0'
+    testRuntimeOnly("vazkii.botania:Botania:${botania_version}") { transitive = false }
 }
