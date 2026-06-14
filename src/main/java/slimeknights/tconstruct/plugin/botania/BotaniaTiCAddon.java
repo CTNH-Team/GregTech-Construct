@@ -65,6 +65,7 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
     public void registerStaticModifiers(StaticModifierRegistrar registrar) {
         registrar.register(BotaniaModifierIds.manafix.getPath(), ManaFixModifier::new);
         registrar.register(BotaniaModifierIds.terrarecover.getPath(), TerraRecoverModifier::new);
+        //ancientWill
         registrar.register(BotaniaModifierIds.ancientWill.getPath(), TerraSetBonusModifier::new);
         registrar.register(BotaniaModifierIds.ancientWillAhrim.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.AHRIM));
         registrar.register(BotaniaModifierIds.ancientWillDharok.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.DHAROK));
