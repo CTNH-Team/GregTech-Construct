@@ -8,6 +8,8 @@ import net.minecraft.data.PackOutput.Target;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 import slimeknights.mantle.data.GenericDataProvider;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.json.MaterialStatJson;
 import slimeknights.tconstruct.library.materials.stats.IMaterialStats;
@@ -25,7 +27,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 /** Base data generator for use in addons, depends on the regular material provider */
-public abstract class AbstractMaterialStatsDataProvider extends GenericDataProvider {
+public abstract class AbstractMaterialStatsDataProvider extends GenericDataProvider implements RuntimeDataProvider {
   /** All material stats generated so far */
   private final Map<MaterialId, MaterialStats> allMaterialStats = new HashMap<>();
   /* Materials data provider for validation */
@@ -41,6 +43,20 @@ public abstract class AbstractMaterialStatsDataProvider extends GenericDataProvi
 
   @Override
   public CompletableFuture<?> run(CachedOutput cache) {
+    generateMaterialStats();
+    return allOf(allMaterialStats.entrySet().stream().map(entry -> saveJson(cache, entry.getKey(), entry.getValue().serialize())));
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicDataRegistrar registrar) {
+    generateMaterialStats();
+    allMaterialStats.forEach((id, stats) -> registrar.addJson(MaterialStatsManager.FOLDER, id, stats.serialize()));
+  }
+
+  private void generateMaterialStats() {
+    if (!allMaterialStats.isEmpty()) {
+      return;
+    }
     addMaterialStats();
 
     // ensure we have stats for all materials
@@ -51,8 +67,6 @@ public abstract class AbstractMaterialStatsDataProvider extends GenericDataProvi
       }
     }
     // does not ensure we have materials for all stats, we may be adding stats for another mod
-    // generate finally
-    return allOf(allMaterialStats.entrySet().stream().map(entry -> saveJson(cache, entry.getKey(), entry.getValue().serialize())));
   }
 
 

@@ -11,13 +11,15 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.enchantment.Enchantment;
 import slimeknights.mantle.data.GenericDataProvider;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /** Data generator for mappings from enchantments to modifiers */
-public abstract class AbstractEnchantmentToModifierProvider extends GenericDataProvider {
+public abstract class AbstractEnchantmentToModifierProvider extends GenericDataProvider implements RuntimeDataProvider {
   /** Compiled JSON to save, no need to do anything fancier, it already does merging for us */
   private final JsonObject enchantmentMap = new JsonObject();
 
@@ -30,9 +32,19 @@ public abstract class AbstractEnchantmentToModifierProvider extends GenericDataP
 
   @Override
   public CompletableFuture<?> run(CachedOutput pCache) {
+    generateEnchantmentMappings();
+    return saveJson(pCache, TConstruct.getResource("enchantments_to_modifiers"), enchantmentMap);
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicDataRegistrar registrar) {
+    generateEnchantmentMappings();
+    registrar.addJson("tinkering", TConstruct.getResource("enchantments_to_modifiers"), enchantmentMap);
+  }
+
+  private void generateEnchantmentMappings() {
     enchantmentMap.entrySet().clear();
     addEnchantmentMappings();
-    return saveJson(pCache, TConstruct.getResource("enchantments_to_modifiers"), enchantmentMap);
   }
 
   /* Helpers */

@@ -26,7 +26,12 @@ import slimeknights.tconstruct.plugin.botania.tag.BotaniaModifierTagProvider;
 
 import slimeknights.tconstruct.library.addon.AddonFluidTextureProviderSet;
 import slimeknights.tconstruct.library.addon.AddonSmelteryCompat;
+import slimeknights.tconstruct.data.material.TiCDynamicMaterialGenerator;
+import slimeknights.tconstruct.data.recipe.TiCDynamicRecipeGenerator;
+import slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicRecipeProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicResourceProviderRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 import slimeknights.tconstruct.library.addon.ITiCAddon;
 import slimeknights.tconstruct.library.addon.ITiCFluidAddon;
@@ -77,28 +82,27 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
     }
 
     @Override
-    public void registerDynamicRecipeProviders(DynamicProviderRegistrar registrar) {
-        registrar.addProvider("BotaniaModifierRecipeProvider", BotaniaModifierRecipeProvider::new);
-        registrar.addProvider("BotaniaMaterialRecipeProvider", BotaniaMaterialRecipeProvider::new);
+    public void registerDynamicRecipeProviders(DynamicRecipeProviderRegistrar registrar) {
+        registrar.addProvider("BotaniaModifierRecipeProvider", TiCDynamicRecipeGenerator.recipeWriter(BotaniaModifierRecipeProvider::new));
+        registrar.addProvider("BotaniaMaterialRecipeProvider", TiCDynamicRecipeGenerator.recipeWriter(BotaniaMaterialRecipeProvider::new));
     }
 
     @Override
     public void registerDynamicMaterialProviders(DynamicProviderRegistrar registrar) {
-        registrar.addProvider("BotaniaMaterialDataProvider", BotaniaMaterialDataProvider::new);
-        registrar.addProvider("BotaniaMaterialStatsDataProvider", BotaniaMaterialStatsDataProvider::new);
-        registrar.addProvider("BotaniaMaterialTraitsDataProvider", BotaniaMaterialTraitsDataProvider::new);
+        registrar.addProvider("BotaniaMaterialDataProvider", TiCDynamicMaterialGenerator.dataWriter(BotaniaMaterialDataProvider::new));
+        registrar.addProvider("BotaniaMaterialStatsDataProvider", TiCDynamicMaterialGenerator.dataWriter(BotaniaMaterialStatsDataProvider::new));
+        registrar.addProvider("BotaniaMaterialTraitsDataProvider", TiCDynamicMaterialGenerator.dataWriter(BotaniaMaterialTraitsDataProvider::new));
     }
 
     @Override
-    public void registerDynamicResourceProviders(DynamicProviderRegistrar registrar) {
+    public void registerDynamicResourceProviders(DynamicResourceProviderRegistrar registrar) {
         AddonFluidTextureProviderSet<BotaniaFluidTextureProvider> fluidTextures = AddonFluidTextureProviderSet
                 .create(BotaniaFluidTextureProvider::new);
-        registrar.addProvider("BotaniaMaterialRenderInfoProvider", BotaniaMaterialRenderInfoProvider::new);
-        registrar.addProvider("BotaniaFluidTextureProvider", fluidTextures::fluidTextures);
-        registrar.addProvider("BotaniaFluidTextureCameraProvider",
-                output -> fluidTextures.cameraProvider(output, BotaniaFluidTextureCameraProvider::new));
-        registrar.addProvider("BotaniaMaterialPartTextureGenerator", BotaniaMaterialPartTextureGenerator::new);
-        registrar.addProvider("BotaniaMaterialPaletteDebugGenerator", BotaniaMaterialPaletteDebugGenerator::new);
+        registrar.addProvider("BotaniaMaterialRenderInfoProvider", TiCDynamicResourceGenerator.runtime(BotaniaMaterialRenderInfoProvider::new));
+        registrar.addProvider("BotaniaFluidTextureProvider", fluidTextures::addFluidTextures);
+        registrar.addProvider("BotaniaFluidTextureCameraProvider", fluidTextures::addCameraTextures);
+        registrar.addProvider("BotaniaMaterialPartTextureGenerator", TiCDynamicResourceGenerator.runtime(BotaniaMaterialPartTextureGenerator::new));
+        registrar.addProvider("BotaniaMaterialPaletteDebugGenerator", TiCDynamicResourceGenerator.runtime(BotaniaMaterialPaletteDebugGenerator::new));
     }
 
     @Override

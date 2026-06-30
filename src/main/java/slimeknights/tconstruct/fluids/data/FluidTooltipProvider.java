@@ -4,6 +4,9 @@ import net.minecraft.data.PackOutput;
 import net.minecraftforge.fluids.FluidType;
 import slimeknights.mantle.fluid.tooltip.AbstractFluidTooltipProvider;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.data.resource.RuntimeMantleDataWriters;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.library.recipe.FluidValues;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.smeltery.menu.AlloyerContainerMenu;
@@ -17,7 +20,7 @@ import static slimeknights.tconstruct.common.TinkerTags.Fluids.METAL_TOOLTIPS;
 import static slimeknights.tconstruct.common.TinkerTags.Fluids.SLIME_TOOLTIPS;
 import static slimeknights.tconstruct.common.TinkerTags.Fluids.SMALL_GEM_TOOLTIPS;
 
-public class FluidTooltipProvider extends AbstractFluidTooltipProvider {
+public class FluidTooltipProvider extends AbstractFluidTooltipProvider implements RuntimeResourceProvider {
   public FluidTooltipProvider(PackOutput packOutput) {
     super(packOutput, TConstruct.MOD_ID);
   }
@@ -60,6 +63,11 @@ public class FluidTooltipProvider extends AbstractFluidTooltipProvider {
       .addUnit("bucket", "mantle", FluidType.BUCKET_VOLUME)
       .addUnit("bottle", "mantle", FluidValues.BOTTLE)
       .addUnit("drop",   "mantle", FluidValues.SIP);
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    RuntimeMantleDataWriters.writeFluidTooltips(registrar, this);
   }
 
   @Override

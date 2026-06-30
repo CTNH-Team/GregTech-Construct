@@ -2,6 +2,8 @@ package slimeknights.tconstruct.library.addon;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.modifiers.Modifier;
 
@@ -10,50 +12,49 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-/**
- * Registers addon tag providers and hooks that append to TiC-owned tag providers.
- */
-public final class DynamicTagProviderRegistrar implements DynamicProviderRegistrar {
-  private final DynamicProviderRegistrar providers;
+public final class DynamicTagProviderRegistrar {
+  private final List<Consumer<BlockTagRegistrar>> blockTagHooks = new ArrayList<>();
+  private final List<Consumer<ItemTagRegistrar>> itemTagHooks = new ArrayList<>();
   private final List<Consumer<FluidTagRegistrar>> fluidTagHooks = new ArrayList<>();
   private final List<Consumer<MaterialTagRegistrar>> materialTagHooks = new ArrayList<>();
   private final List<Consumer<ModifierTagRegistrar>> modifierTagHooks = new ArrayList<>();
 
-  public DynamicTagProviderRegistrar(DynamicProviderRegistrar providers) {
-    this.providers = Objects.requireNonNull(providers, "providers");
+  public void addBlockTags(Consumer<BlockTagRegistrar> hook) {
+    blockTagHooks.add(Objects.requireNonNull(hook, "hook"));
   }
 
-  @Override
-  public void addProvider(String name, java.util.function.Function<net.minecraft.data.PackOutput, ? extends net.minecraft.data.DataProvider> factory) {
-    providers.addProvider(name, factory);
+  public void addItemTags(Consumer<ItemTagRegistrar> hook) {
+    itemTagHooks.add(Objects.requireNonNull(hook, "hook"));
   }
 
-  /** Adds content to TiC's fluid tag provider. */
   public void addFluidTags(Consumer<FluidTagRegistrar> hook) {
     fluidTagHooks.add(Objects.requireNonNull(hook, "hook"));
   }
 
-  /** Adds content to TiC's material tag provider. */
   public void addMaterialTags(Consumer<MaterialTagRegistrar> hook) {
     materialTagHooks.add(Objects.requireNonNull(hook, "hook"));
   }
 
-  /** Adds content to TiC's modifier tag provider. */
   public void addModifierTags(Consumer<ModifierTagRegistrar> hook) {
     modifierTagHooks.add(Objects.requireNonNull(hook, "hook"));
   }
 
-  /** Applies addon fluid tag hooks to the passed registrar. */
+  public void applyBlockTags(BlockTagRegistrar registrar) {
+    blockTagHooks.forEach(hook -> hook.accept(registrar));
+  }
+
+  public void applyItemTags(ItemTagRegistrar registrar) {
+    itemTagHooks.forEach(hook -> hook.accept(registrar));
+  }
+
   public void applyFluidTags(FluidTagRegistrar registrar) {
     fluidTagHooks.forEach(hook -> hook.accept(registrar));
   }
 
-  /** Applies addon material tag hooks to the passed registrar. */
   public void applyMaterialTags(MaterialTagRegistrar registrar) {
     materialTagHooks.forEach(hook -> hook.accept(registrar));
   }
 
-  /** Applies addon modifier tag hooks to the passed registrar. */
   public void applyModifierTags(ModifierTagRegistrar registrar) {
     modifierTagHooks.forEach(hook -> hook.accept(registrar));
   }
@@ -62,6 +63,12 @@ public final class DynamicTagProviderRegistrar implements DynamicProviderRegistr
     void add(TagKey<T> tag, ResourceLocation... ids);
 
     void addOptional(TagKey<T> tag, ResourceLocation... ids);
+  }
+
+  public interface BlockTagRegistrar extends TagRegistrar<Block> {
+  }
+
+  public interface ItemTagRegistrar extends TagRegistrar<Item> {
   }
 
   public interface FluidTagRegistrar extends AddonSmelteryCompat.FluidTagRegistrar {

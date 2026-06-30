@@ -10,22 +10,13 @@ public interface ITiCAddon {
    */
   String addonModId();
 
-  default void registerDynamicRecipeProviders(DynamicProviderRegistrar registrar) {}
+  default void registerDynamicRecipeProviders(DynamicRecipeProviderRegistrar registrar) {}
 
   default void registerDynamicTinkeringProviders(DynamicProviderRegistrar registrar) {}
 
   default void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {}
 
-  default void registerDynamicAdvancementProviders(DynamicProviderRegistrar registrar) {}
-
   default void registerDynamicMaterialProviders(DynamicProviderRegistrar registrar) {}
 
-  /**
-   * Registers client resource providers.
-   *
-   * <p>For providers that need an {@code ExistingFileHelper}, prefer using
-   * {@link slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator#createExistingFileHelperForAddons()}.
-   * That keeps addons aligned with TiC's resource generation setup.</p>
-   */
-  default void registerDynamicResourceProviders(DynamicProviderRegistrar registrar) {}
+  default void registerDynamicResourceProviders(DynamicResourceProviderRegistrar registrar) {}
 }

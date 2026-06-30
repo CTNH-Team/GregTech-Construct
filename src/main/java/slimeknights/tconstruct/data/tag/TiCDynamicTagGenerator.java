@@ -4,7 +4,7 @@ import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.DataProvider;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -23,151 +23,100 @@ import slimeknights.tconstruct.common.data.tags.ModifierTagProvider;
 import slimeknights.tconstruct.common.data.tags.PotionTagProvider;
 import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
-import slimeknights.tconstruct.data.pack.DynamicDataProviderRunner;
-import slimeknights.tconstruct.data.pack.DynamicProviderFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 public final class TiCDynamicTagGenerator {
-    static final List<TagProviderEntry> ADDITIONAL_PROVIDER_ENTRIES = new ArrayList<>();
-
     private TiCDynamicTagGenerator() {}
 
-    public static void register() {
-        register(DynamicDataProviderRunner::run);
-    }
-
-    /** Adds an extra runtime tag provider for TiC's dynamic data pack. */
-    public static synchronized void addProvider(String name, Function<PackOutput, ? extends DataProvider> factory) {
-        ADDITIONAL_PROVIDER_ENTRIES.add(new TagProviderEntry(
-            Objects.requireNonNull(name, "name"),
-            Objects.requireNonNull(factory, "factory")
-        ));
-    }
-
-    static void register(TagRunner runner) {
-        runner.run("tconstruct-tags", createProviders());
-    }
-
-    public static void registerDefaultProviders(DynamicTagProviderRegistrar registrar) {
-        TagProviderState state = new TagProviderState(registrar);
-        registrar.addProvider("BlockTagProvider", state::createBlockTags);
-        registrar.addProvider("ItemTagProvider", state::createItemTags);
-        registrar.addProvider("FluidTagProvider", state::createFluidTags);
-        registrar.addProvider("EntityTypeTagProvider", state::createEntityTypeTags);
-        registrar.addProvider("BlockEntityTypeTagProvider", state::createBlockEntityTypeTags);
-        registrar.addProvider("EnchantmentTagProvider", state::createEnchantmentTags);
-        registrar.addProvider("MenuTypeTagProvider", state::createMenuTypeTags);
-        registrar.addProvider("PotionTagProvider", state::createPotionTags);
-        registrar.addProvider("DamageTypeTagProvider", state::createDamageTypeTags);
-        registrar.addProvider("MaterialTagProvider", state::createMaterialTags);
-        registrar.addProvider("ModifierTagProvider", state::createModifierTags);
-    }
-
-    static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
-        List<Function<PackOutput, ? extends DataProvider>> providers = new ArrayList<>();
-        for (TagProviderEntry entry : createProviderEntries()) {
-            providers.add(new DynamicProviderFactory(entry.name(), entry.factory()));
-        }
-        return providers;
-    }
-
-    static List<TagProviderEntry> createProviderEntries() {
-        List<TagProviderEntry> entries = new ArrayList<>();
-        DynamicTagProviderRegistrar registrar = new DynamicTagProviderRegistrar((name, factory) -> entries.add(new TagProviderEntry(name, factory)));
+    public static void addDatagenProviders(DataGenerator generator, PackOutput output, CompletableFuture<Provider> lookupProvider, ExistingFileHelper existingFileHelper, boolean server) {
+        DynamicTagProviderRegistrar registrar = new DynamicTagProviderRegistrar();
         TiCAddonRegistry.collectTagProviders(registrar);
-        synchronized (TiCDynamicTagGenerator.class) {
-            entries.addAll(ADDITIONAL_PROVIDER_ENTRIES);
-        }
-        return List.copyOf(entries);
+        TagProviderState state = new TagProviderState(output, lookupProvider, existingFileHelper, registrar);
+        BlockTagProvider blockTags = state.createBlockTags();
+        generator.addProvider(server, blockTags);
+        generator.addProvider(server, state.createItemTags(blockTags));
+        generator.addProvider(server, state.createFluidTags());
+        generator.addProvider(server, state.createEntityTypeTags());
+        generator.addProvider(server, state.createBlockEntityTypeTags());
+        generator.addProvider(server, state.createEnchantmentTags());
+        generator.addProvider(server, state.createMenuTypeTags());
+        generator.addProvider(server, state.createPotionTags());
+        generator.addProvider(server, state.createDamageTypeTags());
+        generator.addProvider(server, state.createMaterialTags());
+        generator.addProvider(server, state.createModifierTags());
     }
-
-    @FunctionalInterface
-    interface TagRunner {
-        void run(String owner, List<Function<PackOutput, ? extends DataProvider>> providers);
-    }
-
-    record TagProviderEntry(String name, Function<PackOutput, ? extends DataProvider> factory) {}
 
     private static final class TagProviderState {
+        private final PackOutput output;
+        private final CompletableFuture<Provider> lookupProvider;
+        private final ExistingFileHelper existingFileHelper;
         private final DynamicTagProviderRegistrar registrar;
-        private CompletableFuture<Provider> lookupProvider;
-        private final ExistingFileHelper existingFileHelper = createExistingFileHelper();
-        private BlockTagProvider blockTags;
         private DatapackBuiltinEntriesProvider datapackRegistryProvider;
 
-        private TagProviderState(DynamicTagProviderRegistrar registrar) {
+        private TagProviderState(PackOutput output, CompletableFuture<Provider> lookupProvider, ExistingFileHelper existingFileHelper, DynamicTagProviderRegistrar registrar) {
+            this.output = output;
+            this.lookupProvider = lookupProvider;
+            this.existingFileHelper = existingFileHelper;
             this.registrar = registrar;
         }
 
-        private CompletableFuture<Provider> lookupProvider() {
-            if (lookupProvider == null) {
-                lookupProvider = CompletableFuture.completedFuture(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
-            }
-            return lookupProvider;
+        private CompletableFuture<Provider> registryLookupProvider() {
+            return CompletableFuture.completedFuture(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
         }
 
-        private BlockTagProvider createBlockTags(PackOutput output) {
-            this.blockTags = new BlockTagProvider(output, lookupProvider(), existingFileHelper);
-            return this.blockTags;
+        private BlockTagProvider createBlockTags() {
+            return new BlockTagProvider(output, lookupProvider, existingFileHelper, registrar::applyBlockTags);
         }
 
-        private ItemTagProvider createItemTags(PackOutput output) {
-            return new ItemTagProvider(output, lookupProvider(), blockTags.contentsGetter(), existingFileHelper);
+        private ItemTagProvider createItemTags(BlockTagProvider blockTags) {
+            return new ItemTagProvider(output, lookupProvider, blockTags.contentsGetter(), existingFileHelper, registrar::applyItemTags);
         }
 
-        private FluidTagProvider createFluidTags(PackOutput output) {
-            return new FluidTagProvider(output, lookupProvider(), existingFileHelper, registrar::applyFluidTags);
+        private FluidTagProvider createFluidTags() {
+            return new FluidTagProvider(output, lookupProvider, existingFileHelper, registrar::applyFluidTags);
         }
 
-        private EntityTypeTagProvider createEntityTypeTags(PackOutput output) {
-            return new EntityTypeTagProvider(output, lookupProvider(), existingFileHelper);
+        private EntityTypeTagProvider createEntityTypeTags() {
+            return new EntityTypeTagProvider(output, registryLookupProvider(), existingFileHelper);
         }
 
-        private BlockEntityTypeTagProvider createBlockEntityTypeTags(PackOutput output) {
-            return new BlockEntityTypeTagProvider(output, lookupProvider(), existingFileHelper);
+        private BlockEntityTypeTagProvider createBlockEntityTypeTags() {
+            return new BlockEntityTypeTagProvider(output, registryLookupProvider(), existingFileHelper);
         }
 
-        private EnchantmentTagProvider createEnchantmentTags(PackOutput output) {
-            return new EnchantmentTagProvider(output, lookupProvider(), existingFileHelper);
+        private EnchantmentTagProvider createEnchantmentTags() {
+            return new EnchantmentTagProvider(output, registryLookupProvider(), existingFileHelper);
         }
 
-        private MenuTypeTagProvider createMenuTypeTags(PackOutput output) {
-            return new MenuTypeTagProvider(output, lookupProvider(), existingFileHelper);
+        private MenuTypeTagProvider createMenuTypeTags() {
+            return new MenuTypeTagProvider(output, registryLookupProvider(), existingFileHelper);
         }
 
-        private PotionTagProvider createPotionTags(PackOutput output) {
-            return new PotionTagProvider(output, lookupProvider(), existingFileHelper);
+        private PotionTagProvider createPotionTags() {
+            return new PotionTagProvider(output, registryLookupProvider(), existingFileHelper);
         }
 
-        private DamageTypeTagProvider createDamageTypeTags(PackOutput output) {
-            return new DamageTypeTagProvider(output, registryProvider(output).getRegistryProvider(), existingFileHelper);
+        private DamageTypeTagProvider createDamageTypeTags() {
+            return new DamageTypeTagProvider(output, registryProvider().getRegistryProvider(), existingFileHelper);
         }
 
-        private MaterialTagProvider createMaterialTags(PackOutput output) {
+        private MaterialTagProvider createMaterialTags() {
             return new MaterialTagProvider(output, existingFileHelper, registrar::applyMaterialTags);
         }
 
-        private ModifierTagProvider createModifierTags(PackOutput output) {
+        private ModifierTagProvider createModifierTags() {
             return new ModifierTagProvider(output, existingFileHelper, registrar::applyModifierTags);
         }
 
-        private DatapackBuiltinEntriesProvider registryProvider(PackOutput output) {
+        private DatapackBuiltinEntriesProvider registryProvider() {
             if (datapackRegistryProvider == null) {
                 RegistrySetBuilder registrySetBuilder = new RegistrySetBuilder();
                 DamageTypeProvider.register(registrySetBuilder);
-                datapackRegistryProvider = new DatapackBuiltinEntriesProvider(output, lookupProvider(), registrySetBuilder, Set.of(TConstruct.MOD_ID));
+                datapackRegistryProvider = new DatapackBuiltinEntriesProvider(output, lookupProvider, registrySetBuilder, Set.of(TConstruct.MOD_ID));
             }
             return datapackRegistryProvider;
-        }
-
-        private static ExistingFileHelper createExistingFileHelper() {
-            return new ExistingFileHelper(List.of(), Set.of(), false, null, null);
         }
     }
 }

@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface DynamicProviderRegistrar {
+public interface DynamicRecipeProviderRegistrar {
   void addProvider(String name, Consumer<DynamicDataRegistrar> writer);
 
   default void addProviderChecked(String name, Consumer<DynamicDataRegistrar> writer) {

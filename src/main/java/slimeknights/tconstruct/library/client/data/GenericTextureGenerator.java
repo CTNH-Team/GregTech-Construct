@@ -11,6 +11,7 @@ import net.minecraft.data.PackOutput.Target;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
 import slimeknights.mantle.data.GenericDataProvider;
 import slimeknights.tconstruct.TConstruct;
 
@@ -63,5 +64,17 @@ public abstract class GenericTextureGenerator extends GenericDataProvider {
   /** Saves metadata for the given image */
   protected CompletableFuture<?> saveMetadata(CachedOutput cache, ResourceLocation location, JsonObject metadata) {
     return DataProvider.saveStable(cache, metadata, this.pathProvider.file(location, "png.mcmeta"));
+  }
+
+  protected void saveImage(DynamicResourceRegistrar registrar, ResourceLocation location, NativeImage image) {
+    try {
+      registrar.addTexture(location, image.asByteArray());
+    } catch (IOException e) {
+      throw new IllegalStateException("Couldn't write image for " + location, e);
+    }
+  }
+
+  protected void saveMetadata(DynamicResourceRegistrar registrar, ResourceLocation location, JsonObject metadata) {
+    registrar.addResource(location.withPrefix("textures/").withSuffix(".png.mcmeta"), metadata);
   }
 }

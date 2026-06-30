@@ -2,7 +2,6 @@ package slimeknights.tconstruct.library.addon;
 
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.fml.ModList;
@@ -23,13 +22,11 @@ import slimeknights.tconstruct.test.BaseMcTest;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -61,29 +58,9 @@ class TiCAddonIntegrationTest extends BaseMcTest {
       .endsWith("AddonRecipeProvider");
     assertThat(entryNames("slimeknights.tconstruct.data.tinkering.TiCDynamicTinkeringGenerator"))
       .endsWith("AddonTinkeringProvider");
-    assertThat(entryNames("slimeknights.tconstruct.data.tag.TiCDynamicTagGenerator"))
-      .endsWith("AddonTagProvider");
-    assertThat(entryNames("slimeknights.tconstruct.data.advancement.TiCDynamicAdvancementGenerator"))
-      .endsWith("AddonAdvancementProvider");
     assertThat(entryNames("slimeknights.tconstruct.data.material.TiCDynamicMaterialGenerator"))
       .endsWith("AddonMaterialProvider");
-  }
-
-  @Test
-  void resourceGeneratorIncludesTiCAddonProvider() throws ReflectiveOperationException {
-    injectAddon(new TestAddon());
-
-    Class<?> generator = Class.forName("slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator");
-    Method createProviders = generator.getDeclaredMethod("createProviders");
-    createProviders.setAccessible(true);
-
-    @SuppressWarnings("unchecked")
-    List<Function<PackOutput, ? extends DataProvider>> providers =
-      (List<Function<PackOutput, ? extends DataProvider>>) createProviders.invoke(null);
-
-    PackOutput output = new PackOutput(Path.of("build", "test-tic-addon-resource-generator"));
-    assertThat(providers)
-      .extracting(factory -> factory.apply(output).getName())
+    assertThat(entryNames("slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator"))
       .endsWith("AddonResourceProvider");
   }
 
@@ -120,14 +97,10 @@ class TiCAddonIntegrationTest extends BaseMcTest {
     injectAddon(new TestTagAddon(dynamicTagProvidersCalled));
 
     TagHookCapture capture = new TagHookCapture();
-    DynamicTagProviderRegistrar registrar = new DynamicTagProviderRegistrar(capture::addProvider);
+    DynamicTagProviderRegistrar registrar = new DynamicTagProviderRegistrar();
     TiCAddonRegistry.collectTagProviders(registrar);
 
     assertThat(dynamicTagProvidersCalled).isTrue();
-    assertThat(capture.providerNames)
-      .contains("MaterialTagProvider", "ModifierTagProvider")
-      .endsWith("AddonTagProvider");
-
     registrar.applyFluidTags(fluid -> {
       if (fluid.getId().equals(TinkerFluids.moltenIron.getId())) {
         capture.fluidHookApplied.set(true);
@@ -266,33 +239,28 @@ class TiCAddonIntegrationTest extends BaseMcTest {
     }
 
     @Override
-    public void registerDynamicRecipeProviders(DynamicProviderRegistrar registrar) {
-      registrar.addProvider("AddonRecipeProvider", output -> new StubProvider("AddonRecipeProvider"));
+    public void registerDynamicRecipeProviders(DynamicRecipeProviderRegistrar registrar) {
+      registrar.addProvider("AddonRecipeProvider", data -> {});
     }
 
     @Override
     public void registerDynamicTinkeringProviders(DynamicProviderRegistrar registrar) {
-      registrar.addProvider("AddonTinkeringProvider", output -> new StubProvider("AddonTinkeringProvider"));
+      registrar.addProvider("AddonTinkeringProvider", data -> {});
     }
 
     @Override
     public void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {
-      registrar.addProvider("AddonTagProvider", output -> new StubProvider("AddonTagProvider"));
-    }
-
-    @Override
-    public void registerDynamicAdvancementProviders(DynamicProviderRegistrar registrar) {
-      registrar.addProvider("AddonAdvancementProvider", output -> new StubProvider("AddonAdvancementProvider"));
+      registrar.addFluidTags(addon -> {});
     }
 
     @Override
     public void registerDynamicMaterialProviders(DynamicProviderRegistrar registrar) {
-      registrar.addProvider("AddonMaterialProvider", output -> new StubProvider("AddonMaterialProvider"));
+      registrar.addProvider("AddonMaterialProvider", data -> {});
     }
 
     @Override
-    public void registerDynamicResourceProviders(DynamicProviderRegistrar registrar) {
-      registrar.addProvider("AddonResourceProvider", output -> new StubProvider("AddonResourceProvider"));
+    public void registerDynamicResourceProviders(DynamicResourceProviderRegistrar registrar) {
+      registrar.addProvider("AddonResourceProvider", resources -> {});
     }
 
     @Override
@@ -368,7 +336,6 @@ class TiCAddonIntegrationTest extends BaseMcTest {
     @Override
     public void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {
       dynamicTagProvidersCalled.set(true);
-      registrar.addProvider("AddonTagProvider", output -> new StubProvider("AddonTagProvider"));
       registrar.addFluidTags(addon -> addon.add(TinkerFluids.moltenIron));
       registrar.addMaterialTags(addon -> addon.addOptional(TinkerTags.Materials.LIGHT, MaterialIds.wood));
       registrar.addModifierTags(addon -> addon.add(TinkerTags.Modifiers.GENERAL_UPGRADES, ModifierIds.diamond));
@@ -376,14 +343,9 @@ class TiCAddonIntegrationTest extends BaseMcTest {
   }
 
   private static final class TagHookCapture {
-    private final java.util.ArrayList<String> providerNames = new java.util.ArrayList<>();
     private final AtomicBoolean fluidHookApplied = new AtomicBoolean(false);
     private final AtomicBoolean materialHookApplied = new AtomicBoolean(false);
     private final AtomicBoolean modifierHookApplied = new AtomicBoolean(false);
-
-    public void addProvider(String name, Function<PackOutput, ? extends DataProvider> factory) {
-      providerNames.add(name);
-    }
   }
 
   private record TestFluidAddon(AtomicBoolean initialized, AtomicBoolean tabItemsAdded) implements ITiCAddon, ITiCFluidAddon {

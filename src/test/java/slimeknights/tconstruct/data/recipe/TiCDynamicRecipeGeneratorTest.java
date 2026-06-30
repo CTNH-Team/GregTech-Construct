@@ -1,22 +1,22 @@
 package slimeknights.tconstruct.data.recipe;
 
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
+import com.google.gson.JsonObject;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.IoSupplier;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
-import slimeknights.tconstruct.library.materials.definition.MaterialManager;
+import slimeknights.tconstruct.data.pack.TiCDynamicDataRegistrar;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.lang.reflect.Field;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,14 +30,9 @@ class TiCDynamicRecipeGeneratorTest extends BaseMcTest {
     ((ArrayList<?>) field.get(null)).clear();
   }
 
-  @Test
-  void registerUsesEightProviderFactories() {
-    RecordingRunner runner = new RecordingRunner();
-
-    TiCDynamicRecipeGenerator.register(runner);
-
-    assertThat(runner.owner).isEqualTo("tconstruct-recipes");
-    assertThat(runner.providers).hasSize(8);
+  @BeforeEach
+  void clearDynamicPack() {
+    TiCDynamicDataPack.clearServer();
   }
 
   @Test
@@ -56,7 +51,7 @@ class TiCDynamicRecipeGeneratorTest extends BaseMcTest {
 
   @Test
   void addProviderAppendsExternalProviderEntry() {
-    TiCDynamicRecipeGenerator.addProvider("ExternalRecipeProvider", output -> new StubProvider("ExternalRecipeProvider"));
+    TiCDynamicRecipeGenerator.addProvider("ExternalRecipeWriter", registrar -> registrar.addData(new ResourceLocation("example", "recipes/external.json"), "{}".getBytes()));
 
     assertThat(TiCDynamicRecipeGenerator.createProviderEntries())
       .extracting(TiCDynamicRecipeGenerator.RecipeProviderEntry::name)
@@ -69,62 +64,96 @@ class TiCDynamicRecipeGeneratorTest extends BaseMcTest {
         "ToolsRecipeProvider",
         "SmelteryRecipeProvider",
         "ModifierRecipeProvider",
-        "ExternalRecipeProvider"
+        "ExternalRecipeWriter"
       );
   }
 
   @Test
-  void registerIncludesExternalProviderFactory() {
-    RecordingRunner runner = new RecordingRunner();
-    PackOutput output = new PackOutput(Path.of("build", "test-dynamic-recipe-generator"));
+  void recipeWriterStoresRecipeAndAdvancementDirectlyInMemory() throws Exception {
+    TiCDynamicRecipeGenerator.recipeWriter(TestRecipeProvider::new).accept(TiCDynamicDataRegistrar.INSTANCE);
 
-    TiCDynamicRecipeGenerator.addProvider("ExternalRecipeProvider", ignored -> new StubProvider("ExternalRecipeProvider"));
-    TiCDynamicRecipeGenerator.register(runner);
+    ResourceLocation recipeLocation = new ResourceLocation("example", "recipes/generated.json");
+    ResourceLocation advancementLocation = new ResourceLocation("example", "advancements/recipes/generated.json");
 
-    assertThat(runner.providers).hasSize(9);
-    assertThat(runner.providers)
-      .extracting(factory -> factory.apply(output).getName())
-      .endsWith("ExternalRecipeProvider");
+    assertThat(pack.getResource(PackType.SERVER_DATA, recipeLocation)).isNotNull();
+    assertThat(pack.getResource(PackType.SERVER_DATA, advancementLocation)).isNotNull();
+    assertThat(readString(recipeLocation)).contains("\"type\":\"minecraft:crafting_shapeless\"");
   }
 
   @Test
-  void registerDoesNotGenerateRuntimeMaterialDefinitions() {
-    TiCDynamicDataPack.clearServer();
+  void recipeWriterAddsRecipeAndAdvancementFilters() {
+    TiCDynamicRecipeGenerator.recipeWriter(TestRecipeProvider::new).accept(TiCDynamicDataRegistrar.INSTANCE);
 
-    TiCDynamicRecipeGenerator.register((owner, providers) -> {
-      // Skip recipe providers so the test isolates the recipe registration itself.
-    });
+    JsonObject filter = pack.getMetadataSection(TestFilterSerializer.INSTANCE);
 
-    ResourceLocation woodDefinition = new ResourceLocation(TConstruct.MOD_ID, MaterialManager.FOLDER + "/wood.json");
-    assertThat(pack.getResource(PackType.SERVER_DATA, woodDefinition)).as("runtime material definitions").isNull();
+    assertThat(filter).isNotNull();
+    assertThat(filter.getAsJsonArray("block"))
+      .extracting(element -> element.getAsJsonObject().get("path").getAsString())
+      .containsExactlyInAnyOrder("^recipes/generated\\.json$", "^advancements/recipes/generated\\.json$");
   }
 
-  private static final class StubProvider implements DataProvider {
-    private final String name;
+  private String readString(ResourceLocation location) throws Exception {
+    IoSupplier<java.io.InputStream> resource = pack.getResource(PackType.SERVER_DATA, location);
+    assertThat(resource).isNotNull();
+    try (java.io.InputStream input = resource.get()) {
+      return new String(input.readAllBytes());
+    }
+  }
 
-    private StubProvider(String name) {
-      this.name = name;
+  private static final class TestRecipeProvider extends slimeknights.tconstruct.common.data.BaseRecipeProvider {
+    private TestRecipeProvider(net.minecraft.data.PackOutput output) {
+      super(output);
     }
 
     @Override
-    public CompletableFuture<?> run(net.minecraft.data.CachedOutput output) {
-      return CompletableFuture.completedFuture(null);
+    protected void buildRecipes(java.util.function.Consumer<FinishedRecipe> consumer) {
+      consumer.accept(new TestFinishedRecipe());
     }
 
     @Override
     public String getName() {
-      return name;
+      return "Test Recipe Provider";
     }
   }
 
-  private static final class RecordingRunner implements TiCDynamicRecipeGenerator.RecipeRunner {
-    private String owner;
-    private List<Function<PackOutput, ? extends DataProvider>> providers = List.of();
+  private static final class TestFinishedRecipe implements FinishedRecipe {
+    @Override
+    public void serializeRecipeData(JsonObject json) {}
 
     @Override
-    public void run(String owner, List<Function<PackOutput, ? extends DataProvider>> providers) {
-      this.owner = owner;
-      this.providers = providers;
+    public ResourceLocation getId() {
+      return new ResourceLocation("example", "generated");
+    }
+
+    @Override
+    public RecipeSerializer<?> getType() {
+      return BuiltInRegistries.RECIPE_SERIALIZER.get(new ResourceLocation("minecraft", "crafting_shapeless"));
+    }
+
+    @Override
+    public JsonObject serializeAdvancement() {
+      JsonObject json = new JsonObject();
+      json.add("criteria", new JsonObject());
+      return json;
+    }
+
+    @Override
+    public ResourceLocation getAdvancementId() {
+      return new ResourceLocation("example", "recipes/generated");
+    }
+  }
+
+  private enum TestFilterSerializer implements net.minecraft.server.packs.metadata.MetadataSectionSerializer<JsonObject> {
+    INSTANCE;
+
+    @Override
+    public String getMetadataSectionName() {
+      return "filter";
+    }
+
+    @Override
+    public JsonObject fromJson(JsonObject json) {
+      return json;
     }
   }
 }

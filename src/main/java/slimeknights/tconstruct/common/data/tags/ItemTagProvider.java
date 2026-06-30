@@ -24,6 +24,7 @@ import slimeknights.tconstruct.common.registration.CastItemObject;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
 import slimeknights.tconstruct.gadgets.entity.FrameType;
+import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 import slimeknights.tconstruct.library.data.recipe.CostTagAppender;
 import slimeknights.tconstruct.shared.TinkerCommons;
 import slimeknights.tconstruct.shared.TinkerMaterials;
@@ -52,9 +53,15 @@ public class ItemTagProvider extends ItemTagsProvider {
     /** Twlight forest uncrafting table blacklist */
     private static final TagKey<Item> BANNED_UNCRAFTABLE = ItemTags.create(ResourceLocation.tryBuild("twilightforest", "banned_uncraftables"));
     private final Function<ResourceLocation,IntrinsicTagAppender<Item>> MAKE_TAG = tag -> tag(ItemTags.create(tag));
+    private final Consumer<DynamicTagProviderRegistrar.ItemTagRegistrar> addonTags;
 
     public ItemTagProvider(PackOutput output, CompletableFuture<Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTagProvider, ExistingFileHelper existingFileHelper) {
+        this(output, lookupProvider, blockTagProvider, existingFileHelper, tags -> {});
+    }
+
+    public ItemTagProvider(PackOutput output, CompletableFuture<Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTagProvider, ExistingFileHelper existingFileHelper, Consumer<DynamicTagProviderRegistrar.ItemTagRegistrar> addonTags) {
         super(output, lookupProvider, blockTagProvider, TConstruct.MOD_ID, existingFileHelper);
+        this.addonTags = addonTags;
     }
 
     @Override
@@ -63,6 +70,29 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.addWorld();
         this.addSmeltery();
         this.addTools();
+        addonTags.accept(new AddonItemTagRegistrar());
+    }
+
+    private final class AddonItemTagRegistrar implements DynamicTagProviderRegistrar.ItemTagRegistrar {
+        @Override
+        public void add(TagKey<Item> tag, ResourceLocation... ids) {
+            IntrinsicTagAppender<Item> appender = ItemTagProvider.this.tag(tag);
+            for (ResourceLocation id : ids) {
+                if (net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(id)) {
+                    appender.add(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(id));
+                } else {
+                    appender.addOptional(id);
+                }
+            }
+        }
+
+        @Override
+        public void addOptional(TagKey<Item> tag, ResourceLocation... ids) {
+            IntrinsicTagAppender<Item> appender = ItemTagProvider.this.tag(tag);
+            for (ResourceLocation id : ids) {
+                appender.addOptional(id);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")

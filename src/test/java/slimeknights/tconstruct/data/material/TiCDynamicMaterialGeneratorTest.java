@@ -1,22 +1,25 @@
 package slimeknights.tconstruct.data.material;
 
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
+import slimeknights.tconstruct.data.pack.TiCDynamicDataRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.lang.reflect.Field;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TiCDynamicMaterialGeneratorTest extends BaseMcTest {
+  private final TiCDynamicDataPack pack = new TiCDynamicDataPack("test");
+
   @AfterEach
   void clearExternalProviders() throws ReflectiveOperationException {
     Field field = TiCDynamicMaterialGenerator.class.getDeclaredField("ADDITIONAL_PROVIDER_ENTRIES");
@@ -24,14 +27,9 @@ class TiCDynamicMaterialGeneratorTest extends BaseMcTest {
     ((ArrayList<?>) field.get(null)).clear();
   }
 
-  @Test
-  void registerUsesThreeProviderFactories() {
-    RecordingRunner runner = new RecordingRunner();
-
-    TiCDynamicMaterialGenerator.register(runner);
-
-    assertThat(runner.owner).isEqualTo("tconstruct-materials");
-    assertThat(runner.providers).hasSize(3);
+  @BeforeEach
+  void clearDynamicPack() {
+    TiCDynamicDataPack.clearServer();
   }
 
   @Test
@@ -47,7 +45,7 @@ class TiCDynamicMaterialGeneratorTest extends BaseMcTest {
 
   @Test
   void addProviderAppendsExternalProviderEntry() {
-    TiCDynamicMaterialGenerator.addProvider("ExternalMaterialProvider", output -> new StubProvider("ExternalMaterialProvider"));
+    TiCDynamicMaterialGenerator.addProvider("ExternalMaterialWriter", registrar -> registrar.addData(new ResourceLocation("example", "materials/external.json"), "{}".getBytes()));
 
     assertThat(TiCDynamicMaterialGenerator.createProviderEntries())
       .extracting(TiCDynamicMaterialGenerator.MaterialProviderEntry::name)
@@ -55,50 +53,25 @@ class TiCDynamicMaterialGeneratorTest extends BaseMcTest {
         "MaterialDataProvider",
         "MaterialStatsDataProvider",
         "MaterialTraitsDataProvider",
-        "ExternalMaterialProvider"
+        "ExternalMaterialWriter"
       );
   }
 
   @Test
-  void registerIncludesExternalProviderFactory() {
-    RecordingRunner runner = new RecordingRunner();
-    PackOutput output = new PackOutput(Path.of("build", "test-dynamic-material-generator"));
+  void dataWriterStoresDataDirectlyInMemory() {
+    TiCDynamicMaterialGenerator.dataWriter(TestRuntimeDataProvider::new).accept(TiCDynamicDataRegistrar.INSTANCE);
 
-    TiCDynamicMaterialGenerator.addProvider("ExternalMaterialProvider", ignored -> new StubProvider("ExternalMaterialProvider"));
-    TiCDynamicMaterialGenerator.register(runner);
-
-    assertThat(runner.providers).hasSize(4);
-    assertThat(runner.providers)
-      .extracting(factory -> factory.apply(output).getName())
-      .endsWith("ExternalMaterialProvider");
+    ResourceLocation location = new ResourceLocation("example", "materials/generated.json");
+    assertThat(pack.getResource(PackType.SERVER_DATA, location)).isNotNull();
+    assertThat(pack.getNamespaces(PackType.SERVER_DATA)).contains("example");
   }
 
-  private static final class StubProvider implements DataProvider {
-    private final String name;
-
-    private StubProvider(String name) {
-      this.name = name;
-    }
+  private static final class TestRuntimeDataProvider implements RuntimeDataProvider {
+    private TestRuntimeDataProvider(PackOutput output) {}
 
     @Override
-    public CompletableFuture<?> run(CachedOutput output) {
-      return CompletableFuture.completedFuture(null);
-    }
-
-    @Override
-    public String getName() {
-      return name;
-    }
-  }
-
-  private static final class RecordingRunner implements TiCDynamicMaterialGenerator.MaterialRunner {
-    private String owner;
-    private List<Function<PackOutput, ? extends DataProvider>> providers = List.of();
-
-    @Override
-    public void run(String owner, List<Function<PackOutput, ? extends DataProvider>> providers) {
-      this.owner = owner;
-      this.providers = providers;
+    public void addToDynamicPack(DynamicDataRegistrar registrar) {
+      registrar.addJson(new ResourceLocation("example", "materials/generated.json"), new com.google.gson.JsonObject());
     }
   }
 }

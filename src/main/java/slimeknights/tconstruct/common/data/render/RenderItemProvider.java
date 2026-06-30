@@ -6,7 +6,10 @@ import net.minecraft.data.PackOutput.Target;
 import slimeknights.mantle.client.render.RenderItem;
 import slimeknights.mantle.data.datamap.BlockStateDataMapProvider;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.data.resource.RuntimeMantleDataWriters;
 import slimeknights.tconstruct.library.TinkerItemDisplays;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.tables.TinkerTables;
 
@@ -15,7 +18,7 @@ import java.util.List;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 /** Provides fluid cuboids for block entity renderers */
-public class RenderItemProvider extends BlockStateDataMapProvider<List<RenderItem>> {
+public class RenderItemProvider extends BlockStateDataMapProvider<List<RenderItem>> implements RuntimeResourceProvider {
   public RenderItemProvider(PackOutput output) {
     super(output, Target.RESOURCE_PACK, RenderItem.STATE_REGISTRY, TConstruct.MOD_ID);
   }
@@ -115,6 +118,11 @@ public class RenderItemProvider extends BlockStateDataMapProvider<List<RenderIte
 
     // casting tank
     block(TinkerSmeltery.searedCastingTank).variant(castingTable);
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    RuntimeMantleDataWriters.writeBlockStateDataMap(registrar, this, RenderItem.STATE_REGISTRY.getFolder());
   }
 
   @Override

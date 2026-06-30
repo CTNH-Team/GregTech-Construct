@@ -30,7 +30,7 @@ public final class TiCAddonRegistry {
       .forEach(addon -> addon.registerSmelteryCompat(registrar));
   }
 
-  public static void collectRecipeProviders(DynamicProviderRegistrar registrar) {
+  public static void collectRecipeProviders(DynamicRecipeProviderRegistrar registrar) {
     TiCAddonFinder.getAddons().forEach(addon -> addon.registerDynamicRecipeProviders(registrar));
   }
 
@@ -42,15 +42,11 @@ public final class TiCAddonRegistry {
     TiCAddonFinder.getAddons().forEach(addon -> addon.registerDynamicTagProviders(registrar));
   }
 
-  public static void collectAdvancementProviders(DynamicProviderRegistrar registrar) {
-    TiCAddonFinder.getAddons().forEach(addon -> addon.registerDynamicAdvancementProviders(registrar));
-  }
-
   public static void collectMaterialProviders(DynamicProviderRegistrar registrar) {
     TiCAddonFinder.getAddons().forEach(addon -> addon.registerDynamicMaterialProviders(registrar));
   }
 
-  public static void collectResourceProviders(DynamicProviderRegistrar registrar) {
+  public static void collectResourceProviders(DynamicResourceProviderRegistrar registrar) {
     TiCAddonFinder.getAddons().forEach(addon -> addon.registerDynamicResourceProviders(registrar));
   }
 

@@ -2,6 +2,7 @@ package slimeknights.tconstruct.common.data.tags;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +26,7 @@ import slimeknights.tconstruct.common.registration.GeodeItemObject.BudSize;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
 import slimeknights.tconstruct.library.addon.AddonSmelteryCompat;
+import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.shared.TinkerCommons;
 import slimeknights.tconstruct.shared.TinkerMaterials;
@@ -55,9 +57,15 @@ import static slimeknights.tconstruct.common.TinkerTags.Blocks.UNREPLACABLE_BY_L
 
 @SuppressWarnings({"unchecked", "SameParameterValue"})
 public class BlockTagProvider extends BlockTagsProvider {
+  private final Consumer<DynamicTagProviderRegistrar.BlockTagRegistrar> addonTags;
 
   public BlockTagProvider(PackOutput output, CompletableFuture<Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
+    this(output, lookupProvider, existingFileHelper, tags -> {});
+  }
+
+  public BlockTagProvider(PackOutput output, CompletableFuture<Provider> lookupProvider, ExistingFileHelper existingFileHelper, Consumer<DynamicTagProviderRegistrar.BlockTagRegistrar> addonTags) {
     super(output, lookupProvider, TConstruct.MOD_ID, existingFileHelper);
+    this.addonTags = addonTags;
   }
 
   @Override
@@ -68,6 +76,29 @@ public class BlockTagProvider extends BlockTagsProvider {
     this.addSmeltery();
     this.addFluids();
     this.addHarvest();
+    addonTags.accept(new AddonBlockTagRegistrar());
+  }
+
+  private final class AddonBlockTagRegistrar implements DynamicTagProviderRegistrar.BlockTagRegistrar {
+    @Override
+    public void add(TagKey<Block> tag, ResourceLocation... ids) {
+      IntrinsicTagAppender<Block> appender = BlockTagProvider.this.tag(tag);
+      for (ResourceLocation id : ids) {
+        if (BuiltInRegistries.BLOCK.containsKey(id)) {
+          appender.add(BuiltInRegistries.BLOCK.get(id));
+        } else {
+          appender.addOptional(id);
+        }
+      }
+    }
+
+    @Override
+    public void addOptional(TagKey<Block> tag, ResourceLocation... ids) {
+      IntrinsicTagAppender<Block> appender = BlockTagProvider.this.tag(tag);
+      for (ResourceLocation id : ids) {
+        appender.addOptional(id);
+      }
+    }
   }
 
   private void addCommon() {

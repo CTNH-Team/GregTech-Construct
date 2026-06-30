@@ -12,7 +12,10 @@ import slimeknights.tconstruct.plugin.create.tag.CreateBlockTagProvider;
 import slimeknights.tconstruct.plugin.create.tag.CreateItemTagProvider;
 import slimeknights.tconstruct.plugin.create.tag.CreateModifierTagProvider;
 
+import slimeknights.tconstruct.data.recipe.TiCDynamicRecipeGenerator;
+import slimeknights.tconstruct.data.tinkering.TiCDynamicTinkeringGenerator;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicRecipeProviderRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 import slimeknights.tconstruct.library.addon.ITiCAddon;
 import slimeknights.tconstruct.library.addon.ITiCStaticModifierAddon;
@@ -39,19 +42,19 @@ public class CreateTiCAddon implements ITiCAddon, ITiCStaticModifierAddon {
     }
 
     @Override
-    public void registerDynamicRecipeProviders(DynamicProviderRegistrar registrar) {
-        registrar.addProvider("CreateModifierRecipeProvider", CreateModifierRecipeProvider::new);
+    public void registerDynamicRecipeProviders(DynamicRecipeProviderRegistrar registrar) {
+        registrar.addProvider("CreateModifierRecipeProvider", TiCDynamicRecipeGenerator.recipeWriter(CreateModifierRecipeProvider::new));
     }
 
     @Override
     public void registerDynamicTinkeringProviders(DynamicProviderRegistrar registrar) {
-        registrar.addProvider("CreateModifierProvider", CreateModifierProvider::new);
+        registrar.addProvider("CreateModifierProvider", TiCDynamicTinkeringGenerator.dataWriter(CreateModifierProvider::new));
     }
 
     @Override
     public void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {
-        registrar.addProvider("CreateBlockTagProvider", CreateBlockTagProvider::new);
-        registrar.addProvider("CreateItemTagProvider", CreateItemTagProvider::new);
+        registrar.addBlockTags(CreateBlockTagProvider::addTags);
+        registrar.addItemTags(CreateItemTagProvider::addTags);
         registrar.addModifierTags(CreateModifierTagProvider::addTags);
     }
 }

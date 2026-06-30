@@ -7,6 +7,8 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.PackOutput.Target;
 import net.minecraft.resources.ResourceLocation;
 import slimeknights.mantle.data.GenericDataProvider;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.json.MaterialTraitsJson;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
@@ -26,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 
 /** Base data generator for use in addons */
 @SuppressWarnings({"unused", "SameParameterValue"})  // API
-public abstract class AbstractMaterialTraitDataProvider extends GenericDataProvider {
+public abstract class AbstractMaterialTraitDataProvider extends GenericDataProvider implements RuntimeDataProvider {
   /** Map of material ID to builder, there is at most one builder for each ID */
   private final Map<MaterialId,MaterialTraitsBuilder> allMaterialTraits = new HashMap<>();
   /* Materials data provider for validation */
@@ -42,19 +44,28 @@ public abstract class AbstractMaterialTraitDataProvider extends GenericDataProvi
 
   @Override
   public CompletableFuture<?> run(CachedOutput cache) {
+    generateMaterialTraits();
+    return allOf(allMaterialTraits.entrySet().stream().map(entry -> saveJson(cache, entry.getKey(), entry.getValue().build())));
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicDataRegistrar registrar) {
+    generateMaterialTraits();
+    allMaterialTraits.forEach((id, traits) -> registrar.addJson(MaterialTraitsManager.FOLDER, id, traits.build(), MaterialTraitsManager.GSON));
+  }
+
+  private void generateMaterialTraits() {
+    if (!allMaterialTraits.isEmpty()) {
+      return;
+    }
     addMaterialTraits();
 
-    // ensure we have traits for all materials
-    // if you want no traits for your material, use an empty list
     Set<MaterialId> materialsGenerated = materials.getAllMaterials();
     for (MaterialId material : materialsGenerated) {
       if (!allMaterialTraits.containsKey(material)) {
         throw new IllegalStateException(String.format("Missing material traits for '%s'", material));
       }
     }
-
-    // generate
-    return allOf(allMaterialTraits.entrySet().stream().map(entry -> saveJson(cache, entry.getKey(), entry.getValue().build())));
   }
 
 

@@ -13,7 +13,9 @@ import net.minecraft.resources.ResourceLocation;
 import slimeknights.mantle.data.GenericDataProvider;
 import slimeknights.mantle.data.gson.ResourceLocationSerializer;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
 import slimeknights.tconstruct.library.client.data.material.AbstractPartSpriteProvider.PartSpriteInfo;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 
@@ -25,7 +27,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 /** Generates the file that tells the part generator command which parts are needed for your tools */
-public class GeneratorPartTextureJsonGenerator extends GenericDataProvider {
+public class GeneratorPartTextureJsonGenerator extends GenericDataProvider implements RuntimeResourceProvider {
   /** GSON adapter for material info deserializing */
   public static final Gson GSON = (new GsonBuilder())
     .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
@@ -51,13 +53,22 @@ public class GeneratorPartTextureJsonGenerator extends GenericDataProvider {
 
   @Override
   public CompletableFuture<?> run(CachedOutput cache) {
+    return saveJson(cache, ResourceLocation.tryBuild(modId, "generator_part_textures"), buildJson());
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    registrar.addResource(ResourceLocation.tryBuild(modId, "tinkering/generator_part_textures.json"), buildJson());
+  }
+
+  private JsonObject buildJson() {
     JsonObject json = new JsonObject();
     json.addProperty("replace", false);
     json.add("parts", PartSpriteInfo.LIST_LOADABLE.serialize(spriteProvider.getSprites()));
     if (!overrides.overrides.isEmpty()) {
       json.add("overrides", overrides.serialize());
     }
-    return saveJson(cache, ResourceLocation.tryBuild(modId, "generator_part_textures"), json);
+    return json;
   }
 
   @Override

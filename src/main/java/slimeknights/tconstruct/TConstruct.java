@@ -40,7 +40,6 @@ import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
 import slimeknights.tconstruct.common.data.loot.GlobalLootModifiersProvider;
 import slimeknights.tconstruct.common.data.loot.LootTableInjectionProvider;
 import slimeknights.tconstruct.common.data.loot.TConstructLootTableProvider;
-import slimeknights.tconstruct.data.advancement.TiCDynamicAdvancementGenerator;
 import slimeknights.tconstruct.data.material.TiCDynamicMaterialGenerator;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
 import slimeknights.tconstruct.data.recipe.TiCDynamicRecipeGenerator;
@@ -199,6 +198,8 @@ public class TConstruct {
         DatapackBuiltinEntriesProvider datapackRegistryProvider = new DatapackBuiltinEntriesProvider(packOutput, lookupProvider, registrySetBuilder, Set.of(MOD_ID));
         generator.addProvider(server, datapackRegistryProvider);
         generator.addProvider(server, new BiomeTagProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
+        generator.addProvider(server, new AdvancementsProvider(packOutput));
+        TiCDynamicTagGenerator.addDatagenProviders(generator, packOutput, lookupProvider, event.getExistingFileHelper(), server);
 
         // other datagen
         generator.addProvider(server, new TConstructLootTableProvider(packOutput));
@@ -222,10 +223,8 @@ public class TConstruct {
             ));
         } else if (event.getPackType() == PackType.SERVER_DATA) {
             TiCDynamicDataPack.clearServer();
-            TiCDynamicAdvancementGenerator.register();
             TiCDynamicMaterialGenerator.register();
             TiCDynamicTinkeringGenerator.register();
-            TiCDynamicTagGenerator.register();
             TiCDynamicRecipeGenerator.register();
             event.addRepositorySource(new TiCPackSource(
                 "tconstruct:dynamic_data",

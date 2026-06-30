@@ -1,213 +1,152 @@
 package slimeknights.tconstruct.data.tag;
 
-import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mockito;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
+import slimeknights.tconstruct.common.data.tags.BlockTagProvider;
+import slimeknights.tconstruct.common.data.tags.FluidTagProvider;
+import slimeknights.tconstruct.common.data.tags.ItemTagProvider;
+import slimeknights.tconstruct.common.data.tags.MaterialTagProvider;
+import slimeknights.tconstruct.common.data.tags.ModifierTagProvider;
 import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
 import slimeknights.tconstruct.test.BaseMcTest;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 
 class TiCDynamicTagGeneratorTest extends BaseMcTest {
-    @AfterEach
-    void clearExternalProviders() throws ReflectiveOperationException {
-        Field field = TiCDynamicTagGenerator.class.getDeclaredField("ADDITIONAL_PROVIDER_ENTRIES");
-        field.setAccessible(true);
-        ((ArrayList<?>) field.get(null)).clear();
+  @Test
+  void addDatagenProvidersRegistersTagProviders(@TempDir Path outputRoot) {
+    DataGenerator generator = Mockito.mock(DataGenerator.class);
+    ExistingFileHelper existingFileHelper = Mockito.mock(ExistingFileHelper.class);
+    PackOutput packOutput = new PackOutput(outputRoot);
+    CompletableFuture<net.minecraft.core.HolderLookup.Provider> lookupProvider = CompletableFuture.completedFuture(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+    List<DataProvider> providers = new ArrayList<>();
+
+    Mockito.doAnswer(invocation -> {
+      DataProvider provider = invocation.getArgument(1);
+      providers.add(provider);
+      return provider;
+    }).when(generator).addProvider(Mockito.anyBoolean(), Mockito.<DataProvider>any());
+
+    TiCDynamicTagGenerator.addDatagenProviders(generator, packOutput, lookupProvider, existingFileHelper, true);
+
+    assertThat(providers).anyMatch(BlockTagProvider.class::isInstance);
+    assertThat(providers).anyMatch(ItemTagProvider.class::isInstance);
+    assertThat(providers).anyMatch(FluidTagProvider.class::isInstance);
+    assertThat(providers).anyMatch(MaterialTagProvider.class::isInstance);
+    assertThat(providers).anyMatch(ModifierTagProvider.class::isInstance);
+  }
+
+  @Test
+  void gatherDataRegistersBiomeAndDynamicTagDatagenProviders(@TempDir Path outputRoot) {
+    DataGenerator generator = Mockito.mock(DataGenerator.class);
+    ExistingFileHelper existingFileHelper = Mockito.mock(ExistingFileHelper.class);
+    GatherDataEvent event = Mockito.mock(GatherDataEvent.class);
+    PackOutput packOutput = new PackOutput(outputRoot);
+    List<DataProvider> providers = new ArrayList<>();
+
+    Mockito.when(event.getGenerator()).thenReturn(generator);
+    Mockito.when(generator.getPackOutput()).thenReturn(packOutput);
+    Mockito.when(event.getLookupProvider()).thenReturn(CompletableFuture.completedFuture(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY)));
+    Mockito.when(event.getExistingFileHelper()).thenReturn(existingFileHelper);
+    Mockito.when(event.includeServer()).thenReturn(true);
+    Mockito.when(event.includeClient()).thenReturn(false);
+    Mockito.doAnswer(invocation -> {
+      DataProvider provider = invocation.getArgument(1);
+      providers.add(provider);
+      return provider;
+    }).when(generator).addProvider(Mockito.anyBoolean(), Mockito.<DataProvider>any());
+
+    try {
+      var gatherData = TConstruct.class.getDeclaredMethod("gatherData", GatherDataEvent.class);
+      gatherData.setAccessible(true);
+      gatherData.invoke(null, event);
+    } catch (ReflectiveOperationException exception) {
+      throw new AssertionError(exception);
     }
 
-    @Test
-    void registerSendsElevenProviderFactories() {
-        RecordingRunner runner = new RecordingRunner();
+    assertThat(providers).anyMatch(BiomeTagProvider.class::isInstance);
+    assertThat(providers).anyMatch(BlockTagProvider.class::isInstance);
+  }
 
-        TiCDynamicTagGenerator.register(runner);
+  @Test
+  void registrarAppliesHooksWithoutRuntimePackOutputProviders() {
+    DynamicTagProviderRegistrar registrar = new DynamicTagProviderRegistrar();
+    AtomicBoolean block = new AtomicBoolean(false);
+    AtomicBoolean item = new AtomicBoolean(false);
+    AtomicBoolean fluid = new AtomicBoolean(false);
+    AtomicBoolean material = new AtomicBoolean(false);
+    AtomicBoolean modifier = new AtomicBoolean(false);
 
-        assertThat(runner.owner).isEqualTo("tconstruct-tags");
-        assertThat(runner.providers).hasSize(11);
-    }
+    registrar.addBlockTags(tags -> block.set(true));
+    registrar.addItemTags(tags -> item.set(true));
+    registrar.addFluidTags(tags -> fluid.set(true));
+    registrar.addMaterialTags(tags -> material.set(true));
+    registrar.addModifierTags(tags -> modifier.set(true));
 
-    @Test
-    void registerKeepsProviderOrder() {
-        assertThat(TiCDynamicTagGenerator.createProviderEntries()).extracting(TiCDynamicTagGenerator.TagProviderEntry::name).containsExactly(
-            "BlockTagProvider",
-            "ItemTagProvider",
-            "FluidTagProvider",
-            "EntityTypeTagProvider",
-            "BlockEntityTypeTagProvider",
-            "EnchantmentTagProvider",
-            "MenuTypeTagProvider",
-            "PotionTagProvider",
-            "DamageTypeTagProvider",
-            "MaterialTagProvider",
-            "ModifierTagProvider"
-        );
-    }
+    registrar.applyBlockTags(new NoopBlockTagRegistrar());
+    registrar.applyItemTags(new NoopItemTagRegistrar());
+    registrar.applyFluidTags(new NoopFluidTagRegistrar());
+    registrar.applyMaterialTags(new NoopMaterialTagRegistrar());
+    registrar.applyModifierTags(new NoopModifierTagRegistrar());
 
-    @Test
-    void addProviderAppendsExternalProviderEntry() {
-        TiCDynamicTagGenerator.addProvider("ExternalTagProvider", output -> new StubProvider("ExternalTagProvider"));
+    assertThat(block).isTrue();
+    assertThat(item).isTrue();
+    assertThat(fluid).isTrue();
+    assertThat(material).isTrue();
+    assertThat(modifier).isTrue();
+  }
 
-        assertThat(TiCDynamicTagGenerator.createProviderEntries())
-            .extracting(TiCDynamicTagGenerator.TagProviderEntry::name)
-            .containsExactly(
-                "BlockTagProvider",
-                "ItemTagProvider",
-                "FluidTagProvider",
-                "EntityTypeTagProvider",
-                "BlockEntityTypeTagProvider",
-                "EnchantmentTagProvider",
-                "MenuTypeTagProvider",
-                "PotionTagProvider",
-                "DamageTypeTagProvider",
-                "MaterialTagProvider",
-                "ModifierTagProvider",
-                "ExternalTagProvider"
-            );
-    }
+  private static final class NoopBlockTagRegistrar implements DynamicTagProviderRegistrar.BlockTagRegistrar {
+    @Override
+    public void add(net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block> tag, ResourceLocation... ids) {}
 
-    @Test
-    void registerIncludesExternalProviderFactory() {
-        RecordingRunner runner = new RecordingRunner();
-        PackOutput output = new PackOutput(Path.of("build", "test-dynamic-tag-generator"));
+    @Override
+    public void addOptional(net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block> tag, ResourceLocation... ids) {}
+  }
 
-        TiCDynamicTagGenerator.addProvider("ExternalTagProvider", ignored -> new StubProvider("ExternalTagProvider"));
-        TiCDynamicTagGenerator.register(runner);
+  private static final class NoopItemTagRegistrar implements DynamicTagProviderRegistrar.ItemTagRegistrar {
+    @Override
+    public void add(net.minecraft.tags.TagKey<net.minecraft.world.item.Item> tag, ResourceLocation... ids) {}
 
-        assertThat(runner.providers).hasSize(12);
-        assertThat(runner.providers)
-            .extracting(factory -> factory.apply(output).getName())
-            .endsWith("ExternalTagProvider");
-    }
+    @Override
+    public void addOptional(net.minecraft.tags.TagKey<net.minecraft.world.item.Item> tag, ResourceLocation... ids) {}
+  }
 
-    @Test
-    void gatherDataRegistersBiomeTagProvider(@TempDir Path outputRoot) {
-        DataGenerator generator = Mockito.mock(DataGenerator.class);
-        ExistingFileHelper existingFileHelper = Mockito.mock(ExistingFileHelper.class);
-        GatherDataEvent event = Mockito.mock(GatherDataEvent.class);
-        PackOutput packOutput = new PackOutput(outputRoot);
-        List<DataProvider> providers = new java.util.ArrayList<>();
+  private static final class NoopFluidTagRegistrar implements DynamicTagProviderRegistrar.FluidTagRegistrar {
+    @Override
+    public void add(slimeknights.mantle.registration.object.FlowingFluidObject<?> fluid) {}
+  }
 
-        Mockito.when(event.getGenerator()).thenReturn(generator);
-        Mockito.when(generator.getPackOutput()).thenReturn(packOutput);
-        Mockito.when(event.getLookupProvider()).thenReturn(CompletableFuture.completedFuture(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY)));
-        Mockito.when(event.getExistingFileHelper()).thenReturn(existingFileHelper);
-        Mockito.when(event.includeServer()).thenReturn(true);
-        Mockito.when(event.includeClient()).thenReturn(false);
-        Mockito.doAnswer(invocation -> {
-            DataProvider provider = invocation.getArgument(1);
-            providers.add(provider);
-            return provider;
-        }).when(generator).addProvider(Mockito.anyBoolean(), Mockito.<DataProvider>any());
+  private static final class NoopMaterialTagRegistrar implements DynamicTagProviderRegistrar.MaterialTagRegistrar {
+    @Override
+    public void add(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.materials.definition.IMaterial> tag, ResourceLocation... ids) {}
 
-        try {
-            var gatherData = TConstruct.class.getDeclaredMethod("gatherData", GatherDataEvent.class);
-            gatherData.setAccessible(true);
-            gatherData.invoke(null, event);
-        } catch (ReflectiveOperationException exception) {
-            throw new AssertionError(exception);
-        }
+    @Override
+    public void addOptional(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.materials.definition.IMaterial> tag, ResourceLocation... ids) {}
+  }
 
-        assertThat(providers).anyMatch(BiomeTagProvider.class::isInstance);
-    }
+  private static final class NoopModifierTagRegistrar implements DynamicTagProviderRegistrar.ModifierTagRegistrar {
+    @Override
+    public void add(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.modifiers.Modifier> tag, ResourceLocation... ids) {}
 
-    @Test
-    void runtimeMaterialAndModifierProvidersRunWithExistingFileHelper(@TempDir Path outputRoot) throws Exception {
-        Object state = newTagProviderState();
-        Class<?> stateClass = state.getClass();
-        ExistingFileHelper helper = existingFileHelper(state);
-
-        assertThat(helper).isNotNull();
-
-        PackOutput output = new PackOutput(outputRoot);
-        CachedOutput cachedOutput = Mockito.mock(CachedOutput.class);
-        assertThatCode(() -> {
-            Method createMaterialTags = stateClass.getDeclaredMethod("createMaterialTags", PackOutput.class);
-            Method createModifierTags = stateClass.getDeclaredMethod("createModifierTags", PackOutput.class);
-            createMaterialTags.setAccessible(true);
-            createModifierTags.setAccessible(true);
-
-            DataProvider materialProvider = (DataProvider) createMaterialTags.invoke(state, output);
-            DataProvider modifierProvider = (DataProvider) createModifierTags.invoke(state, output);
-            materialProvider.run(cachedOutput).join();
-            modifierProvider.run(cachedOutput).join();
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    void runtimeExistingFileHelperAllowsRequiredForgeTagReferences() throws Exception {
-        ExistingFileHelper helper = existingFileHelper(newTagProviderState());
-        ExistingFileHelper.ResourceType blockTagType = new ExistingFileHelper.ResourceType(PackType.SERVER_DATA, ".json", "tags/blocks");
-        ExistingFileHelper.ResourceType itemTagType = new ExistingFileHelper.ResourceType(PackType.SERVER_DATA, ".json", "tags/items");
-        ExistingFileHelper.ResourceType fluidTagType = new ExistingFileHelper.ResourceType(PackType.SERVER_DATA, ".json", "tags/fluids");
-
-        assertThat(helper.exists(new ResourceLocation("forge", "storage_blocks/netherite"), blockTagType)).isTrue();
-        assertThat(helper.exists(new ResourceLocation("forge", "ore_rates/dense"), itemTagType)).isTrue();
-        assertThat(helper.exists(new ResourceLocation("forge", "ore_rates/sparse"), itemTagType)).isTrue();
-        assertThat(helper.exists(new ResourceLocation("forge", "milk"), fluidTagType)).isTrue();
-    }
-
-    private static final class StubProvider implements DataProvider {
-        private final String name;
-
-        private StubProvider(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public CompletableFuture<?> run(CachedOutput output) {
-            return CompletableFuture.completedFuture(null);
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-    }
-
-    private static Object newTagProviderState() throws ReflectiveOperationException {
-        Class<?> stateClass = Class.forName("slimeknights.tconstruct.data.tag.TiCDynamicTagGenerator$TagProviderState");
-        Constructor<?> constructor = stateClass.getDeclaredConstructor(DynamicTagProviderRegistrar.class);
-        constructor.setAccessible(true);
-        return constructor.newInstance(new DynamicTagProviderRegistrar((name, factory) -> {}));
-    }
-
-    private static ExistingFileHelper existingFileHelper(Object state) throws ReflectiveOperationException {
-        Field helperField = state.getClass().getDeclaredField("existingFileHelper");
-        helperField.setAccessible(true);
-        return (ExistingFileHelper) helperField.get(state);
-    }
-
-    private static class RecordingRunner implements TiCDynamicTagGenerator.TagRunner {
-        private String owner;
-        private List<Function<PackOutput, ? extends DataProvider>> providers = List.of();
-
-        @Override
-        public void run(String owner, List<Function<PackOutput, ? extends DataProvider>> providers) {
-            this.owner = owner;
-            this.providers = providers;
-        }
-    }
+    @Override
+    public void addOptional(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.modifiers.Modifier> tag, ResourceLocation... ids) {}
+  }
 }

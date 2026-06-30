@@ -6,9 +6,11 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
 import slimeknights.tconstruct.library.client.data.GenericTextureGenerator;
 import slimeknights.tconstruct.library.client.data.spritetransformer.ISpriteTransformer;
 import slimeknights.tconstruct.library.client.data.util.DataGenSpriteReader;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 
 import java.io.IOException;
@@ -18,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 /** Generator transforming the trim palette using our material generators */
-public class TrimMaterialPaletteGenerator extends GenericTextureGenerator {
+public class TrimMaterialPaletteGenerator extends GenericTextureGenerator implements RuntimeResourceProvider {
   private static final String PALETTE_FOLDER = "trims/color_palettes";
   private static final String PALETTE_TEXTURES = "textures/" + PALETTE_FOLDER;
 
@@ -59,6 +61,34 @@ public class TrimMaterialPaletteGenerator extends GenericTextureGenerator {
     } catch (IOException ex) {
       return CompletableFuture.failedFuture(ex);
     }
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    assert existingFileHelper != null;
+    DataGenSpriteReader spriteReader = new DataGenSpriteReader(existingFileHelper, PALETTE_TEXTURES);
+    try {
+      JsonObject trimmedJson = buildTrimmedJson();
+      registrar.addResource(ResourceLocation.tryBuild("trimmed", "maps/unchecked/custom_trim_material_permutations.json"), trimmedJson);
+      NativeImage original = spriteReader.read(ResourceLocation.tryParse("trim_palette"));
+      for (MaterialId material : materials) {
+        saveImage(registrar, material.withPrefix(PALETTE_TEXTURES + '/'), getTransformer(material).transformCopy(original, false));
+      }
+    } catch (IOException ex) {
+      throw new IllegalStateException("Failed to generate dynamic trim material palettes", ex);
+    } finally {
+      spriteReader.closeAll();
+    }
+  }
+
+  private JsonObject buildTrimmedJson() {
+    JsonObject trimmedJson = new JsonObject();
+    JsonObject values = new JsonObject();
+    for (MaterialId material : materials) {
+      values.addProperty(material.withPrefix(PALETTE_FOLDER + '/').toString(), material.getSuffix());
+    }
+    trimmedJson.add("pairs", values);
+    return trimmedJson;
   }
 
   @Override

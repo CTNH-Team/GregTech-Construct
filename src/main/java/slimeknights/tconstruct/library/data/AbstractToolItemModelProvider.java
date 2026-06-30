@@ -19,8 +19,10 @@ import slimeknights.mantle.data.GenericDataProvider;
 import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.IdAwareObject;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
 import slimeknights.tconstruct.library.tools.item.ranged.ModifiableCrossbowItem;
 import slimeknights.tconstruct.library.tools.item.ranged.ModifiableLauncherItem;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -33,7 +35,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 /** Helper for generating tool item models */
-public abstract class AbstractToolItemModelProvider extends GenericDataProvider {
+public abstract class AbstractToolItemModelProvider extends GenericDataProvider implements RuntimeResourceProvider {
   protected final Map<String,JsonObject> models = new HashMap<>();
   protected final ExistingFileHelper existingFileHelper;
   protected final String modId;
@@ -55,6 +57,17 @@ public abstract class AbstractToolItemModelProvider extends GenericDataProvider 
     }
     // no key comparator - I want them sorted in the same order as the input models for easier readability
     return allOf(models.entrySet().stream().map((entry) -> saveJson(cache, ResourceLocation.tryBuild(modId, entry.getKey()), entry.getValue(), null)));
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    models.clear();
+    try {
+      addModels();
+    } catch (IOException exception) {
+      throw new IllegalStateException("Failed to generate dynamic tool item models", exception);
+    }
+    models.forEach((path, json) -> registrar.addItemModel(ResourceLocation.tryBuild(modId, path), json));
   }
 
 

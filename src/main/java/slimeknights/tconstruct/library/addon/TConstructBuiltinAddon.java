@@ -1,11 +1,9 @@
 package slimeknights.tconstruct.library.addon;
 
 import slimeknights.tconstruct.TConstruct;
-import slimeknights.tconstruct.data.advancement.TiCDynamicAdvancementGenerator;
 import slimeknights.tconstruct.data.material.TiCDynamicMaterialGenerator;
 import slimeknights.tconstruct.data.recipe.TiCDynamicRecipeGenerator;
 import slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator;
-import slimeknights.tconstruct.data.tag.TiCDynamicTagGenerator;
 import slimeknights.tconstruct.data.tinkering.TiCDynamicTinkeringGenerator;
 
 /**
@@ -18,7 +16,7 @@ final class TConstructBuiltinAddon implements ITiCAddon {
   }
 
   @Override
-  public void registerDynamicRecipeProviders(DynamicProviderRegistrar registrar) {
+  public void registerDynamicRecipeProviders(DynamicRecipeProviderRegistrar registrar) {
     TiCDynamicRecipeGenerator.registerDefaultProviders(registrar);
   }
 
@@ -28,22 +26,12 @@ final class TConstructBuiltinAddon implements ITiCAddon {
   }
 
   @Override
-  public void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {
-    TiCDynamicTagGenerator.registerDefaultProviders(registrar);
-  }
-
-  @Override
-  public void registerDynamicAdvancementProviders(DynamicProviderRegistrar registrar) {
-    TiCDynamicAdvancementGenerator.registerDefaultProviders(registrar);
-  }
-
-  @Override
   public void registerDynamicMaterialProviders(DynamicProviderRegistrar registrar) {
     TiCDynamicMaterialGenerator.registerDefaultProviders(registrar);
   }
 
   @Override
-  public void registerDynamicResourceProviders(DynamicProviderRegistrar registrar) {
+  public void registerDynamicResourceProviders(DynamicResourceProviderRegistrar registrar) {
     TiCDynamicResourceGenerator.registerDefaultProviders(registrar);
   }
 }

@@ -1,12 +1,13 @@
 package slimeknights.tconstruct.data.tinkering;
 
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.data.DynamicConditionSerializerRegistrar;
-import slimeknights.tconstruct.data.pack.DynamicDataProviderRunner;
-import slimeknights.tconstruct.data.pack.DynamicProviderFactory;
+import slimeknights.tconstruct.data.pack.DynamicPackOutput;
+import slimeknights.tconstruct.data.pack.TiCDynamicDataRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.tools.data.EnchantmentToModifierProvider;
 import slimeknights.tconstruct.tools.data.FluidEffectProvider;
 import slimeknights.tconstruct.tools.data.ModifierProvider;
@@ -17,7 +18,7 @@ import slimeknights.tconstruct.world.data.MobEquipmentProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 public final class TiCDynamicTinkeringGenerator {
   static final List<TinkeringProviderEntry> ADDITIONAL_PROVIDER_ENTRIES = new ArrayList<>();
@@ -26,51 +27,49 @@ public final class TiCDynamicTinkeringGenerator {
 
   public static void register() {
     DynamicConditionSerializerRegistrar.registerCommonSerializers();
-    register(DynamicDataProviderRunner::run);
+    register(TiCDynamicDataRegistrar.INSTANCE);
   }
 
   /** Adds an extra runtime tinkering provider for TiC's dynamic data pack. */
-  public static synchronized void addProvider(String name, Function<PackOutput, ? extends DataProvider> factory) {
+  public static synchronized void addProvider(String name, Consumer<DynamicDataRegistrar> writer) {
     ADDITIONAL_PROVIDER_ENTRIES.add(new TinkeringProviderEntry(
       Objects.requireNonNull(name, "name"),
-      Objects.requireNonNull(factory, "factory")
+      Objects.requireNonNull(writer, "writer")
     ));
   }
 
-  static void register(TinkeringRunner runner) {
-    runner.run("tconstruct-tinkering", createProviders());
+  static void register(DynamicDataRegistrar registrar) {
+    for (TinkeringProviderEntry entry : createProviderEntries()) {
+      entry.writer().accept(registrar);
+    }
   }
 
   public static void registerDefaultProviders(DynamicProviderRegistrar registrar) {
-    registrar.addProvider("ToolDefinitionDataProvider", ToolDefinitionDataProvider::new);
-    registrar.addProvider("StationSlotLayoutProvider", StationSlotLayoutProvider::new);
-    registrar.addProvider("ModifierProvider", ModifierProvider::new);
-    registrar.addProvider("FluidEffectProvider", FluidEffectProvider::new);
-    registrar.addProvider("EnchantmentToModifierProvider", EnchantmentToModifierProvider::new);
-    registrar.addProvider("MobEquipmentProvider", MobEquipmentProvider::new);
+    registrar.addProvider("ToolDefinitionDataProvider", dataWriter(ToolDefinitionDataProvider::new));
+    registrar.addProvider("StationSlotLayoutProvider", dataWriter(StationSlotLayoutProvider::new));
+    registrar.addProvider("ModifierProvider", dataWriter(ModifierProvider::new));
+    registrar.addProvider("FluidEffectProvider", dataWriter(FluidEffectProvider::new));
+    registrar.addProvider("EnchantmentToModifierProvider", dataWriter(EnchantmentToModifierProvider::new));
+    registrar.addProvider("MobEquipmentProvider", dataWriter(MobEquipmentProvider::new));
   }
 
   static List<TinkeringProviderEntry> createProviderEntries() {
     List<TinkeringProviderEntry> entries = new ArrayList<>();
-    TiCAddonRegistry.collectTinkeringProviders((name, factory) -> entries.add(new TinkeringProviderEntry(name, factory)));
+    TiCAddonRegistry.collectTinkeringProviders((name, writer) -> entries.add(new TinkeringProviderEntry(name, writer)));
     synchronized (TiCDynamicTinkeringGenerator.class) {
       entries.addAll(ADDITIONAL_PROVIDER_ENTRIES);
     }
     return List.copyOf(entries);
   }
 
-  static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
-    List<Function<PackOutput, ? extends DataProvider>> providers = new ArrayList<>();
-    for (TinkeringProviderEntry entry : createProviderEntries()) {
-      providers.add(new DynamicProviderFactory(entry.name(), entry.factory()));
-    }
-    return providers;
-  }
-
   @FunctionalInterface
-  interface TinkeringRunner {
-    void run(String owner, List<Function<PackOutput, ? extends DataProvider>> providers);
+  public interface RuntimeProviderFactory<T extends RuntimeDataProvider> {
+    T create(PackOutput output);
   }
 
-  record TinkeringProviderEntry(String name, Function<PackOutput, ? extends DataProvider> factory) {}
+  public static Consumer<DynamicDataRegistrar> dataWriter(RuntimeProviderFactory<? extends RuntimeDataProvider> factory) {
+    return registrar -> factory.create(DynamicPackOutput.dummy()).addToDynamicPack(registrar);
+  }
+
+  record TinkeringProviderEntry(String name, Consumer<DynamicDataRegistrar> writer) {}
 }
