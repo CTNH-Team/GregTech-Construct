@@ -30,6 +30,11 @@ public final class RuntimeMantleDataWriters {
   private static final Field TOOLTIP_REDIRECTS = field(AbstractFluidTooltipProvider.class, "redirects");
   private static final Method ADD_FLUIDS;
 
+  private static final Class<?> FLUID_UNIT_LIST_BUILDER;
+  private static final Field BUILDER_TAG;
+  private static final Field BUILDER_UNITS;
+  private static final Class<?> FLUID_UNIT_LIST;
+
   static {
     try {
       DATA_MAP = Class.forName("slimeknights.mantle.data.datamap.BlockStateDataMapProvider$DataMap");
@@ -39,6 +44,12 @@ public final class RuntimeMantleDataWriters {
       ADD_ENTRIES.setAccessible(true);
       ADD_FLUIDS = AbstractFluidTooltipProvider.class.getDeclaredMethod("addFluids");
       ADD_FLUIDS.setAccessible(true);
+
+      // 初始化 FluidUnitList 相关的反射
+      FLUID_UNIT_LIST = Class.forName("slimeknights.mantle.fluid.tooltip.FluidUnitList");
+      FLUID_UNIT_LIST_BUILDER = Class.forName("slimeknights.mantle.fluid.tooltip.AbstractFluidTooltipProvider$FluidUnitListBuilder");
+      BUILDER_TAG = field(FLUID_UNIT_LIST_BUILDER, "tag");
+      BUILDER_UNITS = field(FLUID_UNIT_LIST_BUILDER, "units");
     } catch (ReflectiveOperationException exception) {
       throw new ExceptionInInitializerError(exception);
     }
@@ -73,7 +84,12 @@ public final class RuntimeMantleDataWriters {
       Map<ResourceLocation, Object> builders = cast(TOOLTIP_BUILDERS.get(provider));
       Map<ResourceLocation, ResourceLocation> redirects = cast(TOOLTIP_REDIRECTS.get(provider));
       for (Map.Entry<ResourceLocation, Object> entry : builders.entrySet()) {
-        Object fluidUnitList = entry.getValue().getClass().getDeclaredMethod("build").invoke(entry.getValue());
+        Object builder = entry.getValue();
+        // 获取 builder 的字段
+        Object tag = BUILDER_TAG.get(builder);
+        List<?> units = cast(BUILDER_UNITS.get(builder));
+        // 使用反射构造 FluidUnitList
+        Object fluidUnitList = FLUID_UNIT_LIST.getDeclaredConstructors()[0].newInstance(tag, List.copyOf(units));
         registrar.addResource(ResourceLocation.tryBuild(entry.getKey().getNamespace(), FluidTooltipHandler.FOLDER + "/" + entry.getKey().getPath() + ".json"), FluidTooltipHandler.GSON.toJsonTree(fluidUnitList));
       }
       for (Map.Entry<ResourceLocation, ResourceLocation> entry : redirects.entrySet()) {
