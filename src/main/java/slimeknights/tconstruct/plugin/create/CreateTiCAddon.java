@@ -20,7 +20,7 @@ import slimeknights.tconstruct.library.addon.ITiCStaticModifierAddon;
 import slimeknights.tconstruct.library.addon.TiCAddon;
 import slimeknights.tconstruct.library.modifiers.impl.NoLevelsModifier;
 
-@TiCAddon(requiredMods = CreateTiCAddon.MOD_ID)
+@TiCAddon(modID = CreateTiCAddon.MOD_ID)
 public class CreateTiCAddon implements ITiCAddon, ITiCStaticModifierAddon {
 
     public static final String MOD_ID = "create";

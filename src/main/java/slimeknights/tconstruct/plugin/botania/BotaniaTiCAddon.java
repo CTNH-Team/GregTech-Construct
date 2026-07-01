@@ -40,7 +40,7 @@ import java.util.function.Consumer;
 /**
  * Centralized Botania compat wiring for TiC.
  */
-@TiCAddon(requiredMods = BotaniaTiCAddon.MOD_ID)
+@TiCAddon(modID = BotaniaTiCAddon.MOD_ID)
 public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticModifierAddon {
 
     public static final String MOD_ID = "botania";

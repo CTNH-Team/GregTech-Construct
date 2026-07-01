@@ -20,5 +20,5 @@ public @interface TiCAddon {
   /**
    * Mods that must be loaded before this addon is instantiated.
    */
-  String[] requiredMods() default {};
+  String[] modID() default {};
 }
