@@ -212,9 +212,7 @@ public class TConstruct {
     static void registerPackFinders(AddPackFindersEvent event) {
         if (event.getPackType() == PackType.CLIENT_RESOURCES) {
             TiCDynamicResourcePack.clearClient();
-            if (FMLEnvironment.dist == Dist.CLIENT) {
-                TiCDynamicResourceGenerator.register();
-            }
+            // 动态资源生成移到 RegisterDynamicResourcesEvent，此时才能安全访问纹理
             event.addRepositorySource(new TiCPackSource(
                 "tconstruct:dynamic_assets",
                 event.getPackType(),
@@ -232,6 +230,14 @@ public class TConstruct {
                 Pack.Position.BOTTOM,
                 TiCDynamicDataPack::new
             ));
+        }
+    }
+
+    @SubscribeEvent
+    static void registerDynamicResources(slimeknights.tconstruct.library.events.RegisterDynamicResourcesEvent event) {
+        // 此时 ResourceManager 已初始化，可以安全访问纹理资源
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            TiCDynamicResourceGenerator.register();
         }
     }
 

@@ -23,6 +23,9 @@
     "tconstruct.create.CastingBlockEntityFanProcessingMixin",
     "tconstruct.create.MelterBlockEntityFuelMixin"
   ],
+  "client": [
+    "client.ModelManagerMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
