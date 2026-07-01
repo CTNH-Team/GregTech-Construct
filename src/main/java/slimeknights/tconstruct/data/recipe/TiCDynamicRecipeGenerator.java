@@ -6,6 +6,7 @@ import slimeknights.tconstruct.data.pack.DynamicPackOutput;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataRegistrar;
 import slimeknights.tconstruct.gadgets.data.GadgetRecipeProvider;
 import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicPackProviderFactory;
 import slimeknights.tconstruct.library.addon.DynamicRecipeProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.shared.data.CommonRecipeProvider;
@@ -55,14 +56,14 @@ public final class TiCDynamicRecipeGenerator {
   }
 
   public static void registerDefaultProviders(DynamicRecipeProviderRegistrar registrar) {
-    registrar.addProvider("CommonRecipeProvider", recipeWriter(CommonRecipeProvider::new));
-    registrar.addProvider("TableRecipeProvider", recipeWriter(TableRecipeProvider::new));
-    registrar.addProvider("GadgetRecipeProvider", recipeWriter(GadgetRecipeProvider::new));
-    registrar.addProvider("WorldRecipeProvider", recipeWriter(WorldRecipeProvider::new));
-    registrar.addProvider("MaterialRecipeProvider", recipeWriter(MaterialRecipeProvider::new));
-    registrar.addProvider("ToolsRecipeProvider", recipeWriter(ToolsRecipeProvider::new));
-    registrar.addProvider("SmelteryRecipeProvider", recipeWriter(SmelteryRecipeProvider::new));
-    registrar.addProvider("ModifierRecipeProvider", recipeWriter(ModifierRecipeProvider::new));
+    registrar.addRecipeProvider(CommonRecipeProvider.class);
+    registrar.addRecipeProvider(TableRecipeProvider.class);
+    registrar.addRecipeProvider(GadgetRecipeProvider.class);
+    registrar.addRecipeProvider(WorldRecipeProvider.class);
+    registrar.addRecipeProvider(MaterialRecipeProvider.class);
+    registrar.addRecipeProvider(ToolsRecipeProvider.class);
+    registrar.addRecipeProvider(SmelteryRecipeProvider.class);
+    registrar.addRecipeProvider(ModifierRecipeProvider.class);
   }
 
   static List<RecipeProviderEntry> createProviderEntries() {
@@ -75,9 +76,7 @@ public final class TiCDynamicRecipeGenerator {
   }
 
   @FunctionalInterface
-  public interface RecipeProviderFactory {
-    BaseRecipeProvider create(net.minecraft.data.PackOutput output);
-  }
+  public interface RecipeProviderFactory extends DynamicPackProviderFactory<BaseRecipeProvider> {}
 
   public static Consumer<DynamicDataRegistrar> recipeWriter(RecipeProviderFactory factory) {
     return registrar -> factory.create(DynamicPackOutput.dummy()).buildRecipesDirect(registrar::addRecipe);

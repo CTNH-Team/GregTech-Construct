@@ -5,6 +5,7 @@ import slimeknights.tconstruct.data.DynamicConditionSerializerRegistrar;
 import slimeknights.tconstruct.data.pack.DynamicPackOutput;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicPackProviderFactory;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.data.RuntimeDataProvider;
@@ -43,9 +44,9 @@ public final class TiCDynamicMaterialGenerator {
 
   public static void registerDefaultProviders(DynamicProviderRegistrar registrar) {
     MaterialState state = new MaterialState();
-    registrar.addProvider("MaterialDataProvider", state::writeMaterialData);
-    registrar.addProvider("MaterialStatsDataProvider", state::writeMaterialStats);
-    registrar.addProvider("MaterialTraitsDataProvider", state::writeMaterialTraits);
+    registrar.addDataProvider(MaterialDataProvider.class, state::createMaterialDataProvider);
+    registrar.addDataProvider(MaterialStatsDataProvider.class, state::createMaterialStatsDataProvider);
+    registrar.addDataProvider(MaterialTraitsDataProvider.class, state::createMaterialTraitsDataProvider);
   }
 
   static List<MaterialProviderEntry> createProviderEntries() {
@@ -58,9 +59,7 @@ public final class TiCDynamicMaterialGenerator {
   }
 
   @FunctionalInterface
-  public interface RuntimeProviderFactory<T extends RuntimeDataProvider> {
-    T create(PackOutput output);
-  }
+  public interface RuntimeProviderFactory<T extends RuntimeDataProvider> extends DynamicPackProviderFactory<T> {}
 
   public static Consumer<DynamicDataRegistrar> dataWriter(RuntimeProviderFactory<? extends RuntimeDataProvider> factory) {
     return registrar -> factory.create(DynamicPackOutput.dummy()).addToDynamicPack(registrar);
@@ -89,18 +88,6 @@ public final class TiCDynamicMaterialGenerator {
 
     private MaterialTraitsDataProvider createMaterialTraitsDataProvider(PackOutput output) {
       return new MaterialTraitsDataProvider(output, getMaterials(output));
-    }
-
-    private void writeMaterialData(DynamicDataRegistrar registrar) {
-      createMaterialDataProvider(DynamicPackOutput.dummy()).addToDynamicPack(registrar);
-    }
-
-    private void writeMaterialStats(DynamicDataRegistrar registrar) {
-      createMaterialStatsDataProvider(DynamicPackOutput.dummy()).addToDynamicPack(registrar);
-    }
-
-    private void writeMaterialTraits(DynamicDataRegistrar registrar) {
-      createMaterialTraitsDataProvider(DynamicPackOutput.dummy()).addToDynamicPack(registrar);
     }
   }
 }

@@ -8,6 +8,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import slimeknights.mantle.fluid.texture.AbstractFluidTextureProvider;
 import slimeknights.mantle.fluid.texture.FluidTexture;
+import slimeknights.mantle.fluid.texture.FluidTextureCameraProvider;
 import slimeknights.mantle.fluid.texture.FluidTextureManager;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.data.model.ModelSpriteProvider;
@@ -24,6 +25,7 @@ import slimeknights.tconstruct.fluids.data.FluidTextureProvider;
 import slimeknights.tconstruct.fluids.data.FluidTooltipProvider;
 import slimeknights.tconstruct.library.addon.DynamicResourceProviderRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicPackProviderFactory;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.client.data.material.GeneratorPartTextureJsonGenerator;
 import slimeknights.tconstruct.library.client.data.material.MaterialPaletteDebugGenerator;
@@ -79,24 +81,24 @@ public final class TiCDynamicResourceGenerator {
 
   public static void registerDefaultProviders(DynamicResourceProviderRegistrar registrar) {
     ResourceProviderStateHolder stateHolder = new ResourceProviderStateHolder();
-    registrar.addProvider("ModelSpriteProvider", runtime(output -> stateHolder.get().createModelSpriteProvider(output)));
-    registrar.addProvider("TinkerSpriteSourceProvider", runtime(output -> stateHolder.get().createSpriteSourceProvider(output)));
-    registrar.addProvider("TinkerItemModelProvider", runtime(output -> stateHolder.get().createItemModelProvider(output)));
-    registrar.addProvider("TinkerBlockStateProvider", runtime(output -> stateHolder.get().createBlockStateProvider(output)));
-    registrar.addProvider("RenderFluidProvider", runtime(RenderFluidProvider::new));
-    registrar.addProvider("RenderItemProvider", runtime(RenderItemProvider::new));
-    registrar.addProvider("FluidTooltipProvider", runtime(FluidTooltipProvider::new));
-    registrar.addProvider("FluidTextureProvider", registrar1 -> writeFluidTextures(registrar1, stateHolder.get().createFluidTextureProvider(DynamicPackOutput.dummy())));
-    registrar.addProvider("FluidTextureCameraProvider", registrar1 -> writeFluidTextureCameras(registrar1, stateHolder.get().existingFileHelper, stateHolder.get().createFluidTextureProvider(DynamicPackOutput.dummy())));
-    registrar.addProvider("FluidBucketModelProvider", runtime(output -> new FluidBucketModelProvider(output, TConstruct.MOD_ID)));
-    registrar.addProvider("FluidBlockstateModelProvider", runtime(output -> new FluidBlockstateModelProvider(output, TConstruct.MOD_ID)));
-    registrar.addProvider("ToolItemModelProvider", runtime(output -> stateHolder.get().createToolItemModelProvider(output)));
-    registrar.addProvider("MaterialRenderInfoProvider", runtime(output -> stateHolder.get().createMaterialRenderInfoProvider(output)));
-    registrar.addProvider("GeneratorPartTextureJsonGenerator", runtime(output -> stateHolder.get().createGeneratorPartTextureJsonGenerator(output)));
-    registrar.addProvider("MaterialPartTextureGenerator", runtime(output -> stateHolder.get().createMaterialPartTextureGenerator(output)));
-    registrar.addProvider("MaterialPaletteDebugGenerator", runtime(output -> stateHolder.get().createMaterialPaletteDebugGenerator(output)));
-    registrar.addProvider("ArmorModelProvider", runtime(ArmorModelProvider::new));
-    registrar.addProvider("TrimMaterialPaletteGenerator", runtime(output -> stateHolder.get().createTrimMaterialPaletteGenerator(output)));
+    registrar.addResourceProvider(ModelSpriteProvider.class, output -> stateHolder.get().createModelSpriteProvider(output));
+    registrar.addResourceProvider(TinkerSpriteSourceProvider.class, output -> stateHolder.get().createSpriteSourceProvider(output));
+    registrar.addResourceProvider(TinkerItemModelProvider.class, output -> stateHolder.get().createItemModelProvider(output));
+    registrar.addResourceProvider(TinkerBlockStateProvider.class, output -> stateHolder.get().createBlockStateProvider(output));
+    registrar.addResourceProvider(RenderFluidProvider.class);
+    registrar.addResourceProvider(RenderItemProvider.class);
+    registrar.addResourceProvider(FluidTooltipProvider.class);
+    registrar.addResourceWriter(FluidTextureProvider.class, registrar1 -> writeFluidTextures(registrar1, stateHolder.get().createFluidTextureProvider(DynamicPackOutput.dummy())));
+    registrar.addResourceWriter(FluidTextureCameraProvider.class, registrar1 -> writeFluidTextureCameras(registrar1, stateHolder.get().existingFileHelper, stateHolder.get().createFluidTextureProvider(DynamicPackOutput.dummy())));
+    registrar.addResourceProvider(FluidBucketModelProvider.class, output -> new FluidBucketModelProvider(output, TConstruct.MOD_ID));
+    registrar.addResourceProvider(FluidBlockstateModelProvider.class, output -> new FluidBlockstateModelProvider(output, TConstruct.MOD_ID));
+    registrar.addResourceProvider(ToolItemModelProvider.class, output -> stateHolder.get().createToolItemModelProvider(output));
+    registrar.addResourceProvider(MaterialRenderInfoProvider.class, output -> stateHolder.get().createMaterialRenderInfoProvider(output));
+    registrar.addResourceProvider(GeneratorPartTextureJsonGenerator.class, output -> stateHolder.get().createGeneratorPartTextureJsonGenerator(output));
+    registrar.addResourceProvider(MaterialPartTextureGenerator.class, output -> stateHolder.get().createMaterialPartTextureGenerator(output));
+    registrar.addResourceProvider(MaterialPaletteDebugGenerator.class, output -> stateHolder.get().createMaterialPaletteDebugGenerator(output));
+    registrar.addResourceProvider(ArmorModelProvider.class);
+    registrar.addResourceProvider(TrimMaterialPaletteGenerator.class, output -> stateHolder.get().createTrimMaterialPaletteGenerator(output));
   }
 
   static List<ResourceProviderEntry> createProviderEntries() {
@@ -109,7 +111,7 @@ public final class TiCDynamicResourceGenerator {
   }
 
   public static Consumer<DynamicResourceRegistrar> runtime(RuntimeResourceProviderFactory<? extends RuntimeResourceProvider> factory) {
-    return registrar -> factory.apply(DynamicPackOutput.dummy()).addToDynamicPack(registrar);
+    return registrar -> factory.create(DynamicPackOutput.dummy()).addToDynamicPack(registrar);
   }
 
   /**
@@ -118,9 +120,7 @@ public final class TiCDynamicResourceGenerator {
    * go through {@link DynamicResourceRegistrar}.
    */
   @FunctionalInterface
-  public interface RuntimeResourceProviderFactory<T extends RuntimeResourceProvider> {
-    T apply(PackOutput output);
-  }
+  public interface RuntimeResourceProviderFactory<T extends RuntimeResourceProvider> extends DynamicPackProviderFactory<T> {}
 
   public static void writeFluidTextures(DynamicResourceRegistrar registrar, AbstractFluidTextureProvider provider) {
     provider.getAllTextures().forEach((type, builder) -> {

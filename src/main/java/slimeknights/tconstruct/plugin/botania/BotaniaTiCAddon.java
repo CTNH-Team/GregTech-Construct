@@ -26,10 +26,6 @@ import slimeknights.tconstruct.plugin.botania.tag.BotaniaModifierTagProvider;
 
 import slimeknights.tconstruct.library.addon.AddonFluidTextureProviderSet;
 import slimeknights.tconstruct.library.addon.AddonSmelteryCompat;
-import slimeknights.tconstruct.data.material.TiCDynamicMaterialGenerator;
-import slimeknights.tconstruct.data.recipe.TiCDynamicRecipeGenerator;
-import slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator;
-import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicRecipeProviderRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicResourceProviderRegistrar;
@@ -84,26 +80,26 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
 
     @Override
     public void registerDynamicRecipeProviders(DynamicRecipeProviderRegistrar registrar) {
-        recipe(registrar, BotaniaModifierRecipeProvider.class, BotaniaModifierRecipeProvider::new);
-        recipe(registrar, BotaniaMaterialRecipeProvider.class, BotaniaMaterialRecipeProvider::new);
+        registrar.addRecipeProvider(BotaniaModifierRecipeProvider.class);
+        registrar.addRecipeProvider(BotaniaMaterialRecipeProvider.class);
     }
 
     @Override
     public void registerDynamicMaterialProviders(DynamicProviderRegistrar registrar) {
-        material(registrar, BotaniaMaterialDataProvider.class, BotaniaMaterialDataProvider::new);
-        material(registrar, BotaniaMaterialStatsDataProvider.class, BotaniaMaterialStatsDataProvider::new);
-        material(registrar, BotaniaMaterialTraitsDataProvider.class, BotaniaMaterialTraitsDataProvider::new);
+        registrar.addDataProvider(BotaniaMaterialDataProvider.class);
+        registrar.addDataProvider(BotaniaMaterialStatsDataProvider.class);
+        registrar.addDataProvider(BotaniaMaterialTraitsDataProvider.class);
     }
 
     @Override
     public void registerDynamicResourceProviders(DynamicResourceProviderRegistrar registrar) {
         AddonFluidTextureProviderSet<BotaniaFluidTextureProvider> fluidTextures = AddonFluidTextureProviderSet
                 .create(BotaniaFluidTextureProvider::new);
-        resource(registrar, BotaniaMaterialRenderInfoProvider.class, BotaniaMaterialRenderInfoProvider::new);
-        resource(registrar, BotaniaFluidTextureProvider.class, fluidTextures::addFluidTextures);
-        resource(registrar, BotaniaFluidTextureCameraProvider.class, fluidTextures::addCameraTextures);
-        resource(registrar, BotaniaMaterialPartTextureGenerator.class, BotaniaMaterialPartTextureGenerator::new);
-        resource(registrar, BotaniaMaterialPaletteDebugGenerator.class, BotaniaMaterialPaletteDebugGenerator::new);
+        registrar.addResourceProvider(BotaniaMaterialRenderInfoProvider.class);
+        registrar.addResourceWriter(BotaniaFluidTextureProvider.class, fluidTextures::addFluidTextures);
+        registrar.addResourceWriter(BotaniaFluidTextureCameraProvider.class, fluidTextures::addCameraTextures);
+        registrar.addResourceProvider(BotaniaMaterialPartTextureGenerator.class);
+        registrar.addResourceProvider(BotaniaMaterialPaletteDebugGenerator.class);
     }
 
     @Override
@@ -111,21 +107,5 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
         registrar.addFluidTags(BotaniaFluidTagProvider::addTags);
         registrar.addMaterialTags(BotaniaMaterialTagProvider::addTags);
         registrar.addModifierTags(BotaniaModifierTagProvider::addTags);
-    }
-
-    private static void recipe(DynamicRecipeProviderRegistrar registrar, Class<?> providerClass, TiCDynamicRecipeGenerator.RecipeProviderFactory factory) {
-        registrar.addProvider(providerClass.getSimpleName(), TiCDynamicRecipeGenerator.recipeWriter(factory));
-    }
-
-    private static void material(DynamicProviderRegistrar registrar, Class<?> providerClass, TiCDynamicMaterialGenerator.RuntimeProviderFactory<?> factory) {
-        registrar.addProvider(providerClass.getSimpleName(), TiCDynamicMaterialGenerator.dataWriter(factory));
-    }
-
-    private static void resource(DynamicResourceProviderRegistrar registrar, Class<?> providerClass, TiCDynamicResourceGenerator.RuntimeResourceProviderFactory<?> factory) {
-        resource(registrar, providerClass, TiCDynamicResourceGenerator.runtime(factory));
-    }
-
-    private static void resource(DynamicResourceProviderRegistrar registrar, Class<?> providerClass, Consumer<DynamicResourceRegistrar> writer) {
-        registrar.addProvider(providerClass.getSimpleName(), writer);
     }
 }

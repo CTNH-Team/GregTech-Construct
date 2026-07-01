@@ -12,8 +12,6 @@ import slimeknights.tconstruct.plugin.create.tag.CreateBlockTagProvider;
 import slimeknights.tconstruct.plugin.create.tag.CreateItemTagProvider;
 import slimeknights.tconstruct.plugin.create.tag.CreateModifierTagProvider;
 
-import slimeknights.tconstruct.data.recipe.TiCDynamicRecipeGenerator;
-import slimeknights.tconstruct.data.tinkering.TiCDynamicTinkeringGenerator;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicRecipeProviderRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
@@ -43,12 +41,12 @@ public class CreateTiCAddon implements ITiCAddon, ITiCStaticModifierAddon {
 
     @Override
     public void registerDynamicRecipeProviders(DynamicRecipeProviderRegistrar registrar) {
-        registrar.addProvider("CreateModifierRecipeProvider", TiCDynamicRecipeGenerator.recipeWriter(CreateModifierRecipeProvider::new));
+        registrar.addRecipeProvider(CreateModifierRecipeProvider.class);
     }
 
     @Override
     public void registerDynamicTinkeringProviders(DynamicProviderRegistrar registrar) {
-        registrar.addProvider("CreateModifierProvider", TiCDynamicTinkeringGenerator.dataWriter(CreateModifierProvider::new));
+        registrar.addDataProvider(CreateModifierProvider.class);
     }
 
     @Override

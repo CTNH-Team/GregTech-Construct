@@ -5,6 +5,7 @@ import slimeknights.tconstruct.data.DynamicConditionSerializerRegistrar;
 import slimeknights.tconstruct.data.pack.DynamicPackOutput;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicPackProviderFactory;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.data.RuntimeDataProvider;
@@ -45,12 +46,12 @@ public final class TiCDynamicTinkeringGenerator {
   }
 
   public static void registerDefaultProviders(DynamicProviderRegistrar registrar) {
-    registrar.addProvider("ToolDefinitionDataProvider", dataWriter(ToolDefinitionDataProvider::new));
-    registrar.addProvider("StationSlotLayoutProvider", dataWriter(StationSlotLayoutProvider::new));
-    registrar.addProvider("ModifierProvider", dataWriter(ModifierProvider::new));
-    registrar.addProvider("FluidEffectProvider", dataWriter(FluidEffectProvider::new));
-    registrar.addProvider("EnchantmentToModifierProvider", dataWriter(EnchantmentToModifierProvider::new));
-    registrar.addProvider("MobEquipmentProvider", dataWriter(MobEquipmentProvider::new));
+    registrar.addDataProvider(ToolDefinitionDataProvider.class);
+    registrar.addDataProvider(StationSlotLayoutProvider.class);
+    registrar.addDataProvider(ModifierProvider.class);
+    registrar.addDataProvider(FluidEffectProvider.class);
+    registrar.addDataProvider(EnchantmentToModifierProvider.class);
+    registrar.addDataProvider(MobEquipmentProvider.class);
   }
 
   static List<TinkeringProviderEntry> createProviderEntries() {
@@ -63,9 +64,7 @@ public final class TiCDynamicTinkeringGenerator {
   }
 
   @FunctionalInterface
-  public interface RuntimeProviderFactory<T extends RuntimeDataProvider> {
-    T create(PackOutput output);
-  }
+  public interface RuntimeProviderFactory<T extends RuntimeDataProvider> extends DynamicPackProviderFactory<T> {}
 
   public static Consumer<DynamicDataRegistrar> dataWriter(RuntimeProviderFactory<? extends RuntimeDataProvider> factory) {
     return registrar -> factory.create(DynamicPackOutput.dummy()).addToDynamicPack(registrar);
