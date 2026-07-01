@@ -4,22 +4,22 @@ import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
-import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DatagenTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.data.tinkering.AbstractMaterialTagProvider;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 
 import java.util.function.Consumer;
 
 public class MaterialTagProvider extends AbstractMaterialTagProvider {
-    private final Consumer<DynamicTagProviderRegistrar.MaterialTagRegistrar> addonTags;
+    private final Consumer<DatagenTagProviderRegistrar.MaterialTagRegistrar> addonTags;
 
     public MaterialTagProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
-        this(packOutput, existingFileHelper, hook -> {});
-    }
-
-    public MaterialTagProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper, Consumer<DynamicTagProviderRegistrar.MaterialTagRegistrar> addonTags) {
         super(packOutput, TConstruct.MOD_ID, existingFileHelper);
-        this.addonTags = addonTags;
+        // 自动收集 addon tag hooks
+        DatagenTagProviderRegistrar registrar = new DatagenTagProviderRegistrar();
+        slimeknights.tconstruct.library.addon.TiCAddonRegistry.collectDatagenTagProviders(registrar);
+        this.addonTags = registrar::applyMaterialTags;
     }
 
     @Override
@@ -275,7 +275,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
         return "Tinkers' Construct Material Tag Provider";
     }
 
-    private final class MaterialTagRegistrar implements DynamicTagProviderRegistrar.MaterialTagRegistrar {
+    private final class MaterialTagRegistrar implements DatagenTagProviderRegistrar.MaterialTagRegistrar {
         @Override
         public void add(net.minecraft.tags.TagKey<slimeknights.tconstruct.library.materials.definition.IMaterial> tag, net.minecraft.resources.ResourceLocation... ids) {
             MaterialTagProvider.this.tag(tag).add(ids);

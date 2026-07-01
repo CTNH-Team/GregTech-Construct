@@ -13,7 +13,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.tconstruct.TConstruct;
-import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DatagenTagProviderRegistrar;
 
 import java.util.List;
 import java.util.Set;
@@ -29,7 +29,7 @@ public class CreateItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        addTags(new DynamicTagProviderRegistrar.ItemTagRegistrar() {
+        addTags(new DatagenTagProviderRegistrar.ItemTagRegistrar() {
             @Override
             public void add(TagKey<Item> tag, ResourceLocation... ids) {
                 IntrinsicTagAppender<Item> appender = CreateItemTagProvider.this.tag(tag);
@@ -51,7 +51,7 @@ public class CreateItemTagProvider extends ItemTagsProvider {
         });
     }
 
-    public static void addTags(DynamicTagProviderRegistrar.ItemTagRegistrar tags) {
+    public static void addTags(DatagenTagProviderRegistrar.ItemTagRegistrar tags) {
         tags.add(CreateItemTags.CRUSHING_BLACKLIST);
     }
 }

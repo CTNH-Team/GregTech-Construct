@@ -26,7 +26,7 @@ import slimeknights.tconstruct.common.registration.GeodeItemObject.BudSize;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
 import slimeknights.tconstruct.library.addon.AddonSmelteryCompat;
-import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DatagenTagProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.shared.TinkerCommons;
 import slimeknights.tconstruct.shared.TinkerMaterials;
@@ -57,15 +57,14 @@ import static slimeknights.tconstruct.common.TinkerTags.Blocks.UNREPLACABLE_BY_L
 
 @SuppressWarnings({"unchecked", "SameParameterValue"})
 public class BlockTagProvider extends BlockTagsProvider {
-  private final Consumer<DynamicTagProviderRegistrar.BlockTagRegistrar> addonTags;
+  private final Consumer<DatagenTagProviderRegistrar.BlockTagRegistrar> addonTags;
 
   public BlockTagProvider(PackOutput output, CompletableFuture<Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-    this(output, lookupProvider, existingFileHelper, tags -> {});
-  }
-
-  public BlockTagProvider(PackOutput output, CompletableFuture<Provider> lookupProvider, ExistingFileHelper existingFileHelper, Consumer<DynamicTagProviderRegistrar.BlockTagRegistrar> addonTags) {
     super(output, lookupProvider, TConstruct.MOD_ID, existingFileHelper);
-    this.addonTags = addonTags;
+    // 自动收集 addon tag hooks
+    DatagenTagProviderRegistrar registrar = new DatagenTagProviderRegistrar();
+    TiCAddonRegistry.collectDatagenTagProviders(registrar);
+    this.addonTags = registrar::applyBlockTags;
   }
 
   @Override
@@ -79,7 +78,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     addonTags.accept(new AddonBlockTagRegistrar());
   }
 
-  private final class AddonBlockTagRegistrar implements DynamicTagProviderRegistrar.BlockTagRegistrar {
+  private final class AddonBlockTagRegistrar implements DatagenTagProviderRegistrar.BlockTagRegistrar {
     @Override
     public void add(TagKey<Block> tag, ResourceLocation... ids) {
       IntrinsicTagAppender<Block> appender = BlockTagProvider.this.tag(tag);

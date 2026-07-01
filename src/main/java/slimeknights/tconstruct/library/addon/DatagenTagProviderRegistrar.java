@@ -12,7 +12,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public final class DynamicTagProviderRegistrar {
+/**
+ * Registrar for static tag providers used in datagen (runData command).
+ * <p>Tags registered here are written to files during static datagen, NOT dynamically at runtime.
+ */
+public final class DatagenTagProviderRegistrar {
   private final List<Consumer<BlockTagRegistrar>> blockTagHooks = new ArrayList<>();
   private final List<Consumer<ItemTagRegistrar>> itemTagHooks = new ArrayList<>();
   private final List<Consumer<FluidTagRegistrar>> fluidTagHooks = new ArrayList<>();

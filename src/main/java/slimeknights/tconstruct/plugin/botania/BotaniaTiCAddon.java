@@ -29,7 +29,7 @@ import slimeknights.tconstruct.library.addon.AddonSmelteryCompat;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicRecipeProviderRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicResourceProviderRegistrar;
-import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DatagenTagProviderRegistrar;
 import slimeknights.tconstruct.library.addon.ITiCAddon;
 import slimeknights.tconstruct.library.addon.ITiCFluidAddon;
 import slimeknights.tconstruct.library.addon.ITiCStaticModifierAddon;
@@ -99,7 +99,7 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
     }
 
     @Override
-    public void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {
+    public void registerDatagenTagProviders(DatagenTagProviderRegistrar registrar) {
         registrar.addFluidTags(BotaniaFluidTagProvider::addTags);
         registrar.addMaterialTags(BotaniaMaterialTagProvider::addTags);
         registrar.addModifierTags(BotaniaModifierTagProvider::addTags);

@@ -93,21 +93,21 @@ class TiCAddonIntegrationTest extends BaseMcTest {
   }
 
   @Test
-  void dynamicTagRegistrarCollectsFluidMaterialAndModifierHooksFromDynamicTagProvidersOnly() throws ReflectiveOperationException {
-    AtomicBoolean dynamicTagProvidersCalled = new AtomicBoolean(false);
-    injectAddon(new TestTagAddon(dynamicTagProvidersCalled));
+  void datagenTagRegistrarCollectsFluidMaterialAndModifierHooksFromDatagenTagProvidersOnly() throws ReflectiveOperationException {
+    AtomicBoolean datagenTagProvidersCalled = new AtomicBoolean(false);
+    injectAddon(new TestTagAddon(datagenTagProvidersCalled));
 
     TagHookCapture capture = new TagHookCapture();
-    DynamicTagProviderRegistrar registrar = new DynamicTagProviderRegistrar();
-    TiCAddonRegistry.collectTagProviders(registrar);
+    DatagenTagProviderRegistrar registrar = new DatagenTagProviderRegistrar();
+    TiCAddonRegistry.collectDatagenTagProviders(registrar);
 
-    assertThat(dynamicTagProvidersCalled).isTrue();
+    assertThat(datagenTagProvidersCalled).isTrue();
     registrar.applyFluidTags(fluid -> {
       if (fluid.getId().equals(TinkerFluids.moltenIron.getId())) {
         capture.fluidHookApplied.set(true);
       }
     });
-    registrar.applyMaterialTags(new DynamicTagProviderRegistrar.MaterialTagRegistrar() {
+    registrar.applyMaterialTags(new DatagenTagProviderRegistrar.MaterialTagRegistrar() {
       @Override
       public void add(TagKey<IMaterial> tag, net.minecraft.resources.ResourceLocation... ids) {
         captureMaterialTags(capture, tag, ids);
@@ -118,7 +118,7 @@ class TiCAddonIntegrationTest extends BaseMcTest {
         captureMaterialTags(capture, tag, ids);
       }
     });
-    registrar.applyModifierTags(new DynamicTagProviderRegistrar.ModifierTagRegistrar() {
+    registrar.applyModifierTags(new DatagenTagProviderRegistrar.ModifierTagRegistrar() {
       @Override
       public void add(TagKey<Modifier> tag, net.minecraft.resources.ResourceLocation... ids) {
         captureModifierTags(capture, tag, ids);
@@ -250,7 +250,7 @@ class TiCAddonIntegrationTest extends BaseMcTest {
     }
 
     @Override
-    public void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {
+    public void registerDatagenTagProviders(DatagenTagProviderRegistrar registrar) {
       registrar.addFluidTags(addon -> {});
     }
 
@@ -323,10 +323,10 @@ class TiCAddonIntegrationTest extends BaseMcTest {
   private static final class StubModifier extends Modifier {}
 
   private static final class TestTagAddon implements ITiCAddon {
-    private final AtomicBoolean dynamicTagProvidersCalled;
+    private final AtomicBoolean datagenTagProvidersCalled;
 
-    private TestTagAddon(AtomicBoolean dynamicTagProvidersCalled) {
-      this.dynamicTagProvidersCalled = dynamicTagProvidersCalled;
+    private TestTagAddon(AtomicBoolean datagenTagProvidersCalled) {
+      this.datagenTagProvidersCalled = datagenTagProvidersCalled;
     }
 
     @Override
@@ -335,8 +335,8 @@ class TiCAddonIntegrationTest extends BaseMcTest {
     }
 
     @Override
-    public void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {
-      dynamicTagProvidersCalled.set(true);
+    public void registerDatagenTagProviders(DatagenTagProviderRegistrar registrar) {
+      datagenTagProvidersCalled.set(true);
       registrar.addFluidTags(addon -> addon.add(TinkerFluids.moltenIron));
       registrar.addMaterialTags(addon -> addon.addOptional(TinkerTags.Materials.LIGHT, MaterialIds.wood));
       registrar.addModifierTags(addon -> addon.add(TinkerTags.Modifiers.GENERAL_UPGRADES, ModifierIds.diamond));

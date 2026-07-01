@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.tconstruct.TConstruct;
-import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DatagenTagProviderRegistrar;
 import slimeknights.tconstruct.shared.TinkerCommons;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 
@@ -30,7 +30,7 @@ public class CreateBlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        addTags(new DynamicTagProviderRegistrar.BlockTagRegistrar() {
+        addTags(new DatagenTagProviderRegistrar.BlockTagRegistrar() {
             @Override
             public void add(TagKey<Block> tag, ResourceLocation... ids) {
                 IntrinsicTagAppender<Block> appender = CreateBlockTagProvider.this.tag(tag);
@@ -52,7 +52,7 @@ public class CreateBlockTagProvider extends BlockTagsProvider {
         });
     }
 
-    public static void addTags(DynamicTagProviderRegistrar.BlockTagRegistrar tags) {
+    public static void addTags(DatagenTagProviderRegistrar.BlockTagRegistrar tags) {
         tags.add(CreateBlockTags.FAN_TRANSPARENT,
                 TinkerSmeltery.searedBasin.getId(), TinkerSmeltery.searedTable.getId(),
                 TinkerSmeltery.scorchedBasin.getId(), TinkerSmeltery.scorchedTable.getId(),

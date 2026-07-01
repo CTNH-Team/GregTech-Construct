@@ -1,7 +1,9 @@
 package slimeknights.tconstruct;
 
 import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -15,6 +17,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -36,35 +39,47 @@ import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.common.data.AdvancementsProvider;
 import slimeknights.tconstruct.common.data.ConfigurationDataProvider;
 import slimeknights.tconstruct.common.data.DamageTypeProvider;
-import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
 import slimeknights.tconstruct.common.data.loot.GlobalLootModifiersProvider;
 import slimeknights.tconstruct.common.data.loot.LootTableInjectionProvider;
 import slimeknights.tconstruct.common.data.loot.TConstructLootTableProvider;
+import slimeknights.tconstruct.common.data.tags.BiomeTagProvider;
+import slimeknights.tconstruct.common.data.tags.BlockEntityTypeTagProvider;
+import slimeknights.tconstruct.common.data.tags.BlockTagProvider;
+import slimeknights.tconstruct.common.data.tags.DamageTypeTagProvider;
+import slimeknights.tconstruct.common.data.tags.EnchantmentTagProvider;
+import slimeknights.tconstruct.common.data.tags.EntityTypeTagProvider;
+import slimeknights.tconstruct.common.data.tags.FluidTagProvider;
+import slimeknights.tconstruct.common.data.tags.ItemTagProvider;
+import slimeknights.tconstruct.common.data.tags.MaterialTagProvider;
+import slimeknights.tconstruct.common.data.tags.MenuTypeTagProvider;
+import slimeknights.tconstruct.common.data.tags.ModifierTagProvider;
+import slimeknights.tconstruct.common.data.tags.PotionTagProvider;
+import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.data.material.TiCDynamicMaterialGenerator;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
-import slimeknights.tconstruct.data.recipe.TiCDynamicRecipeGenerator;
 import slimeknights.tconstruct.data.pack.TiCDynamicResourcePack;
 import slimeknights.tconstruct.data.pack.TiCPackSource;
+import slimeknights.tconstruct.data.recipe.TiCDynamicRecipeGenerator;
 import slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator;
-import slimeknights.tconstruct.data.tag.TiCDynamicTagGenerator;
 import slimeknights.tconstruct.data.tinkering.TiCDynamicTinkeringGenerator;
-import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
 import slimeknights.tconstruct.library.TinkerItemDisplays;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.tools.capability.TinkerDataCapability.ComputableDataKey;
 import slimeknights.tconstruct.library.tools.capability.TinkerDataCapability.TinkerDataKey;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinitionLoader;
 import slimeknights.tconstruct.library.tools.layout.StationSlotLayoutLoader;
 import slimeknights.tconstruct.library.utils.Util;
+import slimeknights.tconstruct.tools.data.material.TrimMaterialProvider;
+import slimeknights.tconstruct.world.data.WorldgenProvider;
 import slimeknights.tconstruct.plugin.DietPlugin;
 import slimeknights.tconstruct.plugin.DummmmmmyPlugin;
 import slimeknights.tconstruct.plugin.ImmersiveEngineeringPlugin;
 import slimeknights.tconstruct.plugin.apotheosis.ApotheosisPlugin;
 import slimeknights.tconstruct.plugin.craftingtweaks.CraftingTweaksPlugin;
 import slimeknights.tconstruct.plugin.jsonthings.JsonThingsPlugin;
-import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.shared.TinkerAttributes;
 import slimeknights.tconstruct.shared.TinkerClient;
 import slimeknights.tconstruct.shared.TinkerCommons;
@@ -188,20 +203,44 @@ public class TConstruct {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
         CompletableFuture<Provider> lookupProvider = event.getLookupProvider();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         boolean server = event.includeServer();
 
-        // its sometimes cleaner to splitup different registry sets to their own classes, combine them here into a single provider
+        // Registry providers
         RegistrySetBuilder registrySetBuilder = new RegistrySetBuilder();
         DamageTypeProvider.register(registrySetBuilder);
         WorldgenProvider.register(registrySetBuilder);
         TrimMaterialProvider.register(registrySetBuilder);
-        DatapackBuiltinEntriesProvider datapackRegistryProvider = new DatapackBuiltinEntriesProvider(packOutput, lookupProvider, registrySetBuilder, Set.of(MOD_ID));
-        generator.addProvider(server, datapackRegistryProvider);
-        generator.addProvider(server, new BiomeTagProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
-        generator.addProvider(server, new AdvancementsProvider(packOutput));
-        TiCDynamicTagGenerator.addDatagenProviders(generator, packOutput, lookupProvider, event.getExistingFileHelper(), server);
+        generator.addProvider(server, new DatapackBuiltinEntriesProvider(packOutput, lookupProvider, registrySetBuilder, Set.of(MOD_ID)));
 
-        // other datagen
+        // Tag providers (addon hooks collected internally)
+        CompletableFuture<Provider> registryLookup = CompletableFuture.completedFuture(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+
+        BlockTagProvider blockTags = new BlockTagProvider(packOutput, lookupProvider, existingFileHelper);
+        generator.addProvider(server, blockTags);
+        generator.addProvider(server, new ItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
+        generator.addProvider(server, new FluidTagProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(server, new EntityTypeTagProvider(packOutput, registryLookup, existingFileHelper));
+        generator.addProvider(server, new BlockEntityTypeTagProvider(packOutput, registryLookup, existingFileHelper));
+        generator.addProvider(server, new EnchantmentTagProvider(packOutput, registryLookup, existingFileHelper));
+        generator.addProvider(server, new MenuTypeTagProvider(packOutput, registryLookup, existingFileHelper));
+        generator.addProvider(server, new PotionTagProvider(packOutput, registryLookup, existingFileHelper));
+
+        // DamageType tags need the registry provider
+        RegistrySetBuilder damageTypeRegistryBuilder = new RegistrySetBuilder();
+        DamageTypeProvider.register(damageTypeRegistryBuilder);
+        DatapackBuiltinEntriesProvider damageTypeRegistryProvider = new DatapackBuiltinEntriesProvider(packOutput, lookupProvider, damageTypeRegistryBuilder, Set.of(MOD_ID));
+        generator.addProvider(server, new DamageTypeTagProvider(packOutput, damageTypeRegistryProvider.getRegistryProvider(), existingFileHelper));
+
+        // TiC custom registry tags
+        generator.addProvider(server, new MaterialTagProvider(packOutput, existingFileHelper));
+        generator.addProvider(server, new ModifierTagProvider(packOutput, existingFileHelper));
+
+        // Other tag providers
+        generator.addProvider(server, new BiomeTagProvider(packOutput, lookupProvider, existingFileHelper));
+
+        // Other datagen providers
+        generator.addProvider(server, new AdvancementsProvider(packOutput));
         generator.addProvider(server, new TConstructLootTableProvider(packOutput));
         generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
         generator.addProvider(server, new LootTableInjectionProvider(packOutput));

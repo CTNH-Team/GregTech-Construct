@@ -30,8 +30,4 @@ final class TConstructBuiltinAddon implements ITiCAddon {
     TiCDynamicMaterialGenerator.registerDefaultProviders(registrar);
   }
 
-  @Override
-  public void registerDynamicResourceProviders(DynamicResourceProviderRegistrar registrar) {
-    TiCDynamicResourceGenerator.registerDefaultProviders(registrar);
-  }
 }

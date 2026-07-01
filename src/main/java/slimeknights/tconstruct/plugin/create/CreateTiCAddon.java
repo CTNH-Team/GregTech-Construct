@@ -14,7 +14,7 @@ import slimeknights.tconstruct.plugin.create.tag.CreateModifierTagProvider;
 
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicRecipeProviderRegistrar;
-import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DatagenTagProviderRegistrar;
 import slimeknights.tconstruct.library.addon.ITiCAddon;
 import slimeknights.tconstruct.library.addon.ITiCStaticModifierAddon;
 import slimeknights.tconstruct.library.addon.TiCAddon;
@@ -50,7 +50,7 @@ public class CreateTiCAddon implements ITiCAddon, ITiCStaticModifierAddon {
     }
 
     @Override
-    public void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {
+    public void registerDatagenTagProviders(DatagenTagProviderRegistrar registrar) {
         registrar.addBlockTags(CreateBlockTagProvider::addTags);
         registrar.addItemTags(CreateItemTagProvider::addTags);
         registrar.addModifierTags(CreateModifierTagProvider::addTags);

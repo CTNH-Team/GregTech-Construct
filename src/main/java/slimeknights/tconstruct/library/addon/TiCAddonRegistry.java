@@ -38,8 +38,12 @@ public final class TiCAddonRegistry {
     TiCAddonFinder.getAddons().forEach(addon -> addon.registerDynamicTinkeringProviders(registrar));
   }
 
-  public static void collectTagProviders(DynamicTagProviderRegistrar registrar) {
-    TiCAddonFinder.getAddons().forEach(addon -> addon.registerDynamicTagProviders(registrar));
+  /**
+   * Collects static tag providers from all addons for datagen (runData).
+   * Tags are written to files during static datagen, not generated dynamically at runtime.
+   */
+  public static void collectDatagenTagProviders(DatagenTagProviderRegistrar registrar) {
+    TiCAddonFinder.getAddons().forEach(addon -> addon.registerDatagenTagProviders(registrar));
   }
 
   public static void collectMaterialProviders(DynamicProviderRegistrar registrar) {

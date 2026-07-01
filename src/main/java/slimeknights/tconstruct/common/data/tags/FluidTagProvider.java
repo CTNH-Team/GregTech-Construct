@@ -14,7 +14,8 @@ import slimeknights.mantle.registration.object.FluidObject;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.fluids.TinkerFluids;
-import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DatagenTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -22,15 +23,14 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
 public class FluidTagProvider extends FluidTagsProvider {
-    private final Consumer<DynamicTagProviderRegistrar.FluidTagRegistrar> addonTags;
+    private final Consumer<DatagenTagProviderRegistrar.FluidTagRegistrar> addonTags;
 
     public FluidTagProvider(PackOutput packOutput, CompletableFuture<Provider> lookupProvider, ExistingFileHelper helper) {
-        this(packOutput, lookupProvider, helper, hook -> {});
-    }
-
-    public FluidTagProvider(PackOutput packOutput, CompletableFuture<Provider> lookupProvider, ExistingFileHelper helper, Consumer<DynamicTagProviderRegistrar.FluidTagRegistrar> addonTags) {
         super(packOutput, lookupProvider, TConstruct.MOD_ID, helper);
-        this.addonTags = addonTags;
+        // 自动收集 addon tag hooks
+        DatagenTagProviderRegistrar registrar = new DatagenTagProviderRegistrar();
+        TiCAddonRegistry.collectDatagenTagProviders(registrar);
+        this.addonTags = registrar::applyFluidTags;
     }
 
     @Override
@@ -263,7 +263,7 @@ public class FluidTagProvider extends FluidTagsProvider {
         }
     }
 
-    private final class FluidTagRegistrar implements DynamicTagProviderRegistrar.FluidTagRegistrar {
+    private final class FluidTagRegistrar implements DatagenTagProviderRegistrar.FluidTagRegistrar {
         @Override
         public void add(FlowingFluidObject<?> fluid) {
             FluidTagProvider.this.fluidTag(fluid);
