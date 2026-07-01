@@ -1,0 +1,10 @@
+{
+  "values": [
+    "minecraft:trident",
+    "tconstruct:thrown_tool",
+    "minecraft:item",
+    "tconstruct:indestructible_item",
+    "minecraft:experience_orb",
+    "#forge:collectables/discardable"
+  ]
+}

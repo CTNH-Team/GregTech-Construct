@@ -1,0 +1,13 @@
+{
+  "values": [
+    "#tconstruct:hard_metals",
+    {
+      "id": "tconstruct:gold",
+      "required": false
+    },
+    {
+      "id": "tconstruct:rose_gold",
+      "required": false
+    }
+  ]
+}
