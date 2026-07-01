@@ -65,16 +65,12 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
 
     @Override
     public void registerStaticModifiers(StaticModifierRegistrar registrar) {
-        registrar.register(BotaniaModifierIds.manafix.getPath(), ManaFixModifier::new);
-        registrar.register(BotaniaModifierIds.terrarecover.getPath(), TerraRecoverModifier::new);
-        //ancientWill
-        registrar.register(BotaniaModifierIds.ancientWill.getPath(), TerraSetBonusModifier::new);
-        registrar.register(BotaniaModifierIds.ancientWillAhrim.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.AHRIM));
-        registrar.register(BotaniaModifierIds.ancientWillDharok.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.DHAROK));
-        registrar.register(BotaniaModifierIds.ancientWillGuthan.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.GUTHAN));
-        registrar.register(BotaniaModifierIds.ancientWillTorag.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.TORAG));
-        registrar.register(BotaniaModifierIds.ancientWillVerac.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.VERAC));
-        registrar.register(BotaniaModifierIds.ancientWillKaril.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.KARIL));
+        registrar.register(BotaniaModifierIds.manafix, ManaFixModifier.class);
+        registrar.register(BotaniaModifierIds.terrarecover, TerraRecoverModifier.class);
+        registrar.register(BotaniaModifierIds.ancientWill, TerraSetBonusModifier.class);
+        for (AncientWillModifier.Will will : AncientWillModifier.Will.values()) {
+            registrar.register(will.modifierId(), () -> new AncientWillModifier(will));
+        }
         BotaniaModifiersProvider.registerSetBonuses();
     }
 

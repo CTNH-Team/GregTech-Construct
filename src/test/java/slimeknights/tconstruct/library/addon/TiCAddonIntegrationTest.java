@@ -14,6 +14,7 @@ import org.objectweb.asm.Type;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.modifiers.Modifier;
+import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
@@ -265,7 +266,7 @@ class TiCAddonIntegrationTest extends BaseMcTest {
 
     @Override
     public void registerStaticModifiers(StaticModifierRegistrar registrar) {
-      registrar.register("addon_static_modifier", StubModifier::new);
+      registrar.register(new ModifierId("testaddon", "addon_static_modifier"), StubModifier::new);
     }
   }
 

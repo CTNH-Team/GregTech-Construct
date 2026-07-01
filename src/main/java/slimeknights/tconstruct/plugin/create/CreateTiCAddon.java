@@ -32,11 +32,11 @@ public class CreateTiCAddon implements ITiCAddon, ITiCStaticModifierAddon {
 
     @Override
     public void registerStaticModifiers(StaticModifierRegistrar registrar) {
-        registrar.register(CreateModifierIds.CRUSHING.getPath(), CreateCrushingModifier::new);
-        registrar.register(CreateModifierIds.EXTENDO.getPath(), CreateExtendoModifier::new);
-        registrar.register(CreateModifierIds.GOGGLES.getPath(), NoLevelsModifier::new);
-        registrar.register(CreateModifierIds.WRENCH.getPath(), NoLevelsModifier::new);
-        registrar.register(CreateModifierIds.DIVING_WEIGHTS.getPath(), NoLevelsModifier::new);
+        registrar.register(CreateModifierIds.CRUSHING, CreateCrushingModifier.class);
+        registrar.register(CreateModifierIds.EXTENDO, CreateExtendoModifier.class);
+        registrar.register(CreateModifierIds.GOGGLES, NoLevelsModifier.class);
+        registrar.register(CreateModifierIds.WRENCH, NoLevelsModifier.class);
+        registrar.register(CreateModifierIds.DIVING_WEIGHTS, NoLevelsModifier.class);
     }
 
     @Override
