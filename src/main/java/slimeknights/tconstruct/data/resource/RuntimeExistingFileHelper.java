@@ -55,7 +55,7 @@ public class RuntimeExistingFileHelper extends ExistingFileHelper {
 
   @Override
   public boolean exists(ResourceLocation loc, PackType packType, String pathSuffix, String pathPrefix) {
-    if (".png.mcmeta".equals(pathSuffix)) {
+    if (PackType.CLIENT_RESOURCES == packType && (".png".equals(pathSuffix) || ".png.mcmeta".equals(pathSuffix))) {
       return actualExists(loc.withPath(path -> pathPrefix + "/" + path + pathSuffix), packType);
     }
     return super.exists(loc, packType, pathSuffix, pathPrefix);
