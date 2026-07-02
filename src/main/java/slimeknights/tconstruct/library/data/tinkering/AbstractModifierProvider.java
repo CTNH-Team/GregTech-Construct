@@ -8,6 +8,8 @@ import net.minecraft.data.PackOutput.Target;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import slimeknights.mantle.data.GenericDataProvider;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.library.json.JsonRedirect;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
@@ -21,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 
 /** Datagen for dynamic modifiers */
 @SuppressWarnings("SameParameterValue")
-public abstract class AbstractModifierProvider extends GenericDataProvider {
+public abstract class AbstractModifierProvider extends GenericDataProvider implements RuntimeDataProvider {
   private final Map<ModifierId,Composable> composableModifiers = new HashMap<>();
 
   public AbstractModifierProvider(PackOutput packOutput) {
@@ -90,8 +92,21 @@ public abstract class AbstractModifierProvider extends GenericDataProvider {
 
   @Override
   public CompletableFuture<?> run(CachedOutput cache) {
-    addModifiers();
+    generateModifiers();
     return allOf(composableModifiers.entrySet().stream().map(entry -> saveJson(cache, entry.getKey(), entry.getValue().serialize())));
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicDataRegistrar registrar) {
+    generateModifiers();
+    composableModifiers.forEach((id, modifier) -> registrar.addJson(ModifierManager.FOLDER, id, modifier.serialize(), ModifierManager.GSON));
+  }
+
+  private void generateModifiers() {
+    if (!composableModifiers.isEmpty()) {
+      return;
+    }
+    addModifiers();
   }
 
   /** Result for composable too */

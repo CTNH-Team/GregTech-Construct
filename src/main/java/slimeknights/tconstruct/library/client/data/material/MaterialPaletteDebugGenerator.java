@@ -4,10 +4,12 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
 import slimeknights.tconstruct.library.client.data.GenericTextureGenerator;
 import slimeknights.tconstruct.library.client.data.material.AbstractMaterialSpriteProvider.MaterialSpriteInfo;
 import slimeknights.tconstruct.library.client.data.spritetransformer.IColorMapping;
 import slimeknights.tconstruct.library.client.data.spritetransformer.RecolorSpriteTransformer;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
 
 /** Simple generator that generates a texture showing the entire range for a palette */
-public class MaterialPaletteDebugGenerator extends GenericTextureGenerator {
+public class MaterialPaletteDebugGenerator extends GenericTextureGenerator implements RuntimeResourceProvider {
   private final String name;
   private final AbstractMaterialSpriteProvider[] materialProviders;
   public MaterialPaletteDebugGenerator(PackOutput packOutput, String name, AbstractMaterialSpriteProvider... materialProviders) {
@@ -44,6 +46,26 @@ public class MaterialPaletteDebugGenerator extends GenericTextureGenerator {
       }
     }
     return allOf(tasks);
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    for (AbstractMaterialSpriteProvider materialProvider : materialProviders) {
+      for (Entry<ResourceLocation,MaterialSpriteInfo> entry : materialProvider.getMaterials().entrySet()) {
+        if (entry.getValue().getTransformer() instanceof RecolorSpriteTransformer recolor) {
+          IColorMapping colorMapping = recolor.getColorMapping();
+          NativeImage palette = new NativeImage(256, 16, true);
+          for (int grey = 0; grey < 256; grey++) {
+            int color = colorMapping.mapColor(grey | (grey << 8) | (grey << 16) | 0xFF000000);
+            for (int height = 0; height < 16; height++) {
+              palette.setPixelRGBA(grey, height, color);
+            }
+          }
+          saveImage(registrar, entry.getKey(), palette);
+          palette.close();
+        }
+      }
+    }
   }
 
   @Override

@@ -6,9 +6,11 @@ import net.minecraft.data.PackOutput.Target;
 import net.minecraft.resources.ResourceLocation;
 import slimeknights.mantle.data.GenericDataProvider;
 import slimeknights.mantle.registration.object.IdAwareObject;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
 import slimeknights.tconstruct.library.client.armor.ArmorModelManager;
 import slimeknights.tconstruct.library.client.armor.ArmorModelManager.ArmorModel;
 import slimeknights.tconstruct.library.client.armor.texture.ArmorTextureSupplier;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 /** Data provider for armor models */
-public abstract class AbstractArmorModelProvider extends GenericDataProvider {
+public abstract class AbstractArmorModelProvider extends GenericDataProvider implements RuntimeResourceProvider {
   private final Map<ResourceLocation,ArmorModel> models = new HashMap<>();
 
   public AbstractArmorModelProvider(PackOutput packOutput) {
@@ -31,6 +33,13 @@ public abstract class AbstractArmorModelProvider extends GenericDataProvider {
   public CompletableFuture<?> run(CachedOutput output) {
     addModels();
     return allOf(models.entrySet().stream().map(entry -> saveJson(output, entry.getKey(), ArmorModel.LOADABLE.serialize(entry.getValue()))));
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    models.clear();
+    addModels();
+    models.forEach((id, model) -> registrar.addResource(ResourceLocation.tryBuild(id.getNamespace(), ArmorModelManager.FOLDER + "/" + id.getPath() + ".json"), ArmorModel.LOADABLE.serialize(model)));
   }
 
   /** Adds a model to the generator */

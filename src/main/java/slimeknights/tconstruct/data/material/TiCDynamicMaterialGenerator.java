@@ -1,12 +1,14 @@
 package slimeknights.tconstruct.data.material;
 
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.data.DynamicConditionSerializerRegistrar;
-import slimeknights.tconstruct.data.pack.DynamicDataProviderRunner;
-import slimeknights.tconstruct.data.pack.DynamicProviderFactory;
+import slimeknights.tconstruct.data.pack.DynamicPackOutput;
+import slimeknights.tconstruct.data.pack.TiCDynamicDataRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicPackProviderFactory;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.tools.data.material.MaterialDataProvider;
 import slimeknights.tconstruct.tools.data.material.MaterialStatsDataProvider;
 import slimeknights.tconstruct.tools.data.material.MaterialTraitsDataProvider;
@@ -14,7 +16,7 @@ import slimeknights.tconstruct.tools.data.material.MaterialTraitsDataProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 public final class TiCDynamicMaterialGenerator {
   static final List<MaterialProviderEntry> ADDITIONAL_PROVIDER_ENTRIES = new ArrayList<>();
@@ -23,56 +25,52 @@ public final class TiCDynamicMaterialGenerator {
 
   public static void register() {
     DynamicConditionSerializerRegistrar.registerCommonSerializers();
-    register(DynamicDataProviderRunner::run);
+    register(TiCDynamicDataRegistrar.INSTANCE);
   }
 
   /** Adds an extra runtime material provider for TiC's dynamic data pack. */
-  public static synchronized void addProvider(String name, Function<PackOutput, ? extends DataProvider> factory) {
+  public static synchronized void addProvider(String name, Consumer<DynamicDataRegistrar> writer) {
     ADDITIONAL_PROVIDER_ENTRIES.add(new MaterialProviderEntry(
       Objects.requireNonNull(name, "name"),
-      Objects.requireNonNull(factory, "factory")
+      Objects.requireNonNull(writer, "writer")
     ));
   }
 
-  static void register(MaterialRunner runner) {
-    runner.run("tconstruct-materials", createProviders());
+  static void register(DynamicDataRegistrar registrar) {
+    for (MaterialProviderEntry entry : createProviderEntries()) {
+      entry.writer().accept(registrar);
+    }
   }
 
   public static void registerDefaultProviders(DynamicProviderRegistrar registrar) {
     MaterialState state = new MaterialState();
-    registrar.addProvider("MaterialDataProvider", state::createMaterialDataProvider);
-    registrar.addProvider("MaterialStatsDataProvider", state::createMaterialStatsDataProvider);
-    registrar.addProvider("MaterialTraitsDataProvider", state::createMaterialTraitsDataProvider);
+    registrar.addDataProvider(MaterialDataProvider.class, state::createMaterialDataProvider);
+    registrar.addDataProvider(MaterialStatsDataProvider.class, state::createMaterialStatsDataProvider);
+    registrar.addDataProvider(MaterialTraitsDataProvider.class, state::createMaterialTraitsDataProvider);
   }
 
   static List<MaterialProviderEntry> createProviderEntries() {
     List<MaterialProviderEntry> entries = new ArrayList<>();
-    TiCAddonRegistry.collectMaterialProviders((name, factory) -> entries.add(new MaterialProviderEntry(name, factory)));
+    TiCAddonRegistry.collectMaterialProviders((name, writer) -> entries.add(new MaterialProviderEntry(name, writer)));
     synchronized (TiCDynamicMaterialGenerator.class) {
       entries.addAll(ADDITIONAL_PROVIDER_ENTRIES);
     }
     return List.copyOf(entries);
   }
 
-  static List<Function<PackOutput, ? extends DataProvider>> createProviders() {
-    List<Function<PackOutput, ? extends DataProvider>> providers = new ArrayList<>();
-    for (MaterialProviderEntry entry : createProviderEntries()) {
-      providers.add(new DynamicProviderFactory(entry.name(), entry.factory()));
-    }
-    return providers;
-  }
-
   @FunctionalInterface
-  interface MaterialRunner {
-    void run(String owner, List<Function<PackOutput, ? extends DataProvider>> providers);
+  public interface RuntimeProviderFactory<T extends RuntimeDataProvider> extends DynamicPackProviderFactory<T> {}
+
+  public static Consumer<DynamicDataRegistrar> dataWriter(RuntimeProviderFactory<? extends RuntimeDataProvider> factory) {
+    return registrar -> factory.create(DynamicPackOutput.dummy()).addToDynamicPack(registrar);
   }
 
-  record MaterialProviderEntry(String name, Function<PackOutput, ? extends DataProvider> factory) {}
+  record MaterialProviderEntry(String name, Consumer<DynamicDataRegistrar> writer) {}
 
   private static final class MaterialState {
     private MaterialDataProvider materials;
 
-    private DataProvider createMaterialDataProvider(PackOutput output) {
+    private MaterialDataProvider createMaterialDataProvider(PackOutput output) {
       this.materials = new MaterialDataProvider(output);
       return this.materials;
     }
@@ -84,11 +82,11 @@ public final class TiCDynamicMaterialGenerator {
       return materials;
     }
 
-    private DataProvider createMaterialStatsDataProvider(PackOutput output) {
+    private MaterialStatsDataProvider createMaterialStatsDataProvider(PackOutput output) {
       return new MaterialStatsDataProvider(output, getMaterials(output));
     }
 
-    private DataProvider createMaterialTraitsDataProvider(PackOutput output) {
+    private MaterialTraitsDataProvider createMaterialTraitsDataProvider(PackOutput output) {
       return new MaterialTraitsDataProvider(output, getMaterials(output));
     }
   }

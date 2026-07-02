@@ -27,7 +27,9 @@ import slimeknights.tconstruct.plugin.botania.tag.BotaniaModifierTagProvider;
 import slimeknights.tconstruct.library.addon.AddonFluidTextureProviderSet;
 import slimeknights.tconstruct.library.addon.AddonSmelteryCompat;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
-import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicRecipeProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicResourceProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DatagenTagProviderRegistrar;
 import slimeknights.tconstruct.library.addon.ITiCAddon;
 import slimeknights.tconstruct.library.addon.ITiCFluidAddon;
 import slimeknights.tconstruct.library.addon.ITiCStaticModifierAddon;
@@ -38,7 +40,7 @@ import java.util.function.Consumer;
 /**
  * Centralized Botania compat wiring for TiC.
  */
-@TiCAddon(requiredMods = BotaniaTiCAddon.MOD_ID)
+@TiCAddon(modID = BotaniaTiCAddon.MOD_ID)
 public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticModifierAddon {
 
     public static final String MOD_ID = "botania";
@@ -63,46 +65,41 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
 
     @Override
     public void registerStaticModifiers(StaticModifierRegistrar registrar) {
-        registrar.register(BotaniaModifierIds.manafix.getPath(), ManaFixModifier::new);
-        registrar.register(BotaniaModifierIds.terrarecover.getPath(), TerraRecoverModifier::new);
-        //ancientWill
-        registrar.register(BotaniaModifierIds.ancientWill.getPath(), TerraSetBonusModifier::new);
-        registrar.register(BotaniaModifierIds.ancientWillAhrim.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.AHRIM));
-        registrar.register(BotaniaModifierIds.ancientWillDharok.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.DHAROK));
-        registrar.register(BotaniaModifierIds.ancientWillGuthan.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.GUTHAN));
-        registrar.register(BotaniaModifierIds.ancientWillTorag.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.TORAG));
-        registrar.register(BotaniaModifierIds.ancientWillVerac.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.VERAC));
-        registrar.register(BotaniaModifierIds.ancientWillKaril.getPath(), () -> new AncientWillModifier(AncientWillModifier.Will.KARIL));
+        registrar.register(BotaniaModifierIds.manafix, ManaFixModifier.class);
+        registrar.register(BotaniaModifierIds.terrarecover, TerraRecoverModifier.class);
+        registrar.register(BotaniaModifierIds.ancientWill, TerraSetBonusModifier.class);
+        for (AncientWillModifier.Will will : AncientWillModifier.Will.values()) {
+            registrar.register(will.modifierId(), () -> new AncientWillModifier(will));
+        }
         BotaniaModifiersProvider.registerSetBonuses();
     }
 
     @Override
-    public void registerDynamicRecipeProviders(DynamicProviderRegistrar registrar) {
-        registrar.addProvider("BotaniaModifierRecipeProvider", BotaniaModifierRecipeProvider::new);
-        registrar.addProvider("BotaniaMaterialRecipeProvider", BotaniaMaterialRecipeProvider::new);
+    public void registerDynamicRecipeProviders(DynamicRecipeProviderRegistrar registrar) {
+        registrar.addRecipeProvider(BotaniaModifierRecipeProvider.class);
+        registrar.addRecipeProvider(BotaniaMaterialRecipeProvider.class);
     }
 
     @Override
     public void registerDynamicMaterialProviders(DynamicProviderRegistrar registrar) {
-        registrar.addProvider("BotaniaMaterialDataProvider", BotaniaMaterialDataProvider::new);
-        registrar.addProvider("BotaniaMaterialStatsDataProvider", BotaniaMaterialStatsDataProvider::new);
-        registrar.addProvider("BotaniaMaterialTraitsDataProvider", BotaniaMaterialTraitsDataProvider::new);
+        registrar.addDataProvider(BotaniaMaterialDataProvider.class);
+        registrar.addDataProvider(BotaniaMaterialStatsDataProvider.class);
+        registrar.addDataProvider(BotaniaMaterialTraitsDataProvider.class);
     }
 
     @Override
-    public void registerDynamicResourceProviders(DynamicProviderRegistrar registrar) {
+    public void registerDynamicResourceProviders(DynamicResourceProviderRegistrar registrar) {
         AddonFluidTextureProviderSet<BotaniaFluidTextureProvider> fluidTextures = AddonFluidTextureProviderSet
                 .create(BotaniaFluidTextureProvider::new);
-        registrar.addProvider("BotaniaMaterialRenderInfoProvider", BotaniaMaterialRenderInfoProvider::new);
-        registrar.addProvider("BotaniaFluidTextureProvider", fluidTextures::fluidTextures);
-        registrar.addProvider("BotaniaFluidTextureCameraProvider",
-                output -> fluidTextures.cameraProvider(output, BotaniaFluidTextureCameraProvider::new));
-        registrar.addProvider("BotaniaMaterialPartTextureGenerator", BotaniaMaterialPartTextureGenerator::new);
-        registrar.addProvider("BotaniaMaterialPaletteDebugGenerator", BotaniaMaterialPaletteDebugGenerator::new);
+        registrar.addResourceProvider(BotaniaMaterialRenderInfoProvider.class);
+        registrar.addResourceWriter(BotaniaFluidTextureProvider.class, fluidTextures::addFluidTextures);
+        registrar.addResourceWriter(BotaniaFluidTextureCameraProvider.class, fluidTextures::addCameraTextures);
+        registrar.addResourceProvider(BotaniaMaterialPartTextureGenerator.class);
+        registrar.addResourceProvider(BotaniaMaterialPaletteDebugGenerator.class);
     }
 
     @Override
-    public void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {
+    public void registerDatagenTagProviders(DatagenTagProviderRegistrar registrar) {
         registrar.addFluidTags(BotaniaFluidTagProvider::addTags);
         registrar.addMaterialTags(BotaniaMaterialTagProvider::addTags);
         registrar.addModifierTags(BotaniaModifierTagProvider::addTags);

@@ -10,6 +10,8 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import slimeknights.mantle.data.GenericDataProvider;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.library.recipe.partbuilder.Pattern;
 import slimeknights.tconstruct.library.tools.item.IModifiableDisplay;
 import slimeknights.tconstruct.library.tools.layout.StationSlotLayout;
@@ -25,7 +27,7 @@ import java.util.function.Supplier;
 
 /** Base data generator to generate station slot layouts */
 @SuppressWarnings("deprecation")  // just let me get item keys forge
-public abstract class AbstractStationSlotLayoutProvider extends GenericDataProvider {
+public abstract class AbstractStationSlotLayoutProvider extends GenericDataProvider implements RuntimeDataProvider {
 
   // TODO 1.21: rework these to have a bit more space between numbers
   /** Sort index for weapons */
@@ -88,8 +90,21 @@ public abstract class AbstractStationSlotLayoutProvider extends GenericDataProvi
 
   @Override
   public CompletableFuture<?> run(CachedOutput cache) {
-    addLayouts();
+    generateLayouts();
     return allOf(allLayouts.entrySet().stream().map(entry -> saveJson(cache, entry.getKey(), entry.getValue().serialize())));
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicDataRegistrar registrar) {
+    generateLayouts();
+    allLayouts.forEach((id, layout) -> registrar.addJson(StationSlotLayoutLoader.FOLDER, id, layout.serialize(), StationSlotLayoutLoader.GSON));
+  }
+
+  private void generateLayouts() {
+    if (!allLayouts.isEmpty()) {
+      return;
+    }
+    addLayouts();
   }
 
   /** Stores the pair of conditions and builder. */

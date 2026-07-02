@@ -1,95 +1,104 @@
 package slimeknights.tconstruct.data.resource;
 
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import org.mockito.Mockito;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import slimeknights.tconstruct.data.pack.TiCDynamicResourcePack;
+import slimeknights.tconstruct.data.pack.TiCDynamicResourceRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.lang.reflect.Field;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 
 class TiCDynamicResourceGeneratorTest extends BaseMcTest {
+  private final TiCDynamicResourcePack pack = new TiCDynamicResourcePack("test");
+
   @AfterEach
   void clearExternalProviders() throws ReflectiveOperationException {
-    Field field = TiCDynamicResourceGenerator.class.getDeclaredField("ADDITIONAL_PROVIDERS");
+    Field field = TiCDynamicResourceGenerator.class.getDeclaredField("ADDITIONAL_PROVIDER_ENTRIES");
     field.setAccessible(true);
     ((ArrayList<?>) field.get(null)).clear();
   }
 
-  @Test
-  void addProviderAppendsExternalProviderFactory() {
-    PackOutput output = new PackOutput(Path.of("build", "test-dynamic-resource-generator"));
-
-    TiCDynamicResourceGenerator.addProvider(ignored -> new StubProvider("ExternalResourceProvider"));
-
-    assertThat(TiCDynamicResourceGenerator.createProviders())
-      .extracting(factory -> factory.apply(output).getName())
-      .endsWith("ExternalResourceProvider");
+  @BeforeEach
+  void clearDynamicPack() {
+    TiCDynamicResourcePack.clearClient();
   }
 
   @Test
-  void registerIncludesExternalProviderFactory() {
-    RecordingRunner runner = new RecordingRunner();
-    PackOutput output = new PackOutput(Path.of("build", "test-dynamic-resource-register"));
-
-    TiCDynamicResourceGenerator.addProvider(ignored -> new StubProvider("ExternalResourceProvider"));
-    TiCDynamicResourceGenerator.register(runner);
-
-    assertThat(runner.providers).hasSize(19);
-    assertThat(runner.providers)
-      .extracting(factory -> factory.apply(output).getName())
-      .endsWith("ExternalResourceProvider");
+  void registerKeepsProviderOrder() {
+    assertThat(TiCDynamicResourceGenerator.createProviderEntries())
+      .extracting(TiCDynamicResourceGenerator.ResourceProviderEntry::name)
+      .containsExactly(
+        "ModelSpriteProvider",
+        "TinkerSpriteSourceProvider",
+        "TinkerItemModelProvider",
+        "TinkerBlockStateProvider",
+        "RenderFluidProvider",
+        "RenderItemProvider",
+        "FluidTooltipProvider",
+        "FluidTextureProvider",
+        "FluidTextureCameraProvider",
+        "FluidBucketModelProvider",
+        "FluidBlockstateModelProvider",
+        "ToolItemModelProvider",
+        "MaterialRenderInfoProvider",
+        "GeneratorPartTextureJsonGenerator",
+        "MaterialPartTextureGenerator",
+        "MaterialPaletteDebugGenerator",
+        "ArmorModelProvider",
+        "TrimMaterialPaletteGenerator"
+      );
   }
 
   @Test
-  void modelSpriteProviderRunsWithDynamicExistingFileHelper(@TempDir Path outputRoot) {
-    List<Function<PackOutput, ? extends DataProvider>> providers = TiCDynamicResourceGenerator.createProviders();
-    PackOutput output = new PackOutput(outputRoot);
-    CachedOutput cachedOutput = Mockito.mock(CachedOutput.class);
+  void addProviderAppendsExternalWriter() {
+    TiCDynamicResourceGenerator.addProvider("ExternalResourceWriter", registrar -> registrar.addResource(new ResourceLocation("example", "raw/generated.txt"), "ok".getBytes()));
 
-    DataProvider modelSpriteProvider = providers.get(0).apply(output);
-
-    assertThatCode(() -> modelSpriteProvider.run(cachedOutput).join())
-      .doesNotThrowAnyException();
+    assertThat(TiCDynamicResourceGenerator.createProviderEntries())
+      .extracting(TiCDynamicResourceGenerator.ResourceProviderEntry::name)
+      .endsWith("ExternalResourceWriter");
   }
 
-  private static final class StubProvider implements DataProvider {
-    private final String name;
+  @Test
+  void registerIncludesExternalWriterAndStoresInMemory() {
+    TiCDynamicResourceGenerator.addProvider("ExternalResourceWriter", registrar -> registrar.addResource(new ResourceLocation("example", "raw/generated.txt"), "ok".getBytes()));
 
-    private StubProvider(String name) {
-      this.name = name;
-    }
+    TiCDynamicResourceGenerator.createProviderEntries().stream()
+      .filter(entry -> entry.name().equals("ExternalResourceWriter"))
+      .forEach(entry -> entry.writer().accept(TiCDynamicResourceRegistrar.INSTANCE));
 
-    @Override
-    public CompletableFuture<?> run(CachedOutput output) {
-      return CompletableFuture.completedFuture(null);
-    }
-
-    @Override
-    public String getName() {
-      return name;
-    }
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("example", "raw/generated.txt"))).isNotNull();
+    assertThat(pack.getNamespaces(PackType.CLIENT_RESOURCES)).contains("example");
   }
 
-  private static final class RecordingRunner implements TiCDynamicResourceGenerator.ResourceRunner {
-    private String owner;
-    private List<Function<PackOutput, ? extends DataProvider>> providers = List.of();
+  @Test
+  void runtimeProviderStoresModelBlockstateTextureAndRawResourceInMemory() {
+    TiCDynamicResourceGenerator.runtime(TestRuntimeResourceProvider::new).accept(TiCDynamicResourceRegistrar.INSTANCE);
+
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("example", "models/item/generated.json"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("example", "blockstates/generated.json"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("example", "textures/generated.png"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("example", "raw/generated.txt"))).isNotNull();
+  }
+
+  private static final class TestRuntimeResourceProvider implements RuntimeResourceProvider {
+    private TestRuntimeResourceProvider(PackOutput output) {}
 
     @Override
-    public void run(String owner, List<Function<PackOutput, ? extends DataProvider>> providers) {
-      this.owner = owner;
-      this.providers = providers;
+    public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+      com.google.gson.JsonObject json = new com.google.gson.JsonObject();
+      registrar.addItemModel(new ResourceLocation("example", "generated"), json);
+      registrar.addBlockState(new ResourceLocation("example", "generated"), json);
+      registrar.addTexture(new ResourceLocation("example", "generated"), "png".getBytes());
+      registrar.addResource(new ResourceLocation("example", "raw/generated.txt"), "raw".getBytes());
     }
   }
 }

@@ -40,6 +40,9 @@ import slimeknights.tconstruct.shared.TinkerCommons;
 import slimeknights.tconstruct.shared.TinkerMaterials;
 import slimeknights.tconstruct.shared.block.ClearStainedGlassBlock.GlassColor;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
+import slimeknights.tconstruct.data.resource.RuntimeResourceWriter;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.world.TinkerWorld;
 
 import javax.annotation.Nullable;
@@ -50,7 +53,7 @@ import static net.minecraftforge.client.model.generators.ModelProvider.BLOCK_FOL
 import static slimeknights.tconstruct.TConstruct.getResource;
 
 @SuppressWarnings({"UnusedReturnValue", "SameParameterValue", "removal"})
-public class TinkerBlockStateProvider extends BlockStateProvider {
+public class TinkerBlockStateProvider extends BlockStateProvider implements RuntimeResourceProvider {
   private final UncheckedModelFile GENERATED = new UncheckedModelFile("item/generated");
 
   public TinkerBlockStateProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
@@ -107,6 +110,20 @@ public class TinkerBlockStateProvider extends BlockStateProvider {
     // smeltery
     basicBlock(TinkerSmeltery.searedLamp.get(), "block/smeltery/seared/lamp", blockTexture("smeltery/seared/lamp"));
     basicBlock(TinkerSmeltery.scorchedLamp.get(), "block/foundry/scorched/lamp", blockTexture("foundry/scorched/lamp"));
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    models().generatedModels.clear();
+    itemModels().generatedModels.clear();
+    registeredBlocks.clear();
+    registerStatesAndModels();
+    RuntimeResourceWriter.writeModels(models(), registrar);
+    RuntimeResourceWriter.writeModels(itemModels(), registrar);
+    registeredBlocks.forEach((block, state) -> registrar.addBlockState(BuiltInRegistries.BLOCK.getKey(block), state.toJson()));
+    models().generatedModels.clear();
+    itemModels().generatedModels.clear();
+    registeredBlocks.clear();
   }
 
 

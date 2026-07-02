@@ -1,0 +1,25 @@
+{
+  "values": [
+    "tconstruct:rock",
+    "tconstruct:copper",
+    "tconstruct:seared_stone",
+    "tconstruct:whitestone",
+    "tconstruct:skyslime_vine",
+    "tconstruct:twisting_vine",
+    "tconstruct:amethyst_bronze",
+    "tconstruct:hepatizon",
+    "tconstruct:ancient_hide",
+    {
+      "id": "tconstruct:lead",
+      "required": false
+    },
+    {
+      "id": "tconstruct:bronze",
+      "required": false
+    },
+    {
+      "id": "tconstruct:constantan",
+      "required": false
+    }
+  ]
+}

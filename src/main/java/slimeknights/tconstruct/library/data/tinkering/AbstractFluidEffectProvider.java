@@ -30,6 +30,8 @@ import slimeknights.mantle.recipe.ingredient.FluidIngredient;
 import slimeknights.mantle.registration.object.FluidObject;
 import slimeknights.tconstruct.common.TinkerDamageTypes;
 import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectContext;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectManager;
@@ -55,7 +57,7 @@ import static slimeknights.mantle.Mantle.commonResource;
 
 /** Data provider for spilling fluids */
 @SuppressWarnings("deprecation")  // fluid registry is ours to use, not yours forge
-public abstract class AbstractFluidEffectProvider extends GenericDataProvider {
+public abstract class AbstractFluidEffectProvider extends GenericDataProvider implements RuntimeDataProvider {
   private final String modId;
   private final Map<ResourceLocation,Builder> entries = new HashMap<>();
 
@@ -69,8 +71,21 @@ public abstract class AbstractFluidEffectProvider extends GenericDataProvider {
 
   @Override
   public CompletableFuture<?> run(CachedOutput cache) {
-    addFluids();
+    generateFluids();
     return allOf(entries.entrySet().stream().map(entry -> saveJson(cache, entry.getKey(), entry.getValue().build(entry.getKey()))));
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicDataRegistrar registrar) {
+    generateFluids();
+    entries.forEach((id, builder) -> registrar.addJson(FluidEffectManager.FOLDER, id, builder.build(id)));
+  }
+
+  private void generateFluids() {
+    if (!entries.isEmpty()) {
+      return;
+    }
+    addFluids();
   }
 
   /* Helpers */

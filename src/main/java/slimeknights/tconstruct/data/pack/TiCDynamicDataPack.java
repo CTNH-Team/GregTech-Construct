@@ -34,8 +34,11 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.library.addon.ITiCAddon;
+import slimeknights.tconstruct.library.addon.TiCAddonFinder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.stream.Collectors;
 
 /**
  * Dynamic data pack for server-side data (recipes, advancements, etc.).
@@ -66,7 +69,7 @@ public class TiCDynamicDataPack implements PackResources {
     }
 
     public TiCDynamicDataPack(String name) {
-        this(name, Set.of());
+        this(name, TiCAddonFinder.getAddons().stream().map(ITiCAddon::addonModId).collect(Collectors.toSet()));
     }
 
     public TiCDynamicDataPack(String name, Collection<String> additionalDomains) {

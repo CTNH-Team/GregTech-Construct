@@ -10,8 +10,12 @@ import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile.UncheckedModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.ItemObject;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.data.resource.RuntimeResourceWriter;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.common.registration.CastItemObject;
 import slimeknights.tconstruct.library.tools.part.MaterialItem;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
@@ -21,7 +25,7 @@ import slimeknights.tconstruct.world.TinkerWorld;
 import static slimeknights.tconstruct.TConstruct.getResource;
 
 @SuppressWarnings("UnusedReturnValue")
-public class TinkerItemModelProvider extends ItemModelProvider {
+public class TinkerItemModelProvider extends ItemModelProvider implements RuntimeResourceProvider {
     private final UncheckedModelFile GENERATED = new UncheckedModelFile("item/generated");
     public TinkerItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, TConstruct.MOD_ID, existingFileHelper);
@@ -130,7 +134,7 @@ public class TinkerItemModelProvider extends ItemModelProvider {
         cast(TinkerSmeltery.bootsPlatingCast);
         cast(TinkerSmeltery.mailleCast);
         // dummy parts
-        TinkerSmeltery.dummyPlating.forEach((type, item) -> basicItem(item, "tool/parts/plating_" + type.getName()));
+        basicEnumItems(TinkerSmeltery.dummyPlating, "tool/parts/plating_");
 
         // world //
         // shards
@@ -140,6 +144,14 @@ public class TinkerItemModelProvider extends ItemModelProvider {
         generated(TinkerWorld.steelCluster, "block/geode/steel_cluster");
         generated(TinkerWorld.cobaltCluster, "block/geode/cobalt_cluster");
         generated(TinkerWorld.knightmetalCluster, "block/geode/knightmetal_cluster");
+    }
+
+    @Override
+    public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+        generatedModels.clear();
+        registerModels();
+        RuntimeResourceWriter.writeModels(this, registrar);
+        generatedModels.clear();
     }
 
     @SuppressWarnings("deprecation") // no its not
@@ -162,6 +174,10 @@ public class TinkerItemModelProvider extends ItemModelProvider {
         return generated(id(item), texture);
     }
 
+    private ItemModelBuilder generated(ItemObject<?> item, String texture) {
+        return generated(item.getId(), texture);
+    }
+
     /** Generated item with a texture */
     private ItemModelBuilder basicItem(ResourceLocation item, String texture) {
         return generated(item, "item/" + texture);
@@ -170,6 +186,16 @@ public class TinkerItemModelProvider extends ItemModelProvider {
     /** Generated item with a texture */
     private ItemModelBuilder basicItem(ItemLike item, String texture) {
         return basicItem(id(item), texture);
+    }
+
+    private ItemModelBuilder basicItem(ItemObject<?> item, String texture) {
+        return basicItem(item.getId(), texture);
+    }
+
+    private void basicEnumItems(EnumObject<ArmorItem.Type,?> items, String texturePrefix) {
+        for (ArmorItem.Type type : items.keys()) {
+            basicItem(getResource(type.getName() + "_plating_dummy"), texturePrefix + type.getName());
+        }
     }
 
 
@@ -201,8 +227,9 @@ public class TinkerItemModelProvider extends ItemModelProvider {
     /** Creates models for the given cast object */
     private void cast(CastItemObject cast) {
         String name = cast.getName().getPath();
-        basicItem(cast.getId(), "cast/" + name);
-        basicItem(cast.getSand(), "sand_cast/" + name);
-        basicItem(cast.getRedSand(), "red_sand_cast/" + name);
+        ResourceLocation id = cast.getId();
+        basicItem(id, "cast/" + name);
+        basicItem(id.withPath(path -> name + "_sand_cast"), "sand_cast/" + name);
+        basicItem(id.withPath(path -> name + "_red_sand_cast"), "red_sand_cast/" + name);
     }
 }

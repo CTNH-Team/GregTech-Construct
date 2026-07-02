@@ -7,7 +7,9 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
 import slimeknights.tconstruct.library.client.data.GenericTextureGenerator;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.library.client.data.material.AbstractMaterialSpriteProvider.MaterialSpriteInfo;
 import slimeknights.tconstruct.library.client.data.material.AbstractPartSpriteProvider.PartSpriteInfo;
 import slimeknights.tconstruct.library.client.data.material.GeneratorPartTextureJsonGenerator.StatOverride;
@@ -33,7 +35,7 @@ import java.util.function.BiConsumer;
  * </ul>
  * In case you need to divide into more than those two, it will be most efficient if each sprite is handled by only a single generator, so always split over sets of materials.
  */
-public class MaterialPartTextureGenerator extends GenericTextureGenerator {
+public class MaterialPartTextureGenerator extends GenericTextureGenerator implements RuntimeResourceProvider {
   /** Path to textures outputted by this generator */
   public static final String FOLDER = "textures";
   private final DataGenSpriteReader spriteReader;
@@ -114,6 +116,44 @@ public class MaterialPartTextureGenerator extends GenericTextureGenerator {
       partProvider.cleanCache();
       runCallbacks(null, null);
     });
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    runCallbacks(existingFileHelper, null);
+    List<PartSpriteInfo> parts = partProvider.getSprites();
+    if (parts.isEmpty()) {
+      throw new IllegalStateException(partProvider.getName() + " has no parts, must have at least one part to generate");
+    }
+    BiConsumer<ResourceLocation, NativeImage> saver = (path, image) -> saveImage(registrar, path, image);
+    BiConsumer<ResourceLocation, JsonObject> metaSaver = (path, meta) -> saveMetadata(registrar, path, meta);
+    try {
+      for (AbstractMaterialSpriteProvider materialProvider : materialProviders) {
+        Collection<MaterialSpriteInfo> materials = materialProvider.getMaterials().values();
+        if (materials.isEmpty()) {
+          throw new IllegalStateException(materialProvider.getName() + " has no materials, must have at least one material to generate");
+        }
+        for (MaterialSpriteInfo material : materials) {
+          for (PartSpriteInfo part : parts) {
+            if (!material.isVariant() || !part.isSkipVariants()) {
+              for (MaterialStatsId statType : part.getStatTypes()) {
+                if (material.supportStatType(statType) || overrides.hasOverride(statType, material.getTexture())) {
+                  ResourceLocation spritePath = outputPath(part, material);
+                  if (!spriteReader.exists(spritePath)) {
+                    generateSprite(spriteReader, material, part, spritePath, saver, metaSaver);
+                  }
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    } finally {
+      spriteReader.closeAll();
+      partProvider.cleanCache();
+      runCallbacks(null, null);
+    }
   }
 
   /** Gets the output path for a given sprite */

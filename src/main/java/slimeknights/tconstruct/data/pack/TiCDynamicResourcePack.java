@@ -28,8 +28,11 @@ import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraftforge.fml.loading.FMLPaths;
 import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.library.addon.ITiCAddon;
+import slimeknights.tconstruct.library.addon.TiCAddonFinder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.stream.Collectors;
 
 /**
  * Dynamic resource pack for client-side resources (models, blockstates, textures, etc.).
@@ -60,7 +63,7 @@ public class TiCDynamicResourcePack implements PackResources {
     }
 
     public TiCDynamicResourcePack(String name) {
-        this(name, Set.of());
+        this(name, TiCAddonFinder.getAddons().stream().map(ITiCAddon::addonModId).collect(Collectors.toSet()));
     }
 
     public TiCDynamicResourcePack(String name, Collection<String> additionalDomains) {

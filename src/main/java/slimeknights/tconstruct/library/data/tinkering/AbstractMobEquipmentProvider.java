@@ -14,6 +14,8 @@ import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import slimeknights.mantle.data.GenericDataProvider;
 import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.util.JsonHelper;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.library.json.loot.equipment.MobEquipment;
 import slimeknights.tconstruct.library.json.loot.equipment.MobEquipmentManager;
 
@@ -23,7 +25,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /** Data provider for {@link EquipmentJson} */
-public abstract class AbstractMobEquipmentProvider extends GenericDataProvider {
+public abstract class AbstractMobEquipmentProvider extends GenericDataProvider implements RuntimeDataProvider {
   private final Map<String, EquipmentJson> equipment = new HashMap<>();
   private final String modId;
 
@@ -37,8 +39,22 @@ public abstract class AbstractMobEquipmentProvider extends GenericDataProvider {
 
   @Override
   public CompletableFuture<?> run(CachedOutput cache) {
-    addEquipment();
+    generateEquipment();
     return allOf(equipment.entrySet().stream().map(entry -> saveJson(cache, ResourceLocation.tryBuild(modId, entry.getKey()), entry.getValue().serialize())));
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicDataRegistrar registrar) {
+    generateEquipment();
+    equipment.forEach((name, value) ->
+      registrar.addJson(MobEquipmentManager.FOLDER, ResourceLocation.tryBuild(modId, name), value.serialize(), JsonHelper.DEFAULT_GSON));
+  }
+
+  private void generateEquipment() {
+    if (!equipment.isEmpty()) {
+      return;
+    }
+    addEquipment();
   }
 
   /** Creates a builder for the given entity */

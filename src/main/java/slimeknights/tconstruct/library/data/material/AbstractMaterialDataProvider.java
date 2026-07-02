@@ -12,6 +12,8 @@ import slimeknights.mantle.data.GenericDataProvider;
 import slimeknights.mantle.recipe.condition.TagFilledCondition;
 import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
 import slimeknights.tconstruct.library.json.JsonRedirect;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.materials.definition.Material;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
@@ -33,7 +35,7 @@ import java.util.stream.Stream;
  * Extendable material provider, useful for addons
  */
 @SuppressWarnings({"SameParameterValue", "unused"})
-public abstract class AbstractMaterialDataProvider extends GenericDataProvider {
+public abstract class AbstractMaterialDataProvider extends GenericDataProvider implements RuntimeDataProvider {
   /** General purpose materials */
   public static final int ORDER_GENERAL = 0;
   /** Materials primarily used for harvest */
@@ -82,6 +84,12 @@ public abstract class AbstractMaterialDataProvider extends GenericDataProvider {
   public CompletableFuture<?> run(CachedOutput cache) {
     ensureAddMaterialsRun();
     return allOf(allMaterials.entrySet().stream().map(entry -> saveJson(cache, entry.getKey(), convert(entry.getValue()))));
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicDataRegistrar registrar) {
+    ensureAddMaterialsRun();
+    allMaterials.forEach((id, material) -> registrar.addJson(MaterialManager.FOLDER, id, convert(material), MaterialManager.GSON));
   }
 
   /**

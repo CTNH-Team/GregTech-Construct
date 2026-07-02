@@ -6,13 +6,13 @@ package slimeknights.tconstruct.plugin.create.tag;
 import slimeknights.tconstruct.plugin.create.modifier.CreateModifierIds;
 
 import slimeknights.tconstruct.common.TinkerTags;
-import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DatagenTagProviderRegistrar;
 
 public final class CreateModifierTagProvider {
 
     private CreateModifierTagProvider() {}
 
-    public static void addTags(DynamicTagProviderRegistrar.ModifierTagRegistrar tags) {
+    public static void addTags(DatagenTagProviderRegistrar.ModifierTagRegistrar tags) {
         tags.add(TinkerTags.Modifiers.HARVEST_ABILITIES, CreateModifierIds.CRUSHING);
         tags.add(TinkerTags.Modifiers.CHESTPLATE_UPGRADES, CreateModifierIds.EXTENDO);
         tags.add(TinkerTags.Modifiers.GENERAL_SLOTLESS, CreateModifierIds.GOGGLES);

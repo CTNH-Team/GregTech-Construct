@@ -13,13 +13,14 @@ import slimeknights.tconstruct.plugin.create.tag.CreateItemTagProvider;
 import slimeknights.tconstruct.plugin.create.tag.CreateModifierTagProvider;
 
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
-import slimeknights.tconstruct.library.addon.DynamicTagProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DynamicRecipeProviderRegistrar;
+import slimeknights.tconstruct.library.addon.DatagenTagProviderRegistrar;
 import slimeknights.tconstruct.library.addon.ITiCAddon;
 import slimeknights.tconstruct.library.addon.ITiCStaticModifierAddon;
 import slimeknights.tconstruct.library.addon.TiCAddon;
 import slimeknights.tconstruct.library.modifiers.impl.NoLevelsModifier;
 
-@TiCAddon(requiredMods = CreateTiCAddon.MOD_ID)
+@TiCAddon(modID = CreateTiCAddon.MOD_ID)
 public class CreateTiCAddon implements ITiCAddon, ITiCStaticModifierAddon {
 
     public static final String MOD_ID = "create";
@@ -31,27 +32,27 @@ public class CreateTiCAddon implements ITiCAddon, ITiCStaticModifierAddon {
 
     @Override
     public void registerStaticModifiers(StaticModifierRegistrar registrar) {
-        registrar.register(CreateModifierIds.CRUSHING.getPath(), CreateCrushingModifier::new);
-        registrar.register(CreateModifierIds.EXTENDO.getPath(), CreateExtendoModifier::new);
-        registrar.register(CreateModifierIds.GOGGLES.getPath(), NoLevelsModifier::new);
-        registrar.register(CreateModifierIds.WRENCH.getPath(), NoLevelsModifier::new);
-        registrar.register(CreateModifierIds.DIVING_WEIGHTS.getPath(), NoLevelsModifier::new);
+        registrar.register(CreateModifierIds.CRUSHING, CreateCrushingModifier.class);
+        registrar.register(CreateModifierIds.EXTENDO, CreateExtendoModifier.class);
+        registrar.register(CreateModifierIds.GOGGLES, NoLevelsModifier.class);
+        registrar.register(CreateModifierIds.WRENCH, NoLevelsModifier.class);
+        registrar.register(CreateModifierIds.DIVING_WEIGHTS, NoLevelsModifier.class);
     }
 
     @Override
-    public void registerDynamicRecipeProviders(DynamicProviderRegistrar registrar) {
-        registrar.addProvider("CreateModifierRecipeProvider", CreateModifierRecipeProvider::new);
+    public void registerDynamicRecipeProviders(DynamicRecipeProviderRegistrar registrar) {
+        registrar.addRecipeProvider(CreateModifierRecipeProvider.class);
     }
 
     @Override
     public void registerDynamicTinkeringProviders(DynamicProviderRegistrar registrar) {
-        registrar.addProvider("CreateModifierProvider", CreateModifierProvider::new);
+        registrar.addDataProvider(CreateModifierProvider.class);
     }
 
     @Override
-    public void registerDynamicTagProviders(DynamicTagProviderRegistrar registrar) {
-        registrar.addProvider("CreateBlockTagProvider", CreateBlockTagProvider::new);
-        registrar.addProvider("CreateItemTagProvider", CreateItemTagProvider::new);
+    public void registerDatagenTagProviders(DatagenTagProviderRegistrar registrar) {
+        registrar.addBlockTags(CreateBlockTagProvider::addTags);
+        registrar.addItemTags(CreateItemTagProvider::addTags);
         registrar.addModifierTags(CreateModifierTagProvider::addTags);
     }
 }

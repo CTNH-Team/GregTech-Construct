@@ -7,6 +7,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import slimeknights.mantle.client.render.FluidCuboid;
 import slimeknights.mantle.data.datamap.BlockStateDataMapProvider;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.data.resource.RuntimeMantleDataWriters;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.smeltery.block.FaucetBlock;
 import slimeknights.tconstruct.smeltery.block.component.SearedTankBlock.TankType;
@@ -14,7 +17,7 @@ import slimeknights.tconstruct.smeltery.block.component.SearedTankBlock.TankType
 import java.util.List;
 
 /** Provides fluid cuboids for block entity renderers */
-public class RenderFluidProvider extends BlockStateDataMapProvider<List<FluidCuboid>> {
+public class RenderFluidProvider extends BlockStateDataMapProvider<List<FluidCuboid>> implements RuntimeResourceProvider {
   public RenderFluidProvider(PackOutput output) {
     super(output, Target.RESOURCE_PACK, FluidCuboid.REGISTRY, TConstruct.MOD_ID);
   }
@@ -123,6 +126,11 @@ public class RenderFluidProvider extends BlockStateDataMapProvider<List<FluidCub
       .variant(List.of(FluidCuboid.builder().from( 5,    6,     0.5f).to(11,    11,      0.5f).face(Direction.SOUTH).build())).when(BlockStateProperties.FACING, Direction.SOUTH).end()
       .variant(List.of(FluidCuboid.builder().from(15.5f, 6,     5   ).to(15.5f, 11,     11   ).face(Direction.WEST ).build())).when(BlockStateProperties.FACING, Direction.WEST).end()
       .variant(List.of(FluidCuboid.builder().from( 0.5f, 6,     5   ).to( 0.5f, 11,     11   ).face(Direction.EAST ).build())).when(BlockStateProperties.FACING, Direction.EAST).end();
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    RuntimeMantleDataWriters.writeBlockStateDataMap(registrar, this, FluidCuboid.REGISTRY.getFolder());
   }
 
   @Override

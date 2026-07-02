@@ -7,11 +7,13 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.PackOutput.Target;
 import net.minecraft.world.item.BucketItem;
 import slimeknights.mantle.data.GenericDataProvider;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 
 import java.util.concurrent.CompletableFuture;
 
 /** Quick and dirty data provider to generate fluid bucket models */
-public class FluidBucketModelProvider extends GenericDataProvider {
+public class FluidBucketModelProvider extends GenericDataProvider implements RuntimeResourceProvider {
   private final String modId;
   public FluidBucketModelProvider(PackOutput packOutput, String modId) {
     super(packOutput, Target.RESOURCE_PACK, "models/item");
@@ -37,6 +39,14 @@ public class FluidBucketModelProvider extends GenericDataProvider {
       BuiltInRegistries.ITEM.entrySet().stream()
         .filter(entry -> entry.getKey().location().getNamespace().equals(modId) && entry.getValue() instanceof BucketItem)
         .map(entry -> saveJson(cache, entry.getKey().location(), makeJson((BucketItem)entry.getValue()))));
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    BuiltInRegistries.ITEM.entrySet().stream()
+      .filter(entry -> entry.getKey().location().getNamespace().equals(modId) && entry.getValue() instanceof BucketItem)
+      .forEach(entry -> registrar.addItemModel(entry.getKey().location(), makeJson((BucketItem)entry.getValue())));
   }
 
   @Override

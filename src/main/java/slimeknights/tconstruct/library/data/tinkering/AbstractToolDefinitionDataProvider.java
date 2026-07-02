@@ -9,6 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.level.ItemLike;
 import slimeknights.mantle.data.GenericDataProvider;
+import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
+import slimeknights.tconstruct.library.data.RuntimeDataProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
 import slimeknights.tconstruct.library.tools.definition.ModifiableArmorMaterial;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
@@ -28,7 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /** Base datagenerator to generate tool definition data */
-public abstract class AbstractToolDefinitionDataProvider extends GenericDataProvider {
+public abstract class AbstractToolDefinitionDataProvider extends GenericDataProvider implements RuntimeDataProvider {
   private final Map<ResourceLocation,ToolDefinitionDataBuilder> allTools = new HashMap<>();
   /** Mod ID to filter definitions we care about */
   private final String modId;
@@ -66,6 +68,20 @@ public abstract class AbstractToolDefinitionDataProvider extends GenericDataProv
 
   @Override
   public CompletableFuture<?> run(CachedOutput cache) {
+    return allOf(generateToolDefinitions().entrySet().stream()
+      .map(entry -> saveJson(cache, entry.getKey(), ToolDefinitionData.LOADABLE.serialize(entry.getValue().build()))));
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicDataRegistrar registrar) {
+    generateToolDefinitions().forEach((id, builder) ->
+      registrar.addJson(ToolDefinitionLoader.FOLDER, id, ToolDefinitionData.LOADABLE.serialize(builder.build())));
+  }
+
+  private Map<ResourceLocation,ToolDefinitionDataBuilder> generateToolDefinitions() {
+    if (!allTools.isEmpty()) {
+      return allTools;
+    }
     addToolDefinitions();
     Map<ResourceLocation,ToolDefinition> relevantDefinitions = ToolDefinitionLoader.getInstance().getRegisteredToolDefinitions().stream()
                                                                                    .filter(def -> def.getId().getNamespace().equals(modId))
@@ -78,16 +94,14 @@ public abstract class AbstractToolDefinitionDataProvider extends GenericDataProv
       }
     }
     // ensure all included ones are required, and the built ones are valid
-    List<CompletableFuture<?>> tasks = new ArrayList<>();
     for (Entry<ResourceLocation,ToolDefinitionDataBuilder> entry : allTools.entrySet()) {
       ResourceLocation id = entry.getKey();
       ToolDefinition definition = relevantDefinitions.get(id);
       if (definition == null) {
         throw new IllegalStateException("Unknown tool definition with ID " + id);
       }
-      tasks.add(saveJson(cache, id, ToolDefinitionData.LOADABLE.serialize(entry.getValue().build())));
     }
-    return allOf(tasks);
+    return allTools;
   }
 
   /** Builder for an armor material to batch certain hooks */

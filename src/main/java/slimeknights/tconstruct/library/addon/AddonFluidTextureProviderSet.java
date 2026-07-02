@@ -4,30 +4,30 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.mantle.fluid.texture.AbstractFluidTextureProvider;
+import slimeknights.tconstruct.data.pack.DynamicPackOutput;
 import slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * Shared resource-provider state for addon fluid textures and their camera textures.
  */
 public final class AddonFluidTextureProviderSet<T extends AbstractFluidTextureProvider> {
-  private final Function<PackOutput,T> fluidTextureProviderFactory;
+  private final FluidTextureProviderFactory<T> fluidTextureProviderFactory;
   private ExistingFileHelper existingFileHelper;
   private T fluidTextures;
 
-  private AddonFluidTextureProviderSet(Function<PackOutput,T> fluidTextureProviderFactory) {
+  private AddonFluidTextureProviderSet(FluidTextureProviderFactory<T> fluidTextureProviderFactory) {
     this.fluidTextureProviderFactory = Objects.requireNonNull(fluidTextureProviderFactory, "fluidTextureProviderFactory");
   }
 
-  public static <T extends AbstractFluidTextureProvider> AddonFluidTextureProviderSet<T> create(Function<PackOutput,T> fluidTextureProviderFactory) {
+  public static <T extends AbstractFluidTextureProvider> AddonFluidTextureProviderSet<T> create(FluidTextureProviderFactory<T> fluidTextureProviderFactory) {
     return new AddonFluidTextureProviderSet<>(fluidTextureProviderFactory);
   }
 
   public T fluidTextures(PackOutput output) {
     if (fluidTextures == null) {
-      fluidTextures = fluidTextureProviderFactory.apply(output);
+      fluidTextures = fluidTextureProviderFactory.create(output);
     }
     return fluidTextures;
   }
@@ -36,11 +36,24 @@ public final class AddonFluidTextureProviderSet<T extends AbstractFluidTexturePr
     return factory.create(output, existingFileHelper(), fluidTextures(output));
   }
 
+  public void addFluidTextures(DynamicResourceRegistrar registrar) {
+    TiCDynamicResourceGenerator.writeFluidTextures(registrar, fluidTextures(DynamicPackOutput.dummy()));
+  }
+
+  public void addCameraTextures(DynamicResourceRegistrar registrar) {
+    TiCDynamicResourceGenerator.writeFluidTextureCameras(registrar, existingFileHelper(), fluidTextures(DynamicPackOutput.dummy()));
+  }
+
   private ExistingFileHelper existingFileHelper() {
     if (existingFileHelper == null) {
       existingFileHelper = TiCDynamicResourceGenerator.createExistingFileHelperForAddons();
     }
     return existingFileHelper;
+  }
+
+  @FunctionalInterface
+  public interface FluidTextureProviderFactory<T extends AbstractFluidTextureProvider> {
+    T create(PackOutput output);
   }
 
   @FunctionalInterface

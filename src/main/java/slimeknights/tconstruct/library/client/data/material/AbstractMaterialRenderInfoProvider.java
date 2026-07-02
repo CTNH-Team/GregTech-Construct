@@ -11,10 +11,12 @@ import net.minecraft.data.PackOutput.Target;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import slimeknights.mantle.data.GenericDataProvider;
+import slimeknights.tconstruct.library.addon.DynamicResourceRegistrar;
 import slimeknights.tconstruct.library.client.data.material.AbstractMaterialSpriteProvider.MaterialSpriteInfo;
 import slimeknights.tconstruct.library.client.materials.MaterialGeneratorInfo;
 import slimeknights.tconstruct.library.client.materials.MaterialRenderInfo;
 import slimeknights.tconstruct.library.client.materials.MaterialRenderInfoLoader;
+import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 
 import javax.annotation.Nullable;
@@ -24,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 
 /** Base data generator for use in addons */
 @SuppressWarnings("unused")  // API
-public abstract class AbstractMaterialRenderInfoProvider extends GenericDataProvider {
+public abstract class AbstractMaterialRenderInfoProvider extends GenericDataProvider implements RuntimeResourceProvider {
   /** Map of material ID to builder, there is at most one builder for each ID */
   private final Map<MaterialVariantId,RenderInfoBuilder> allRenderInfo = new HashMap<>();
   @Nullable
@@ -58,6 +60,22 @@ public abstract class AbstractMaterialRenderInfoProvider extends GenericDataProv
           MaterialPartTextureGenerator.runCallbacks(null, null);
         }
     });
+  }
+
+  @Override
+  public void addToDynamicPack(DynamicResourceRegistrar registrar) {
+    allRenderInfo.clear();
+    if (existingFileHelper != null) {
+      MaterialPartTextureGenerator.runCallbacks(existingFileHelper, null);
+    }
+    addMaterialRenderInfo();
+    allRenderInfo.forEach((id, builder) -> {
+      ResourceLocation location = id.getLocation('/');
+      registrar.addResource(ResourceLocation.tryBuild(location.getNamespace(), MaterialRenderInfoLoader.FOLDER + "/" + location.getPath() + ".json"), builder.build(id));
+    });
+    if (existingFileHelper != null) {
+      MaterialPartTextureGenerator.runCallbacks(null, null);
+    }
   }
 
 
