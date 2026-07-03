@@ -30,8 +30,14 @@
     "#forge:uranium",
     "#forge:chromium",
     "#forge:cadmium",
-    "#forge:polyethylene",
-    "#forge:polyvinyl_chloride",
+    {
+      "id": "#forge:polyethylene",
+      "required": false
+    },
+    {
+      "id": "#forge:polyvinyl_chloride",
+      "required": false
+    },
     "#forge:bronze",
     "#forge:brass",
     "#forge:electrum",

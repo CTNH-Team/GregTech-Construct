@@ -1,10 +1,12 @@
 package slimeknights.tconstruct.data.gtceu;
 
 import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Test;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
+import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.test.BaseMcTest;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
@@ -53,6 +55,12 @@ class GTConstructRecipesTest extends BaseMcTest {
     assertThat(GTConstructRecipes.getSupportedParts(material, List.of(supported, unsupported)))
       .extracting(GTConstructRecipes.SolidifierPart::path)
       .containsExactly("supported");
+  }
+
+  @Test
+  void selectedMaterialsUseCompatFluidPlaceholders() {
+    assertThat(TinkerFluids.isCompatMaterialFluid(TinkerFluids.moltenIron)).isTrue();
+    assertThat(TinkerFluids.moltenIron.getTag().location()).isEqualTo(ResourceLocation.tryBuild("forge", "iron"));
   }
 
   @Test

@@ -46,7 +46,11 @@ public class GTConstructFluid {
           if (FluidObject.class.isAssignableFrom(fieldType) || FlowingFluidObject.class.isAssignableFrom(fieldType)) {
             Object fluidObjectInstance = field.get(null);
             if (fluidObjectInstance != null) {
-              Fluid fluid = ((FluidObject<?>) fluidObjectInstance).get();
+              FluidObject<?> fluidObject = (FluidObject<?>) fluidObjectInstance;
+              if (TinkerFluids.isCompatMaterialFluid(fluidObject)) {
+                continue;
+              }
+              Fluid fluid = fluidObject.get();
               if (fluid != null) {
                 ResourceLocation fluidId = ForgeRegistries.FLUIDS.getKey(fluid);
                 if (fluidId != null) {

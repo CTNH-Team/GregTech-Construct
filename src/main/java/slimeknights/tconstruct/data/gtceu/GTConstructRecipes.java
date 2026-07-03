@@ -103,8 +103,7 @@ public class GTConstructRecipes {
       TinkerFluids.moltenCinderslime.get(),
       TinkerFluids.moltenSlimesteel.get(),
       TinkerFluids.moltenQueensSlime.get(),
-      TinkerFluids.moltenKnightmetal.get(),
-      TinkerFluids.moltenPlatinum.get()
+      TinkerFluids.moltenKnightmetal.get()
     );
 
     for (Map.Entry<ResourceLocation, Fluid> entry : tinkersFluids.entrySet()) {

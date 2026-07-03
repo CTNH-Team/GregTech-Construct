@@ -1,11 +1,17 @@
 package slimeknights.tconstruct.common.registration;
 
+import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import slimeknights.mantle.registration.deferred.FluidDeferredRegister;
+import slimeknights.mantle.registration.object.FlowingFluidObject;
 
 /** Extension of the fluid register to add a few common tinkers fluid behaviors. */
 public class FluidDeferredRegisterExtension extends FluidDeferredRegister {
+  private final String modId;
+
   public FluidDeferredRegisterExtension(String modID) {
     super(modID);
+    this.modId = modID;
   }
 
   /** Registers a slime fluid with slime-like behavior. Slows down the flow rate but doesn't reduce flow speed. */
@@ -21,6 +27,10 @@ public class FluidDeferredRegisterExtension extends FluidDeferredRegister {
   /** Registers a hot fluid with half flow rate. */
   public Builder registerMetal(String name) {
     return register(name).levelDecreasePerBlock(3).slopeFindDistance(3).tickRate(30);
+  }
+
+  public FlowingFluidObject<ForgeFlowingFluid> registerCompatMetal(String name, FluidType.Properties properties) {
+    return new CompatMaterialFluidObject(modId, name, properties);
   }
 
   /** Registers a fluid with gem-like behavior. Flows just the one block */

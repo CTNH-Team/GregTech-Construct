@@ -138,6 +138,9 @@ public class FluidTextureProvider extends AbstractFluidTextureProvider {
 
     /** Creates a texture using the given fixed name in the fluid folder */
     private FluidTexture.Builder named(FluidObject<?> fluid, String name) {
+        if (TinkerFluids.isCompatMaterialFluid(fluid)) {
+            return new FluidTexture.Builder(fluid.getType());
+        }
         return texture(fluid).root(getResource("fluid/"+name+"/"))
                 .still().flowing().camera().calculateFogColor(true).fog(FogShape.SPHERE, 0.25f, 2);
     }

@@ -19,6 +19,7 @@ import slimeknights.mantle.fluid.texture.FluidTexture;
 import slimeknights.mantle.registration.object.FlowingFluidObject;
 import slimeknights.mantle.registration.object.FluidObject;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.common.registration.CompatMaterialFluidObject;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
@@ -40,22 +41,34 @@ public interface AddonSmelteryCompat {
 
   /** Adds addon-owned molten fluids to the fluids creative tab. */
   default void addCreativeTabItems(CreativeModeTab.Output output) {
-    entries().forEach(entry -> acceptCompat(output, entry.fluid(), entry.material(), entry.name()));
+    entries().stream()
+      .filter(entry -> !isCompatMaterialFluid(entry.fluid()))
+      .forEach(entry -> acceptCompat(output, entry.fluid(), entry.material(), entry.name()));
   }
 
   /** Adds addon-owned molten fluid tags using the passed provider-specific registrar. */
   default void addFluidTags(FluidTagRegistrar registrar) {
-    entries().forEach(entry -> registrar.add(entry.fluid()));
+    entries().stream()
+      .filter(entry -> !isCompatMaterialFluid(entry.fluid()))
+      .forEach(entry -> registrar.add(entry.fluid()));
   }
 
   /** Adds addon-owned molten fluid textures using the passed provider. */
   default void addFluidTextures(AbstractFluidTextureProvider provider) {
-    entries().forEach(entry -> compatOre(provider, entry.fluid()));
+    entries().stream()
+      .filter(entry -> !isCompatMaterialFluid(entry.fluid()))
+      .forEach(entry -> compatOre(provider, entry.fluid()));
   }
 
   /** Skips addon-owned molten fluids in a core texture provider that validates a whole mod namespace. */
   default void skipFluidTextures(AbstractFluidTextureProvider provider) {
-    entries().forEach(entry -> provider.skip(entry.fluid()));
+    entries().stream()
+      .filter(entry -> !isCompatMaterialFluid(entry.fluid()))
+      .forEach(entry -> provider.skip(entry.fluid()));
+  }
+
+  private static boolean isCompatMaterialFluid(FluidObject<?> fluid) {
+    return fluid instanceof CompatMaterialFluidObject;
   }
 
   /** Creates a builder for a hot fluid with sounds and description. */
