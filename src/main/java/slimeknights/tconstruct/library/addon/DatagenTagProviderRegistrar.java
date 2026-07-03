@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import slimeknights.mantle.registration.object.FlowingFluidObject;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.modifiers.Modifier;
 
@@ -76,6 +77,9 @@ public final class DatagenTagProviderRegistrar {
   }
 
   public interface FluidTagRegistrar extends AddonSmelteryCompat.FluidTagRegistrar {
+    default void addOptional(FlowingFluidObject<?> fluid) {
+      throw new UnsupportedOperationException("Optional fluid tags are only available from the generated fluid tag provider");
+    }
   }
 
   public interface MaterialTagRegistrar extends TagRegistrar<IMaterial> {

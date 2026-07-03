@@ -5,6 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.FluidTagsProvider;
 import net.minecraft.data.tags.TagsProvider.TagAppender;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -286,6 +287,17 @@ public class FluidTagProvider extends FluidTagsProvider {
         @Override
         public void add(FlowingFluidObject<?> fluid) {
             FluidTagProvider.this.fluidTag(fluid);
+        }
+
+        @Override
+        public void addOptional(FlowingFluidObject<?> fluid) {
+            ResourceLocation id = fluid.getId();
+            ResourceLocation flowingId = ResourceLocation.tryBuild(id.getNamespace(), "flowing_" + id.getPath());
+            tag(fluid.getLocalTag()).addOptional(id).addOptional(flowingId);
+            TagKey<Fluid> commonTag = fluid.getCommonTag();
+            if (commonTag != null) {
+                tag(commonTag).addOptionalTag(fluid.getLocalTag().location());
+            }
         }
     }
 }

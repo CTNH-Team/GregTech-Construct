@@ -12,6 +12,7 @@ public final class BotaniaFluidTagProvider {
     private BotaniaFluidTagProvider() {}
 
     public static void addTags(DatagenTagProviderRegistrar.FluidTagRegistrar tags) {
-        BotaniaSmelteryCompat.INSTANCE.addFluidTags(tags);
+        tags.addOptional(BotaniaSmelteryCompat.moltenManaSteel);
+        tags.addOptional(BotaniaSmelteryCompat.moltenTerraSteel);
     }
 }

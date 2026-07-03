@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "tconstruct:terra_steel",
+      "required": false
+    },
+    {
+      "id": "tconstruct:flowing_terra_steel",
+      "required": false
+    }
+  ]
+}

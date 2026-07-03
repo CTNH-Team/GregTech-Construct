@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "tconstruct:mana_steel",
+      "required": false
+    },
+    {
+      "id": "tconstruct:flowing_mana_steel",
+      "required": false
+    }
+  ]
+}
