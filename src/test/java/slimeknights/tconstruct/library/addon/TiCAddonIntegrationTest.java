@@ -7,6 +7,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -40,6 +41,7 @@ class TiCAddonIntegrationTest extends BaseMcTest {
       .anyMatch(addon -> addon.addonModId().equals("tconstruct"));
   }
 
+  @BeforeEach
   @AfterEach
   void clearAddonCache() throws ReflectiveOperationException {
     Field cache = TiCAddonFinder.class.getDeclaredField("cache");
