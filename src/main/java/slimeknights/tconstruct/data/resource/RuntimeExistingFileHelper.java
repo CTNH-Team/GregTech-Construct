@@ -2,29 +2,40 @@ package slimeknights.tconstruct.data.resource;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.PathPackResources;
+import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import slimeknights.tconstruct.TConstruct;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class RuntimeExistingFileHelper extends ExistingFileHelper {
   public static final RuntimeExistingFileHelper INSTANCE = new RuntimeExistingFileHelper(HashMultimap.create());
 
+  private static final PackResources CLASSPATH_PACK = new ClasspathPackResources();
+
   private final Multimap<PackType, ResourceLocation> generated;
   private final List<PathPackResources> resourcePacks = new ArrayList<>();
+  private Active activeHelper;
 
   protected RuntimeExistingFileHelper(Multimap<PackType, ResourceLocation> generated) {
     super(Collections.emptySet(), Collections.emptySet(), false, null, null);
@@ -36,6 +47,13 @@ public class RuntimeExistingFileHelper extends ExistingFileHelper {
   @Override
   public boolean exists(ResourceLocation loc, PackType packType) {
     return true;
+  }
+
+  public Active activeHelper() {
+    if (activeHelper == null) {
+      activeHelper = new Active(generated);
+    }
+    return activeHelper;
   }
 
   @Override
@@ -55,10 +73,7 @@ public class RuntimeExistingFileHelper extends ExistingFileHelper {
 
   @Override
   public boolean exists(ResourceLocation loc, PackType packType, String pathSuffix, String pathPrefix) {
-    if (PackType.CLIENT_RESOURCES == packType && (".png".equals(pathSuffix) || ".png.mcmeta".equals(pathSuffix))) {
-      return actualExists(loc.withPath(path -> pathPrefix + "/" + path + pathSuffix), packType);
-    }
-    return super.exists(loc, packType, pathSuffix, pathPrefix);
+    return true;
   }
 
   @Override
@@ -66,6 +81,10 @@ public class RuntimeExistingFileHelper extends ExistingFileHelper {
     Resource runtimeResource = getRuntimeResource(loc, packType);
     if (runtimeResource != null) {
       return runtimeResource;
+    }
+    Resource vanillaResource = getVanillaResource(loc, packType);
+    if (vanillaResource != null) {
+      return vanillaResource;
     }
     for (PathPackResources pack : resourcePacks) {
       IoSupplier<InputStream> supplier = pack.getResource(packType, loc);
@@ -75,24 +94,16 @@ public class RuntimeExistingFileHelper extends ExistingFileHelper {
     }
     IoSupplier<InputStream> classpathResource = getClasspathResource(loc, packType);
     if (classpathResource != null) {
-      return new Resource(fallbackPack(), classpathResource);
+      return new Resource(CLASSPATH_PACK, classpathResource);
     }
     throw new FileNotFoundException(loc.toString());
   }
 
-  private boolean actualExists(ResourceLocation loc, PackType packType) {
+  protected boolean actualExists(ResourceLocation loc, PackType packType) {
     if (generated.get(packType).contains(loc)) {
       return true;
     }
-    if (getRuntimeResource(loc, packType) != null) {
-      return true;
-    }
-    for (PathPackResources pack : resourcePacks) {
-      if (pack.getResource(packType, loc) != null) {
-        return true;
-      }
-    }
-    return getClasspathResource(loc, packType) != null;
+    return getRuntimeResource(loc, packType) != null;
   }
 
   private static Resource getRuntimeResource(ResourceLocation loc, PackType packType) {
@@ -101,6 +112,17 @@ public class RuntimeExistingFileHelper extends ExistingFileHelper {
       return null;
     }
     return manager.getResource(loc).orElse(null);
+  }
+
+  private static Resource getVanillaResource(ResourceLocation loc, PackType packType) {
+    if (packType != PackType.CLIENT_RESOURCES || !isClient()) {
+      return null;
+    }
+    try {
+      return ClientResources.getVanillaResource(loc, packType);
+    } catch (RuntimeException | LinkageError ignored) {
+      return null;
+    }
   }
 
   private static ResourceManager getRuntimeManager(PackType packType) {
@@ -118,16 +140,26 @@ public class RuntimeExistingFileHelper extends ExistingFileHelper {
   }
 
   private static ResourceManager getClientResourceManager() {
-    try {
-      Class<?> minecraftClass = Class.forName("net.minecraft.client.Minecraft");
-      Object minecraft = minecraftClass.getMethod("getInstance").invoke(null);
-      if (minecraft == null) {
-        return null;
-      }
-      Object manager = minecraftClass.getMethod("getResourceManager").invoke(minecraft);
-      return manager instanceof ResourceManager resourceManager ? resourceManager : null;
-    } catch (ReflectiveOperationException | LinkageError ignored) {
+    if (!isClient()) {
       return null;
+    }
+    return ClientResources.getResourceManager();
+  }
+
+  private static boolean isClient() {
+    return FMLEnvironment.dist == Dist.CLIENT;
+  }
+
+  @OnlyIn(Dist.CLIENT)
+  private static final class ClientResources {
+    private static ResourceManager getResourceManager() {
+      return Minecraft.getInstance().getResourceManager();
+    }
+
+    private static Resource getVanillaResource(ResourceLocation loc, PackType packType) {
+      PackResources pack = Minecraft.getInstance().getVanillaPackResources();
+      IoSupplier<InputStream> supplier = pack.getResource(packType, loc);
+      return supplier != null ? new Resource(pack, supplier) : null;
     }
   }
 
@@ -145,17 +177,66 @@ public class RuntimeExistingFileHelper extends ExistingFileHelper {
     };
   }
 
-  private PathPackResources fallbackPack() {
-    if (!resourcePacks.isEmpty()) {
-      return resourcePacks.get(0);
-    }
-    Path path = Path.of(".");
-    return new PathPackResources(path.toString(), path, false);
-  }
-
   private void addPack(Path path) {
     if (Files.exists(path)) {
       resourcePacks.add(new PathPackResources(path.toString(), path, false));
     }
+  }
+
+  private static class ClasspathPackResources implements PackResources {
+    @Override
+    public IoSupplier<InputStream> getRootResource(String... elements) {
+      return null;
+    }
+
+    @Override
+    public IoSupplier<InputStream> getResource(PackType packType, ResourceLocation loc) {
+      return null;
+    }
+
+    @Override
+    public void listResources(PackType packType, String namespace, String path, ResourceOutput output) {}
+
+    @Override
+    public Set<String> getNamespaces(PackType packType) {
+      return Set.of();
+    }
+
+    @Override
+    public <T> T getMetadataSection(MetadataSectionSerializer<T> serializer) throws IOException {
+      return null;
+    }
+
+    @Override
+    public String packId() {
+      return "tconstruct/classpath";
+    }
+
+    @Override
+    public void close() {}
+  }
+
+  public static class Active extends RuntimeExistingFileHelper implements AutoCloseable {
+    private Active(Multimap<PackType, ResourceLocation> generated) {
+      super(generated);
+    }
+
+    @Override
+    public Active activeHelper() {
+      return this;
+    }
+
+    @Override
+    public boolean exists(ResourceLocation loc, PackType packType) {
+      return this.actualExists(loc, packType);
+    }
+
+    @Override
+    public boolean exists(ResourceLocation loc, PackType packType, String pathSuffix, String pathPrefix) {
+      return this.actualExists(loc.withPath(path -> pathPrefix + "/" + path + pathSuffix), packType);
+    }
+
+    @Override
+    public void close() {}
   }
 }
