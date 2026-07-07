@@ -36,6 +36,21 @@
     "tconstruct:chestplate_plating_sand_cast",
     "tconstruct:leggings_plating_sand_cast",
     "tconstruct:boots_plating_sand_cast",
-    "tconstruct:maille_sand_cast"
+    "tconstruct:maille_sand_cast",
+    "tconstruct:armor_plate_sand_cast",
+    "tconstruct:armor_mail_sand_cast",
+    "tconstruct:cast_helmet_sand_cast",
+    "tconstruct:cast_chestplate_sand_cast",
+    "tconstruct:cast_leggings_sand_cast",
+    "tconstruct:cast_boots_sand_cast",
+    "tconstruct:frame_of_helmet_sand_cast",
+    "tconstruct:frame_of_chestplate_sand_cast",
+    "tconstruct:frame_of_leggings_sand_cast",
+    "tconstruct:frame_of_boots_sand_cast",
+    "tconstruct:massive_cast_helmet_sand_cast",
+    "tconstruct:massive_cast_chestplate_sand_cast",
+    "tconstruct:massive_cast_leggings_sand_cast",
+    "tconstruct:massive_cast_boots_sand_cast",
+    "tconstruct:linear_sand_cast"
   ]
 }

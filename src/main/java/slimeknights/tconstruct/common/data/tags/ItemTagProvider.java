@@ -333,6 +333,17 @@ public class ItemTagProvider extends ItemTagsProvider {
         addArmorTags(TinkerTools.plateArmor,    MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
         addArmorTags(TinkerTools.slimesuit,     DURABILITY, BONUS_SLOTS, TRIM, EMBELLISHMENT_SLIME);
         addToolTags(TinkerTools.slimesuit.get(ArmorItem.Type.HELMET), SINGLEPART_TOOL);
+        addArmorTags(TinkerTools.standardArmor,          MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
+        addArmorTags(TinkerTools.knightsArmor,           MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
+        addArmorTags(TinkerTools.explorersArmor,         MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
+        addArmorTags(TinkerTools.lightCompositeArmor,    MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
+        addArmorTags(TinkerTools.heavyCompositeArmor,    MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
+        addArmorTags(TinkerTools.lightForgedArmor,       MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
+        addArmorTags(TinkerTools.heavyForgedArmor,       MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
+        addArmorTags(TinkerTools.mixCompositeArmor,      MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
+        addArmorTags(TinkerTools.mixCompositeOtherArmor, MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
+        addArmorTags(TinkerTools.mixForgedArmor,         MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
+        addArmorTags(TinkerTools.mixForgedOtherArmor,    MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, TRIM);
 
         // shields
         addToolTags(TinkerTools.travelersShield, DURABILITY, BONUS_SLOTS, SHIELDS, INTERACTABLE_LEFT, Tags.Items.TOOLS_SHIELDS, SINGLEPART_TOOL, UNRECYCLABLE, DYEABLE);
@@ -349,8 +360,19 @@ public class ItemTagProvider extends ItemTagsProvider {
             bookArmor.add(TinkerTools.plateArmor.get(slotType));
         }
         bookArmor.add(TinkerTools.plateShield.get());
-        tag(MIGHTY_ARMOR);
-        tag(FANTASTIC_ARMOR);
+        bookArmor = tag(MIGHTY_ARMOR);
+        addArmorSetToTag(bookArmor, TinkerTools.standardArmor);
+        addArmorSetToTag(bookArmor, TinkerTools.explorersArmor);
+        addArmorSetToTag(bookArmor, TinkerTools.lightCompositeArmor);
+        addArmorSetToTag(bookArmor, TinkerTools.heavyCompositeArmor);
+        addArmorSetToTag(bookArmor, TinkerTools.lightForgedArmor);
+        addArmorSetToTag(bookArmor, TinkerTools.heavyForgedArmor);
+        addArmorSetToTag(bookArmor, TinkerTools.mixCompositeArmor);
+        addArmorSetToTag(bookArmor, TinkerTools.mixCompositeOtherArmor);
+        addArmorSetToTag(bookArmor, TinkerTools.mixForgedArmor);
+        addArmorSetToTag(bookArmor, TinkerTools.mixForgedOtherArmor);
+        bookArmor = tag(FANTASTIC_ARMOR);
+        addArmorSetToTag(bookArmor, TinkerTools.knightsArmor);
         bookArmor = tag(GADGETRY_ARMOR);
         for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
             bookArmor.add(TinkerTools.slimesuit.get(slotType));
@@ -434,9 +456,14 @@ public class ItemTagProvider extends ItemTagsProvider {
                         TinkerToolParts.wrenchHead.get(), TinkerToolParts.wireCutterHead.get(),
                         TinkerToolParts.fileHead.get(), TinkerToolParts.screwdriverHead.get(),
                         TinkerToolParts.sawBlade.get(), TinkerToolParts.crowbarHead.get(),
-                        TinkerToolParts.mortarHead.get(), TinkerToolParts.mortarBowl.get())
+                        TinkerToolParts.mortarHead.get(), TinkerToolParts.mortarBowl.get(),
+                        TinkerToolParts.armorPlate.get(), TinkerToolParts.armorMail.get(),
+                        TinkerToolParts.linear.get())
 
-                .add(TinkerToolParts.plating.values().toArray(new Item[0]));
+                .add(TinkerToolParts.plating.values().toArray(new Item[0]))
+                .add(TinkerToolParts.armorCast.values().toArray(new Item[0]))
+                .add(TinkerToolParts.armorFrame.values().toArray(new Item[0]))
+                .add(TinkerToolParts.massiveArmorCast.values().toArray(new Item[0]));
         // tag for the part chest items
         this.tag(TinkerTags.Items.CHEST_PARTS).addTag(TinkerTags.Items.TOOL_PARTS).add(TinkerSmeltery.dummyPlating.values().toArray(new Item[0]));
 
@@ -607,6 +634,21 @@ public class ItemTagProvider extends ItemTagsProvider {
         addCast.accept(TinkerSmeltery.leggingsPlatingCast);
         addCast.accept(TinkerSmeltery.bootsPlatingCast);
         addCast.accept(TinkerSmeltery.mailleCast);
+        addCast.accept(TinkerSmeltery.armorPlateCast);
+        addCast.accept(TinkerSmeltery.armorMailCast);
+        addCast.accept(TinkerSmeltery.armorCastHelmetCast);
+        addCast.accept(TinkerSmeltery.armorCastChestplateCast);
+        addCast.accept(TinkerSmeltery.armorCastLeggingsCast);
+        addCast.accept(TinkerSmeltery.armorCastBootsCast);
+        addCast.accept(TinkerSmeltery.frameHelmetCast);
+        addCast.accept(TinkerSmeltery.frameChestplateCast);
+        addCast.accept(TinkerSmeltery.frameLeggingsCast);
+        addCast.accept(TinkerSmeltery.frameBootsCast);
+        addCast.accept(TinkerSmeltery.massiveCastHelmetCast);
+        addCast.accept(TinkerSmeltery.massiveCastChestplateCast);
+        addCast.accept(TinkerSmeltery.massiveCastLeggingsCast);
+        addCast.accept(TinkerSmeltery.massiveCastBootsCast);
+        addCast.accept(TinkerSmeltery.linearCast);
 
         // arrow patterns are basically a gold cast
         goldCasts.add(TinkerSmeltery.arrowCast.get());
@@ -755,6 +797,10 @@ public class ItemTagProvider extends ItemTagsProvider {
             this.tag(getArmorTag(type)).add(item);
             this.tag(getForgeArmorTag(type)).add(item);
         });
+    }
+
+    private static void addArmorSetToTag(IntrinsicTagAppender<Item> tag, EnumObject<ArmorItem.Type,? extends Item> armor) {
+        armor.forEach((type, item) -> tag.add(item));
     }
 
     /** Creates a builder for a melting tag with a molten fluid */

@@ -15,6 +15,7 @@ import slimeknights.tconstruct.library.data.tinkering.AbstractToolDefinitionData
 import slimeknights.tconstruct.library.json.predicate.modifier.SingleModifierPredicate;
 import slimeknights.tconstruct.library.materials.RandomMaterial;
 import slimeknights.tconstruct.library.tools.SlotType;
+import slimeknights.tconstruct.library.tools.definition.ModifiableArmorMaterial;
 import slimeknights.tconstruct.library.tools.definition.module.ToolHooks;
 import slimeknights.tconstruct.library.tools.definition.module.ToolModule;
 import slimeknights.tconstruct.library.tools.definition.module.aoe.*;
@@ -34,6 +35,7 @@ import slimeknights.tconstruct.library.tools.definition.module.weapon.ParticleWe
 import slimeknights.tconstruct.library.tools.definition.module.weapon.SweepWeaponAttack;
 import slimeknights.tconstruct.library.tools.nbt.MultiplierNBT;
 import slimeknights.tconstruct.library.tools.nbt.StatsNBT;
+import slimeknights.tconstruct.library.tools.part.IToolPart;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.tools.*;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
@@ -43,6 +45,7 @@ import slimeknights.tconstruct.tools.modules.interaction.FishingModule;
 import slimeknights.tconstruct.tools.stats.*;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.gregtechceu.gtceu.common.data.item.GTToolActions.*;
 import static net.minecraftforge.common.ToolActions.*;
@@ -869,6 +872,8 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // display name - helmet displays a name for each material
                 .module(ArmorItem.Type.HELMET, UniqueMaterialToolName.FIRST);
 
+        defineArmorExtensionFamilies(tier1Material);
+
         // ancient
         // melting pan
         define(ToolDefinitions.MELTING_PAN)
@@ -987,6 +992,221 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(IsEffectiveModule.tag(TinkerTags.Blocks.MINABLE_WITH_HAND_AXE))
                 .module(BoxAOEIterator.builder(0, 5, 0).addWidth(1).addDepth(1).direction(IBoxExpansion.HEIGHT).build())
                 .module(new ParticleWeaponAttack(TinkerTools.axeAttackParticle.get()));
+    }
+
+    private void defineArmorExtensionFamilies(RandomMaterial tier1Material) {
+        RandomMaterial tier1To2Material = RandomMaterial.random().tier(1, 2).build();
+        DefaultMaterialsModule defaultThree = defaultMaterials(tier1To2Material, tier1To2Material, tier1Material);
+        DefaultMaterialsModule defaultFour = defaultMaterials(tier1To2Material, tier1To2Material, tier1To2Material, tier1Material);
+        DefaultMaterialsModule defaultForgedSmall = defaultMaterials(tier1To2Material, tier1To2Material, tier1To2Material);
+        DefaultMaterialsModule defaultForgedLarge = defaultMaterials(tier1To2Material, tier1To2Material, tier1To2Material, tier1To2Material);
+
+        defineArmor(ArmorDefinitions.STANDARD)
+                .modules(slots -> PartStatsModule.armor(slots)
+                        .part(TinkerToolParts.armorCast, 1)
+                        .part(maille, 1)
+                        .part(linear, 1))
+                .module(defaultThree)
+                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.4f))
+                .module(slots(4, 0, 1))
+                .module(FixedMaterialToolName.FIRST);
+
+        defineArmor(ArmorDefinitions.KNIGHTS)
+                .modules(slots -> PartStatsModule.armor(slots)
+                        .part(TinkerToolParts.massiveArmorCast, 1)
+                        .part(maille, 1)
+                        .part(linear, 1))
+                .module(defaultThree)
+                .module(baseStats(stats()
+                        .set(ToolStats.KNOCKBACK_RESISTANCE, 0.05f)
+                        .set(ArmorStats.PRE_REDUCTION, 0.25f)
+                        .set(ArmorStats.PROTECTION, 0.025f)))
+                .module(multiply(1.75f, 1.1f, 1.25f, 1.25f))
+                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.8f))
+                .module(slots(5, 1, 1))
+                .module(FixedMaterialToolName.FIRST);
+
+        defineArmor(ArmorDefinitions.EXPLORERS)
+                .modules(slots -> PartStatsModule.armor(slots)
+                        .part(TinkerToolParts.armorFrame, 1)
+                        .part(armorMail, 1)
+                        .part(linear, 1))
+                .module(defaultThree)
+                .module(multiply(null, 0.9f, 0.8f, 0.8f))
+                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.6f))
+                .module(slots(1, 1, 2))
+                .module(FixedMaterialToolName.FIRST);
+
+        defineLayeredCompositeArmor(ArmorDefinitions.LIGHT_COMPOSITE, armorMail, defaultThree, defaultFour, null, multiply(null, 0.9f, 0.8f, 1.25f), 0.4f, slots(3, 1, 1));
+        defineLayeredCompositeArmor(ArmorDefinitions.HEAVY_COMPOSITE, armorPlate, defaultThree, defaultFour,
+                baseStats(stats().set(ArmorStats.ARMOR_STRENGTH, 1f).set(ToolStats.KNOCKBACK_RESISTANCE, 0.1f)),
+                multiply(1.25f, null, 0.8f, 1.25f), 0.5f, slots(4, 2, 1));
+        defineLayeredForgedArmor(ArmorDefinitions.LIGHT_FORGED, armorMail, defaultForgedSmall, defaultForgedLarge, null, multiply(1.4f, 0.9f, 1.25f, 0.8f), 0.4f, slots(1, 3, 1));
+        defineLayeredForgedArmor(ArmorDefinitions.HEAVY_FORGED, armorPlate, defaultForgedSmall, defaultForgedLarge,
+                baseStats(stats().set(ToolStats.ARMOR_TOUGHNESS, 1f).set(ToolStats.KNOCKBACK_RESISTANCE, 0.1f)),
+                multiply(1.4f, 0.9f, 1.25f, 0.8f), 0.4f, slots(2, 4, 1));
+
+        defineMixedCompositeArmor(ArmorDefinitions.MIX_COMPOSITE, false, defaultFour);
+        defineMixedCompositeArmor(ArmorDefinitions.MIX_COMPOSITE_OTHER, true, defaultFour);
+        defineMixedForgedArmor(ArmorDefinitions.MIX_FORGED, false, defaultForgedLarge);
+        defineMixedForgedArmor(ArmorDefinitions.MIX_FORGED_OTHER, true, defaultForgedLarge);
+    }
+
+    private void defineLayeredCompositeArmor(ModifiableArmorMaterial material, Supplier<? extends IToolPart> layer, DefaultMaterialsModule smallMaterials,
+                                             DefaultMaterialsModule largeMaterials, ToolModule baseStats, ToolModule multipliers, float chestAttack, ToolModule slots) {
+        ArmorDataBuilder builder = defineArmor(material);
+        for (ArmorItem.Type type : ArmorItem.Type.values()) {
+            boolean small = isSmallArmor(type);
+            builder.module(type, compositeParts(type, layer, small ? 0.5f : 0.25f));
+            builder.module(type, small ? smallMaterials : largeMaterials);
+        }
+        if (baseStats != null) {
+            builder.module(baseStats);
+        }
+        builder.module(multipliers)
+                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, chestAttack))
+                .module(slots)
+                .module(FixedMaterialToolName.FIRST);
+    }
+
+    private void defineLayeredForgedArmor(ModifiableArmorMaterial material, Supplier<? extends IToolPart> layer, DefaultMaterialsModule smallMaterials,
+                                          DefaultMaterialsModule largeMaterials, ToolModule baseStats, ToolModule multipliers, float chestAttack, ToolModule slots) {
+        ArmorDataBuilder builder = defineArmor(material);
+        for (ArmorItem.Type type : ArmorItem.Type.values()) {
+            boolean small = isSmallArmor(type);
+            builder.module(type, forgedParts(type, layer, small ? 1f : 0.5f));
+            builder.module(type, small ? smallMaterials : largeMaterials);
+        }
+        if (baseStats != null) {
+            builder.module(baseStats);
+        }
+        builder.module(multipliers)
+                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, chestAttack))
+                .module(slots)
+                .module(FixedMaterialToolName.FIRST);
+    }
+
+    private void defineMixedCompositeArmor(ModifiableArmorMaterial material, boolean plateFirst, DefaultMaterialsModule materials) {
+        ArmorDataBuilder builder = defineArmor(material);
+        for (ArmorItem.Type type : List.of(ArmorItem.Type.CHESTPLATE, ArmorItem.Type.LEGGINGS)) {
+            builder.module(type, mixedCompositeParts(type, plateFirst));
+            builder.module(type, materials);
+        }
+        builder.module(multiply(1.25f, 0.95f, 0.8f, 1.25f))
+                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.45f))
+                .module(slots(4, 1, 1))
+                .module(FixedMaterialToolName.FIRST);
+    }
+
+    private void defineMixedForgedArmor(ModifiableArmorMaterial material, boolean plateFirst, DefaultMaterialsModule materials) {
+        ArmorDataBuilder builder = defineArmor(material);
+        for (ArmorItem.Type type : List.of(ArmorItem.Type.CHESTPLATE, ArmorItem.Type.LEGGINGS)) {
+            builder.module(type, mixedForgedParts(type, plateFirst));
+            builder.module(type, materials);
+        }
+        builder.module(baseStats(stats().set(ToolStats.ARMOR_TOUGHNESS, 1f).set(ToolStats.KNOCKBACK_RESISTANCE, 0.1f)))
+                .module(multiply(1.4f, 0.95f, 1.25f, 0.8f))
+                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.45f))
+                .module(slots(1, 4, 1))
+                .module(FixedMaterialToolName.FIRST);
+    }
+
+    private static PartStatsModule compositeParts(ArmorItem.Type type, Supplier<? extends IToolPart> layer, float layerScale) {
+        PartStatsModule.Builder builder = PartStatsModule.parts()
+                .part(TinkerToolParts.armorFrame.get(type), 0.5f)
+                .part(layer, layerScale);
+        if (!isSmallArmor(type)) {
+            builder.part(layer, layerScale);
+        }
+        return builder.part(maille, 0.5f).build();
+    }
+
+    private static PartStatsModule forgedParts(ArmorItem.Type type, Supplier<? extends IToolPart> layer, float layerScale) {
+        PartStatsModule.Builder builder = PartStatsModule.parts()
+                .part(TinkerToolParts.armorFrame.get(type), 1f)
+                .part(plating.get(type), 1f)
+                .part(layer, layerScale);
+        if (!isSmallArmor(type)) {
+            builder.part(layer, layerScale);
+        }
+        return builder.build();
+    }
+
+    private static PartStatsModule mixedCompositeParts(ArmorItem.Type type, boolean plateFirst) {
+        Supplier<? extends IToolPart> first = plateFirst ? armorPlate : armorMail;
+        Supplier<? extends IToolPart> second = plateFirst ? armorMail : armorPlate;
+        return PartStatsModule.parts()
+                .part(TinkerToolParts.armorFrame.get(type), 0.5f)
+                .part(first, 0.25f)
+                .part(second, 0.25f)
+                .part(maille, 0.5f)
+                .build();
+    }
+
+    private static PartStatsModule mixedForgedParts(ArmorItem.Type type, boolean plateFirst) {
+        Supplier<? extends IToolPart> first = plateFirst ? armorPlate : armorMail;
+        Supplier<? extends IToolPart> second = plateFirst ? armorMail : armorPlate;
+        return PartStatsModule.parts()
+                .part(TinkerToolParts.armorFrame.get(type), 1f)
+                .part(plating.get(type), 1f)
+                .part(first, 0.5f)
+                .part(second, 0.5f)
+                .build();
+    }
+
+    private static boolean isSmallArmor(ArmorItem.Type type) {
+        return type == ArmorItem.Type.HELMET || type == ArmorItem.Type.BOOTS;
+    }
+
+    private static DefaultMaterialsModule defaultMaterials(RandomMaterial... materials) {
+        DefaultMaterialsModule.Builder builder = DefaultMaterialsModule.builder();
+        for (RandomMaterial material : materials) {
+            builder.material(material);
+        }
+        return builder.build();
+    }
+
+    private static StatsNBT.Builder stats() {
+        return StatsNBT.builder();
+    }
+
+    private static SetStatsModule baseStats(StatsNBT.Builder builder) {
+        return new SetStatsModule(builder.build());
+    }
+
+    private static MultiplyStatsModule multiply(Float durability, Float armor, Float armorStrength, Float toughness) {
+        MultiplierNBT.Builder builder = MultiplierNBT.builder();
+        if (durability != null) {
+            builder.set(ToolStats.DURABILITY, durability);
+        }
+        if (armor != null) {
+            builder.set(ToolStats.ARMOR, armor);
+        }
+        if (armorStrength != null) {
+            builder.set(ArmorStats.ARMOR_STRENGTH, armorStrength);
+        }
+        if (toughness != null) {
+            builder.set(ToolStats.ARMOR_TOUGHNESS, toughness);
+        }
+        return new MultiplyStatsModule(builder.build());
+    }
+
+    private static MultiplyStatsModule multiply(slimeknights.tconstruct.library.tools.stat.FloatToolStat stat, float value) {
+        return new MultiplyStatsModule(MultiplierNBT.builder().set(stat, value).build());
+    }
+
+    private static ToolModule slots(int defense, int upgrades, int abilities) {
+        ToolSlotsModule.Builder builder = ToolSlotsModule.builder();
+        if (defense > 0) {
+            builder.slots(SlotType.DEFENSE, defense);
+        }
+        if (upgrades > 0) {
+            builder.slots(SlotType.UPGRADE, upgrades);
+        }
+        if (abilities > 0) {
+            builder.slots(SlotType.ABILITY, abilities);
+        }
+        return builder.build();
     }
 
     @Override

@@ -116,6 +116,7 @@ tasks.named('processResources', ProcessResources).configure {
         "displayURL": mod_url,
         "authors": mod_author,
         "mod_description": mod_description,
+        "formula_loader_range": formula_loader_range,
         "forge_version": forge_version.split("\\.")[0], // only specify major version of forge
         "minecraft_version": minecraft_version,
         "gtceu_version": gtceu_version,

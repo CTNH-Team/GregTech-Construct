@@ -354,6 +354,21 @@ public final class TinkerSmeltery extends TinkerModule {
     public static final CastItemObject leggingsPlatingCast = ITEMS.registerCast("leggings_plating", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.plating.get(ArmorItem.Type.LEGGINGS)));
     public static final CastItemObject bootsPlatingCast = ITEMS.registerCast("boots_plating", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.plating.get(ArmorItem.Type.BOOTS)));
     public static final CastItemObject mailleCast = ITEMS.registerCast(TinkerToolParts.maille, ITEM_PROPS);
+    public static final CastItemObject armorPlateCast = ITEMS.registerCast(TinkerToolParts.armorPlate, ITEM_PROPS);
+    public static final CastItemObject armorMailCast = ITEMS.registerCast(TinkerToolParts.armorMail, ITEM_PROPS);
+    public static final CastItemObject armorCastHelmetCast = ITEMS.registerCast("cast_helmet", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.armorCast.get(ArmorItem.Type.HELMET)));
+    public static final CastItemObject armorCastChestplateCast = ITEMS.registerCast("cast_chestplate", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.armorCast.get(ArmorItem.Type.CHESTPLATE)));
+    public static final CastItemObject armorCastLeggingsCast = ITEMS.registerCast("cast_leggings", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.armorCast.get(ArmorItem.Type.LEGGINGS)));
+    public static final CastItemObject armorCastBootsCast = ITEMS.registerCast("cast_boots", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.armorCast.get(ArmorItem.Type.BOOTS)));
+    public static final CastItemObject frameHelmetCast = ITEMS.registerCast("frame_of_helmet", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.armorFrame.get(ArmorItem.Type.HELMET)));
+    public static final CastItemObject frameChestplateCast = ITEMS.registerCast("frame_of_chestplate", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.armorFrame.get(ArmorItem.Type.CHESTPLATE)));
+    public static final CastItemObject frameLeggingsCast = ITEMS.registerCast("frame_of_leggings", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.armorFrame.get(ArmorItem.Type.LEGGINGS)));
+    public static final CastItemObject frameBootsCast = ITEMS.registerCast("frame_of_boots", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.armorFrame.get(ArmorItem.Type.BOOTS)));
+    public static final CastItemObject massiveCastHelmetCast = ITEMS.registerCast("massive_cast_helmet", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.HELMET)));
+    public static final CastItemObject massiveCastChestplateCast = ITEMS.registerCast("massive_cast_chestplate", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.CHESTPLATE)));
+    public static final CastItemObject massiveCastLeggingsCast = ITEMS.registerCast("massive_cast_leggings", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.LEGGINGS)));
+    public static final CastItemObject massiveCastBootsCast = ITEMS.registerCast("massive_cast_boots", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.BOOTS)));
+    public static final CastItemObject linearCast = ITEMS.registerCast(TinkerToolParts.linear, ITEM_PROPS);
     // dummy cast creation items
     public static final EnumObject<ArmorItem.Type,DummyMaterialItem> dummyPlating = ITEMS.registerEnum(ArmorItem.Type.values(), "plating_dummy", type -> new DummyMaterialItem(ITEM_PROPS));
 
@@ -588,6 +603,21 @@ public final class TinkerSmeltery extends TinkerModule {
         accept(output, getter, leggingsPlatingCast);
         accept(output, getter, bootsPlatingCast);
         accept(output, getter, mailleCast);
+        accept(output, getter, armorPlateCast);
+        accept(output, getter, armorMailCast);
+        accept(output, getter, armorCastHelmetCast);
+        accept(output, getter, armorCastChestplateCast);
+        accept(output, getter, armorCastLeggingsCast);
+        accept(output, getter, armorCastBootsCast);
+        accept(output, getter, frameHelmetCast);
+        accept(output, getter, frameChestplateCast);
+        accept(output, getter, frameLeggingsCast);
+        accept(output, getter, frameBootsCast);
+        accept(output, getter, massiveCastHelmetCast);
+        accept(output, getter, massiveCastChestplateCast);
+        accept(output, getter, massiveCastLeggingsCast);
+        accept(output, getter, massiveCastBootsCast);
+        accept(output, getter, linearCast);
     }
 
     /** Adds a cast to the tab */

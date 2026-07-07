@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tools.data;
 
 import net.minecraft.data.PackOutput;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.armor.texture.ArmorTextureSupplier;
 import slimeknights.tconstruct.library.client.armor.texture.DyedArmorTextureSupplier;
 import slimeknights.tconstruct.library.client.armor.texture.FirstArmorTextureSupplier;
@@ -13,6 +14,10 @@ import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 
 public class ArmorModelProvider extends AbstractArmorModelProvider {
+  private static final String[] ARMOR_EXTENSION_SLOTS = { "helmet", "chestplate", "leggings", "boots" };
+  private static final String[] ARMOR_EXTENSION_SMALL_SLOTS = { "helmet", "boots" };
+  private static final String[] ARMOR_EXTENSION_LARGE_SLOTS = { "chestplate", "leggings" };
+
   public ArmorModelProvider(PackOutput packOutput) {
     super(packOutput);
   }
@@ -39,6 +44,44 @@ public class ArmorModelProvider extends AbstractArmorModelProvider {
         FixedArmorTextureSupplier.builder(name, "/").materialSuffix(MaterialIds.enderslime).build()),
       TrimArmorTextureSupplier.INSTANCE
     });
+    addArmorExtensionModels();
+  }
+
+  private void addArmorExtensionModels() {
+    for (String slot : ARMOR_EXTENSION_SLOTS) {
+      addArmorExtensionModel("standard/" + slot, from("linear_", 2), from("cast_", 0));
+      addArmorExtensionModel("knights/" + slot, from("linear_", 2), from("massive_cast_", 0));
+      addArmorExtensionModel("explorers/" + slot, from("linear_", 2), from("armor_mail_1_", 1), from("frame_of_", 0));
+    }
+
+    for (String slot : ARMOR_EXTENSION_SMALL_SLOTS) {
+      addArmorExtensionModel("light_composite/" + slot, from("armor_mail_1_", 1), from("frame_of_", 0), from("maille_", 2));
+      addArmorExtensionModel("heavy_composite/" + slot, from("armor_plate_1_", 1), from("frame_of_", 0), from("maille_", 2));
+      addArmorExtensionModel("light_forged/" + slot, from("armor_mail_1_", 2), from("frame_of_", 0), from("plating_", 1));
+      addArmorExtensionModel("heavy_forged/" + slot, from("armor_plate_1_", 2), from("frame_of_", 0), from("plating_", 1));
+    }
+
+    for (String slot : ARMOR_EXTENSION_LARGE_SLOTS) {
+      addArmorExtensionModel("light_composite/" + slot, from("armor_mail_1_", 1), from("armor_mail_2_", 2), from("frame_of_", 0), from("maille_", 3));
+      addArmorExtensionModel("mix_composite/" + slot, from("armor_mail_1_", 1), from("armor_plate_2_", 2), from("frame_of_", 0), from("maille_", 3));
+      addArmorExtensionModel("mix_composite_other/" + slot, from("armor_plate_1_", 1), from("armor_mail_2_", 2), from("frame_of_", 0), from("maille_", 3));
+      addArmorExtensionModel("heavy_composite/" + slot, from("armor_plate_1_", 1), from("armor_plate_2_", 2), from("frame_of_", 0), from("maille_", 3));
+      addArmorExtensionModel("light_forged/" + slot, from("armor_mail_1_", 2), from("armor_mail_2_", 3), from("frame_of_", 0), from("plating_", 1));
+      addArmorExtensionModel("mix_forged/" + slot, from("armor_mail_1_", 2), from("armor_plate_2_", 3), from("frame_of_", 0), from("plating_", 1));
+      addArmorExtensionModel("mix_forged_other/" + slot, from("armor_plate_1_", 2), from("armor_mail_2_", 3), from("frame_of_", 0), from("plating_", 1));
+      addArmorExtensionModel("heavy_forged/" + slot, from("armor_plate_1_", 2), from("armor_plate_2_", 3), from("frame_of_", 0), from("plating_", 1));
+    }
+  }
+
+  private void addArmorExtensionModel(String path, MaterialArmorTextureSupplier... layers) {
+    ArmorTextureSupplier[] allLayers = new ArmorTextureSupplier[layers.length + 1];
+    System.arraycopy(layers, 0, allLayers, 0, layers.length);
+    allLayers[layers.length] = TrimArmorTextureSupplier.INSTANCE;
+    addModel(TConstruct.getResource(path), allLayers);
+  }
+
+  private static MaterialArmorTextureSupplier from(String path, int index) {
+    return new MaterialArmorTextureSupplier.Material(TConstruct.getResource(path), "", index);
   }
 
   @Override

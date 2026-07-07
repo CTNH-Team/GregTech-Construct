@@ -45,7 +45,9 @@ options.txt
 /resources/assets/tinker
 /resources/assets/unused
 /design
-/docs/
+/docs/*
+!/docs/third_party/
+!/docs/third_party/**
 /classes/
 #custom
 *.tmp

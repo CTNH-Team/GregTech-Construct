@@ -2,6 +2,17 @@
   "values": [
     "tconstruct:travelers_leggings",
     "tconstruct:plate_leggings",
-    "tconstruct:slime_leggings"
+    "tconstruct:slime_leggings",
+    "tconstruct:standard_leggings",
+    "tconstruct:knights_leggings",
+    "tconstruct:explorers_leggings",
+    "tconstruct:light_composite_leggings",
+    "tconstruct:heavy_composite_leggings",
+    "tconstruct:light_forged_leggings",
+    "tconstruct:heavy_forged_leggings",
+    "tconstruct:mix_composite_leggings",
+    "tconstruct:mix_composite_other_leggings",
+    "tconstruct:mix_forged_leggings",
+    "tconstruct:mix_forged_other_leggings"
   ]
 }

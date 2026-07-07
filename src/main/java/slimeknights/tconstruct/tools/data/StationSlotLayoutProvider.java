@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tools.data;
 
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -232,6 +233,106 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
                 .addInputPattern(Patterns.PLATING,   33, 29, Ingredient.of(TinkerToolParts.plating.values().toArray(new Item[0])))
                 .addInputItem(TinkerToolParts.maille, 33, 53)
                 .build();
+        defineArmorExtensionLayouts();
+    }
+
+    private void defineArmorExtensionLayouts() {
+        definePattern(Patterns.PLATE_ARMOR_SMALL)
+                .sortIndex(32)
+                .translationKey(TConstruct.makeTranslationKey("gui", "plate_small"))
+                .addInputPattern(Patterns.PLATING_SMALL, 33, 32, smallPlating())
+                .addInputItem(TinkerToolParts.maille, 33, 58)
+                .build();
+        definePattern(Patterns.PLATE_ARMOR_LARGE)
+                .sortIndex(33)
+                .translationKey(TConstruct.makeTranslationKey("gui", "plate_large"))
+                .addInputPattern(Patterns.PLATING_LARGE, 20, 33, largePlating())
+                .addInputPattern(Patterns.PLATING_LARGE, 46, 33, largePlating())
+                .addInputItem(TinkerToolParts.maille, 33, 56)
+                .build();
+        definePattern(Patterns.EXPLORERS_ARMOR)
+                .sortIndex(34)
+                .translationKey(TConstruct.makeTranslationKey("gui", "explorers"))
+                .addInputPattern(Patterns.ARMOR_FRAME, 33, 20, allFrames())
+                .addInputItem(TinkerToolParts.armorMail, 33, 46)
+                .addInputItem(TinkerToolParts.linear, 33, 72)
+                .build();
+        definePattern(Patterns.STANDARD_ARMOR)
+                .sortIndex(35)
+                .translationKey(TConstruct.makeTranslationKey("gui", "standard"))
+                .addInputPattern(Patterns.ARMOR_CAST, 33, 33, allArmorCasts())
+                .addInputItem(TinkerToolParts.maille, 20, 56)
+                .addInputItem(TinkerToolParts.linear, 46, 56)
+                .build();
+        definePattern(Patterns.COMPOSITE_ARMOR_SMALL)
+                .sortIndex(36)
+                .translationKey(TConstruct.makeTranslationKey("gui", "composite_small"))
+                .addInputPattern(Patterns.ARMOR_FRAME_SMALL, 33, 20, smallFrames())
+                .addInputPattern(Patterns.MAIL_PLATE, 33, 46, mailOrPlate())
+                .addInputItem(TinkerToolParts.maille, 33, 72)
+                .build();
+        definePattern(Patterns.COMPOSITE_ARMOR_LARGE)
+                .sortIndex(37)
+                .translationKey(TConstruct.makeTranslationKey("gui", "composite_large"))
+                .addInputPattern(Patterns.ARMOR_FRAME_LARGE, 33, 23, largeFrames())
+                .addInputPattern(Patterns.MAIL_PLATE, 46, 46, mailOrPlate())
+                .addInputPattern(Patterns.MAIL_PLATE, 20, 46, mailOrPlate())
+                .addInputItem(TinkerToolParts.maille, 33, 69)
+                .build();
+        definePattern(Patterns.FORGED_ARMOR_SMALL)
+                .sortIndex(38)
+                .translationKey(TConstruct.makeTranslationKey("gui", "forged_small"))
+                .addInputPattern(Patterns.ARMOR_FRAME_SMALL, 33, 46, smallFrames())
+                .addInputPattern(Patterns.PLATING_SMALL, 33, 20, smallPlating())
+                .addInputPattern(Patterns.MAIL_PLATE, 33, 72, mailOrPlate())
+                .build();
+        definePattern(Patterns.FORGED_ARMOR_LARGE)
+                .sortIndex(39)
+                .translationKey(TConstruct.makeTranslationKey("gui", "forged_large"))
+                .addInputPattern(Patterns.ARMOR_FRAME_LARGE, 33, 46, largeFrames())
+                .addInputPattern(Patterns.PLATING_LARGE, 33, 20, largePlating())
+                .addInputPattern(Patterns.MAIL_PLATE, 10, 59, mailOrPlate())
+                .addInputPattern(Patterns.MAIL_PLATE, 56, 59, mailOrPlate())
+                .build();
+        definePattern(Patterns.KNIGHTS_ARMOR)
+                .sortIndex(40)
+                .translationKey(TConstruct.makeTranslationKey("gui", "knights"))
+                .addInputPattern(Patterns.MASSIVE_ARMOR_CAST, 33, 33, allMassiveArmorCasts())
+                .addInputItem(TinkerToolParts.maille, 20, 56)
+                .addInputItem(TinkerToolParts.linear, 46, 56)
+                .build();
+    }
+
+    private static Ingredient allArmorCasts() {
+        return Ingredient.of(TinkerToolParts.armorCast.values().toArray(new Item[0]));
+    }
+
+    private static Ingredient allMassiveArmorCasts() {
+        return Ingredient.of(TinkerToolParts.massiveArmorCast.values().toArray(new Item[0]));
+    }
+
+    private static Ingredient allFrames() {
+        return Ingredient.of(TinkerToolParts.armorFrame.values().toArray(new Item[0]));
+    }
+
+    private static Ingredient smallFrames() {
+        return Ingredient.of(TinkerToolParts.armorFrame.get(ArmorItem.Type.HELMET), TinkerToolParts.armorFrame.get(ArmorItem.Type.BOOTS));
+    }
+
+    private static Ingredient largeFrames() {
+        return Ingredient.of(TinkerToolParts.armorFrame.get(ArmorItem.Type.CHESTPLATE), TinkerToolParts.armorFrame.get(ArmorItem.Type.LEGGINGS));
+    }
+
+    private static Ingredient smallPlating() {
+        return Ingredient.of(TinkerToolParts.plating.get(ArmorItem.Type.HELMET), TinkerToolParts.plating.get(ArmorItem.Type.BOOTS));
+    }
+
+    private static Ingredient largePlating() {
+        return Ingredient.of(TinkerToolParts.plating.get(ArmorItem.Type.CHESTPLATE), TinkerToolParts.plating.get(ArmorItem.Type.LEGGINGS));
+    }
+
+    private static Ingredient mailOrPlate() {
+        return Ingredient.of(TinkerToolParts.armorMail, TinkerToolParts.armorPlate);
     }
 
     @Override

@@ -10,6 +10,8 @@ import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataRegistrar;
 import slimeknights.tconstruct.library.addon.DynamicDataRegistrar;
 import slimeknights.tconstruct.library.data.RuntimeDataProvider;
+import slimeknights.tconstruct.tools.ArmorDefinitions;
+import slimeknights.tconstruct.tools.data.ArmorFormulaProvider;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.lang.reflect.Field;
@@ -40,7 +42,8 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
       "ModifierProvider",
       "FluidEffectProvider",
       "EnchantmentToModifierProvider",
-      "MobEquipmentProvider"
+      "MobEquipmentProvider",
+      "ArmorFormulaProvider"
     );
   }
 
@@ -57,8 +60,27 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
         "FluidEffectProvider",
         "EnchantmentToModifierProvider",
         "MobEquipmentProvider",
+        "ArmorFormulaProvider",
         "ExternalTinkeringWriter"
       );
+  }
+
+  @Test
+  void registerStoresArmorFormulaDefaults() {
+    TiCDynamicTinkeringGenerator.dataWriter(ArmorFormulaProvider::new).accept(TiCDynamicDataRegistrar.INSTANCE);
+
+    assertThat(pack.getResource(PackType.SERVER_DATA, ResourceLocation.tryBuild("tconstruct", "formula/default/generic/per_armor_ratio.json"))).isNotNull();
+    assertThat(pack.getResource(PackType.SERVER_DATA, ResourceLocation.tryBuild("tconstruct", "formula/plating/tool_damage.json"))).isNotNull();
+  }
+
+  @Test
+  void nativeArmorDefinitionsUseTconstructNamespace() {
+    assertThat(ArmorDefinitions.STANDARD.getArmorDefinition(net.minecraft.world.item.ArmorItem.Type.HELMET).getId())
+      .isEqualTo(ResourceLocation.tryBuild("tconstruct", "standard_helmet"));
+    assertThat(ArmorDefinitions.KNIGHTS.getArmorDefinition(net.minecraft.world.item.ArmorItem.Type.CHESTPLATE).getId())
+      .isEqualTo(ResourceLocation.tryBuild("tconstruct", "knights_chestplate"));
+    assertThat(ArmorDefinitions.MIX_FORGED_OTHER.getArmorDefinition(net.minecraft.world.item.ArmorItem.Type.LEGGINGS).getId())
+      .isEqualTo(ResourceLocation.tryBuild("tconstruct", "mix_forged_other_leggings"));
   }
 
   @Test
