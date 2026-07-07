@@ -33,7 +33,10 @@ class MaterialDynamicPackTest extends BaseMcTest {
     TiCDynamicMaterialGenerator.register();
 
     assertThat(readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialManager.FOLDER + "/wood.json"))).isNotNull();
-    assertThat(readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialStatsManager.FOLDER + "/iron.json"))).isNotNull();
+    JsonObject ironStats = readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialStatsManager.FOLDER + "/iron.json"));
+    assertThat(ironStats).isNotNull();
+    assertThat(ironStats.getAsJsonObject("stats").keySet())
+      .contains("tconstruct:armor_plate", "tconstruct:armor_mail", "tconstruct:cast_helmet", "tconstruct:frame_of_helmet", "tconstruct:massive_cast_helmet");
     assertThat(readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialTraitsManager.FOLDER + "/iron.json"))).isNotNull();
   }
 

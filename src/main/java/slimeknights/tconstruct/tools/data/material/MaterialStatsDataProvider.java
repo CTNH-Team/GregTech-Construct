@@ -1,8 +1,12 @@
 package slimeknights.tconstruct.tools.data.material;
 
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.ArmorItem;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialStatsDataProvider;
+import slimeknights.tconstruct.library.materials.definition.MaterialId;
+import slimeknights.tconstruct.library.materials.stats.IMaterialStats;
+import slimeknights.tconstruct.library.materials.stats.MaterialStatType;
 import slimeknights.tconstruct.tools.stats.*;
 
 import static net.minecraft.world.item.Tiers.*;
@@ -533,5 +537,72 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.blood);
         addMaterialStats(MaterialIds.clay);
         addMaterialStats(MaterialIds.honey);
+    }
+
+    private void addArmorShieldStats(MaterialId location, PlatingMaterialStats.Builder statBuilder, IMaterialStats... otherStats) {
+        PlatingMaterialStats[] plating = new PlatingMaterialStats[4];
+        for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+            plating[slotType.ordinal()] = statBuilder.build(slotType);
+        }
+
+        addMaterialStats(location, plating);
+        addMaterialStats(location, armorExtensionStats(plating));
+        if (otherStats.length > 0) {
+            addMaterialStats(location, otherStats);
+        }
+        addMaterialStats(location, statBuilder.buildShield());
+    }
+
+    private static IMaterialStats[] armorExtensionStats(PlatingMaterialStats[] plating) {
+        IMaterialStats[] stats = new IMaterialStats[14];
+        stats[0] = new ArmorExtensionMaterialStats.ArmorLayerStats(
+                ArmorExtensionMaterialStats.ARMOR_PLATE, 0.10f, 0.08f, 0f, averageToughness(plating) * 0.10f, 0f, 0f);
+        stats[1] = new ArmorExtensionMaterialStats.ArmorLayerStats(
+                ArmorExtensionMaterialStats.ARMOR_MAIL, 0.05f, 0.04f, 0f, averageToughness(plating) * 0.05f, 0f, 0f);
+
+        int index = 2;
+        for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+            PlatingMaterialStats slot = plating[slotType.ordinal()];
+            stats[index++] = piece(ArmorExtensionMaterialStats.CAST_TYPES.get(slotType.ordinal()), slot, 1f);
+        }
+        for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+            PlatingMaterialStats slot = plating[slotType.ordinal()];
+            stats[index++] = frame(ArmorExtensionMaterialStats.FRAME_TYPES.get(slotType.ordinal()), slot);
+        }
+        for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+            PlatingMaterialStats slot = plating[slotType.ordinal()];
+            stats[index++] = piece(ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES.get(slotType.ordinal()), slot, 1f);
+        }
+        return stats;
+    }
+
+    private static ArmorExtensionMaterialStats.ArmorPieceStats piece(MaterialStatType<?> type, PlatingMaterialStats source, float scale) {
+        return new ArmorExtensionMaterialStats.ArmorPieceStats(
+                type,
+                Math.max(1, Math.round(source.durability() * scale)),
+                source.armor() * scale,
+                0f,
+                source.toughness() * scale,
+                0f,
+                0f,
+                source.knockbackResistance() * scale);
+    }
+
+    private static ArmorExtensionMaterialStats.ArmorFrameStats frame(MaterialStatType<?> type, PlatingMaterialStats source) {
+        return new ArmorExtensionMaterialStats.ArmorFrameStats(
+                type,
+                Math.max(1, Math.round(source.durability() * 0.5f)),
+                source.armor() * 0.25f,
+                0f,
+                0f,
+                source.knockbackResistance() * 0.5f);
+    }
+
+    private static float averageToughness(PlatingMaterialStats[] plating) {
+        float total = 0f;
+        for (PlatingMaterialStats stats : plating) {
+            total += stats.toughness();
+        }
+        return total / plating.length;
     }
 }
