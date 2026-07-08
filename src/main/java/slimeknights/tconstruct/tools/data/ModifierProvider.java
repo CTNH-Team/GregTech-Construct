@@ -554,7 +554,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("tanned/formula")));
         buildModifier(ModifierIds.plating)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
-                .addModule(new StatCapacityBarModule(0x8A9A8C))
+                .addModule(new StatCapacityBarModule(ModifierIds.plating, 0x8A9A8C))
                 .addModule(new DurabilityBarColorModule(0x8A9A8C))
                 .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, TConstruct.getResource("plating/stat_bonus")))
                 .addModule(ToolDamageCapacityModule.of(
@@ -576,7 +576,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).amount(-0.1f, -0.1f));
         buildModifier(ModifierIds.crystalLattice)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
-                .addModule(new StatCapacityBarModule(0xC687BD))
+                .addModule(new StatCapacityBarModule(ModifierIds.crystalLattice, 0xC687BD))
                 .addModule(new DurabilityBarColorModule(0xC687BD))
                 .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, TConstruct.getResource("crystal_lattice/stat_bonus")))
                 .addModule(ToolDamageCapacityModule.of(
