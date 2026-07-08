@@ -22,8 +22,7 @@ import java.util.List;
 /**
  * 基于动态创建的 tool stat 的 capacity bar。
  *
- * 注意：capacity stat 不是在构造时创建，而是在 ModifiersLoadedEvent 时
- * 由 TinkerModifiers 的事件监听器统一初始化。
+ * 当通过 JSON 加载时，ModifierId 会自动注入并初始化 capacity stat。
  */
 public class StatCapacityBarModule implements CapacityBarHook, ModifierModule, HookProvider {
   private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<StatCapacityBarModule>defaultHooks(ModifierHooks.CAPACITY_BAR);
@@ -36,8 +35,7 @@ public class StatCapacityBarModule implements CapacityBarHook, ModifierModule, H
 
   private final ResourceLocation key;
   private final int color;
-  @Nullable
-  private FloatToolStat stat; // 延迟初始化
+  private final FloatToolStat stat;
 
   public StatCapacityBarModule(int color) {
     this(ModifierManager.EMPTY, color);
@@ -46,7 +44,14 @@ public class StatCapacityBarModule implements CapacityBarHook, ModifierModule, H
   public StatCapacityBarModule(ResourceLocation key, int color) {
     this.key = key;
     this.color = color;
-    this.stat = null; // 等待事件初始化
+    // 当 key 不是 EMPTY 时（即从 JSON 加载时），立即初始化
+    if (key != ModifierManager.EMPTY) {
+      ModifierId modifierId = new ModifierId(key);
+      this.stat = StatCapacityBarManager.getOrCreateStat(modifierId, color);
+      StatCapacityBarManager.register(modifierId, this);
+    } else {
+      this.stat = null;
+    }
   }
 
   public int color() {
@@ -55,17 +60,6 @@ public class StatCapacityBarModule implements CapacityBarHook, ModifierModule, H
 
   public ResourceLocation getKey() {
     return key;
-  }
-
-  /**
-   * 由 TinkerModifiers 的 ModifiersLoadedEvent 监听器调用。
-   * 动态创建并注册 capacity stat。
-   */
-  public void initialize(ModifierId modifierId) {
-    if (stat == null) {
-      stat = StatCapacityBarManager.getOrCreateStat(modifierId, color);
-      StatCapacityBarManager.register(modifierId, this);
-    }
   }
 
   @Override

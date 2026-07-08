@@ -26,6 +26,7 @@ import slimeknights.tconstruct.library.module.HookProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
 import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
+import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -76,8 +77,9 @@ public record FormulaCapacityRegenerateModule(
       return;
     }
 
-    CompoundTag persistentData = tool.getPersistentData();
-    CompoundTag state = persistentData.getCompound(modifier.getId());
+    ModDataNBT persistentData = tool.getPersistentData();
+    ResourceLocation key = modifier.getId();
+    CompoundTag state = persistentData.getCompound(key);
 
     // 间隔 tick 检查（避免每 tick 都计算）
     int intervalOffset = getIntervalOffset(state);
@@ -121,7 +123,7 @@ public record FormulaCapacityRegenerateModule(
 
     // 检查是否在 cooldown 中
     if (world.getGameTime() < cooldownEnd) {
-      persistentData.put(modifier.getId(), state);
+      persistentData.put(key, state);
       return;
     }
 
@@ -130,7 +132,7 @@ public record FormulaCapacityRegenerateModule(
       if (amount > capacity) {
         capacityBar.setAmount(tool, barModifier, capacity);
       }
-      persistentData.put(modifier.getId(), state);
+      persistentData.put(key, state);
       return;
     }
 
@@ -139,7 +141,7 @@ public record FormulaCapacityRegenerateModule(
     double duraCost = duraCostFormula.accept(level, gain, capacity, amount);
 
     if (gain <= 0) {
-      persistentData.put(modifier.getId(), state);
+      persistentData.put(key, state);
       return;
     }
 
@@ -149,7 +151,7 @@ public record FormulaCapacityRegenerateModule(
       int cost = (int) duraRem;
       if (cost > 0) {
         if (cost >= durability) {
-          persistentData.put(modifier.getId(), state);
+          persistentData.put(key, state);
           return; // 耐久度不够
         }
         duraRem -= cost;
