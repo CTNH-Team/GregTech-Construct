@@ -70,7 +70,13 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
     TiCDynamicTinkeringGenerator.dataWriter(ArmorFormulaProvider::new).accept(TiCDynamicDataRegistrar.INSTANCE);
 
     assertThat(pack.getResource(PackType.SERVER_DATA, ResourceLocation.tryBuild("tconstruct", "formula/default/generic/per_armor_ratio.json"))).isNotNull();
+    assertThat(pack.getResource(PackType.SERVER_DATA, ResourceLocation.tryBuild("tconstruct", "formula/default/damage_limit/finalizer/armor_damage_formula.json"))).isNotNull();
+    assertThat(pack.getResource(PackType.SERVER_DATA, ResourceLocation.tryBuild("tconstruct", "formula/default/damage_limit/finalizer/overshield_damage_formula.json"))).isNotNull();
     assertThat(pack.getResource(PackType.SERVER_DATA, ResourceLocation.tryBuild("tconstruct", "formula/plating/tool_damage.json"))).isNotNull();
+    assertThat(pack.getResource(PackType.SERVER_DATA, ResourceLocation.tryBuild("tconstruct", "formula/crystal_solidity/finalizer/overshield_damage_formula.json"))).isNotNull();
+    assertThat(pack.getResource(PackType.SERVER_DATA, ResourceLocation.tryBuild("tconstruct", "formula/malleability/slot_formula.json"))).isNotNull();
+    assertThat(pack.getNamespaces(PackType.SERVER_DATA)).contains("tconstruct");
+    assertThat(pack.getNamespaces(PackType.SERVER_DATA)).doesNotContain("tconarmorex");
   }
 
   @Test
