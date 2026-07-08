@@ -63,10 +63,3 @@ mandatory=true
     versionRange="[7.1.0,)"
 ordering="BEFORE"
 side="BOTH"
-
-[[dependencies.tconstruct]]
-modId="ooformula"
-mandatory=true
-versionRange="${formula_loader_range}"
-ordering="AFTER"
-side="BOTH"
