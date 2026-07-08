@@ -445,14 +445,15 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.cactus, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.bone, StatlessMaterialStats.SHIELD_CORE);
         addArmorShieldStats(MaterialIds.copper, PlatingMaterialStats.builder().durabilityFactor(13).armor(1, 2, 3, 1), StatlessMaterialStats.MAILLE);
-        addMaterialStats(MaterialIds.leather, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS);
+        addMaterialStats(MaterialIds.leather, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
         addMaterialStats(MaterialIds.vine, StatlessMaterialStats.MAILLE);
+        addMaterialStats(MaterialIds.wool, StatlessMaterialStats.LINEAR);
         // tier 2
         addMaterialStats(MaterialIds.slimewood, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.venombone, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.necroticBone, StatlessMaterialStats.SHIELD_CORE);
-        addMaterialStats(MaterialIds.slimeskin, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS);
-        addMaterialStats(MaterialIds.skyslimeVine, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS);
+        addMaterialStats(MaterialIds.slimeskin, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.skyslimeVine, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
         addMaterialStats(MaterialIds.weepingVine, StatlessMaterialStats.MAILLE);
         addMaterialStats(MaterialIds.twistingVine, StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.iron,          PlatingMaterialStats.builder().durabilityFactor(15).armor(2, 4, 5, 2), StatlessMaterialStats.MAILLE);
@@ -468,7 +469,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addArmorShieldStats(MaterialIds.lead,      PlatingMaterialStats.builder().durabilityFactor(12).armor(1, 3, 4, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
         // tier 3
         addMaterialStats(MaterialIds.nahuatl, StatlessMaterialStats.SHIELD_CORE);
-        addMaterialStats(MaterialIds.ichorskin, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS);
+        addMaterialStats(MaterialIds.ichorskin, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
         addArmorShieldStats(MaterialIds.slimesteel,     PlatingMaterialStats.builder().durabilityFactor(40).armor(2, 5, 6, 2), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.amethystBronze, PlatingMaterialStats.builder().durabilityFactor(28).armor(2, 5, 6, 2).toughness(2), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.obsidian,       PlatingMaterialStats.builder().durabilityFactor(11).armor(2, 4, 5, 2).knockbackResistance(0.15f), StatlessMaterialStats.MAILLE);
@@ -494,10 +495,10 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addArmorShieldStats(MaterialIds.hepatizon,   PlatingMaterialStats.builder().durabilityFactor(32).armor(2, 5, 7, 2).toughness(2).knockbackResistance(0.10f), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.manyullyn,   PlatingMaterialStats.builder().durabilityFactor(35).armor(2, 5, 7, 2).toughness(3).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.ancient,     PlatingMaterialStats.builder().durabilityFactor(25).armor(2, 4, 6, 2).knockbackResistance(0.15f));
-        addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS);
+        addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
         // tier 4 (end)
         addArmorShieldStats(MaterialIds.knightmetal, PlatingMaterialStats.builder().durabilityFactor(20).armor(2, 5, 7, 2).toughness(2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
-        addMaterialStats(MaterialIds.enderslimeVine, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS);
+        addMaterialStats(MaterialIds.enderslimeVine, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
         addMaterialStats(MaterialIds.dragonScale, StatlessMaterialStats.MAILLE);
         addMaterialStats(MaterialIds.shulker, StatlessMaterialStats.MAILLE);
         // tier 4 (compat)

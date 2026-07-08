@@ -5,6 +5,9 @@
     "tconstruct:magic_protection",
     "tconstruct:melee_protection",
     "tconstruct:projectile_protection",
+    "tconstruct:blast_defense",
+    "tconstruct:melee_defense",
+    "tconstruct:projectile_defense",
     "tconstruct:dragonborn",
     "tconstruct:shulking",
     "tconstruct:turtle_shell"

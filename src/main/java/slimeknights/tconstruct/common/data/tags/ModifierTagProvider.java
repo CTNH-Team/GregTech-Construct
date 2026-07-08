@@ -98,7 +98,8 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
 
     this.tag(GENERAL_ARMOR_UPGRADES).add(
       ModifierIds.fiery, ModifierIds.freezing, ModifierIds.thorns,
-      ModifierIds.ricochet, ModifierIds.springy, ModifierIds.blockade);
+      ModifierIds.ricochet, ModifierIds.springy, ModifierIds.blockade,
+      ModifierIds.cushion);
     this.tag(HELMET_UPGRADES).add(TinkerModifiers.itemFrame.getId(), ModifierIds.respiration, ModifierIds.minimap).addOptional(ModifierIds.headlight);
     this.tag(CHESTPLATE_UPGRADES).add(ModifierIds.haste, TinkerModifiers.knockback.getId(), TinkerModifiers.sleeves.getId());
     this.tag(LEGGING_UPGRADES).add(ModifierIds.leaping, TinkerModifiers.shieldStrap.getId(), ModifierIds.speedy, ModifierIds.swiftSneak, ModifierIds.stepUp);
@@ -131,7 +132,7 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
       TinkerModifiers.bonking.getId(), TinkerModifiers.flinging.getId(), TinkerModifiers.springing.getId(), TinkerModifiers.warping.getId(),
       ModifierIds.throwing, ModifierIds.drillAttack);
     // armor
-    this.tag(GENERAL_ARMOR_ABILITIES).add(ModifierIds.protection, TinkerModifiers.bursting.getId(), TinkerModifiers.wetting.getId());
+    this.tag(GENERAL_ARMOR_ABILITIES).add(ModifierIds.protection, ModifierIds.physicsDefense, TinkerModifiers.bursting.getId(), TinkerModifiers.wetting.getId());
     this.tag(HELMET_ABILITIES).add(ModifierIds.aquaAffinity, TinkerModifiers.slurping.getId());
     this.tag(CHESTPLATE_ABILITIES).add(TinkerModifiers.ambidextrous.getId(), ModifierIds.reach, ModifierIds.strength, ModifierIds.wings);
     this.tag(LEGGING_ABILITIES).add(ModifierIds.pockets, ModifierIds.soulBelt, ModifierIds.toolBelt, ModifierIds.craftingTable);
@@ -144,6 +145,7 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
     this.tag(PROTECTION_DEFENSE).add(
       ModifierIds.blastProtection, ModifierIds.fireProtection, ModifierIds.magicProtection,
       ModifierIds.meleeProtection, ModifierIds.projectileProtection,
+      ModifierIds.blastDefense, ModifierIds.meleeDefense, ModifierIds.projectileDefense,
       ModifierIds.dragonborn, ModifierIds.shulking, ModifierIds.turtleShell);
     this.tag(SPECIAL_DEFENSE).add(ModifierIds.knockbackResistance, ModifierIds.revitalizing);
 

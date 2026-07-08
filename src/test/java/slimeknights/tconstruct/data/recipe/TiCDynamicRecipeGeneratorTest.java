@@ -10,6 +10,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import slimeknights.tconstruct.common.data.BaseRecipeProvider;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataRegistrar;
 import slimeknights.tconstruct.test.BaseMcTest;
@@ -92,6 +93,27 @@ class TiCDynamicRecipeGeneratorTest extends BaseMcTest {
       .containsExactlyInAnyOrder("^recipes/generated\\.json$", "^advancements/recipes/generated\\.json$");
   }
 
+  @Test
+  void recipeWriterStoresNativeArmorDefenseRecipes() throws Exception {
+    TiCDynamicRecipeGenerator.recipeWriter(NativeArmorDefenseRecipeProvider::new).accept(TiCDynamicDataRegistrar.INSTANCE);
+
+    ResourceLocation meleeId = ResourceLocation.tryBuild("tconstruct", "recipes/tools/modifiers/defense/melee_defense.json");
+    ResourceLocation projectileId = ResourceLocation.tryBuild("tconstruct", "recipes/tools/modifiers/defense/projectile_defense.json");
+    ResourceLocation blastId = ResourceLocation.tryBuild("tconstruct", "recipes/tools/modifiers/defense/blast_defense.json");
+    ResourceLocation physicsId = ResourceLocation.tryBuild("tconstruct", "recipes/tools/modifiers/ability/physics_defense.json");
+
+    String melee = readString(meleeId);
+    String projectile = readString(projectileId);
+    String blast = readString(blastId);
+    String physics = readString(physicsId);
+
+    assertThat(melee).contains("tconstruct:incremental_modifier", "tconstruct:melee_defense", "forge:ingots/manyullyn", "\"defense\":1");
+    assertThat(projectile).contains("tconstruct:incremental_modifier", "tconstruct:projectile_defense", "forge:ingots/hepatizon", "\"defense\":1");
+    assertThat(blast).contains("tconstruct:incremental_modifier", "tconstruct:blast_defense", "forge:ingots/queens_slime", "\"defense\":1");
+    assertThat(physics).contains("tconstruct:modifier", "tconstruct:physics_defense", "forge:ingots/netherite", "\"abilities\":1");
+    assertThat(melee + projectile + blast + physics).doesNotContain("tconarmorex");
+  }
+
   private String readString(ResourceLocation location) throws Exception {
     IoSupplier<java.io.InputStream> resource = pack.getResource(PackType.SERVER_DATA, location);
     assertThat(resource).isNotNull();
@@ -100,7 +122,7 @@ class TiCDynamicRecipeGeneratorTest extends BaseMcTest {
     }
   }
 
-  private static final class TestRecipeProvider extends slimeknights.tconstruct.common.data.BaseRecipeProvider {
+  private static final class TestRecipeProvider extends BaseRecipeProvider {
     private TestRecipeProvider(net.minecraft.data.PackOutput output) {
       super(output);
     }
@@ -113,6 +135,76 @@ class TiCDynamicRecipeGeneratorTest extends BaseMcTest {
     @Override
     public String getName() {
       return "Test Recipe Provider";
+    }
+  }
+
+  private static final class NativeArmorDefenseRecipeProvider extends BaseRecipeProvider {
+    private NativeArmorDefenseRecipeProvider(net.minecraft.data.PackOutput output) {
+      super(output);
+    }
+
+    @Override
+    protected void buildRecipes(java.util.function.Consumer<FinishedRecipe> consumer) {
+      String defenseFolder = "tools/modifiers/defense/";
+      String abilityFolder = "tools/modifiers/ability/";
+
+      consumer.accept(new NativeArmorDefenseFinishedRecipe(
+        location(defenseFolder + "melee_defense"), "tconstruct:incremental_modifier",
+        "tconstruct:melee_defense", "forge:ingots/manyullyn", "defense"));
+      consumer.accept(new NativeArmorDefenseFinishedRecipe(
+        location(defenseFolder + "projectile_defense"), "tconstruct:incremental_modifier",
+        "tconstruct:projectile_defense", "forge:ingots/hepatizon", "defense"));
+      consumer.accept(new NativeArmorDefenseFinishedRecipe(
+        location(defenseFolder + "blast_defense"), "tconstruct:incremental_modifier",
+        "tconstruct:blast_defense", "forge:ingots/queens_slime", "defense"));
+      consumer.accept(new NativeArmorDefenseFinishedRecipe(
+        location(abilityFolder + "physics_defense"), "tconstruct:modifier",
+        "tconstruct:physics_defense", "forge:ingots/netherite", "abilities"));
+    }
+
+    @Override
+    public String getName() {
+      return "Native Armor Defense Recipe Provider";
+    }
+  }
+
+  private record NativeArmorDefenseFinishedRecipe(
+    ResourceLocation id, String type, String modifier, String inputTag, String slot
+  ) implements FinishedRecipe {
+    @Override
+    public void serializeRecipeData(JsonObject json) {
+      JsonObject input = new JsonObject();
+      input.addProperty("tag", inputTag);
+      input.addProperty("count", 5);
+
+      JsonObject slots = new JsonObject();
+      slots.addProperty(slot, 1);
+
+      json.addProperty("type", type);
+      json.addProperty("modifier", modifier);
+      json.add("input", input);
+      json.add("slots", slots);
+      json.addProperty("tools", "tconstruct:modifiable/armor");
+    }
+
+    @Override
+    public RecipeSerializer<?> getType() {
+      return BuiltInRegistries.RECIPE_SERIALIZER.get(new ResourceLocation("minecraft", "crafting_shapeless"));
+    }
+
+    @Override
+    public ResourceLocation getId() {
+      return id;
+    }
+
+    @Override
+    public JsonObject serializeAdvancement() {
+      return null;
+    }
+
+    @Override
+    public ResourceLocation getAdvancementId() {
+      return null;
     }
   }
 

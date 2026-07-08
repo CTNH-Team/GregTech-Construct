@@ -214,6 +214,7 @@ public class ToolClientEvents extends ClientEventBase {
         event.registerSpriteSet(TinkerTools.hammerAttackParticle.get(), factory);
         event.registerSpriteSet(TinkerTools.axeAttackParticle.get(), factory);
         event.registerSpriteSet(TinkerTools.bonkAttackParticle.get(), factory);
+        event.registerSpriteSet(TinkerTools.shareDamageParticle.get(), ShareDamageParticle.Provider::new);
     }
 
     @SubscribeEvent

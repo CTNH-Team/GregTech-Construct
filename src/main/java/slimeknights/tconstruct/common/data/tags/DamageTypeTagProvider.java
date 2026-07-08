@@ -48,6 +48,7 @@ public class DamageTypeTagProvider extends DamageTypeTagsProvider {
         tag(FIRE_PROTECTION).addTags(IS_FIRE, IS_LIGHTNING).add(SHOCK);
         tag(BLAST_PROTECTION).addTag(IS_EXPLOSION);
         tag(MAGIC_PROTECTION).addTag(WITCH_RESISTANT_TO).add(WITHER, WITHER_SKULL, DRAGON_BREATH);
+        tag(PHYSICS).addTags(MELEE_PROTECTION, PROJECTILE_PROTECTION, BLAST_PROTECTION);
         tag(INSULATION).addTag(IS_LIGHTNING);
         tag(FALL_PROTECTION).addTag(IS_FALL).add(FLY_INTO_WALL);
 

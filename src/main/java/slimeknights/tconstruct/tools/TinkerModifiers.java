@@ -542,12 +542,19 @@ public final class TinkerModifiers extends TinkerModule {
             ModifierModule.LOADER.register(getResource("block_damage"), BlockDamageSourceModule.LOADER);
             ModifierModule.LOADER.register(getResource("cover_ground"), CoverGroundWalkerModule.LOADER);
             ModifierModule.LOADER.register(getResource("armor_piece_damage_reduction"), ArmorPieceDamageReductionModule.LOADER);
+            ModifierModule.LOADER.register(getResource("conditional_armor_stat"), ConditionalArmorStatModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_area_effect"), FormulaAreaEffectModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_armor_stat"), FormulaArmorStatModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_damage_limit"), FormulaDamageLimitModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_guarding"), FormulaGuardingModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_recurrence"), FormulaRecurrenceModule.LOADER);
             ModifierModule.LOADER.register(getResource("protection"), ProtectionModule.LOADER);
             ModifierModule.LOADER.register(getResource("replace_fluid"), ReplaceBlockWalkerModule.LOADER);
             ModifierModule.LOADER.register(getResource("tool_action_walk_transform"), ToolActionWalkerTransformModule.LOADER);
             // behavior
             ModifierModule.LOADER.register(getResource("attribute"), AttributeModule.LOADER);
             ModifierModule.LOADER.register(getResource("reduce_tool_damage"), ReduceToolDamageModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_tool_damage"), FormulaToolDamageModule.LOADER);
             // TODO 1.21: rename to repair_factor?
             ModifierModule.LOADER.register(getResource("repair"), RepairModule.LOADER);
             ModifierModule.LOADER.register(getResource("material_repair"), MaterialRepairModule.LOADER);
@@ -557,6 +564,7 @@ public final class TinkerModifiers extends TinkerModule {
             // build
             ModifierModule.LOADER.register(getResource("conditional_stat"), ConditionalStatModule.LOADER);
             ModifierModule.LOADER.register(getResource("modifier_slot"), ModifierSlotModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_modifier_slot"), FormulaModifierSlotModule.LOADER);
             ModifierModule.LOADER.register(getResource("rarity"), RarityModule.LOADER);
             ModifierModule.LOADER.register(getResource("requirements"), ModifierRequirementsModule.LOADER);
             ModifierModule.LOADER.register(getResource("swappable_slot"), SwappableSlotModule.LOADER);
@@ -629,6 +637,7 @@ public final class TinkerModifiers extends TinkerModule {
             ModifierModule.LOADER.register(getResource("overgrowth"), OvergrowthModule.LOADER);
             ModifierModule.LOADER.register(getResource("overburn"), OverburnModule.INSTANCE.getLoader());
             ModifierModule.LOADER.register(getResource("overshield"), OvershieldModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_repair"), FormulaRepairModule.LOADER);
             // combat
             ModifierModule.LOADER.register(getResource("fiery_attack"), FieryAttackModule.LOADER);
             ModifierModule.LOADER.register(getResource("freezing_attack"), FreezingAttackModule.LOADER);

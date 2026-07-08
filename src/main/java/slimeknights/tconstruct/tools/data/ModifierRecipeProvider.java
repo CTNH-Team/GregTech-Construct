@@ -792,6 +792,38 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .setTools(protectableTools)
                 .saveSalvage(consumer, prefix(ModifierIds.fireProtection, defenseSalvage))
                 .save(consumer, prefix(ModifierIds.fireProtection, defenseFolder));
+        IncrementalModifierRecipeBuilder.modifier(ModifierIds.meleeDefense)
+                .setInput(TinkerMaterials.manyullyn.getIngotTag(), 1, 5)
+                .setSlots(SlotType.DEFENSE, 1)
+                .setTools(TinkerTags.Items.ARMOR)
+                .saveSalvage(consumer, prefix(ModifierIds.meleeDefense, defenseSalvage))
+                .save(consumer, prefix(ModifierIds.meleeDefense, defenseFolder));
+        IncrementalModifierRecipeBuilder.modifier(ModifierIds.projectileDefense)
+                .setInput(TinkerMaterials.hepatizon.getIngotTag(), 1, 5)
+                .setSlots(SlotType.DEFENSE, 1)
+                .setTools(TinkerTags.Items.ARMOR)
+                .saveSalvage(consumer, prefix(ModifierIds.projectileDefense, defenseSalvage))
+                .save(consumer, prefix(ModifierIds.projectileDefense, defenseFolder));
+        IncrementalModifierRecipeBuilder.modifier(ModifierIds.blastDefense)
+                .setInput(TinkerMaterials.queensSlime.getIngotTag(), 1, 5)
+                .setSlots(SlotType.DEFENSE, 1)
+                .setTools(TinkerTags.Items.ARMOR)
+                .saveSalvage(consumer, prefix(ModifierIds.blastDefense, defenseSalvage))
+                .save(consumer, prefix(ModifierIds.blastDefense, defenseFolder));
+        ModifierRecipeBuilder.modifier(ModifierIds.physicsDefense)
+                .addInput(Tags.Items.INGOTS_NETHERITE, 5)
+                .setSlots(SlotType.ABILITY, 1)
+                .setTools(TinkerTags.Items.ARMOR)
+                .setMaxLevel(1)
+                .saveSalvage(consumer, prefix(ModifierIds.physicsDefense, abilitySalvage))
+                .save(consumer, prefix(ModifierIds.physicsDefense, abilityFolder));
+        ModifierRecipeBuilder.modifier(ModifierIds.cushion)
+                .addInput(ItemTags.WOOL, 5)
+                .setSlots(SlotType.UPGRADE, 1)
+                .setTools(TinkerTags.Items.ARMOR)
+                .setMaxLevel(1)
+                .saveSalvage(consumer, prefix(ModifierIds.cushion, upgradeSalvage))
+                .save(consumer, prefix(ModifierIds.cushion, upgradeFolder));
         ModifierRecipeBuilder.modifier(ModifierIds.protection)
                 .addInput(TinkerModifiers.goldReinforcement)
                 .addInput(TinkerModifiers.searedReinforcement)

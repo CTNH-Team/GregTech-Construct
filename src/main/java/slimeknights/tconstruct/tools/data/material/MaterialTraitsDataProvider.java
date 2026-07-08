@@ -35,6 +35,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addTraits(MaterialIds.bamboo, AMMO, ModifierIds.woodwind);
         addDefaultTraits(MaterialIds.cactus, ModifierIds.spiny);
         addTraits(MaterialIds.cactus, ARMOR, ModifierIds.thorns);
+        addTraits(MaterialIds.wool, ARMOR, ModifierIds.cushion);
         addTraits(MaterialIds.wool, AMMO, ModifierIds.soft);
         noTraits(MaterialIds.feather);
         addTraits(MaterialIds.paper, AMMO, ModifierIds.weak);
@@ -69,6 +70,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addTraits(MaterialIds.scorchedStone, ARMOR, ModifierIds.scorchProtection);
         // tier 2 - end
         addDefaultTraits(MaterialIds.whitestone, ModifierIds.stoneshield);
+        addTraits(MaterialIds.whitestone, ARMOR, ModifierIds.malleability);
         // tier 2 - binding
         addDefaultTraits(MaterialIds.skyslimeVine, ModifierIds.airborne);
         addTraits(MaterialIds.skyslimeVine, ARMOR, ModifierIds.skyfall);
@@ -89,7 +91,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addDefaultTraits(MaterialIds.slimesteel, ModifierIds.overcast, TinkerModifiers.overslime.getId());
         addTraits(MaterialIds.amethystBronze, MELEE_HARVEST, ModifierIds.crumbling);
         addTraits(MaterialIds.amethystBronze, RANGED, ModifierIds.crystalbound);
-        addTraits(MaterialIds.amethystBronze, ARMOR, ModifierIds.crystalstrike);
+        addTraits(MaterialIds.amethystBronze, ARMOR, ModifierIds.crystalstrike, ModifierIds.crystalLattice, ModifierIds.crystalizing, ModifierIds.crystalSolidity);
         addDefaultTraits(MaterialIds.nahuatl, TinkerModifiers.lacerating);
         addDefaultTraits(MaterialIds.roseGold, ModifierIds.enhanced);
         addDefaultTraits(MaterialIds.pigIron, TinkerModifiers.tasty);
@@ -114,7 +116,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addDefaultTraits(MaterialIds.cinderslime, ModifierIds.overburn, TinkerModifiers.overslime.getId());
         addDefaultTraits(MaterialIds.queensSlime, ModifierIds.overlord, TinkerModifiers.overslime.getId());
         addDefaultTraits(MaterialIds.hepatizon, TinkerModifiers.momentum);
-        addTraits(MaterialIds.hepatizon, ARMOR, ModifierIds.recurrentProtection);
+        addTraits(MaterialIds.hepatizon, ARMOR, ModifierIds.recurrentProtection, ModifierIds.recurrence);
         addDefaultTraits(MaterialIds.manyullyn, TinkerModifiers.insatiable);
         addTraits(MaterialIds.manyullyn, ARMOR, ModifierIds.kinetic);
         addDefaultTraits(MaterialIds.blazingBone, TinkerModifiers.conducting);
@@ -125,6 +127,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         // tier 4 - binding
         addTraits(MaterialIds.ancientHide, MELEE_HARVEST, ModifierIds.fortune);
         addDefaultTraits(MaterialIds.ancientHide, ModifierIds.fortified);
+        addTraits(MaterialIds.ancientHide, ARMOR, ModifierIds.totem);
         addTraits(MaterialIds.dragonScale, ARMOR, ModifierIds.dragonborn);
         addTraits(MaterialIds.dragonScale, AMMO, ModifierIds.dragonshot);
         addTraits(MaterialIds.shulker, ARMOR, ModifierIds.shulking);
@@ -134,7 +137,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
 
         // tier 4 (end)
         addDefaultTraits(MaterialIds.knightmetal, ModifierIds.valiant);
-        addTraits(MaterialIds.knightmetal, ARMOR, ModifierIds.stalwart);
+        addTraits(MaterialIds.knightmetal, ARMOR, ModifierIds.stalwart, ModifierIds.guarding, ModifierIds.plating, ModifierIds.hardening);
         addDefaultTraits(MaterialIds.knightly, ModifierIds.valiant);
         addDefaultTraits(MaterialIds.enderslimeVine, TinkerModifiers.enderporting);
         addTraits(MaterialIds.enderslimeVine, ARMOR, ModifierIds.enderclearance);

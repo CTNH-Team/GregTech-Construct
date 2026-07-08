@@ -66,6 +66,7 @@ import slimeknights.tconstruct.library.json.variable.tool.*;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
+import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook.ArmorDamageStat;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.EntityInteractionModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.ranged.BowAmmoModifierHook;
 import slimeknights.tconstruct.library.modifiers.impl.BasicModifier.TooltipDisplay;
@@ -523,6 +524,71 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
         buildModifier(ModifierIds.magicProtection)
                 .addModule(MaxArmorAttributeModule.builder(TinkerAttributes.BAD_EFFECT_DURATION, Operation.MULTIPLY_BASE).heldTag(TinkerTags.Items.HELD).eachLevel(-0.05f))
                 .addModule(ProtectionModule.builder().sources(DamageSourcePredicate.CAN_PROTECT, DamageSourcePredicate.tag(TinkerTags.DamageTypes.MAGIC_PROTECTION)).eachLevel(2.5f));
+        buildModifier(ModifierIds.meleeDefense)
+                .addModule(ConditionalArmorStatModule.stat(ArmorDamageStat.PRE_REDUCTION)
+                        .sources(DamageSourcePredicate.tag(TinkerTags.DamageTypes.MELEE_PROTECTION), DamageSourcePredicate.IS_INDIRECT.inverted())
+                        .eachLevel(0.25f).highestEachLevel(0.75f).build());
+        buildModifier(ModifierIds.projectileDefense)
+                .addModule(ConditionalArmorStatModule.stat(ArmorDamageStat.PRE_REDUCTION)
+                        .source(DamageSourcePredicate.tag(TinkerTags.DamageTypes.PROJECTILE_PROTECTION))
+                        .eachLevel(0.25f).highestEachLevel(0.75f).build());
+        buildModifier(ModifierIds.blastDefense)
+                .addModule(ConditionalArmorStatModule.stat(ArmorDamageStat.PRE_REDUCTION)
+                        .source(DamageSourcePredicate.tag(TinkerTags.DamageTypes.BLAST_PROTECTION))
+                        .eachLevel(0.5f).highestEachLevel(1.0f).build());
+        buildModifier(ModifierIds.physicsDefense)
+                .addModule(ConditionalArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION)
+                        .source(DamageSourcePredicate.tag(TinkerTags.DamageTypes.PHYSICS))
+                        .eachLevel(0.5f).build());
+        buildModifier(ModifierIds.guarding)
+                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(FormulaGuardingModule.guarding(
+                        TConstruct.getResource("guarding/distance_factor_formula"),
+                        TConstruct.getResource("guarding/share_ratio_formula"),
+                        TConstruct.getResource("guarding/extra_protection_formula")));
+        buildModifier(ModifierIds.cushion)
+                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("cushion/formula")));
+        buildModifier(ModifierIds.plating)
+                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, TConstruct.getResource("plating/stat_bonus")))
+                .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("plating/tool_damage")));
+        buildModifier(ModifierIds.hardening)
+                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(FormulaRepairModule.repair(TConstruct.getResource("hardening/regenerate_formula"), TConstruct.getResource("hardening/cool_down_formula")));
+        buildModifier(ModifierIds.crystalLattice)
+                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, TConstruct.getResource("crystal_lattice/stat_bonus")))
+                .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("crystal_lattice/damage_capacity")));
+        buildModifier(ModifierIds.crystalizing)
+                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(FormulaRepairModule.repair(TConstruct.getResource("crystalizing/regenerate_formula"), TConstruct.getResource("crystalizing/cool_down_formula")));
+        buildModifier(ModifierIds.crystalSolidity)
+                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(FormulaDamageLimitModule.limit(
+                        TConstruct.getResource("crystal_solidity/cap_formula"),
+                        TConstruct.getResource("crystal_solidity/condition_formula"),
+                        TConstruct.getResource("crystal_solidity/per_armor_ratio"),
+                        TConstruct.getResource("crystal_solidity/finalizer/armor_damage_formula"),
+                        TConstruct.getResource("crystal_solidity/finalizer/overshield_damage_formula")));
+        buildModifier(ModifierIds.totem)
+                .addModule(ModifierSlotModule.slot(SlotType.DEFENSE).eachLevel(1))
+                .addModule(FormulaAreaEffectModule.tamed(
+                        TConstruct.getResource("triggered"),
+                        TConstruct.getResource("totem/range_formula"),
+                        TConstruct.getResource("totem/accumulator/duration_formula"),
+                        TConstruct.getResource("totem/accumulator/level_formula"),
+                        TConstruct.getResource("totem/finalizer/duration_formula"),
+                        TConstruct.getResource("totem/finalizer/level_formula")));
+        buildModifier(ModifierIds.recurrence)
+                .addModule(FormulaRecurrenceModule.recurrence(
+                        TConstruct.getResource("recurrence/persistent_armor_stat/finalizer"),
+                        TConstruct.getResource("recurrence/damage_to_persistent/finalizer"),
+                        TConstruct.getResource("recurrence/persistent_tick/finalizer"),
+                        TConstruct.getResource("recurrence")));
+        buildModifier(ModifierIds.malleability)
+                .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.ARMOR_ABSORPTION_CAP, TConstruct.getResource("malleability/cap_formula")))
+                .addModule(FormulaModifierSlotModule.slot(SlotType.DEFENSE, TConstruct.getResource("malleability/slot_formula")));
         buildModifier(ModifierIds.insulation)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(ArmorPieceDamageReductionModule.perPiece(DamageSourcePredicate.tag(TinkerTags.DamageTypes.INSULATION), 0.25f));

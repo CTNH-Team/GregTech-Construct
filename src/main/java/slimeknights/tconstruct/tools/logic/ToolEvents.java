@@ -3,6 +3,7 @@ package slimeknights.tconstruct.tools.logic;
 import com.google.common.collect.Multiset;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
@@ -47,8 +48,10 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import org.joml.Vector3f;
 import slimeknights.mantle.data.predicate.damage.DamageSourcePredicate;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.common.Sounds;
 import slimeknights.tconstruct.common.TinkerEffect;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.config.Config;
@@ -57,6 +60,7 @@ import slimeknights.tconstruct.library.events.TinkerToolEvent.ToolHarvestEvent;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
+import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook.ArmorDamageStats;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ModifyDamageModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.OnAttackedModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ProtectionModifierHook;
@@ -90,6 +94,7 @@ import slimeknights.tconstruct.shared.TinkerEffects;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.network.SyncProjectileModifiersPacket;
+import slimeknights.tconstruct.tools.particle.ShareDamageParticleData;
 
 
 import java.util.HashMap;
@@ -107,6 +112,18 @@ import static slimeknights.tconstruct.common.config.Config.COMMON;
  */
 @EventBusSubscriber(modid = TConstruct.MOD_ID, bus = Bus.FORGE)
 public class ToolEvents {
+  private static final ThreadLocal<Boolean> SHARING_DAMAGE = ThreadLocal.withInitial(() -> false);
+  private static final Vector3f[] SHARE_DAMAGE_PARTICLE_COLORS = {
+    new Vector3f(0.654f, 0.713f, 0.580f),
+    new Vector3f(0.727f, 0.792f, 0.644f),
+    new Vector3f(0.774f, 0.839f, 0.692f),
+    new Vector3f(0.564f, 0.624f, 0.509f),
+    new Vector3f(0.760f, 0.839f, 0.682f),
+    new Vector3f(0.604f, 0.674f, 0.539f),
+    new Vector3f(0.804f, 0.878f, 0.729f),
+    new Vector3f(0.692f, 0.754f, 0.612f)
+  };
+
   @SuppressWarnings("removal")
   @SubscribeEvent
   static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
@@ -335,6 +352,18 @@ public class ToolEvents {
     // ensure any changes made so far apply, though we may change it again
     event.setAmount(originalDamage);
 
+    float armor = 0, toughness = 0, armorStrength = 0, preReduction = 0, postReduction = 0, armorProtection = 0, armorAbsorptionCapModifier = 0;
+    if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+      armor = entity.getArmorValue();
+      toughness = (float)entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+      armorStrength = (float)entity.getAttributeValue(TinkerAttributes.ARMOR_STRENGTH.get());
+      preReduction = (float)entity.getAttributeValue(TinkerAttributes.PRE_REDUCTION.get());
+    }
+    if (canProtect) {
+      armorProtection = (float)entity.getAttributeValue(TinkerAttributes.ARMOR_PROTECTION.get());
+    }
+    ArmorDamageStats armorDamageStats = new ArmorDamageStats(armorStrength, preReduction, postReduction, armorProtection, originalDamage);
+
     // for our own armor, we have boosts from modifiers to consider
     if (context.hasModifiableArmor()) {
       // first, allow modifiers to change the damage being dealt and respond to it happening
@@ -359,6 +388,7 @@ public class ToolEvents {
           if (tool != null && !tool.isBroken()) {
             for (ModifierEntry entry : tool.getModifierList()) {
               modifierValue = entry.getHook(ModifierHooks.PROTECTION).getProtectionModifier(tool, entry, context, slotType, source, modifierValue);
+              entry.getHook(ModifierHooks.ARMOR_DAMAGE_STATS).addArmorDamageStats(tool, entry, context, slotType, source, armorDamageStats);
             }
           }
         }
@@ -381,22 +411,28 @@ public class ToolEvents {
     if (modifierValue > 0) {
       cap = (float) ProtectionModifierHook.getProtectionCap(entity, context.getTinkerData());
     }
-    float armor = 0, toughness = 0, armorStrength = 0, preReduction = 0, armorProtection = 0;
-    if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-      armor = entity.getArmorValue();
-      toughness = (float)entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
-      armorStrength = (float)entity.getAttributeValue(TinkerAttributes.ARMOR_STRENGTH.get());
-      preReduction = (float)entity.getAttributeValue(TinkerAttributes.PRE_REDUCTION.get());
-    }
-    if (canProtect) {
-      armorProtection = (float)entity.getAttributeValue(TinkerAttributes.ARMOR_PROTECTION.get());
-    }
-    boolean hasArmorExtensionStats = armorStrength > 0 || preReduction > 0 || armorProtection > 0;
+    armorStrength = armorDamageStats.armorStrength();
+    preReduction = armorDamageStats.preReduction();
+    postReduction = armorDamageStats.postReduction();
+    armorProtection = armorDamageStats.armorProtection();
+    armorAbsorptionCapModifier = armorDamageStats.armorAbsorptionCap();
+    boolean hasArmorExtensionStats = armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0;
+    boolean sharedDamage = false;
     if (vanillaModifier != modifierValue || (cap > 20 && vanillaModifier > 20) || (cap < 20 && vanillaModifier > cap) || hasArmorExtensionStats) {
 
       // set the final dealt damage
-      float finalDamage = ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap, armorStrength, preReduction, armorProtection);
+      float finalDamage = armorDamageStats.hasDamageLimit()
+        ? ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap, armorStrength, preReduction, postReduction, armorProtection, armorAbsorptionCapModifier,
+          damage -> armorDamageStats.applyDamageLimit(entity, (float)damage))
+        : ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap, armorStrength, preReduction, postReduction, armorProtection, armorAbsorptionCapModifier);
+      if (!SHARING_DAMAGE.get()) {
+        finalDamage = Math.max(0, finalDamage - shareDamageWithNearbyGuardians(entity, source, finalDamage));
+        sharedDamage = true;
+      }
       event.setAmount(finalDamage);
+      if (originalDamage > 0 && finalDamage <= 0) {
+        entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), Sounds.FULLY_REDUCTED.getSound(), SoundSource.AMBIENT, 1.0F, 1.0F);
+      }
 
       // armor is damaged less as a result of our math, so damage the armor based on the difference if there is one
       if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
@@ -423,6 +459,101 @@ public class ToolEvents {
         }
       }
     }
+    if (!sharedDamage && !SHARING_DAMAGE.get()) {
+      float finalDamage = event.getAmount();
+      if (finalDamage > 0) {
+        float sharedFinalDamage = Math.max(0, finalDamage - shareDamageWithNearbyGuardians(entity, source, finalDamage));
+        event.setAmount(sharedFinalDamage);
+        if (sharedFinalDamage <= 0) {
+          entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), Sounds.FULLY_REDUCTED.getSound(), SoundSource.AMBIENT, 1.0F, 1.0F);
+        }
+      }
+    }
+  }
+
+  private static float shareDamageWithNearbyGuardians(LivingEntity entity, DamageSource source, float damage) {
+    if (damage <= 0 || entity.level().isClientSide || SHARING_DAMAGE.get()) {
+      return 0;
+    }
+
+    float shared = 0;
+    float remaining = damage;
+    boolean previous = SHARING_DAMAGE.get();
+    SHARING_DAMAGE.set(true);
+    try {
+      for (LivingEntity guardian : entity.level().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(16), candidate -> candidate != entity && candidate.isAlive() && entity.isAlliedTo(candidate))) {
+        EquipmentContext guardianContext = new EquipmentContext(guardian);
+        if (!guardianContext.hasModifiableArmor()) {
+          continue;
+        }
+        for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
+          IToolStackView tool = guardianContext.getToolInSlot(slotType);
+          if (tool == null || tool.isBroken()) {
+            continue;
+          }
+          for (ModifierEntry entry : tool.getModifierList()) {
+            float amount = entry.getHook(ModifierHooks.SHARE_DAMAGE).shareDamage(tool, entry, guardian, slotType, entity, source, remaining);
+            if (amount > 0) {
+              amount = Math.min(amount, remaining);
+              shared += amount;
+              remaining -= amount;
+              spawnShareDamageParticles(entity, guardian);
+              if (remaining <= 0) {
+                return shared;
+              }
+            }
+          }
+        }
+      }
+    } finally {
+      SHARING_DAMAGE.set(previous);
+    }
+    return shared;
+  }
+
+  private static void spawnShareDamageParticles(LivingEntity protectedEntity, LivingEntity guardian) {
+    if (!(protectedEntity.level() instanceof ServerLevel level)) {
+      return;
+    }
+    Vec3 from = protectedEntity.position().add(0, protectedEntity.getBbHeight() / 2.0, 0);
+    Vec3 to = guardian.position().add(0, guardian.getBbHeight() / 2.0, 0);
+    Vec3 offset = to.subtract(from);
+    double distance = offset.length();
+    if (distance < 0.01 || distance > 32.0) {
+      return;
+    }
+
+    Vec3 direction = offset.normalize();
+    Vec3 random = new Vec3(level.random.nextGaussian(), level.random.nextGaussian(), level.random.nextGaussian());
+    double dot = random.dot(direction);
+    Vec3 bendDirection = random.subtract(direction.x * dot, direction.y * dot, direction.z * dot);
+    if (bendDirection.lengthSqr() < 1.0E-4) {
+      bendDirection = new Vec3(-direction.z, 0, direction.x);
+    }
+    bendDirection = bendDirection.normalize();
+
+    int count = Math.max(4, (int)Math.ceil(distance) * 4);
+    double height = Math.min(10.0, distance) * (0.1 + level.random.nextDouble() * 0.15);
+    for (int i = 1; i <= count; i++) {
+      double progress = (double)i / count;
+      double bend = height * Math.sin(Math.PI * progress);
+      Vec3 pos = from.add(direction.scale(distance * progress)).add(bendDirection.scale(bend));
+      level.sendParticles(shareDamageParticle(level, 0.5f), pos.x, pos.y, pos.z, 0, 0, 0, 0, 0);
+    }
+
+    for (int i = 0; i < 12; i++) {
+      double x = to.x + (level.random.nextDouble() - 0.5) * 0.2;
+      double y = to.y + (level.random.nextDouble() - 0.5) * 0.02;
+      double z = to.z + (level.random.nextDouble() - 0.5) * 0.2;
+      double xd = direction.x + level.random.nextDouble() - 0.5;
+      double yd = 0.5 * (level.random.nextDouble() - 0.5);
+      double zd = direction.z + level.random.nextDouble() - 0.5;
+      level.sendParticles(shareDamageParticle(level, 0.5f), x, y, z, 0, xd, yd, zd, 0.2);
+    }
+  }
+
+  private static ShareDamageParticleData shareDamageParticle(ServerLevel level, float scale) {
+    return new ShareDamageParticleData(SHARE_DAMAGE_PARTICLE_COLORS[level.random.nextInt(SHARE_DAMAGE_PARTICLE_COLORS.length)], scale);
   }
 
   @SubscribeEvent

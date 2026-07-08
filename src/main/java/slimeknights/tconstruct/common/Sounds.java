@@ -54,6 +54,15 @@ public enum Sounds {
   EQUIP_SLIME("equip.slime"),
   EQUIP_TRAVELERS("equip.travelers"),
   EQUIP_PLATE("equip.plate"),
+  EQUIP_EXPLORERS("equip.explorers"),
+  EQUIP_LIGHT("equip.light"),
+  EQUIP_MIX("equip.mix"),
+  EQUIP_HEAVY("equip.heavy"),
+  EQUIP_STANDARD("equip.standard"),
+  EQUIP_KNIGHTS("equip.knights"),
+
+  DAMAGE_LIMIT("module.damage_limit"),
+  FULLY_REDUCTED("generic.fully_reducted"),
 
   // unused
   TOY_SQUEAK,

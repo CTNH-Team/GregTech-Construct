@@ -14,6 +14,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import slimeknights.mantle.data.registry.IdAwareComponentRegistry;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
+import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorWalkModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.DamageBlockModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ElytraFlightModifierHook;
@@ -21,6 +22,7 @@ import slimeknights.tconstruct.library.modifiers.hook.armor.EquipmentChangeModif
 import slimeknights.tconstruct.library.modifiers.hook.armor.ModifyDamageModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.OnAttackedModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ProtectionModifierHook;
+import slimeknights.tconstruct.library.modifiers.hook.armor.ShareDamageModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.behavior.AttributesModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.behavior.EnchantmentModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.behavior.MaterialRepairModifierHook;
@@ -254,6 +256,10 @@ public class ModifierHooks {
 
   /** Hook called when taking damage wearing this armor to reduce the damage, runs after {@link #MODIFY_HURT} and before {@link #MODIFY_DAMAGE} */
   public static final ModuleHook<ProtectionModifierHook> PROTECTION = register("protection", ProtectionModifierHook.class, ProtectionModifierHook.AllMerger::new, (tool, modifier, context, slotType, source, modifierValue) -> modifierValue);
+
+  public static final ModuleHook<ArmorDamageStatsModifierHook> ARMOR_DAMAGE_STATS = register("armor_damage_stats", ArmorDamageStatsModifierHook.class, ArmorDamageStatsModifierHook.AllMerger::new, (tool, modifier, context, slotType, source, stats) -> {});
+
+  public static final ModuleHook<ShareDamageModifierHook> SHARE_DAMAGE = register("share_damage", ShareDamageModifierHook.class, ShareDamageModifierHook.AllMerger::new, (tool, modifier, guardian, slotType, protectedEntity, source, damage) -> 0);
 
   /** Hook called when taking damage wearing this armor to cancel the damage */
   public static final ModuleHook<DamageBlockModifierHook> DAMAGE_BLOCK = register("damage_block", DamageBlockModifierHook.class, DamageBlockModifierHook.AnyMerger::new, (tool, modifier, context, slotType, source, amount) -> false);

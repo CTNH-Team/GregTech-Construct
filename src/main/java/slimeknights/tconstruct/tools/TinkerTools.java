@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tools;
 
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
@@ -102,6 +103,7 @@ import slimeknights.tconstruct.tools.logic.ModifiableArrowDispenserBehavior;
 import slimeknights.tconstruct.tools.logic.ModifiableShurikenDispenserBehavior;
 import slimeknights.tconstruct.tools.menu.ToolContainerMenu;
 import slimeknights.tconstruct.tools.modules.MeltingFluidEffectiveModule;
+import slimeknights.tconstruct.tools.particle.ShareDamageParticleData;
 import slimeknights.tconstruct.tools.stats.ArmorStats;
 
 import java.util.function.Consumer;
@@ -225,6 +227,7 @@ public final class TinkerTools extends TinkerModule {
     public static final RegistryObject<SimpleParticleType> hammerAttackParticle = PARTICLE_TYPES.register("hammer_attack", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> axeAttackParticle = PARTICLE_TYPES.register("axe_attack", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> bonkAttackParticle = PARTICLE_TYPES.register("bonk", () -> new SimpleParticleType(true));
+    public static final RegistryObject<ParticleType<ShareDamageParticleData>> shareDamageParticle = PARTICLE_TYPES.register("share_damage", ShareDamageParticleData.Type::new);
 
     /* Entities */
     public static final RegistryObject<EntityType<IndestructibleItemEntity>> indestructibleItem = ENTITIES.register("indestructible_item", () ->

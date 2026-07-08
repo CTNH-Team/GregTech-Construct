@@ -21,6 +21,8 @@ import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.lang.reflect.Field;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -29,6 +31,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TiCDynamicResourceGeneratorTest extends BaseMcTest {
   private final TiCDynamicResourcePack pack = new TiCDynamicResourcePack("test");
   private static boolean armorTextureLoadersRegistered;
+  private static final String[] ALL_ARMOR_EXTENSION_FAMILIES = {
+    "standard", "knights", "explorers", "light_composite", "heavy_composite", "light_forged", "heavy_forged"
+  };
+  private static final String[] LARGE_ARMOR_EXTENSION_FAMILIES = {
+    "mix_composite", "mix_composite_other", "mix_forged", "mix_forged_other"
+  };
+  private static final String[] ALL_ARMOR_EXTENSION_SLOTS = { "helmet", "chestplate", "leggings", "boots" };
+  private static final String[] LARGE_ARMOR_EXTENSION_SLOTS = { "chestplate", "leggings" };
 
   @AfterEach
   void clearExternalProviders() throws ReflectiveOperationException {
@@ -112,6 +122,26 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
     assertThat(readClientResource(new ResourceLocation("tconstruct", "models/item/armor/standard/helmet_broken.json")))
       .contains("linear_broken")
       .doesNotContain("tconarmorex");
+    for (String family : ALL_ARMOR_EXTENSION_FAMILIES) {
+      for (String slot : ALL_ARMOR_EXTENSION_SLOTS) {
+        assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "models/item/" + family + "_" + slot + ".json")))
+          .as(family + " " + slot + " item model")
+          .isNotNull();
+        assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "tinkering/armor_models/" + family + "/" + slot + ".json")))
+          .as(family + " " + slot + " armor model")
+          .isNotNull();
+      }
+    }
+    for (String family : LARGE_ARMOR_EXTENSION_FAMILIES) {
+      for (String slot : LARGE_ARMOR_EXTENSION_SLOTS) {
+        assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "models/item/" + family + "_" + slot + ".json")))
+          .as(family + " " + slot + " item model")
+          .isNotNull();
+        assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "tinkering/armor_models/" + family + "/" + slot + ".json")))
+          .as(family + " " + slot + " armor model")
+          .isNotNull();
+      }
+    }
     assertThat(readClientResource(new ResourceLocation("tconstruct", "tinkering/armor_models/standard/helmet.json")))
       .contains("linear_")
       .doesNotContain("tconarmorex");
@@ -119,6 +149,47 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
       .contains("armor_plate_1_")
       .contains("armor_mail_2_")
       .doesNotContain("tconarmorex");
+    assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/mantle/colors.json")))
+      .contains("\"melee_defense\": \"#9261CC\"")
+      .contains("\"projectile_defense\": \"#60496B\"")
+      .contains("\"blast_defense\": \"#236C45\"")
+      .contains("\"physics_defense\": \"#4C4143\"")
+      .contains("\"cushion\": \"#C9D2CF\"")
+      .contains("\"guarding\": \"#C4D6AE\"")
+      .contains("\"plating\": \"#C4D6AE\"")
+      .contains("\"hardening\": \"#C4D6AE\"")
+      .contains("\"crystal_lattice\": \"#C687BD\"")
+      .contains("\"crystalizing\": \"#C687BD\"")
+      .contains("\"crystal_solidity\": \"#C687BD\"")
+      .contains("\"totem\": \"#7E6059\"")
+      .contains("\"recurrence\": \"#60496b\"")
+      .contains("\"malleability\": \"#8FBC8F\"")
+      .doesNotContain("tconarmorex");
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "mantle/colors.json")))
+      .as("modifier colors stay in static resources")
+      .isNull();
+    assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/sounds.json")))
+      .contains("\"equip.standard\"")
+      .contains("\"subtitle\": \"subtitles.tconstruct.equip.standard\"")
+      .contains("\"name\": \"tconstruct:damage_limit\"")
+      .contains("\"generic.fully_reducted\"")
+      .doesNotContain("tconarmorex");
+    assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/particles/share_damage.json")))
+      .contains("tconstruct:share_damage")
+      .doesNotContain("tconarmorex");
+    assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/lang/en_us.json")))
+      .contains("\"pattern.tconstruct.armor_frame_large\": \"Large Frame of Armor\"")
+      .contains("\"pattern.tconstruct.mail_plate\": \"Armor Mail or Plate\"")
+      .contains("\"pattern.tconstruct.plating_large\": \"Large Armor Plating\"")
+      .doesNotContain("tconarmorex");
+    assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/lang/zh_cn.json")))
+      .contains("\"pattern.tconstruct.armor_frame_large\": \"大型盔甲框架\"")
+      .contains("\"pattern.tconstruct.mail_plate\": \"通用护甲\"")
+      .contains("\"pattern.tconstruct.plating_large\": \"大型盔甲镶板\"")
+      .doesNotContain("tconarmorex");
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "particles/share_damage.json")))
+      .as("share_damage particle stays in static resources")
+      .isNull();
 
     assertThat(pack.getNamespaces(PackType.CLIENT_RESOURCES)).doesNotContain("tconarmorex");
   }
