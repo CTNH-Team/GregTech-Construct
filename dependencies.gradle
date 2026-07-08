@@ -1,6 +1,9 @@
 dependencies {
     compileOnly("org.jetbrains:annotations:26.0.1")
     annotationProcessor('org.spongepowered:mixin:0.8.5:processor')
+
+    // Formula Loader - using local dev jar for compilation
+    // The obf jar will be directly embedded into final jar via build.gradle
     compileOnly files("libs/Formula Loader-1.20.1-${formula_loader_version}-dev.jar")
     runtimeOnly files("libs/Formula Loader-1.20.1-${formula_loader_version}-dev.jar")
 
