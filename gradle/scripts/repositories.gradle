@@ -128,6 +128,11 @@ repositories {
     }
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
     flatDir {
+        name "local-libs"
         dir '../Mantle/build/libs'
+    }
+    flatDir {
+        name "formula-loader"
+        dir 'libs'
     }
 }

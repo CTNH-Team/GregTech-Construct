@@ -2,10 +2,9 @@ dependencies {
     compileOnly("org.jetbrains:annotations:26.0.1")
     annotationProcessor('org.spongepowered:mixin:0.8.5:processor')
 
-    // Formula Loader - using local dev jar for compilation
-    // The obf jar will be directly embedded into final jar via build.gradle
-    compileOnly files("libs/Formula Loader-1.20.1-${formula_loader_version}-dev.jar")
-    runtimeOnly files("libs/Formula Loader-1.20.1-${formula_loader_version}-dev.jar")
+    // Formula Loader - JarJar'd dependency (using flatDir repository)
+    modImplementation("oftenoviour:Formula Loader:1.20.1-${formula_loader_version}-dev")
+    jarJar("oftenoviour:Formula Loader:1.20.1-${formula_loader_version}-dev") { transitive = false }
 
     // would ideally use API for this, but that does not work well with fg.deobf in my understanding
     modImplementation("slimeknights.mantle:Mantle:${minecraft_version}-${mantle_version}")
