@@ -11,11 +11,15 @@ import net.minecraft.world.item.ItemStack;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.hook.behavior.PriorityToolDamageModifierHook;
+import slimeknights.tconstruct.library.modifiers.hook.behavior.ToolDamageModifierHook;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -104,16 +108,38 @@ public class ToolDamageUtil {
       return false;
     }
 
-    // try each modifier
+    List<HookModuleEntry> hooks = new ArrayList<>();
     for (ModifierEntry entry : tool.getModifierList()) {
-      amount = entry.getHook(ModifierHooks.TOOL_DAMAGE).onDamageTool(tool, entry, amount, entity, stack);
-      // if no more damage, done
+      ToolDamageModifierHook hook = entry.getHook(ModifierHooks.TOOL_DAMAGE);
+      if (hook instanceof ToolDamageModifierHook.Merger merger) {
+        for (ToolDamageModifierHook module : merger.modules()) {
+          hooks.add(new HookModuleEntry(module, entry, getPriority(module, entry)));
+        }
+      } else {
+        hooks.add(new HookModuleEntry(hook, entry, getPriority(hook, entry)));
+      }
+    }
+    // 按优先级降序排序
+    hooks.sort((a, b) -> b.priority - a.priority);
+
+    // 按优先级顺序执行
+    for (HookModuleEntry item : hooks) {
+      amount = item.hook.onDamageTool(tool, item.entry, amount, entity, stack);
       if (amount <= 0) {
         return false;
       }
     }
     return directDamage(tool, amount, entity, stack);
   }
+
+  private static int getPriority(ToolDamageModifierHook hook, ModifierEntry entry) {
+    if (hook instanceof PriorityToolDamageModifierHook priorityHook) {
+      return priorityHook.getToolDamagePriority();
+    }
+    return entry.getModifier().getPriority();
+  }
+
+  private record HookModuleEntry(ToolDamageModifierHook hook, ModifierEntry entry, int priority) {}
 
   /**
    * Damages the tool and sends the break animation if it broke

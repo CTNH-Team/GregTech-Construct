@@ -433,6 +433,36 @@ public class AdvancementsProvider extends GenericDataProvider {
             with.accept(TinkerTools.swasher);
         });
 
+        // 护甲成就
+        // composite_or_forged：拥有任意复合或锻造护甲
+        Advancement compositeOrForged = builder(TinkerTools.lightCompositeArmor.get(ArmorItem.Type.CHESTPLATE).getRenderTool(),
+                resource("special/composite_or_forged"), tinkerTool, FrameType.TASK, builder -> {
+            TinkerTools.lightCompositeArmor.forEach((type, armor) -> builder.addCriterion("light_composite_" + type.getName(), hasItem(armor)));
+            TinkerTools.heavyCompositeArmor.forEach((type, armor) -> builder.addCriterion("heavy_composite_" + type.getName(), hasItem(armor)));
+            TinkerTools.lightForgedArmor.forEach((type, armor) -> builder.addCriterion("light_forged_" + type.getName(), hasItem(armor)));
+            TinkerTools.heavyForgedArmor.forEach((type, armor) -> builder.addCriterion("heavy_forged_" + type.getName(), hasItem(armor)));
+            TinkerTools.mixCompositeArmor.forEach((type, armor) -> builder.addCriterion("mix_composite_" + type.getName(), hasItem(armor)));
+            TinkerTools.mixCompositeOtherArmor.forEach((type, armor) -> builder.addCriterion("mix_composite_other_" + type.getName(), hasItem(armor)));
+            TinkerTools.mixForgedArmor.forEach((type, armor) -> builder.addCriterion("mix_forged_" + type.getName(), hasItem(armor)));
+            TinkerTools.mixForgedOtherArmor.forEach((type, armor) -> builder.addCriterion("mix_forged_other_" + type.getName(), hasItem(armor)));
+            builder.requirements(RequirementsStrategy.OR);
+        });
+
+        // knights：拥有骑士全套护甲
+        builder(TinkerTools.knightsArmor.get(ArmorItem.Type.CHESTPLATE).getRenderTool(),
+                resource("full_set/knights"), compositeOrForged, FrameType.CHALLENGE, builder -> {
+            TinkerTools.knightsArmor.forEach((type, armor) -> builder.addCriterion("knights_" + type.getName(), hasItem(armor)));
+        });
+
+        // mixed_armor：同时拥有混合型复合和锻造护甲
+        builder(TinkerTools.mixCompositeArmor.get(ArmorItem.Type.CHESTPLATE).getRenderTool(),
+                resource("special/mixed_armor"), compositeOrForged, FrameType.GOAL, builder -> {
+            TinkerTools.mixCompositeArmor.forEach((type, armor) -> builder.addCriterion("mix_composite_" + type.getName(), hasItem(armor)));
+            TinkerTools.mixCompositeOtherArmor.forEach((type, armor) -> builder.addCriterion("mix_composite_other_" + type.getName(), hasItem(armor)));
+            TinkerTools.mixForgedArmor.forEach((type, armor) -> builder.addCriterion("mix_forged_" + type.getName(), hasItem(armor)));
+            TinkerTools.mixForgedOtherArmor.forEach((type, armor) -> builder.addCriterion("mix_forged_other_" + type.getName(), hasItem(armor)));
+        });
+
         // internal advancements
         hiddenBuilder(resource("internal/starting_book"), ConfigEnabledCondition.SPAWN_WITH_BOOK, builder -> {
             builder.addCriterion("tick", new PlayerTrigger.TriggerInstance(CriteriaTriggers.TICK.getId(), ContextAwarePredicate.ANY));

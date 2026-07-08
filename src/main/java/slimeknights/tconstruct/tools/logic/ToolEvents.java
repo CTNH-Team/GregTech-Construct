@@ -481,27 +481,40 @@ public class ToolEvents {
     boolean previous = SHARING_DAMAGE.get();
     SHARING_DAMAGE.set(true);
     try {
-      for (LivingEntity guardian : entity.level().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(16), candidate -> candidate != entity && candidate.isAlive() && entity.isAlliedTo(candidate))) {
-        EquipmentContext guardianContext = new EquipmentContext(guardian);
-        if (!guardianContext.hasModifiableArmor()) {
-          continue;
-        }
-        for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
-          IToolStackView tool = guardianContext.getToolInSlot(slotType);
-          if (tool == null || tool.isBroken()) {
-            continue;
-          }
-          for (ModifierEntry entry : tool.getModifierList()) {
-            float amount = entry.getHook(ModifierHooks.SHARE_DAMAGE).shareDamage(tool, entry, guardian, slotType, entity, source, remaining);
-            if (amount > 0) {
-              amount = Math.min(amount, remaining);
-              shared += amount;
-              remaining -= amount;
-              spawnShareDamageParticles(entity, guardian);
-              if (remaining <= 0) {
-                return shared;
-              }
+      for (Entity passenger : entity.getPassengers()) {
+        if (passenger instanceof LivingEntity rider && rider.isAlive()) {
+          float riderShared = tryShareDamageWith(rider, entity, source, remaining);
+          if (riderShared > 0) {
+            shared += riderShared;
+            remaining -= riderShared;
+            if (remaining <= 0) {
+              return shared;
             }
+          }
+        }
+      }
+
+      if (entity instanceof net.minecraft.world.entity.TamableAnimal tamable) {
+        LivingEntity owner = tamable.getOwner();
+        if (owner != null && owner.isAlive()) {
+          float ownerShared = tryShareDamageWith(owner, entity, source, remaining);
+          if (ownerShared > 0) {
+            shared += ownerShared;
+            remaining -= ownerShared;
+            if (remaining <= 0) {
+              return shared;
+            }
+          }
+        }
+      }
+
+      for (LivingEntity guardian : entity.level().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(16), candidate -> candidate != entity && candidate.isAlive() && entity.isAlliedTo(candidate))) {
+        float guardianShared = tryShareDamageWith(guardian, entity, source, remaining);
+        if (guardianShared > 0) {
+          shared += guardianShared;
+          remaining -= guardianShared;
+          if (remaining <= 0) {
+            return shared;
           }
         }
       }
@@ -509,6 +522,34 @@ public class ToolEvents {
       SHARING_DAMAGE.set(previous);
     }
     return shared;
+  }
+
+  private static float tryShareDamageWith(LivingEntity guardian, LivingEntity protectedEntity, DamageSource source, float damage) {
+    EquipmentContext guardianContext = new EquipmentContext(guardian);
+    if (!guardianContext.hasModifiableArmor()) {
+      return 0;
+    }
+
+    float totalShared = 0;
+    for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
+      IToolStackView tool = guardianContext.getToolInSlot(slotType);
+      if (tool == null || tool.isBroken()) {
+        continue;
+      }
+      for (ModifierEntry entry : tool.getModifierList()) {
+        float amount = entry.getHook(ModifierHooks.SHARE_DAMAGE).shareDamage(tool, entry, guardian, slotType, protectedEntity, source, damage);
+        if (amount > 0) {
+          amount = Math.min(amount, damage);
+          totalShared += amount;
+          damage -= amount;
+          spawnShareDamageParticles(protectedEntity, guardian);
+          if (damage <= 0) {
+            return totalShared;
+          }
+        }
+      }
+    }
+    return totalShared;
   }
 
   private static void spawnShareDamageParticles(LivingEntity protectedEntity, LivingEntity guardian) {

@@ -555,6 +555,8 @@ public final class TinkerModifiers extends TinkerModule {
             ModifierModule.LOADER.register(getResource("attribute"), AttributeModule.LOADER);
             ModifierModule.LOADER.register(getResource("reduce_tool_damage"), ReduceToolDamageModule.LOADER);
             ModifierModule.LOADER.register(getResource("formula_tool_damage"), FormulaToolDamageModule.LOADER);
+            ModifierModule.LOADER.register(getResource("priority_tool_damage"), PriorityToolDamageModule.LOADER);
+            ModifierModule.LOADER.register(getResource("tool_damage_capacity"), ToolDamageCapacityModule.LOADER);
             // TODO 1.21: rename to repair_factor?
             ModifierModule.LOADER.register(getResource("repair"), RepairModule.LOADER);
             ModifierModule.LOADER.register(getResource("material_repair"), MaterialRepairModule.LOADER);
@@ -600,6 +602,7 @@ public final class TinkerModifiers extends TinkerModule {
             ModifierModule.LOADER.register(getResource("conditional_mining_speed"), ConditionalMiningSpeedModule.LOADER);
             // capacity
             ModifierModule.LOADER.register(getResource("capacity_bar"), CapacityBarModule.LOADER);
+            ModifierModule.LOADER.register(getResource("stat_capacity_bar"), StatCapacityBarModule.LOADER);
             ModifierModule.LOADER.register(getResource("durability_as_capacity"), DurabilityAsCapacityModule.LOADER);
             ModifierModule.LOADER.register(getResource("durability_shield"), DurabilityShieldModule.LOADER);
             ModifierModule.LOADER.register(getResource("loot_to_capacity"), LootToCapacityModule.LOADER);
@@ -736,6 +739,22 @@ public final class TinkerModifiers extends TinkerModule {
         EntityModifierCapability.register();
         // by default, we support modifying projectiles (arrows or fireworks mainly, but maybe other stuff). other entities may come in the future
         EntityModifierCapability.registerEntityPredicate(entity -> entity instanceof Projectile);
+    }
+
+    /**
+     * 初始化 StatCapacityBarModule，动态创建 capacity stats。
+     * 对齐 TCAE 的实现。
+     */
+    @SubscribeEvent
+    void onModifiersLoaded(ModifierManager.ModifiersLoadedEvent event) {
+        ModifierManager.INSTANCE.getAllValues().forEach(modifier -> {
+            ModifierId id = modifier.getId();
+            // 查找所有 StatCapacityBarModule 并初始化
+            modifier.getModules().stream()
+                .filter(module -> module instanceof StatCapacityBarModule)
+                .map(module -> (StatCapacityBarModule) module)
+                .forEach(module -> module.initialize(id));
+        });
     }
 
     /** Adds all relevant items to the creative tab, called by general */

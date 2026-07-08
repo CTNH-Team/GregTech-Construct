@@ -551,15 +551,29 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("cushion/formula")));
         buildModifier(ModifierIds.plating)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(new StatCapacityBarModule(0x8A9A8C))
+                .addModule(new DurabilityBarColorModule(0x8A9A8C))
                 .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, TConstruct.getResource("plating/stat_bonus")))
-                .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("plating/tool_damage")));
+                .addModule(ToolDamageCapacityModule.of(
+                        TConstruct.getResource("plating/pre_damage"),
+                        TConstruct.getResource("plating/damage_capacity_pre"),
+                        3125))
+                .addModule(ToolDamageCapacityModule.of(
+                        TConstruct.getResource("plating/tool_damage"),
+                        TConstruct.getResource("plating/damage_capacity"),
+                        100));
         buildModifier(ModifierIds.hardening)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(FormulaRepairModule.repair(TConstruct.getResource("hardening/regenerate_formula"), TConstruct.getResource("hardening/cool_down_formula")));
         buildModifier(ModifierIds.crystalLattice)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(new StatCapacityBarModule(0xC687BD))
+                .addModule(new DurabilityBarColorModule(0xC687BD))
                 .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, TConstruct.getResource("crystal_lattice/stat_bonus")))
-                .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("crystal_lattice/damage_capacity")));
+                .addModule(ToolDamageCapacityModule.of(
+                        TConstruct.getResource("crystal_lattice/damage_capacity"),
+                        TConstruct.getResource("crystal_lattice/damage_capacity"),
+                        125));
         buildModifier(ModifierIds.crystalizing)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(FormulaRepairModule.repair(TConstruct.getResource("crystalizing/regenerate_formula"), TConstruct.getResource("crystalizing/cool_down_formula")));
