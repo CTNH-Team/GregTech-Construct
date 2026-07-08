@@ -37,7 +37,13 @@ class MaterialDynamicPackTest extends BaseMcTest {
     assertThat(ironStats).isNotNull();
     assertThat(ironStats.getAsJsonObject("stats").keySet())
       .contains("tconstruct:armor_plate", "tconstruct:armor_mail", "tconstruct:cast_helmet", "tconstruct:frame_of_helmet", "tconstruct:massive_cast_helmet");
-    assertThat(readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialTraitsManager.FOLDER + "/iron.json"))).isNotNull();
+    JsonObject ironTraits = readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialTraitsManager.FOLDER + "/iron.json"));
+    assertThat(ironTraits).isNotNull();
+    JsonObject perStatTraits = ironTraits.getAsJsonObject("perStat");
+    assertThat(perStatTraits.getAsJsonArray("tconstruct:cast_helmet").get(0).getAsJsonObject().get("name").getAsString()).isEqualTo("tconstruct:projectile_protection");
+    assertThat(perStatTraits.getAsJsonArray("tconstruct:cast_helmet").get(0).getAsJsonObject().get("level").getAsInt()).isEqualTo(2);
+    assertThat(perStatTraits.getAsJsonArray("tconstruct:massive_cast_helmet").get(0).getAsJsonObject().get("name").getAsString()).isEqualTo("tconstruct:projectile_protection");
+    assertThat(perStatTraits.getAsJsonArray("tconstruct:massive_cast_helmet").get(0).getAsJsonObject().get("level").getAsInt()).isEqualTo(2);
   }
 
   private JsonObject readJson(ResourceLocation location) throws Exception {

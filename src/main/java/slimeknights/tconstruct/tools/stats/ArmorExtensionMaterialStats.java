@@ -17,9 +17,21 @@ import java.util.List;
 public final class ArmorExtensionMaterialStats {
   public static final MaterialStatType<ArmorLayerStats> ARMOR_PLATE = layerType("armor_plate");
   public static final MaterialStatType<ArmorLayerStats> ARMOR_MAIL = layerType("armor_mail");
-  public static final List<MaterialStatType<ArmorPieceStats>> CAST_TYPES = List.of(pieceType("cast_helmet"), pieceType("cast_chestplate"), pieceType("cast_leggings"), pieceType("cast_boots"));
-  public static final List<MaterialStatType<ArmorFrameStats>> FRAME_TYPES = List.of(frameType("frame_of_helmet"), frameType("frame_of_chestplate"), frameType("frame_of_leggings"), frameType("frame_of_boots"));
-  public static final List<MaterialStatType<ArmorPieceStats>> MASSIVE_CAST_TYPES = List.of(pieceType("massive_cast_helmet"), pieceType("massive_cast_chestplate"), pieceType("massive_cast_leggings"), pieceType("massive_cast_boots"));
+  public static final MaterialStatType<ArmorPieceStats> CAST_HELMET = pieceType("cast_helmet");
+  public static final MaterialStatType<ArmorPieceStats> CAST_CHESTPLATE = pieceType("cast_chestplate");
+  public static final MaterialStatType<ArmorPieceStats> CAST_LEGGINGS = pieceType("cast_leggings");
+  public static final MaterialStatType<ArmorPieceStats> CAST_BOOTS = pieceType("cast_boots");
+  public static final MaterialStatType<ArmorFrameStats> FRAME_HELMET = frameType("frame_of_helmet");
+  public static final MaterialStatType<ArmorFrameStats> FRAME_CHESTPLATE = frameType("frame_of_chestplate");
+  public static final MaterialStatType<ArmorFrameStats> FRAME_LEGGINGS = frameType("frame_of_leggings");
+  public static final MaterialStatType<ArmorFrameStats> FRAME_BOOTS = frameType("frame_of_boots");
+  public static final MaterialStatType<ArmorPieceStats> MASSIVE_CAST_HELMET = pieceType("massive_cast_helmet");
+  public static final MaterialStatType<ArmorPieceStats> MASSIVE_CAST_CHESTPLATE = pieceType("massive_cast_chestplate");
+  public static final MaterialStatType<ArmorPieceStats> MASSIVE_CAST_LEGGINGS = pieceType("massive_cast_leggings");
+  public static final MaterialStatType<ArmorPieceStats> MASSIVE_CAST_BOOTS = pieceType("massive_cast_boots");
+  public static final List<MaterialStatType<ArmorPieceStats>> CAST_TYPES = List.of(CAST_HELMET, CAST_CHESTPLATE, CAST_LEGGINGS, CAST_BOOTS);
+  public static final List<MaterialStatType<ArmorFrameStats>> FRAME_TYPES = List.of(FRAME_HELMET, FRAME_CHESTPLATE, FRAME_LEGGINGS, FRAME_BOOTS);
+  public static final List<MaterialStatType<ArmorPieceStats>> MASSIVE_CAST_TYPES = List.of(MASSIVE_CAST_HELMET, MASSIVE_CAST_CHESTPLATE, MASSIVE_CAST_LEGGINGS, MASSIVE_CAST_BOOTS);
 
   private ArmorExtensionMaterialStats() {}
 
