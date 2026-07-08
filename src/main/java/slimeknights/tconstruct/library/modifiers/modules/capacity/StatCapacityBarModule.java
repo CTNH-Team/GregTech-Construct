@@ -35,6 +35,7 @@ public class StatCapacityBarModule implements CapacityBarHook, ModifierModule, H
 
   private final ResourceLocation key;
   private final int color;
+  @Nullable
   private final FloatToolStat stat;
 
   public StatCapacityBarModule(int color) {
