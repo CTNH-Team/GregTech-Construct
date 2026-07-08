@@ -258,7 +258,7 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
 
         // plate armor
         String plateFolder = armorFolder + "plate/";
-        TinkerTools.plateArmor.forEach(item -> toolBuilding(consumer, item, plateFolder, Patterns.PLATE_ARMOR));
+        TinkerTools.plateArmor.forEach((type, item) -> toolBuilding(consumer, item, plateFolder, plateArmorLayout(type)));
         MaterialCastingRecipeBuilder.tableRecipe(TinkerTools.plateShield.get())
                 .setCast(MaterialIngredient.of(TinkerToolParts.shieldCore), CastPurpose.FIRST_MATERIAL)
                 .setItemCost(3)
@@ -526,6 +526,10 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
 
     private static Pattern forgedArmorLayout(ArmorItem.Type type) {
         return isSmallArmor(type) ? Patterns.FORGED_ARMOR_SMALL : Patterns.FORGED_ARMOR_LARGE;
+    }
+
+    private static Pattern plateArmorLayout(ArmorItem.Type type) {
+        return isSmallArmor(type) ? Patterns.PLATE_ARMOR_SMALL : Patterns.PLATE_ARMOR_LARGE;
     }
 
     private static boolean isSmallArmor(ArmorItem.Type type) {

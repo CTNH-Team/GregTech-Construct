@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.modifiers.hook.armor;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -15,6 +16,7 @@ import slimeknights.tconstruct.library.modifiers.modules.capacity.OverslimeModul
 import slimeknights.tconstruct.library.tools.context.EquipmentContext;
 import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
+import slimeknights.tconstruct.shared.AchievementEvents;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -124,6 +126,9 @@ public interface ArmorDamageStatsModifierHook {
       double totalLevel = damageLimits.stream().mapToDouble(DamageLimitEntry::level).sum();
       float ratio = getPerArmorRatio(damageLimits.get(0).perArmorRatioFormula(), damageLimits.size());
       entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), Sounds.DAMAGE_LIMIT.getSound(), SoundSource.AMBIENT, 1.0F, 1.0F);
+      if (originalDamage > 0 && overflow / originalDamage >= 0.8f && entity instanceof ServerPlayer player) {
+        AchievementEvents.grantAdvancement(player, TConstruct.getResource("combat/damage_limit"));
+      }
       for (DamageLimitEntry entry : damageLimits) {
         entry.apply(entity, totalLevel, originalDamage, overflow, ratio);
       }

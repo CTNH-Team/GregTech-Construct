@@ -136,7 +136,7 @@ public final class MaterialRegistry {
       registry.registerStatType(type, ARMOR);
     }
     registry.registerStatType(StatlessMaterialStats.CUIRASS.getType(), ARMOR);
-    registry.registerStatType(StatlessMaterialStats.MAILLE.getType(), ARMOR);
+    registry.registerStatType(ArmorExtensionMaterialStats.MAILLE, ARMOR);
     registry.registerStatType(StatlessMaterialStats.SHIELD_CORE.getType(), ARMOR);
     registry.registerStatType(StatlessMaterialStats.LINEAR.getType(), ARMOR);
     // ammo

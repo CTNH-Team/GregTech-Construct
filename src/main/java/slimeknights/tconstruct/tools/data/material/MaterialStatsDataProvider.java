@@ -7,7 +7,10 @@ import slimeknights.tconstruct.library.data.material.AbstractMaterialStatsDataPr
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.stats.IMaterialStats;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatType;
+import slimeknights.tconstruct.tools.modules.ArmorModuleBuilder;
 import slimeknights.tconstruct.tools.stats.*;
+
+import java.util.Map;
 
 import static net.minecraft.world.item.Tiers.*;
 
@@ -28,6 +31,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addAmmo();
         addArmor();
         addMisc();
+        addArmorExtensionMaterialStats();
     }
 
     private void addMeleeHarvest() {
@@ -538,6 +542,168 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.blood);
         addMaterialStats(MaterialIds.clay);
         addMaterialStats(MaterialIds.honey);
+    }
+
+
+
+    private static final float DEFAULT_SMALL_REDUCTION_FACTOR = 0.5f;
+    private static final float DEFAULT_SMALL_PROTECTION_FACTOR = 0.4f;
+
+    private static final Map<MaterialId,ArmorDefaults> ARMOR_EXTENSION_DEFAULTS = Map.ofEntries(
+            Map.entry(MaterialIds.aluminum, armorDefaults(39f, 2.0f, 6.5f, 5.0f, 1.5f, null, null, 0.18f, 0.01f, null, -0.12f, -0.1f, 0.0f, 0.12f)),
+            Map.entry(MaterialIds.amethystBronze, armorDefaults(39f, 2.5f, 7.0f, 5.5f, 2.0f, 1.25f, 2.25f, 0.4f, 0.032f, null, 0.0f, -0.07f, 0.12f, 0.15f, 0.6f, 0.25f)),
+            Map.entry(MaterialIds.ancient, armorDefaults(28.8f, 2.0f, 6.0f, 4.5f, 1.5f, null, null, 0.1f, 0.08f, 0.15f, 0.1f, 0.0f, 0.0f, 0.0f)),
+            Map.entry(MaterialIds.bronze, armorDefaults(34.3f, 2.0f, 6.0f, 5.0f, 2.0f, 0.5f, 0.25f, 0.28f, 0.025f, 0.05f, 0.1f, 0.04f, -0.05f, -0.05f)),
+            Map.entry(MaterialIds.cinderslime, armorDefaults(45.6f, 2.5f, 7.0f, 6.0f, 2.5f, 2.25f, 1.75f, 0.36f, 0.056f, 0.1f, 0.16f, 0.02f, 0.08f, -0.08f, 0.4f, 0.75f)),
+            Map.entry(MaterialIds.cobalt, armorDefaults(30f, 2.5f, 6.5f, 5.0f, 2.0f, 2.0f, 1.0f, 0.6f, 0.07f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.6f, 0.5f)),
+            Map.entry(MaterialIds.constantan, armorDefaults(26.25f, 2.0f, 5.0f, 4.0f, 2.0f, 0.75f, 2.0f, 0.3f, 0.036f, 0.05f, -0.05f, 0.0f, 0.18f, 0.1f)),
+            Map.entry(MaterialIds.copper, armorDefaults(13f, 1.0f, 3.0f, 2.0f, 1.0f, null, null, 0.05f, 0.018f, null, -0.2f, 0.07f, 0.0f, 0.0f)),
+            Map.entry(MaterialIds.fiery, armorDefaults(25f, 3.0f, 8.0f, 6.0f, 3.0f, 2.5f, 1.5f, 0.9f, 0.028f, null, -0.2f, 0.15f, 0.05f, 0.03f)),
+            Map.entry(MaterialIds.gold, armorDefaults(7f, 1.0f, 4.0f, 3.0f, 1.0f, null, null, 0.05f, 0.01f, null, 0.0f, 0.0f, 0.0f, 0.0f)),
+            Map.entry(MaterialIds.hepatizon, armorDefaults(32f, 3.0f, 7.5f, 6.5f, 3.0f, 1.25f, 2.5f, 0.25f, 0.064f, 0.1f, 0.15f, 0.0f, 0.12f, 0.2f, null, 0.75f)),
+            Map.entry(MaterialIds.invar, armorDefaults(27f, 2.5f, 6.0f, 5.0f, 2.5f, 0.75f, 1.5f, 0.12f, 0.048f, 0.1f, 0.0f, -0.06f, 0.1f, 0.18f)),
+            Map.entry(MaterialIds.iron, armorDefaults(15f, 2.0f, 6.0f, 5.0f, 2.0f, 1.0f, 0.5f, 0.2f, 0.012f, null, 0.1f, 0.08f, 0.0f, -0.1f)),
+            Map.entry(MaterialIds.knightmetal, armorDefaults(22.8f, 3.0f, 8.0f, 6.5f, 2.5f, 1.5f, 2.25f, 0.5f, 0.08f, 0.05f, 0.0f, 0.12f, 0.05f, 0.08f, 0.375f, 0.375f)),
+            Map.entry(MaterialIds.lead, armorDefaults(10.8f, 1.5f, 4.0f, 3.5f, 1.5f, null, 0.75f, 0.6f, 0.01f, 0.1f, -0.1f, -0.04f, -0.05f, 0.08f)),
+            Map.entry(MaterialIds.manyullyn, armorDefaults(51.25f, 2.5f, 7.0f, 6.5f, 2.0f, 3.0f, 1.25f, 0.75f, 0.05f, 0.05f, 0.2f, 0.05f, 0.2f, -0.1f, 0.8f, 0.8f)),
+            Map.entry(MaterialIds.obsidian, armorDefaults(21f, 2.0f, 7.0f, 5.5f, 1.5f, 1.75f, null, 0.45f, 0.02f, 0.15f, 0.0f, 0.1f, -0.1f, -0.2f, 0.2f, 0.5f)),
+            Map.entry(MaterialIds.osmium, armorDefaults(25.5f, 1.5f, 5.0f, 4.5f, 1.0f, null, 0.5f, 0.05f, 0.044f, 0.05f, 0.15f, 0.03f, -0.2f, 0.05f)),
+            Map.entry(MaterialIds.pewter, armorDefaults(16f, 2.5f, 6.5f, 5.0f, 2.0f, 0.5f, null, 0.15f, 0.03f, null, -0.15f, 0.02f, 0.05f, -0.05f)),
+            Map.entry(MaterialIds.pigIron, armorDefaults(35f, 2.0f, 6.0f, 5.0f, 2.0f, 1.5f, 0.25f, 0.3f, 0.06f, 0.075f, 0.07f, 0.0f, 0.12f, 0.0f)),
+            Map.entry(MaterialIds.queensSlime, armorDefaults(64f, 2.0f, 6.0f, 5.0f, 2.0f, 0.75f, 3.0f, 0.6f, 0.075f, null, 0.35f, 0.0f, -0.1f, 0.2f, 0.75f, 0.6f)),
+            Map.entry(MaterialIds.roseGold, armorDefaults(9f, 1.5f, 5.0f, 4.0f, 1.5f, 0.25f, 1.0f, 0.05f, 0.01f, null, -0.3f, -0.1f, 0.1f, 0.08f)),
+            Map.entry(MaterialIds.scorchedStone, armorDefaults(10.5f, 2.0f, 4.5f, 4.0f, 1.5f, 1.5f, null, 0.16f, 0.04f, 0.05f, -0.1f, 0.0f, 0.15f, -0.15f)),
+            Map.entry(MaterialIds.searedStone, armorDefaults(13.75f, 1.5f, 4.0f, 3.0f, 1.5f, 1.0f, null, 0.1f, 0.024f, 0.1f, -0.15f, 0.05f, 0.1f, -0.1f)),
+            Map.entry(MaterialIds.silver, armorDefaults(16.5f, 1.0f, 3.5f, 2.5f, 1.0f, null, null, 0.05f, 0.01f, null, -0.18f, 0.0f, -0.25f, 0.08f)),
+            Map.entry(MaterialIds.slimesteel, armorDefaults(43.2f, 2.0f, 6.0f, 5.0f, 2.0f, 0.25f, 0.75f, 0.15f, 0.016f, 0.025f, 0.25f, -0.07f, -0.08f, 0.1f)),
+            Map.entry(MaterialIds.steel, armorDefaults(32f, 2.5f, 7.5f, 6.0f, 2.0f, 2.0f, 2.0f, 0.7f, 0.08f, null, 0.2f, 0.04f, 0.05f, 0.05f, 0.5f, 0.6f)),
+            Map.entry(MaterialIds.steeleaf, armorDefaults(10f, 2.0f, 6.5f, 5.5f, 2.0f, 1.0f, 1.0f, 0.75f, 0.015f, 0.025f, -0.15f, -0.05f, 0.12f, 0.08f))
+    );
+
+
+    private static final Map<MaterialId,ArmorDefaults> ARMOR_EXTENSION_COMPAT_DEFAULTS = Map.ofEntries(
+            Map.entry(new MaterialId("tgears", "cardboard"), armorDefaults(2.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f, -0.1f, 0.0f, 0.0f)),
+            Map.entry(new MaterialId("tinkersinnovation", "andesite_alloy"), armorDefaults(21.6f, 2.0f, 4.0f, 3.0f, 2.0f, 0.75f, 0.0f, 0.24f, 0.018f, 0.0f, 0.15f, 0.02f, 0.05f, -0.1f)),
+            Map.entry(new MaterialId("tinkersinnovation", "brass"), armorDefaults(46.75f, 3.0f, 6.5f, 5.0f, 2.5f, 1.4f, 0.0f, 0.35f, 0.02f, 0.1f, 0.2f, 0.04f, 0.08f, -0.16f)),
+            Map.entry(new MaterialId("tinkersinnovation", "chaos"), armorDefaults(38.4f, 2.0f, 6.0f, 5.0f, 2.0f, 0.25f, 2.75f, 0.2f, 0.038f, 0.0f, -0.07f, 0.0f, -0.1f, 0.13f)),
+            Map.entry(new MaterialId("tinkersinnovation", "clonate"), armorDefaults(75.0f, 3.0f, 7.0f, 5.0f, 3.0f, 0.6f, 2.4f, 0.65f, 0.049f, 0.1f, -0.05f, 0.05f, -0.05f, 0.0f)),
+            Map.entry(new MaterialId("tinkersinnovation", "decline"), armorDefaults(66.5f, 3.0f, 8.0f, 6.0f, 3.0f, 1.5f, 3.0f, 0.02f, 0.052f, 0.01f, 0.0f, -0.04f, 0.1f, 0.1f)),
+            Map.entry(new MaterialId("tinkersinnovation", "enchantment_essence"), armorDefaults(36.6f, 1.5f, 3.0f, 2.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.1f, 0.01f, -0.15f, -0.1f, 0.0f, 0.0f)),
+            Map.entry(new MaterialId("tinkersinnovation", "eternium"), armorDefaults(9999.0f, 3.0f, 8.0f, 6.0f, 3.0f, 5.0f, 7.5f, 1.25f, 0.1f, 1.0f, 1.0f, -0.05f, 0.1f, 0.25f)),
+            Map.entry(new MaterialId("tinkersinnovation", "experience"), armorDefaults(18.75f, 1.0f, 2.0f, 2.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.07f, 0.0f, -0.3f, -0.15f, -0.2f, -0.2f)),
+            Map.entry(new MaterialId("tinkersinnovation", "farseeing_alloy"), armorDefaults(69.5f, 3.0f, 6.0f, 5.0f, 2.0f, 2.5f, 4.0f, 0.9f, 0.08f, 0.2f, -0.1f, 0.08f, 0.05f, 0.15f)),
+            Map.entry(new MaterialId("tinkersinnovation", "fools_gold"), armorDefaults(51.7f, 3.0f, 6.0f, 5.0f, 2.0f, 1.5f, 1.0f, 0.45f, 0.033f, 0.0f, 0.17f, -0.06f, 0.0f, 0.05f)),
+            Map.entry(new MaterialId("tinkersinnovation", "hostilium"), armorDefaults(67.6f, 6.0f, 10.0f, 9.0f, 5.0f, 6.0f, 4.0f, 0.8f, 0.2f, 0.1f, 0.1f, -0.1f, 0.1f, 0.1f, null, 0.75f)),
+            Map.entry(new MaterialId("tinkersinnovation", "machine"), armorDefaults(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f)),
+            Map.entry(new MaterialId("tinkersinnovation", "miracle"), armorDefaults(69.0f, 4.0f, 7.0f, 6.0f, 3.0f, 4.5f, 3.0f, 1.05f, 0.16f, 0.05f, -0.15f, 0.09f, 0.3f, -0.1f)),
+            Map.entry(new MaterialId("tinkersinnovation", "mudslime"), armorDefaults(32.5f, 1.5f, 4.0f, 3.0f, 1.5f, 0.25f, 1.0f, 0.01f, 0.01f, 0.0f, 0.05f, -0.07f, -0.05f, 0.18f)),
+            Map.entry(new MaterialId("tinkersinnovation", "polychrome_alloy"), armorDefaults(65.0f, 3.0f, 6.0f, 5.0f, 2.0f, 3.2f, 8.0f, 1.0f, 0.125f, 0.01f, 0.2f, 0.1f, -0.05f, 0.3f)),
+            Map.entry(new MaterialId("tinkersinnovation", "poseidite"), armorDefaults(42.2f, 3.0f, 8.0f, 6.0f, 3.0f, 3.6f, 2.0f, 0.48f, 0.09f, 0.0f, -0.2f, -0.1f, 0.25f, 0.15f)),
+            Map.entry(new MaterialId("tinkersinnovation", "ruby"), armorDefaults(20.5f, 2.0f, 5.5f, 4.5f, 2.0f, 0.9f, 1.5f, 0.55f, 0.015f, 0.05f, -0.1f, -0.05f, -0.3f, -0.1f)),
+            Map.entry(new MaterialId("tinkersinnovation", "sapphire"), armorDefaults(23.0f, 2.0f, 5.0f, 4.0f, 2.0f, 1.25f, 2.5f, 0.32f, 0.05f, 0.0f, 0.05f, 0.03f, -0.1f, 0.1f)),
+            Map.entry(new MaterialId("tinkersinnovation", "sculkium"), armorDefaults(40.0f, 6.0f, 10.0f, 9.0f, 5.0f, 7.5f, 4.0f, 1.0f, 0.15f, 1.0f, 0.0f, -0.1f, 0.3f, 0.2f)),
+            Map.entry(new MaterialId("tinkersinnovation", "shulkerate"), armorDefaults(400.0f, 3.0f, 8.0f, 6.0f, 3.0f, 1.6f, 2.0f, 0.4f, 0.1f, 0.0f, 0.4f, 0.1f, -0.08f, -0.1f)),
+            Map.entry(new MaterialId("tinkersinnovation", "slimton"), armorDefaults(68.0f, 5.0f, 9.0f, 7.0f, 4.0f, 5.0f, 5.0f, 1.2f, 0.06f, 0.05f, 0.0f, -0.05f, 0.2f, 0.2f)),
+            Map.entry(new MaterialId("tinkersinnovation", "straddlite_alloy"), armorDefaults(1890.0f, 4.0f, 7.0f, 6.0f, 3.0f, 0.0f, 2.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f)),
+            Map.entry(new MaterialId("tinkersinnovation", "sunsoul_alloy"), armorDefaults(70.5f, 3.0f, 6.0f, 5.0f, 2.0f, 2.1f, 3.0f, 0.65f, 0.08f, 0.1f, 0.2f, -0.07f, 0.05f, 0.1f)),
+            Map.entry(new MaterialId("tinkersinnovation", "totemic_gold"), armorDefaults(15.0f, 2.0f, 6.0f, 5.0f, 2.0f, 1.0f, 0.0f, 0.15f, 0.03f, 0.0f, 0.1f, 0.0f, 0.0f, -0.1f)),
+            Map.entry(new MaterialId("tinkersinnovation", "zinc"), armorDefaults(39.0f, 2.0f, 4.0f, 3.0f, 2.0f, 0.0f, 0.0f, 0.1f, 0.01f, 0.0f, -0.25f, -0.15f, 0.0f, 0.0f))
+    );
+
+    private void addArmorExtensionMaterialStats() {
+        ARMOR_EXTENSION_DEFAULTS.forEach(this::addArmorDefaultStats);
+        ARMOR_EXTENSION_COMPAT_DEFAULTS.forEach(this::addArmorDefaultStats);
+        addMaterialStats(MaterialIds.leather, StatlessMaterialStats.CUIRASS, ArmorExtensionMaterialStats.MAILLE_DEFAULT, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.slimeskin, StatlessMaterialStats.CUIRASS, ArmorExtensionMaterialStats.MAILLE_DEFAULT, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.skyslimeVine, StatlessMaterialStats.CUIRASS, ArmorExtensionMaterialStats.MAILLE_DEFAULT, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.ichorskin, StatlessMaterialStats.CUIRASS, ArmorExtensionMaterialStats.MAILLE_DEFAULT, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.enderslimeVine, StatlessMaterialStats.CUIRASS, ArmorExtensionMaterialStats.MAILLE_DEFAULT, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.wool, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.dragonScale, ArmorExtensionMaterialStats.maille(-0.1f, 0.05f, 0.1f, 0f));
+        addMaterialStats(MaterialIds.shulker, ArmorExtensionMaterialStats.maille(0f, 0f, 0.1f, 0f));
+        addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR, ArmorExtensionMaterialStats.maille(0.25f, 0.1f, 0f, 0f));
+    }
+
+    private void addArmorDefaultStats(MaterialId material, ArmorDefaults defaults) {
+        addMaterialStats(material, defaults.platingStats());
+        addMaterialStats(material, defaults.extensionStats());
+        addMaterialStats(material, defaults.shieldStats());
+        addMaterialStats(material, ArmorExtensionMaterialStats.MAILLE_DEFAULT);
+    }
+
+    private static ArmorDefaults armorDefaults(float durabilityBase, float helmet, float chestplate, float leggings, float boots,
+                                               Float armorStrength, Float armorToughness, float reduction, float protection,
+                                               Float knockbackResistance, float durabilityMultiplier, float armorMultiplier,
+                                               float armorStrengthMultiplier, float armorToughnessMultiplier) {
+        return armorDefaults(durabilityBase, helmet, chestplate, leggings, boots, armorStrength, armorToughness, reduction, protection,
+                knockbackResistance, durabilityMultiplier, armorMultiplier, armorStrengthMultiplier, armorToughnessMultiplier, null, null);
+    }
+
+    private static ArmorDefaults armorDefaults(float durabilityBase, float helmet, float chestplate, float leggings, float boots,
+                                               Float armorStrength, Float armorToughness, float reduction, float protection,
+                                               Float knockbackResistance, float durabilityMultiplier, float armorMultiplier,
+                                               float armorStrengthMultiplier, float armorToughnessMultiplier,
+                                               Float smallReductionFactor, Float smallProtectionFactor) {
+        return new ArmorDefaults(durabilityBase, helmet, chestplate, leggings, boots,
+                armorStrength == null ? 0f : armorStrength,
+                armorToughness == null ? 0f : armorToughness,
+                reduction, protection,
+                knockbackResistance == null ? 0f : knockbackResistance,
+                durabilityMultiplier, armorMultiplier, armorStrengthMultiplier, armorToughnessMultiplier,
+                smallReductionFactor == null ? DEFAULT_SMALL_REDUCTION_FACTOR : smallReductionFactor,
+                smallProtectionFactor == null ? DEFAULT_SMALL_PROTECTION_FACTOR : smallProtectionFactor);
+    }
+
+    private record ArmorDefaults(float durabilityBase, float helmet, float chestplate, float leggings, float boots,
+                                 float armorStrength, float armorToughness, float reduction, float protection,
+                                 float knockbackResistance, float durabilityMultiplier, float armorMultiplier,
+                                 float armorStrengthMultiplier, float armorToughnessMultiplier,
+                                 float smallReductionFactor, float smallProtectionFactor) {
+        private IMaterialStats[] platingStats() {
+            IMaterialStats[] stats = new IMaterialStats[4];
+            for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+                stats[slotType.ordinal()] = new PlatingMaterialStats(PlatingMaterialStats.TYPES.get(slotType.ordinal()), durability(slotType), armor(slotType), armorStrength, armorToughness, knockbackResistance);
+            }
+            return stats;
+        }
+
+        private PlatingMaterialStats shieldStats() {
+            return new PlatingMaterialStats(PlatingMaterialStats.SHIELD, shieldDurability(), 0f, armorStrength, armorToughness, knockbackResistance);
+        }
+
+        private IMaterialStats[] extensionStats() {
+            IMaterialStats[] stats = new IMaterialStats[14];
+            stats[0] = new ArmorExtensionMaterialStats.ArmorLayerStats(ArmorExtensionMaterialStats.ARMOR_PLATE, durabilityMultiplier, armorMultiplier, armorStrength, armorToughness, reduction * smallReductionFactor, protection);
+            stats[1] = new ArmorExtensionMaterialStats.ArmorLayerStats(ArmorExtensionMaterialStats.ARMOR_MAIL, durabilityMultiplier, armorMultiplier, armorStrength, armorToughness, 0f, protection);
+            int index = 2;
+            for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+                stats[index++] = new ArmorExtensionMaterialStats.ArmorPieceStats(ArmorExtensionMaterialStats.CAST_TYPES.get(slotType.ordinal()), durability(slotType), armor(slotType), armorStrength, armorToughness, reduction * smallReductionFactor, protection * smallProtectionFactor, knockbackResistance);
+            }
+            for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+                stats[index++] = new ArmorExtensionMaterialStats.ArmorFrameStats(ArmorExtensionMaterialStats.FRAME_TYPES.get(slotType.ordinal()), durability(slotType), armor(slotType), armorStrengthMultiplier, armorToughnessMultiplier, knockbackResistance);
+            }
+            for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+                stats[index++] = new ArmorExtensionMaterialStats.ArmorPieceStats(ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES.get(slotType.ordinal()), durability(slotType), armor(slotType), armorStrength, armorToughness, reduction, protection, knockbackResistance);
+            }
+            return stats;
+        }
+
+        private int durability(ArmorItem.Type slot) {
+            return (int)(ArmorModuleBuilder.MAX_DAMAGE_ARRAY[slot.ordinal()] * durabilityBase);
+        }
+
+        private int shieldDurability() {
+            return (int)(ArmorModuleBuilder.SHIELD_DAMAGE * durabilityBase);
+        }
+
+        private float armor(ArmorItem.Type slot) {
+            return switch (slot) {
+                case HELMET -> helmet;
+                case CHESTPLATE -> chestplate;
+                case LEGGINGS -> leggings;
+                case BOOTS -> boots;
+            };
+        }
     }
 
     private void addArmorShieldStats(MaterialId location, PlatingMaterialStats.Builder statBuilder, IMaterialStats... otherStats) {

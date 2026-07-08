@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.modifiers.modules.armor;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -12,6 +13,7 @@ import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.data.loadable.primitive.FloatLoadable;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ShareDamageModifierHook;
@@ -22,6 +24,7 @@ import slimeknights.tconstruct.library.module.HookProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
+import slimeknights.tconstruct.shared.AchievementEvents;
 
 import java.util.List;
 
@@ -77,7 +80,8 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
     float shared = damage * shareRatio;
     float guardianDamage = shared * (1 - Mth.clamp((float)protectionFormula.accept(0, level, capacity, amount), 0, 1));
     float maxGuardianDamage = Math.max(0, guardian.getHealth() - healthGround);
-    if (guardianDamage > maxGuardianDamage) {
+    boolean protectedByHealthGround = guardianDamage > maxGuardianDamage;
+    if (protectedByHealthGround) {
       float scale = maxGuardianDamage / guardianDamage;
       guardianDamage = maxGuardianDamage;
       shared *= scale;
@@ -87,6 +91,14 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
     }
 
     guardian.hurt(source, guardianDamage);
+    if (guardian instanceof ServerPlayer player) {
+      if (shared / damage >= 0.9f) {
+        AchievementEvents.grantAdvancement(player, TConstruct.getResource("combat/shared_fate"));
+      }
+      if (protectedByHealthGround && guardianDamage >= 10f) {
+        AchievementEvents.grantAdvancement(player, TConstruct.getResource("combat/sacrifice"));
+      }
+    }
     return shared;
   }
 

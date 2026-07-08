@@ -3,6 +3,7 @@ package slimeknights.tconstruct.tools.data.material;
 import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialTraitDataProvider;
+import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.data.ModifierIds;
@@ -170,6 +171,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         // tier 4 - mod compat
         addDefaultTraits(MaterialIds.fiery, TinkerModifiers.autosmelt);
         addTraits(MaterialIds.fiery, ARMOR, ModifierIds.temperedProtection);
+        addTraits(new MaterialId("tinkersinnovation", "zinc"), ARMOR, ModifierIds.malleability);
 
         // slimeskull
         addTraits(MaterialIds.glass,        SkullStats.ID, TinkerModifiers.selfDestructive.getId(), ModifierIds.creeperDisguise);

@@ -102,6 +102,11 @@ class TiCDynamicMaterialGeneratorTest extends BaseMcTest {
     assertThat(hepatizonTraits)
       .contains("tconstruct:armor", "tconstruct:recurrence")
       .doesNotContain("tconarmorex");
+
+    String zincTraits = readString(new ResourceLocation("tinkersinnovation", "tinkering/materials/traits/zinc.json"));
+    assertThat(zincTraits)
+      .contains("tconstruct:armor", "tconstruct:malleability")
+      .doesNotContain("tconarmorex");
   }
 
   @Test
@@ -118,6 +123,35 @@ class TiCDynamicMaterialGeneratorTest extends BaseMcTest {
     String woolStats = readString(new ResourceLocation("tconstruct", "tinkering/materials/stats/wool.json"));
     assertThat(woolStats)
       .contains("tconstruct:linear")
+      .doesNotContain("tconarmorex");
+
+    String dragonScaleStats = readString(new ResourceLocation("tconstruct", "tinkering/materials/stats/dragon_scale.json"));
+    assertThat(dragonScaleStats)
+      .contains("tconstruct:maille", "\"durability\":-0.1", "\"armor\":0.05", "\"armor_strength\":0.1")
+      .doesNotContain("tconarmorex");
+
+    String cardboardStats = readString(new ResourceLocation("tgears", "tinkering/materials/stats/cardboard.json"));
+    assertThat(cardboardStats)
+      .contains("tconstruct:plating_helmet", "\"durability\":27", "tconstruct:armor_plate", "\"durability\":-0.5")
+      .doesNotContain("tconarmorex");
+  }
+
+  @Test
+  void materialStatsWriteNativeArmorExtensionDefaults() throws IOException {
+    MaterialDataProvider materials = new MaterialDataProvider(DynamicPackOutput.dummy());
+    new MaterialStatsDataProvider(DynamicPackOutput.dummy(), materials)
+      .addToDynamicPack(TiCDynamicDataRegistrar.INSTANCE);
+
+    String manyullynStats = readString(new ResourceLocation("tconstruct", "tinkering/materials/stats/manyullyn.json"));
+    assertThat(manyullynStats)
+      .contains("tconstruct:plating_helmet", "\"durability\":563", "\"armor\":2.5", "\"armor_strength\":3.0", "\"toughness\":1.25")
+      .contains("tconstruct:armor_plate", "\"durability\":0.2", "\"armor\":0.05", "\"reduction\":0.6", "\"protection\":0.05")
+      .contains("tconstruct:massive_cast_chestplate", "\"durability\":820", "\"armor\":7.0", "\"reduction\":0.75")
+      .doesNotContain("tconarmorex");
+
+    String zincStats = readString(new ResourceLocation("tinkersinnovation", "tinkering/materials/stats/zinc.json"));
+    assertThat(zincStats)
+      .contains("tconstruct:plating_helmet", "\"durability\":429", "tconstruct:armor_mail", "\"armor\":-0.15")
       .doesNotContain("tconarmorex");
   }
 

@@ -815,9 +815,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                         .slots(SlotType.UPGRADE, 2)
                         .slots(SlotType.DEFENSE, 3).build();
         defineArmor(ArmorDefinitions.PLATE)
-                .modules(slots -> PartStatsModule.armor(slots)
-                        .part(TinkerToolParts.plating, 1)
-                        .part(TinkerToolParts.maille, 1))
+                .module(ToolDefinitionDataProvider::plateArmorParts)
                 .module(plateMaterials)
                 .module(ArmorItem.Type.CHESTPLATE, new MultiplyStatsModule(MultiplierNBT.builder().set(ToolStats.ATTACK_DAMAGE, 0.4f).build()))
                 .module(plateSlots)
@@ -1151,6 +1149,15 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .part(plating.get(type), 1f)
                 .part(first, 0.5f)
                 .part(second, 0.5f)
+                .build();
+    }
+
+    private static PartStatsModule plateArmorParts(ArmorItem.Type type) {
+        IToolPart plating = TinkerToolParts.plating.get(type);
+        return PartStatsModule.parts()
+                .part(plating, 0.5f)
+                .part(plating, 0.5f)
+                .part(TinkerToolParts.maille.get(), 1f)
                 .build();
     }
 

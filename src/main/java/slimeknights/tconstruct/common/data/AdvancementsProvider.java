@@ -83,6 +83,12 @@ public class AdvancementsProvider extends GenericDataProvider {
         // tinkering path
         Advancement materialsAndYou = builder(TinkerCommons.materialsAndYou, resource("tools/materials_and_you"), resource("textures/gui/advancement_background.png"), FrameType.TASK, builder ->
                 builder.addCriterion("crafted_book", hasItem(TinkerCommons.materialsAndYou)));
+        builder(Items.TURTLE_HELMET, resource("combat/damage_limit"), materialsAndYou, FrameType.CHALLENGE, builder ->
+                builder.addCriterion("impossible", new ImpossibleTrigger.TriggerInstance()));
+        builder(Items.TOTEM_OF_UNDYING, resource("combat/shared_fate"), materialsAndYou, FrameType.CHALLENGE, builder ->
+                builder.addCriterion("impossible", new ImpossibleTrigger.TriggerInstance()));
+        builder(Items.SHIELD, resource("combat/sacrifice"), materialsAndYou, FrameType.CHALLENGE, builder ->
+                builder.addCriterion("impossible", new ImpossibleTrigger.TriggerInstance()));
         Advancement partBuilder = builder(TinkerTables.partBuilder, resource("tools/part_builder"), materialsAndYou, FrameType.TASK, builder ->
                 builder.addCriterion("crafted_block", hasItem(TinkerTables.partBuilder)));
         builder(TinkerToolParts.pickHead.get().withMaterialForDisplay(MaterialIds.wood), resource("tools/make_part"), partBuilder, FrameType.TASK, builder ->

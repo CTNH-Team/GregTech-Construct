@@ -114,6 +114,17 @@ class TiCDynamicRecipeGeneratorTest extends BaseMcTest {
     assertThat(melee + projectile + blast + physics).doesNotContain("tconarmorex");
   }
 
+  @Test
+  void productionToolsRecipeProviderUsesSlotSpecificPlateLayouts() throws Exception {
+    String provider = java.nio.file.Files.readString(java.nio.file.Path.of(
+      "src/main/java/slimeknights/tconstruct/tools/data/ToolsRecipeProvider.java"));
+
+    assertThat(provider)
+      .contains("TinkerTools.plateArmor.forEach((type, item) -> toolBuilding(consumer, item, plateFolder, plateArmorLayout(type)))")
+      .contains("return isSmallArmor(type) ? Patterns.PLATE_ARMOR_SMALL : Patterns.PLATE_ARMOR_LARGE")
+      .doesNotContain("TinkerTools.plateArmor.forEach(item -> toolBuilding(consumer, item, plateFolder, Patterns.PLATE_ARMOR))");
+  }
+
   private String readString(ResourceLocation location) throws Exception {
     IoSupplier<java.io.InputStream> resource = pack.getResource(PackType.SERVER_DATA, location);
     assertThat(resource).isNotNull();
