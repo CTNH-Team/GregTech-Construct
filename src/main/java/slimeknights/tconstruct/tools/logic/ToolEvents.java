@@ -289,6 +289,7 @@ public class ToolEvents {
     int vanillaModifier = 0;
     float modifierValue = 0;
     float originalDamage = event.getAmount();
+    boolean canProtect = DamageSourcePredicate.CAN_PROTECT.matches(source);
 
     Entity attacker = source.getEntity();
     if (attacker instanceof LivingEntity living) {
@@ -346,7 +347,7 @@ public class ToolEvents {
 
       // remaining logic is reducing damage like vanilla protection
       // fetch vanilla enchant level, assuming its not bypassed in vanilla
-      if (DamageSourcePredicate.CAN_PROTECT.matches(source)) {
+      if (canProtect) {
         modifierValue = vanillaModifier = EnchantmentHelper.getDamageProtection(entity.getArmorSlots(), source);
       }
 
@@ -367,7 +368,7 @@ public class ToolEvents {
       if (entity.getType().is(TinkerTags.EntityTypes.SMALL_ARMOR)) {
         modifierValue *= 4;
       }
-    } else if (DamageSourcePredicate.CAN_PROTECT.matches(source) && entity.getType().is(TinkerTags.EntityTypes.SMALL_ARMOR)) {
+    } else if (canProtect && entity.getType().is(TinkerTags.EntityTypes.SMALL_ARMOR)) {
       vanillaModifier = EnchantmentHelper.getDamageProtection(entity.getArmorSlots(), source);
       modifierValue = vanillaModifier * 4;
     }
@@ -380,16 +381,21 @@ public class ToolEvents {
     if (modifierValue > 0) {
       cap = (float) ProtectionModifierHook.getProtectionCap(entity, context.getTinkerData());
     }
-    if (vanillaModifier != modifierValue || (cap > 20 && vanillaModifier > 20) || (cap < 20 && vanillaModifier > cap)) {
-      // fetch armor and toughness if blockable, passing in 0 to the logic will skip the armor calculations
-      float armor = 0, toughness = 0;
-      if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-        armor = entity.getArmorValue();
-        toughness = (float)entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
-      }
+    float armor = 0, toughness = 0, armorStrength = 0, preReduction = 0, armorProtection = 0;
+    if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+      armor = entity.getArmorValue();
+      toughness = (float)entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+      armorStrength = (float)entity.getAttributeValue(TinkerAttributes.ARMOR_STRENGTH.get());
+      preReduction = (float)entity.getAttributeValue(TinkerAttributes.PRE_REDUCTION.get());
+    }
+    if (canProtect) {
+      armorProtection = (float)entity.getAttributeValue(TinkerAttributes.ARMOR_PROTECTION.get());
+    }
+    boolean hasArmorExtensionStats = armorStrength > 0 || preReduction > 0 || armorProtection > 0;
+    if (vanillaModifier != modifierValue || (cap > 20 && vanillaModifier > 20) || (cap < 20 && vanillaModifier > cap) || hasArmorExtensionStats) {
 
       // set the final dealt damage
-      float finalDamage = ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap);
+      float finalDamage = ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap, armorStrength, preReduction, armorProtection);
       event.setAmount(finalDamage);
 
       // armor is damaged less as a result of our math, so damage the armor based on the difference if there is one

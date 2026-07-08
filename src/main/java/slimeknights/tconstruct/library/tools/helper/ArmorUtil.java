@@ -10,6 +10,8 @@ import static net.minecraft.world.damagesource.CombatRules.getDamageAfterAbsorb;
  */
 public class ArmorUtil {
   private ArmorUtil() {}
+  private static final float ARMOR_STRENGTH_ABSORBING_BASE = 0.8f;
+  private static final float ARMOR_STRENGTH_ABSORBING_UNIT = 4f;
 
   /**
    * Inverse of {@link net.minecraft.world.damagesource.CombatRules#getDamageAfterAbsorb(float, float, float)}  with respect to damage
@@ -81,8 +83,28 @@ public class ArmorUtil {
    * @return  Damage to return in the event
    */
   public static float getDamageForEvent(float originalDamage, float armor, float toughness, float vanillaModifiers, float finalModifiers, float modifierCap) {
+    return getDamageForEvent(originalDamage, armor, toughness, vanillaModifiers, finalModifiers, modifierCap, 0, 0, 0);
+  }
+
+  public static float getDamageAfterArmorExtensionAbsorb(float damage, float armor, float toughness, float armorStrength, float preReduction, float armorProtection) {
+    if (damage <= 0) {
+      return 0;
+    }
+    float toughnessFactor = Math.max(2.0f, 2.0f + toughness / 4.0f);
+    damage = Math.max(0, damage - preReduction);
+    float effectiveStrength = Math.max(0.0f, armorStrength - damage / toughnessFactor);
+    damage *= (float)Math.pow(ARMOR_STRENGTH_ABSORBING_BASE, effectiveStrength / ARMOR_STRENGTH_ABSORBING_UNIT);
+    float effectiveArmor = Math.max((armor + toughness) / 5.0f, Math.min(armor, armor + effectiveStrength - damage / toughnessFactor));
+    damage *= Math.max(0.2f, 1.0f - effectiveArmor * 0.04f);
+    damage *= 1.0f - Mth.clamp(armorProtection, 0, 0.8f);
+    return damage;
+  }
+
+  public static float getDamageForEvent(float originalDamage, float armor, float toughness, float vanillaModifiers, float finalModifiers, float modifierCap,
+                                        float armorStrength, float preReduction, float armorProtection) {
     // if we are changing no values, nothing to do
-    if (vanillaModifiers == finalModifiers && modifierCap == 20) {
+    boolean hasArmorExtensionStats = armorStrength > 0 || preReduction > 0 || armorProtection > 0;
+    if (!hasArmorExtensionStats && vanillaModifiers == finalModifiers && modifierCap == 20) {
       return originalDamage;
     }
 
@@ -91,7 +113,9 @@ public class ArmorUtil {
     // the solution is instead of returning M(x), we return A-1(M(A(x))), giving us A(A-1(M(A(x)))) == M(A(x))
     float damage = originalDamage;
     // if there is no armor value though, no work is needed
-    if (armor > 0) {
+    if (hasArmorExtensionStats) {
+      damage = getDamageAfterArmorExtensionAbsorb(damage, armor, toughness, armorStrength, preReduction, armorProtection);
+    } else if (armor > 0) {
       damage = getDamageAfterAbsorb(damage, armor, toughness);
     }
 

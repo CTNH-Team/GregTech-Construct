@@ -54,6 +54,8 @@ import slimeknights.tconstruct.library.tools.nbt.StatsNBT;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.library.utils.Util;
+import slimeknights.tconstruct.shared.TinkerAttributes;
+import slimeknights.tconstruct.tools.stats.ArmorStats;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -294,6 +296,18 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
       double knockbackResistance = statsNBT.get(ToolStats.KNOCKBACK_RESISTANCE);
       if (knockbackResistance != 0) {
         builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(uuid, "tconstruct.armor.knockback_resistance", knockbackResistance, AttributeModifier.Operation.ADDITION));
+      }
+      double armorStrength = statsNBT.get(ArmorStats.ARMOR_STRENGTH);
+      if (armorStrength != 0) {
+        builder.put(TinkerAttributes.ARMOR_STRENGTH.get(), new AttributeModifier(uuid, "tconstruct.armor.armor_strength", armorStrength, AttributeModifier.Operation.ADDITION));
+      }
+      double preReduction = statsNBT.get(ArmorStats.PRE_REDUCTION);
+      if (preReduction != 0) {
+        builder.put(TinkerAttributes.PRE_REDUCTION.get(), new AttributeModifier(uuid, "tconstruct.armor.pre_reduction", preReduction, AttributeModifier.Operation.ADDITION));
+      }
+      double armorProtection = statsNBT.get(ArmorStats.PROTECTION);
+      if (armorProtection != 0) {
+        builder.put(TinkerAttributes.ARMOR_PROTECTION.get(), new AttributeModifier(uuid, "tconstruct.armor.armor_protection", armorProtection, AttributeModifier.Operation.ADDITION));
       }
       // grab attributes from modifiers
       BiConsumer<Attribute,AttributeModifier> attributeConsumer = builder::put;
