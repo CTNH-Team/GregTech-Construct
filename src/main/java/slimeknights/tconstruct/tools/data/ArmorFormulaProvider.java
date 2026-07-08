@@ -138,6 +138,8 @@ public final class ArmorFormulaProvider implements RuntimeDataProvider {
                 f("stored_value", "total_level", "original_damage", "overflow", "result = (4 + log(2, original_damage))"));
         write(registrar, ROOT + "/crystalizing", "regenerate_formula",
                 f("level", "amount", "capacity", "last_amount", "result = 0.025 * level * pow((1 + min(100, amount) / 100), 2)"));
+        write(registrar, ROOT + "/crystalizing", "dura_consume_formula",
+                f("level", "gain", "capacity", "amount", "result = 0"));
         write(registrar, ROOT + "/crystalizing", "cool_down_formula",
                 f("level", "amount", "capacity", "last_amount", "result = 160 - 10 * level"));
         write(registrar, ROOT + "/cushion", "formula",

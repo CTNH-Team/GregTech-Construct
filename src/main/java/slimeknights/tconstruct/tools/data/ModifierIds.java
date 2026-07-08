@@ -109,6 +109,7 @@ public class ModifierIds {
     public static final ModifierId blastDefense = id("blast_defense");
     public static final ModifierId physicsDefense = id("physics_defense");
     public static final ModifierId cushion = id("cushion");
+    public static final ModifierId tanned = id("tanned");
     public static final ModifierId guarding = id("guarding");
     public static final ModifierId plating = id("plating");
     public static final ModifierId hardening = id("hardening");

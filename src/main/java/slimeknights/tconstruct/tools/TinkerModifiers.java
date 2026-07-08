@@ -641,6 +641,7 @@ public final class TinkerModifiers extends TinkerModule {
             ModifierModule.LOADER.register(getResource("overburn"), OverburnModule.INSTANCE.getLoader());
             ModifierModule.LOADER.register(getResource("overshield"), OvershieldModule.LOADER);
             ModifierModule.LOADER.register(getResource("formula_repair"), FormulaRepairModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_capacity_regenerate"), FormulaCapacityRegenerateModule.LOADER);
             // combat
             ModifierModule.LOADER.register(getResource("fiery_attack"), FieryAttackModule.LOADER);
             ModifierModule.LOADER.register(getResource("freezing_attack"), FreezingAttackModule.LOADER);

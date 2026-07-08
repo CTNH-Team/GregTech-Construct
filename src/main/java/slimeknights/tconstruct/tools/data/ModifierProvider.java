@@ -549,6 +549,9 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
         buildModifier(ModifierIds.cushion)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("cushion/formula")));
+        buildModifier(ModifierIds.tanned)
+                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
+                .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("tanned/formula")));
         buildModifier(ModifierIds.plating)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(new StatCapacityBarModule(0x8A9A8C))
@@ -563,8 +566,15 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                         TConstruct.getResource("plating/damage_capacity"),
                         100));
         buildModifier(ModifierIds.hardening)
-                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
-                .addModule(FormulaRepairModule.repair(TConstruct.getResource("hardening/regenerate_formula"), TConstruct.getResource("hardening/cool_down_formula")));
+                .levelDisplay(ModifierLevelDisplay.DEFAULT)
+                .addModule(FormulaCapacityRegenerateModule.regenerate(
+                        ModifierIds.plating,
+                        TConstruct.getResource("hardening/regenerate_formula"),
+                        TConstruct.getResource("hardening/dura_consume_formula"),
+                        TConstruct.getResource("hardening/cool_down_formula")))
+                .addModule(StatCopyModule.copyToCapacity(ToolStats.DURABILITY, ModifierIds.plating, 0.15f))
+                .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).eachLevel(-0.1f).max(9))
+                .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).flat(-0.99999f).min(10));
         buildModifier(ModifierIds.crystalLattice)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(new StatCapacityBarModule(0xC687BD))
@@ -573,10 +583,16 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .addModule(ToolDamageCapacityModule.of(
                         TConstruct.getResource("crystal_lattice/damage_capacity"),
                         TConstruct.getResource("crystal_lattice/damage_capacity"),
-                        125));
+                        125))
+                .addModule(StatBoostModule.add(StatCapacityBarManager.getOrCreateStat(ModifierIds.crystalLattice, 0xC687BD)).flat(25f));
         buildModifier(ModifierIds.crystalizing)
-                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
-                .addModule(FormulaRepairModule.repair(TConstruct.getResource("crystalizing/regenerate_formula"), TConstruct.getResource("crystalizing/cool_down_formula")));
+                .levelDisplay(ModifierLevelDisplay.DEFAULT)
+                .addModule(FormulaCapacityRegenerateModule.regenerate(
+                        ModifierIds.crystalLattice,
+                        TConstruct.getResource("crystalizing/regenerate_formula"),
+                        TConstruct.getResource("crystalizing/dura_consume_formula"),
+                        TConstruct.getResource("crystalizing/cool_down_formula")))
+                .addModule(StatBoostModule.add(StatCapacityBarManager.getOrCreateStat(ModifierIds.crystalLattice, 0xC687BD)).flat(25f));
         buildModifier(ModifierIds.crystalSolidity)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(FormulaDamageLimitModule.limit(
