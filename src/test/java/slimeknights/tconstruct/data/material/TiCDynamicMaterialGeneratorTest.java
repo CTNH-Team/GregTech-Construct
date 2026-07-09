@@ -101,7 +101,21 @@ class TiCDynamicMaterialGeneratorTest extends BaseMcTest {
     String hepatizonTraits = readString(new ResourceLocation("tconstruct", "tinkering/materials/traits/hepatizon.json"));
     assertThat(hepatizonTraits)
       .contains("tconstruct:armor", "tconstruct:recurrence")
-      .contains("tconstruct:cast_helmet", "tconstruct:recurrence")
+      .contains("tconstruct:cast_helmet", "{\"name\":\"tconstruct:recurrence\",\"level\":2}")
+      .doesNotContain("tconstruct:recurrent_protection")
+      .doesNotContain("tconarmorex");
+
+    String knightmetalTraits = readString(new ResourceLocation("tconstruct", "tinkering/materials/traits/knightmetal.json"));
+    assertThat(knightmetalTraits)
+      .contains("tconstruct:cast_helmet", "tconstruct:guarding", "tconstruct:plating", "tconstruct:hardening")
+      .contains("{\"name\":\"tconstruct:guarding\",\"level\":2}")
+      .doesNotContain("tconstruct:stalwart")
+      .doesNotContain("tconarmorex");
+
+    assertThat(amethystBronzeTraits)
+      .contains("tconstruct:cast_helmet", "tconstruct:crystal_lattice", "tconstruct:crystalizing", "tconstruct:crystal_solidity")
+      .contains("{\"name\":\"tconstruct:crystal_lattice\",\"level\":2}")
+      .doesNotContain("tconstruct:crystalstrike")
       .doesNotContain("tconarmorex");
 
     String zincTraits = readString(new ResourceLocation("tinkersinnovation", "tinkering/materials/traits/zinc.json"));

@@ -25,6 +25,36 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
       ArmorExtensionMaterialStats.MASSIVE_CAST_LEGGINGS.getId(),
       ArmorExtensionMaterialStats.MASSIVE_CAST_BOOTS.getId()
     };
+    private static final MaterialId[] ARMOR_CAST_TRAIT_MATERIALS = {
+      MaterialIds.aluminum,
+      MaterialIds.amethystBronze,
+      MaterialIds.ancient,
+      MaterialIds.bronze,
+      MaterialIds.cinderslime,
+      MaterialIds.cobalt,
+      MaterialIds.constantan,
+      MaterialIds.copper,
+      MaterialIds.fiery,
+      MaterialIds.gold,
+      MaterialIds.hepatizon,
+      MaterialIds.invar,
+      MaterialIds.iron,
+      MaterialIds.knightmetal,
+      MaterialIds.lead,
+      MaterialIds.manyullyn,
+      MaterialIds.obsidian,
+      MaterialIds.osmium,
+      MaterialIds.pewter,
+      MaterialIds.pigIron,
+      MaterialIds.queensSlime,
+      MaterialIds.roseGold,
+      MaterialIds.scorchedStone,
+      MaterialIds.searedStone,
+      MaterialIds.silver,
+      MaterialIds.slimesteel,
+      MaterialIds.steel,
+      MaterialIds.steeleaf
+    };
 
     public MaterialTraitsDataProvider(PackOutput packOutput, AbstractMaterialDataProvider materials) {
         super(packOutput, materials);
@@ -208,47 +238,22 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         noTraits(MaterialIds.honey);
         noTraits(MaterialIds.phantom);
 
-        copyArmorTraitsToCasts(MaterialIds.aluminum);
-        copyArmorTraitsToCasts(MaterialIds.amethystBronze);
-        copyArmorTraitsToCasts(MaterialIds.ancient);
-        copyArmorTraitsToCasts(MaterialIds.bronze);
-        copyArmorTraitsToCasts(MaterialIds.cinderslime);
-        copyArmorTraitsToCasts(MaterialIds.cobalt);
-        copyArmorTraitsToCasts(MaterialIds.constantan);
-        copyArmorTraitsToCasts(MaterialIds.copper);
-        copyArmorTraitsToCasts(MaterialIds.fiery);
-        copyArmorTraitsToCasts(MaterialIds.gold);
-        copyArmorTraitsToCasts(MaterialIds.hepatizon);
-        copyArmorTraitsToCasts(MaterialIds.invar);
-        copyArmorTraitsToCasts(MaterialIds.iron);
-        copyArmorTraitsToCasts(MaterialIds.knightmetal);
-        copyArmorTraitsToCasts(MaterialIds.lead);
-        copyArmorTraitsToCasts(MaterialIds.manyullyn);
-        copyArmorTraitsToCasts(MaterialIds.obsidian);
-        copyArmorTraitsToCasts(MaterialIds.osmium);
-        copyArmorTraitsToCasts(MaterialIds.pewter);
-        copyArmorTraitsToCasts(MaterialIds.pigIron);
-        copyArmorTraitsToCasts(MaterialIds.queensSlime);
-        copyArmorTraitsToCasts(MaterialIds.roseGold);
-        copyArmorTraitsToCasts(MaterialIds.scorchedStone);
-        copyArmorTraitsToCasts(MaterialIds.searedStone);
-        copyArmorTraitsToCasts(MaterialIds.silver);
-        copyArmorTraitsToCasts(MaterialIds.slimesteel);
-        copyArmorTraitsToCasts(MaterialIds.steel);
-        copyArmorTraitsToCasts(MaterialIds.steeleaf);
-
         overrideTraits(MaterialIds.wool, ARMOR, ModifierIds.cushion);
         overrideTraits(MaterialIds.leather, ARMOR, TinkerModifiers.tanned.getId());
         overrideTraits(MaterialIds.knightmetal, ARMOR, ModifierIds.guarding, ModifierIds.plating, ModifierIds.hardening);
         overrideTraits(MaterialIds.amethystBronze, ARMOR, ModifierIds.crystalLattice, ModifierIds.crystalizing, ModifierIds.crystalSolidity);
         overrideTraits(MaterialIds.ancientHide, ARMOR, ModifierIds.totem);
         overrideTraits(MaterialIds.hepatizon, ARMOR, ModifierIds.recurrence);
+
+        copyArmorTraitsToCasts(ARMOR_CAST_TRAIT_MATERIALS);
     }
 
-    private void copyArmorTraitsToCasts(MaterialId material) {
-        var traits = material(material);
-        for (MaterialStatsId cast : ARMOR_CASTS) {
-            traits.copyTraits(ARMOR, cast, 2, true);
+    private void copyArmorTraitsToCasts(MaterialId... materials) {
+        for (MaterialId material : materials) {
+            var traits = material(material);
+            for (MaterialStatsId cast : ARMOR_CASTS) {
+                traits.copyTraits(ARMOR, cast, 2, true);
+            }
         }
     }
 
