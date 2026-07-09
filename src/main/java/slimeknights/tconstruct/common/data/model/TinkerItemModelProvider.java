@@ -19,6 +19,7 @@ import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.common.registration.CastItemObject;
 import slimeknights.tconstruct.library.tools.part.MaterialItem;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
+import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.TinkerToolParts;
 import slimeknights.tconstruct.world.TinkerWorld;
 
@@ -90,6 +91,10 @@ public class TinkerItemModelProvider extends ItemModelProvider implements Runtim
         // gauges
         generated(TinkerSmeltery.copperGauge, "block/smeltery/io/gauge");
         generated(TinkerSmeltery.obsidianGauge, "block/foundry/io/gauge");
+        generated(TinkerModifiers.manyullynReinforcement, "item/reinforcement/manyullyn");
+        generated(TinkerModifiers.hepatizonReinforcement, "item/reinforcement/hepatizon");
+        generated(TinkerModifiers.queensSlimeReinforcement, "item/reinforcement/queens_slime");
+        generated(TinkerModifiers.netheriteReinforcement, "item/reinforcement/netherite");
 
         // casts //
         // basic

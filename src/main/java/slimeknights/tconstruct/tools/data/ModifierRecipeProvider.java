@@ -137,6 +137,26 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .setFluidAndTime(TinkerFluids.moltenCobalt, FluidValues.INGOT)
                 .setCast(TinkerTables.pattern, true)
                 .save(consumer, prefix(TinkerModifiers.cobaltReinforcement, folder));
+        ItemCastingRecipeBuilder.tableRecipe(TinkerModifiers.manyullynReinforcement)
+                .setFluid(TinkerFluids.moltenManyullyn.ingredient(FluidValues.INGOT))
+                .setCoolingTime(102)
+                .setCast(TinkerCommons.obsidianPane, true)
+                .save(consumer, prefix(TinkerModifiers.manyullynReinforcement, folder));
+        ItemCastingRecipeBuilder.tableRecipe(TinkerModifiers.hepatizonReinforcement)
+                .setFluid(TinkerFluids.moltenHepatizon.ingredient(FluidValues.INGOT))
+                .setCoolingTime(75)
+                .setCast(TinkerCommons.obsidianPane, true)
+                .save(consumer, prefix(TinkerModifiers.hepatizonReinforcement, folder));
+        ItemCastingRecipeBuilder.tableRecipe(TinkerModifiers.queensSlimeReinforcement)
+                .setFluid(TinkerFluids.moltenQueensSlime.ingredient(FluidValues.INGOT))
+                .setCoolingTime(88)
+                .setCast(TinkerCommons.obsidianPane, true)
+                .save(consumer, prefix(TinkerModifiers.queensSlimeReinforcement, folder));
+        ItemCastingRecipeBuilder.tableRecipe(TinkerModifiers.netheriteReinforcement)
+                .setFluid(TinkerFluids.moltenNetherite.ingredient(FluidValues.INGOT))
+                .setCoolingTime(121)
+                .setCast(TinkerCommons.obsidianPane, true)
+                .save(consumer, prefix(TinkerModifiers.netheriteReinforcement, folder));
 
         // jeweled apple
         ItemCastingRecipeBuilder.tableRecipe(TinkerCommons.jeweledApple)
@@ -793,25 +813,25 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .saveSalvage(consumer, prefix(ModifierIds.fireProtection, defenseSalvage))
                 .save(consumer, prefix(ModifierIds.fireProtection, defenseFolder));
         IncrementalModifierRecipeBuilder.modifier(ModifierIds.meleeDefense)
-                .setInput(TinkerMaterials.manyullyn.getIngotTag(), 1, 5)
+                .setInput(TinkerModifiers.manyullynReinforcement, 1, 5)
                 .setSlots(SlotType.DEFENSE, 1)
                 .setTools(TinkerTags.Items.ARMOR)
                 .saveSalvage(consumer, prefix(ModifierIds.meleeDefense, defenseSalvage))
                 .save(consumer, prefix(ModifierIds.meleeDefense, defenseFolder));
         IncrementalModifierRecipeBuilder.modifier(ModifierIds.projectileDefense)
-                .setInput(TinkerMaterials.hepatizon.getIngotTag(), 1, 5)
+                .setInput(TinkerModifiers.hepatizonReinforcement, 1, 5)
                 .setSlots(SlotType.DEFENSE, 1)
                 .setTools(TinkerTags.Items.ARMOR)
                 .saveSalvage(consumer, prefix(ModifierIds.projectileDefense, defenseSalvage))
                 .save(consumer, prefix(ModifierIds.projectileDefense, defenseFolder));
         IncrementalModifierRecipeBuilder.modifier(ModifierIds.blastDefense)
-                .setInput(TinkerMaterials.queensSlime.getIngotTag(), 1, 5)
+                .setInput(TinkerModifiers.queensSlimeReinforcement, 1, 5)
                 .setSlots(SlotType.DEFENSE, 1)
                 .setTools(TinkerTags.Items.ARMOR)
                 .saveSalvage(consumer, prefix(ModifierIds.blastDefense, defenseSalvage))
                 .save(consumer, prefix(ModifierIds.blastDefense, defenseFolder));
         ModifierRecipeBuilder.modifier(ModifierIds.physicsDefense)
-                .addInput(Tags.Items.INGOTS_NETHERITE, 5)
+                .addInput(TinkerModifiers.netheriteReinforcement, 5)
                 .setSlots(SlotType.ABILITY, 1)
                 .setTools(TinkerTags.Items.ARMOR)
                 .setMaxLevel(1)

@@ -190,6 +190,10 @@ public final class TinkerModifiers extends TinkerModule {
     public static final ItemObject<Item> goldReinforcement = ITEMS.register("gold_reinforcement", ITEM_PROPS);
     public static final ItemObject<Item> cobaltReinforcement = ITEMS.register("cobalt_reinforcement", ITEM_PROPS);
     public static final ItemObject<Item> obsidianReinforcement = ITEMS.register("obsidian_reinforcement", ITEM_PROPS);
+    public static final ItemObject<Item> manyullynReinforcement = ITEMS.register("manyullyn_reinforcement", ITEM_PROPS);
+    public static final ItemObject<Item> hepatizonReinforcement = ITEMS.register("hepatizon_reinforcement", ITEM_PROPS);
+    public static final ItemObject<Item> queensSlimeReinforcement = ITEMS.register("queens_slime_reinforcement", ITEM_PROPS);
+    public static final ItemObject<Item> netheriteReinforcement = ITEMS.register("netherite_reinforcement", ITEM_PROPS);
     // special
     public static final ItemObject<Item> modifierCrystal = ITEMS.register("modifier_crystal", () -> new ModifierCrystalItem(new Item.Properties().stacksTo(16)));
     public static final ItemObject<CreativeSlotItem> creativeSlotItem = ITEMS.register("creative_slot", () -> new CreativeSlotItem(ITEM_PROPS));
@@ -756,6 +760,10 @@ public final class TinkerModifiers extends TinkerModule {
         output.accept(goldReinforcement);
         output.accept(cobaltReinforcement);
         output.accept(obsidianReinforcement);
+        output.accept(manyullynReinforcement);
+        output.accept(hepatizonReinforcement);
+        output.accept(queensSlimeReinforcement);
+        output.accept(netheriteReinforcement);
         creativeSlotItem.get().addVariants(output::accept);
         // modifier crystal is handled by tool parts tab
     }

@@ -10,6 +10,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import slimeknights.tconstruct.common.data.BaseRecipeProvider;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataRegistrar;
@@ -18,6 +19,7 @@ import slimeknights.tconstruct.test.BaseMcTest;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -71,7 +73,7 @@ class TiCDynamicRecipeGeneratorTest extends BaseMcTest {
 
   @Test
   void recipeWriterStoresRecipeAndAdvancementDirectlyInMemory() throws Exception {
-    TiCDynamicRecipeGenerator.recipeWriter(TestRecipeProvider::new).accept(TiCDynamicDataRegistrar.INSTANCE);
+    TiCDynamicRecipeGenerator.recipeWriter(output -> testRecipeProvider()).accept(TiCDynamicDataRegistrar.INSTANCE);
 
     ResourceLocation recipeLocation = new ResourceLocation("example", "recipes/generated.json");
     ResourceLocation advancementLocation = new ResourceLocation("example", "advancements/recipes/generated.json");
@@ -83,7 +85,7 @@ class TiCDynamicRecipeGeneratorTest extends BaseMcTest {
 
   @Test
   void recipeWriterAddsRecipeAndAdvancementFilters() {
-    TiCDynamicRecipeGenerator.recipeWriter(TestRecipeProvider::new).accept(TiCDynamicDataRegistrar.INSTANCE);
+    TiCDynamicRecipeGenerator.recipeWriter(output -> testRecipeProvider()).accept(TiCDynamicDataRegistrar.INSTANCE);
 
     JsonObject filter = pack.getMetadataSection(TestFilterSerializer.INSTANCE);
 
@@ -94,24 +96,32 @@ class TiCDynamicRecipeGeneratorTest extends BaseMcTest {
   }
 
   @Test
-  void recipeWriterStoresNativeArmorDefenseRecipes() throws Exception {
-    TiCDynamicRecipeGenerator.recipeWriter(NativeArmorDefenseRecipeProvider::new).accept(TiCDynamicDataRegistrar.INSTANCE);
+  void modifierRecipeProviderWiresTcaeDefenseReinforcements() throws Exception {
+    String provider = java.nio.file.Files.readString(java.nio.file.Path.of(
+      "src/main/java/slimeknights/tconstruct/tools/data/ModifierRecipeProvider.java"));
+    String modifiers = java.nio.file.Files.readString(java.nio.file.Path.of(
+      "src/main/java/slimeknights/tconstruct/tools/TinkerModifiers.java"));
+    String models = java.nio.file.Files.readString(java.nio.file.Path.of(
+      "src/main/java/slimeknights/tconstruct/common/data/model/TinkerItemModelProvider.java"));
 
-    ResourceLocation meleeId = ResourceLocation.tryBuild("tconstruct", "recipes/tools/modifiers/defense/melee_defense.json");
-    ResourceLocation projectileId = ResourceLocation.tryBuild("tconstruct", "recipes/tools/modifiers/defense/projectile_defense.json");
-    ResourceLocation blastId = ResourceLocation.tryBuild("tconstruct", "recipes/tools/modifiers/defense/blast_defense.json");
-    ResourceLocation physicsId = ResourceLocation.tryBuild("tconstruct", "recipes/tools/modifiers/ability/physics_defense.json");
-
-    String melee = readString(meleeId);
-    String projectile = readString(projectileId);
-    String blast = readString(blastId);
-    String physics = readString(physicsId);
-
-    assertThat(melee).contains("tconstruct:incremental_modifier", "tconstruct:melee_defense", "forge:ingots/manyullyn", "\"defense\":1");
-    assertThat(projectile).contains("tconstruct:incremental_modifier", "tconstruct:projectile_defense", "forge:ingots/hepatizon", "\"defense\":1");
-    assertThat(blast).contains("tconstruct:incremental_modifier", "tconstruct:blast_defense", "forge:ingots/queens_slime", "\"defense\":1");
-    assertThat(physics).contains("tconstruct:modifier", "tconstruct:physics_defense", "forge:ingots/netherite", "\"abilities\":1");
-    assertThat(melee + projectile + blast + physics).doesNotContain("tconarmorex");
+    assertThat(provider)
+      .contains("ItemCastingRecipeBuilder.tableRecipe(TinkerModifiers.manyullynReinforcement)", "TinkerFluids.moltenManyullyn.ingredient(FluidValues.INGOT)", ".setCoolingTime(102)")
+      .contains("ItemCastingRecipeBuilder.tableRecipe(TinkerModifiers.hepatizonReinforcement)", "TinkerFluids.moltenHepatizon.ingredient(FluidValues.INGOT)", ".setCoolingTime(75)")
+      .contains("ItemCastingRecipeBuilder.tableRecipe(TinkerModifiers.queensSlimeReinforcement)", "TinkerFluids.moltenQueensSlime.ingredient(FluidValues.INGOT)", ".setCoolingTime(88)")
+      .contains("ItemCastingRecipeBuilder.tableRecipe(TinkerModifiers.netheriteReinforcement)", "TinkerFluids.moltenNetherite.ingredient(FluidValues.INGOT)", ".setCoolingTime(121)")
+      .contains(".setCast(TinkerCommons.obsidianPane, true)")
+      .contains("IncrementalModifierRecipeBuilder.modifier(ModifierIds.meleeDefense)", ".setInput(TinkerModifiers.manyullynReinforcement, 1, 5)")
+      .contains("IncrementalModifierRecipeBuilder.modifier(ModifierIds.projectileDefense)", ".setInput(TinkerModifiers.hepatizonReinforcement, 1, 5)")
+      .contains("IncrementalModifierRecipeBuilder.modifier(ModifierIds.blastDefense)", ".setInput(TinkerModifiers.queensSlimeReinforcement, 1, 5)")
+      .contains("ModifierRecipeBuilder.modifier(ModifierIds.physicsDefense)", ".addInput(TinkerModifiers.netheriteReinforcement, 5)");
+    assertThat(modifiers)
+      .contains("ITEMS.register(\"manyullyn_reinforcement\", ITEM_PROPS)", "ITEMS.register(\"hepatizon_reinforcement\", ITEM_PROPS)")
+      .contains("ITEMS.register(\"queens_slime_reinforcement\", ITEM_PROPS)", "ITEMS.register(\"netherite_reinforcement\", ITEM_PROPS)");
+    assertThat(models)
+      .contains("generated(TinkerModifiers.manyullynReinforcement, \"item/reinforcement/manyullyn\")")
+      .contains("generated(TinkerModifiers.hepatizonReinforcement, \"item/reinforcement/hepatizon\")")
+      .contains("generated(TinkerModifiers.queensSlimeReinforcement, \"item/reinforcement/queens_slime\")")
+      .contains("generated(TinkerModifiers.netheriteReinforcement, \"item/reinforcement/netherite\")");
   }
 
   @Test
@@ -133,90 +143,14 @@ class TiCDynamicRecipeGeneratorTest extends BaseMcTest {
     }
   }
 
-  private static final class TestRecipeProvider extends BaseRecipeProvider {
-    private TestRecipeProvider(net.minecraft.data.PackOutput output) {
-      super(output);
-    }
-
-    @Override
-    protected void buildRecipes(java.util.function.Consumer<FinishedRecipe> consumer) {
+  private BaseRecipeProvider testRecipeProvider() {
+    BaseRecipeProvider provider = Mockito.mock(BaseRecipeProvider.class);
+    Mockito.doAnswer(invocation -> {
+      Consumer<FinishedRecipe> consumer = invocation.getArgument(0);
       consumer.accept(new TestFinishedRecipe());
-    }
-
-    @Override
-    public String getName() {
-      return "Test Recipe Provider";
-    }
-  }
-
-  private static final class NativeArmorDefenseRecipeProvider extends BaseRecipeProvider {
-    private NativeArmorDefenseRecipeProvider(net.minecraft.data.PackOutput output) {
-      super(output);
-    }
-
-    @Override
-    protected void buildRecipes(java.util.function.Consumer<FinishedRecipe> consumer) {
-      String defenseFolder = "tools/modifiers/defense/";
-      String abilityFolder = "tools/modifiers/ability/";
-
-      consumer.accept(new NativeArmorDefenseFinishedRecipe(
-        location(defenseFolder + "melee_defense"), "tconstruct:incremental_modifier",
-        "tconstruct:melee_defense", "forge:ingots/manyullyn", "defense"));
-      consumer.accept(new NativeArmorDefenseFinishedRecipe(
-        location(defenseFolder + "projectile_defense"), "tconstruct:incremental_modifier",
-        "tconstruct:projectile_defense", "forge:ingots/hepatizon", "defense"));
-      consumer.accept(new NativeArmorDefenseFinishedRecipe(
-        location(defenseFolder + "blast_defense"), "tconstruct:incremental_modifier",
-        "tconstruct:blast_defense", "forge:ingots/queens_slime", "defense"));
-      consumer.accept(new NativeArmorDefenseFinishedRecipe(
-        location(abilityFolder + "physics_defense"), "tconstruct:modifier",
-        "tconstruct:physics_defense", "forge:ingots/netherite", "abilities"));
-    }
-
-    @Override
-    public String getName() {
-      return "Native Armor Defense Recipe Provider";
-    }
-  }
-
-  private record NativeArmorDefenseFinishedRecipe(
-    ResourceLocation id, String type, String modifier, String inputTag, String slot
-  ) implements FinishedRecipe {
-    @Override
-    public void serializeRecipeData(JsonObject json) {
-      JsonObject input = new JsonObject();
-      input.addProperty("tag", inputTag);
-      input.addProperty("count", 5);
-
-      JsonObject slots = new JsonObject();
-      slots.addProperty(slot, 1);
-
-      json.addProperty("type", type);
-      json.addProperty("modifier", modifier);
-      json.add("input", input);
-      json.add("slots", slots);
-      json.addProperty("tools", "tconstruct:modifiable/armor");
-    }
-
-    @Override
-    public RecipeSerializer<?> getType() {
-      return BuiltInRegistries.RECIPE_SERIALIZER.get(new ResourceLocation("minecraft", "crafting_shapeless"));
-    }
-
-    @Override
-    public ResourceLocation getId() {
-      return id;
-    }
-
-    @Override
-    public JsonObject serializeAdvancement() {
       return null;
-    }
-
-    @Override
-    public ResourceLocation getAdvancementId() {
-      return null;
-    }
+    }).when(provider).buildRecipesDirect(Mockito.any());
+    return provider;
   }
 
   private static final class TestFinishedRecipe implements FinishedRecipe {
