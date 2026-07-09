@@ -137,6 +137,18 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 tasks.named('jar', Jar).configure { finalizedBy 'reobfJar' }
+
+tasks.named('jarJar').configure {
+    doLast {
+        def metadataFile = outputDirectory.file('META-INF/jarjar/metadata.json').get().asFile
+        def originalMetadata = metadataFile.getText('UTF-8')
+        def updatedMetadata = originalMetadata.replaceFirst(/"isObfuscated"\s*:\s*false/, '"isObfuscated": true')
+        if (updatedMetadata == originalMetadata) {
+            throw new GradleException('Formula Loader JarJar metadata did not contain an obfuscation flag')
+        }
+        metadataFile.setText(updatedMetadata, 'UTF-8')
+    }
+}
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly

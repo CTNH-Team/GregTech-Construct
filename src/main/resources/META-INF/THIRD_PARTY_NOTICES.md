@@ -15,5 +15,5 @@ This branch incorporates selected ideas and generated-data outputs from third-pa
 - Upstream project: `https://gitee.com/OftenStack/util-formula-loader`
 - Author: OftenOviour / Formula Loader contributors
 - License: LGPL-2.1
-- Usage: External runtime dependency (`ooformula`); not shaded, relocated, or jarjarred into GregTech-Construct.
+- Usage: Bundled as an unchanged obfuscated JarJar runtime dependency (`ooformula`) in release artifacts; not shaded or relocated.
 - License text: `docs/third_party/FormulaLoader-LGPL-2.1.txt`
