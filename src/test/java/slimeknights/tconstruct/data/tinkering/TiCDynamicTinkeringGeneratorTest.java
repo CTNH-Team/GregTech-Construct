@@ -26,11 +26,16 @@ import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaArmorStatM
 import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaDamageLimitModule;
 import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaGuardingModule;
 import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaRecurrenceModule;
+import slimeknights.tconstruct.library.modifiers.modules.behavior.FormulaCapacityRegenerateModule;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.FormulaRepairModule;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.FormulaToolDamageModule;
+import slimeknights.tconstruct.library.modifiers.modules.behavior.ToolDamageCapacityModule;
 import slimeknights.tconstruct.library.modifiers.modules.build.FormulaModifierSlotModule;
 import slimeknights.tconstruct.library.modifiers.modules.build.ModifierSlotModule;
+import slimeknights.tconstruct.library.modifiers.modules.build.StatBoostModule;
+import slimeknights.tconstruct.library.modifiers.modules.build.StatCopyModule;
 import slimeknights.tconstruct.library.modifiers.util.ModifierLevelDisplay;
+import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.tools.ArmorDefinitions;
 import slimeknights.tconstruct.tools.data.ArmorFormulaProvider;
 import slimeknights.tconstruct.tools.data.ModifierIds;
@@ -143,9 +148,11 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
     assertThat(physics).contains("tconstruct:conditional_armor_stat", "post_reduction", "tconstruct:physics", "0.5");
     assertThat(guarding).contains("tconstruct:formula_guarding", "tconstruct:guarding/distance_factor_formula", "tconstruct:guarding/share_ratio_formula", "tconstruct:guarding/extra_protection_formula", "no_levels");
     assertThat(cushion).contains("tconstruct:formula_tool_damage", "tconstruct:cushion/formula", "no_levels");
-    assertThat(plating).contains("tconstruct:formula_armor_stat", "post_reduction", "tconstruct:plating/stat_bonus", "tconstruct:formula_tool_damage", "tconstruct:plating/tool_damage", "no_levels");
-    assertThat(hardening).contains("tconstruct:formula_repair", "tconstruct:hardening/regenerate_formula", "tconstruct:hardening/cool_down_formula", "no_levels");
-    assertThat(crystalLattice).contains("tconstruct:formula_armor_stat", "post_reduction", "tconstruct:crystal_lattice/stat_bonus", "tconstruct:formula_tool_damage", "tconstruct:crystal_lattice/damage_capacity", "no_levels");
+    assertThat(plating).contains("tconstruct:formula_armor_stat", "armor_protection", "tconstruct:plating/stat_bonus", "tconstruct:tool_damage_capacity", "tconstruct:plating/tool_damage", "no_levels");
+    assertThat(hardening).contains("tconstruct:formula_capacity_regenerate", "tconstruct:hardening/regenerate_formula", "tconstruct:hardening/dura_consume_formula", "tconstruct:hardening/cool_down_formula", "tconstruct:stat_copy", "tconstruct:plating");
+    assertThat(hardening).contains("\"modifier_level\":{\"max\":9}", "\"each_level\":-0.1");
+    assertThat(hardening).contains("\"modifier_level\":{\"min\":10}", "\"flat\":-0.99999");
+    assertThat(crystalLattice).contains("tconstruct:formula_armor_stat", "pre_reduction", "tconstruct:crystal_lattice/stat_bonus", "tconstruct:tool_damage_capacity", "tconstruct:crystal_lattice/damage_capacity", "no_levels");
     assertThat(crystalizing).contains("tconstruct:formula_repair", "tconstruct:crystalizing/regenerate_formula", "tconstruct:crystalizing/cool_down_formula", "no_levels");
     assertThat(crystalSolidity).contains("tconstruct:formula_damage_limit", "tconstruct:crystal_solidity/cap_formula", "tconstruct:crystal_solidity/condition_formula", "tconstruct:crystal_solidity/per_armor_ratio", "tconstruct:crystal_solidity/finalizer/armor_damage_formula", "tconstruct:crystal_solidity/finalizer/overshield_damage_formula", "no_levels");
     assertThat(totem).contains("tconstruct:modifier_slot", "defense", "each_level", "1",
@@ -227,15 +234,32 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
         .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("cushion/formula")));
       buildModifier(ModifierIds.plating)
         .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
-        .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, TConstruct.getResource("plating/stat_bonus")))
-        .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("plating/tool_damage")));
+        .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.ARMOR_PROTECTION, TConstruct.getResource("plating/stat_bonus")))
+        .addModule(ToolDamageCapacityModule.of(
+          TConstruct.getResource("plating/pre_damage"),
+          TConstruct.getResource("plating/damage_capacity_pre"),
+          3125))
+        .addModule(ToolDamageCapacityModule.of(
+          TConstruct.getResource("plating/tool_damage"),
+          TConstruct.getResource("plating/damage_capacity"),
+          100));
       buildModifier(ModifierIds.hardening)
-        .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
-        .addModule(FormulaRepairModule.repair(TConstruct.getResource("hardening/regenerate_formula"), TConstruct.getResource("hardening/cool_down_formula")));
+        .levelDisplay(ModifierLevelDisplay.DEFAULT)
+        .addModule(FormulaCapacityRegenerateModule.regenerate(
+          ModifierIds.plating,
+          TConstruct.getResource("hardening/regenerate_formula"),
+          TConstruct.getResource("hardening/dura_consume_formula"),
+          TConstruct.getResource("hardening/cool_down_formula")))
+        .addModule(StatCopyModule.copyToCapacity(ToolStats.DURABILITY, ModifierIds.plating, 0.15f))
+        .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).maxLevel(9).amount(0f, -0.1f))
+        .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).minLevel(10).flat(-0.99999f));
       buildModifier(ModifierIds.crystalLattice)
         .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
-        .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, TConstruct.getResource("crystal_lattice/stat_bonus")))
-        .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("crystal_lattice/damage_capacity")));
+        .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.PRE_REDUCTION, TConstruct.getResource("crystal_lattice/stat_bonus")))
+        .addModule(ToolDamageCapacityModule.of(
+          TConstruct.getResource("crystal_lattice/damage_capacity"),
+          TConstruct.getResource("crystal_lattice/damage_capacity"),
+          125));
       buildModifier(ModifierIds.crystalizing)
         .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
         .addModule(FormulaRepairModule.repair(TConstruct.getResource("crystalizing/regenerate_formula"), TConstruct.getResource("crystalizing/cool_down_formula")));
@@ -281,10 +305,14 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
     tryRegisterModifierModule("formula_damage_limit", FormulaDamageLimitModule.LOADER);
     tryRegisterModifierModule("formula_guarding", FormulaGuardingModule.LOADER);
     tryRegisterModifierModule("formula_recurrence", FormulaRecurrenceModule.LOADER);
+    tryRegisterModifierModule("tool_damage_capacity", ToolDamageCapacityModule.LOADER);
+    tryRegisterModifierModule("formula_capacity_regenerate", FormulaCapacityRegenerateModule.LOADER);
     tryRegisterModifierModule("formula_repair", FormulaRepairModule.LOADER);
     tryRegisterModifierModule("formula_tool_damage", FormulaToolDamageModule.LOADER);
     tryRegisterModifierModule("modifier_slot", ModifierSlotModule.LOADER);
     tryRegisterModifierModule("formula_modifier_slot", FormulaModifierSlotModule.LOADER);
+    tryRegisterModifierModule("stat_copy", StatCopyModule.LOADER);
+    tryRegisterModifierModule("stat_boost", StatBoostModule.LOADER);
     registeredModifierSerializationLoaders = true;
   }
 

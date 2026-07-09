@@ -556,7 +556,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(new StatCapacityBarModule(ModifierIds.plating, 0x8A9A8C))
                 .addModule(new DurabilityBarColorModule(0x8A9A8C))
-                .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, TConstruct.getResource("plating/stat_bonus")))
+                .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.ARMOR_PROTECTION, TConstruct.getResource("plating/stat_bonus")))
                 .addModule(ToolDamageCapacityModule.of(
                         TConstruct.getResource("plating/pre_damage"),
                         TConstruct.getResource("plating/damage_capacity_pre"),
@@ -573,12 +573,13 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                         TConstruct.getResource("hardening/dura_consume_formula"),
                         TConstruct.getResource("hardening/cool_down_formula")))
                 .addModule(StatCopyModule.copyToCapacity(ToolStats.DURABILITY, ModifierIds.plating, 0.15f))
-                .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).amount(-0.1f, -0.1f));
+                .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).maxLevel(9).amount(0f, -0.1f))
+                .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).minLevel(10).flat(-0.99999f));
         buildModifier(ModifierIds.crystalLattice)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(new StatCapacityBarModule(ModifierIds.crystalLattice, 0xC687BD))
                 .addModule(new DurabilityBarColorModule(0xC687BD))
-                .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, TConstruct.getResource("crystal_lattice/stat_bonus")))
+                .addModule(FormulaArmorStatModule.stat(ArmorDamageStat.PRE_REDUCTION, TConstruct.getResource("crystal_lattice/stat_bonus")))
                 .addModule(ToolDamageCapacityModule.of(
                         TConstruct.getResource("crystal_lattice/damage_capacity"),
                         TConstruct.getResource("crystal_lattice/damage_capacity"),
