@@ -29,13 +29,16 @@ public final class AroundEntityTickHandler {
       return;
     }
 
+    List<LivingEntity> targets = player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(Config.guardingScanRange()), entity -> entity != player && entity.isAlive());
     EquipmentContext context = new EquipmentContext(player);
     if (event.phase == TickEvent.Phase.START) {
       runSelfAndArmorTicks(player, context);
+      for (LivingEntity target : targets) {
+        runSelfAndArmorTicks(target, new EquipmentContext(target));
+      }
     }
-    List<LivingEntity> targets = player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(Config.guardingScanRange()), entity -> entity != player && entity.isAlive());
+    PlayerPersistentDataCache.syncFromEntity(player);
     if (targets.isEmpty()) {
-      PlayerPersistentDataCache.syncFromEntity(player);
       return;
     }
     for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
@@ -54,23 +57,22 @@ public final class AroundEntityTickHandler {
         }
       }
     }
-    PlayerPersistentDataCache.syncFromEntity(player);
     if (event.phase == TickEvent.Phase.END) {
       FormulaAreaEffectModule.flushPending(player);
     }
   }
 
-  private static void runSelfAndArmorTicks(Player player, EquipmentContext context) {
+  private static void runSelfAndArmorTicks(LivingEntity entity, EquipmentContext context) {
     for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
       IToolStackView tool = context.getToolInSlot(slotType);
       if (tool == null || tool.isBroken()) {
         continue;
       }
       for (ModifierEntry entry : tool.getModifierList()) {
-        entry.getHook(ModifierHooks.SELF_TICK).onSelfTick(tool, entry, slotType, player);
-        entry.getHook(ModifierHooks.ARMOR_TICK).onArmorTick(tool, entry, slotType, player);
+        entry.getHook(ModifierHooks.SELF_TICK).onSelfTick(tool, entry, slotType, entity);
+        entry.getHook(ModifierHooks.ARMOR_TICK).onArmorTick(tool, entry, slotType, entity);
       }
     }
-    FormulaRecurrenceModule.flushArmorTicks(player);
+    FormulaRecurrenceModule.flushArmorTicks(entity);
   }
 }

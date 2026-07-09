@@ -97,6 +97,10 @@ class AroundEntityTickHandlerTest extends BaseMcTest {
     when(player.getItemBySlot(EquipmentSlot.FEET)).thenReturn(ItemStack.EMPTY);
     when(level.getEntitiesOfClass(org.mockito.Mockito.eq(LivingEntity.class), any(AABB.class), any())).thenReturn(List.of(target));
     when(target.isAlive()).thenReturn(true);
+    when(target.getItemBySlot(EquipmentSlot.CHEST)).thenReturn(chest);
+    when(target.getItemBySlot(EquipmentSlot.HEAD)).thenReturn(ItemStack.EMPTY);
+    when(target.getItemBySlot(EquipmentSlot.LEGS)).thenReturn(ItemStack.EMPTY);
+    when(target.getItemBySlot(EquipmentSlot.FEET)).thenReturn(ItemStack.EMPTY);
     when(player.distanceTo(target)).thenReturn(3.0f);
 
     try (org.mockito.MockedStatic<ToolStack> toolStacks = org.mockito.Mockito.mockStatic(ToolStack.class)) {
@@ -153,6 +157,10 @@ class AroundEntityTickHandlerTest extends BaseMcTest {
     when(player.getItemBySlot(EquipmentSlot.FEET)).thenReturn(ItemStack.EMPTY);
     when(level.getEntitiesOfClass(org.mockito.Mockito.eq(LivingEntity.class), any(AABB.class), any())).thenReturn(List.of(target));
     when(target.isAlive()).thenReturn(true);
+    when(target.getItemBySlot(EquipmentSlot.CHEST)).thenReturn(chest);
+    when(target.getItemBySlot(EquipmentSlot.HEAD)).thenReturn(ItemStack.EMPTY);
+    when(target.getItemBySlot(EquipmentSlot.LEGS)).thenReturn(ItemStack.EMPTY);
+    when(target.getItemBySlot(EquipmentSlot.FEET)).thenReturn(ItemStack.EMPTY);
     when(player.distanceTo(target)).thenReturn(3.0f);
 
     try (org.mockito.MockedStatic<ToolStack> toolStacks = org.mockito.Mockito.mockStatic(ToolStack.class)) {
@@ -160,8 +168,8 @@ class AroundEntityTickHandlerTest extends BaseMcTest {
       AroundEntityTickHandler.onPlayerTick(new TickEvent.PlayerTickEvent(TickEvent.Phase.START, player));
     }
 
-    assertThat(selfCalls.get()).isEqualTo(1);
-    assertThat(armorCalls.get()).isEqualTo(1);
+    assertThat(selfCalls.get()).isEqualTo(2);
+    assertThat(armorCalls.get()).isEqualTo(2);
   }
 
   @Test
@@ -265,6 +273,10 @@ class AroundEntityTickHandlerTest extends BaseMcTest {
     when(player.getItemBySlot(EquipmentSlot.FEET)).thenReturn(ItemStack.EMPTY);
     when(level.getEntitiesOfClass(org.mockito.Mockito.eq(LivingEntity.class), any(AABB.class), any())).thenReturn(List.of(target));
     when(target.isAlive()).thenReturn(true);
+    when(target.getItemBySlot(EquipmentSlot.CHEST)).thenReturn(ItemStack.EMPTY);
+    when(target.getItemBySlot(EquipmentSlot.HEAD)).thenReturn(ItemStack.EMPTY);
+    when(target.getItemBySlot(EquipmentSlot.LEGS)).thenReturn(ItemStack.EMPTY);
+    when(target.getItemBySlot(EquipmentSlot.FEET)).thenReturn(ItemStack.EMPTY);
     when(target.getOwner()).thenReturn(player);
     when(target.getPersistentData()).thenReturn(persistent);
     when(player.distanceTo(target)).thenReturn(3.0f);
