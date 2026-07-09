@@ -68,6 +68,7 @@ import slimeknights.tconstruct.library.modifiers.hook.armor.ProtectionModifierHo
 import slimeknights.tconstruct.library.modifiers.hook.mining.BreakSpeedContext;
 import slimeknights.tconstruct.library.modifiers.hook.ranged.ProjectileHitModifierHook;
 import slimeknights.tconstruct.library.modifiers.modules.armor.MobDisguiseModule;
+import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaRecurrenceModule;
 import slimeknights.tconstruct.library.modifiers.modules.technical.ArmorStatModule;
 import slimeknights.tconstruct.library.module.ModuleHook;
 import slimeknights.tconstruct.library.tools.capability.EntityModifierCapability;
@@ -390,19 +391,33 @@ public class ToolEvents {
         modifierValue = vanillaModifier = EnchantmentHelper.getDamageProtection(entity.getArmorSlots(), source);
       }
 
-      // next, determine how much tinkers armor wants to change it
-      // note that armor modifiers can choose to block "absolute damage" if they wish, currently just starving damage I think
-      for (EquipmentSlot slotType : EquipmentSlot.values()) {
-        if (ModifierUtil.validArmorSlot(entity, slotType)) {
-          IToolStackView tool = context.getToolInSlot(slotType);
-          if (tool != null && !tool.isBroken()) {
-            for (ModifierEntry entry : tool.getModifierList()) {
-              modifierValue = entry.getHook(ModifierHooks.PROTECTION).getProtectionModifier(tool, entry, context, slotType, source, modifierValue);
-              entry.getHook(ModifierHooks.ARMOR_DAMAGE_STATS).addArmorDamageStats(tool, entry, context, slotType, source, armorDamageStats);
-              entry.getHook(ModifierHooks.DAMAGE_TO_PERSISTENT).onDamageToPersistent(tool, entry, context, slotType, source, armorDamageStats);
+      FormulaRecurrenceModule.beginDamageEvent(entity);
+      try {
+        // next, determine how much tinkers armor wants to change it
+        // note that armor modifiers can choose to block "absolute damage" if they wish, currently just starving damage I think
+        for (EquipmentSlot slotType : EquipmentSlot.values()) {
+          if (ModifierUtil.validArmorSlot(entity, slotType)) {
+            IToolStackView tool = context.getToolInSlot(slotType);
+            if (tool != null && !tool.isBroken()) {
+              for (ModifierEntry entry : tool.getModifierList()) {
+                modifierValue = entry.getHook(ModifierHooks.PROTECTION).getProtectionModifier(tool, entry, context, slotType, source, modifierValue);
+                entry.getHook(ModifierHooks.ARMOR_DAMAGE_STATS).addArmorDamageStats(tool, entry, context, slotType, source, armorDamageStats);
+              }
             }
           }
         }
+        for (EquipmentSlot slotType : EquipmentSlot.values()) {
+          if (ModifierUtil.validArmorSlot(entity, slotType)) {
+            IToolStackView tool = context.getToolInSlot(slotType);
+            if (tool != null && !tool.isBroken()) {
+              for (ModifierEntry entry : tool.getModifierList()) {
+                entry.getHook(ModifierHooks.DAMAGE_TO_PERSISTENT).onDamageToPersistent(tool, entry, context, slotType, source, armorDamageStats);
+              }
+            }
+          }
+        }
+      } finally {
+        FormulaRecurrenceModule.finishDamageEvent(armorDamageStats);
       }
 
       // give slimes a 4x armor boost

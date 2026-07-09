@@ -31,6 +31,7 @@ import slimeknights.tconstruct.library.modifiers.hook.special.CapacityBarHook;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.ToolDamageCapacityModule;
 import slimeknights.tconstruct.library.module.ModuleHookMap;
 import slimeknights.tconstruct.library.tools.helper.ToolDamageHandler;
+import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
 import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
 import slimeknights.tconstruct.library.tools.nbt.StatsNBT;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
@@ -61,6 +62,7 @@ class ToolEventsPlatingDepletedFallbackTest extends BaseMcTest {
   void restoreFormulaManager() {
     FormulaManager.applySync(previousFormulas, previousRawJson);
     ToolDamageHandler.clearPendingDamageForTests();
+    PlayerPersistentDataCache.resetDataGetter();
   }
 
   @Test
@@ -121,6 +123,7 @@ class ToolEventsPlatingDepletedFallbackTest extends BaseMcTest {
     when(tool.isUnbreakable()).thenReturn(false);
     when(tool.hasTag(any())).thenAnswer(invocation -> invocation.getArgument(0) == slimeknights.tconstruct.common.TinkerTags.Items.DURABILITY);
     when(tool.getItem()).thenReturn(net.minecraft.world.item.Items.AIR);
+    PlayerPersistentDataCache.setDataGetter(ignored -> new ModDataNBT());
 
     try (MockedStatic<EnchantmentHelper> enchantments = Mockito.mockStatic(EnchantmentHelper.class);
          MockedStatic<ToolStack> toolStacks = Mockito.mockStatic(ToolStack.class)) {

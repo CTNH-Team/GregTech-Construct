@@ -11,6 +11,7 @@ import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaAreaEffectModule;
+import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaRecurrenceModule;
 import slimeknights.tconstruct.library.tools.context.EquipmentContext;
 import slimeknights.tconstruct.library.tools.definition.ModifiableArmorMaterial;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
@@ -70,5 +71,6 @@ public final class AroundEntityTickHandler {
         entry.getHook(ModifierHooks.ARMOR_TICK).onArmorTick(tool, entry, slotType, player);
       }
     }
+    FormulaRecurrenceModule.flushArmorTicks(player);
   }
 }

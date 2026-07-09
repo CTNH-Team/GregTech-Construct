@@ -4,7 +4,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -15,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook.ArmorDamageStats;
+import slimeknights.tconstruct.library.tools.context.EquipmentContext;
 import slimeknights.tconstruct.library.tools.nbt.DummyToolStack;
 import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
 import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
@@ -44,6 +44,7 @@ class FormulaRecurrenceModuleTest extends BaseMcTest {
     FormulaManager.applySync(previousFormulas, previousRawJson);
     PlayerPersistentDataCache.remove(TEST_PLAYER);
     PlayerPersistentDataCache.resetDataGetter();
+    FormulaRecurrenceModule.resetPersistentDataGetter();
   }
 
   private static final UUID TEST_PLAYER = UUID.randomUUID();
@@ -56,68 +57,79 @@ class FormulaRecurrenceModuleTest extends BaseMcTest {
         armorInputs[0] = values;
         return 1.0;
       }),
-      DAMAGE, formula(values -> 5.0),
+      DAMAGE, formula(values -> values[0]),
       TICK, formula(values -> 0)
     ), Map.of(ARMOR_STAT, "{}", DAMAGE, "{}", TICK, "{}"));
-    tool.getPersistentData().putFloat(KEY, 2);
+    ModDataNBT entityData = new ModDataNBT();
+    entityData.putFloat(KEY, 2);
+    FormulaRecurrenceModule.setPersistentDataGetter(ignored -> entityData);
+    Player player = player(entityData);
     DamageSource source = mock(DamageSource.class);
     when(source.is(DamageTypeTags.BYPASSES_ARMOR)).thenReturn(false);
 
     ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, 10);
-    FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY)
-      .addArmorDamageStats(tool, new ModifierEntry(ModifierIds.recurrence, 2), null, EquipmentSlot.CHEST, source, stats);
+    FormulaRecurrenceModule module = FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY);
+    FormulaRecurrenceModule.beginDamageEvent(player);
+    module.addArmorDamageStats(tool, new ModifierEntry(ModifierIds.recurrence, 2), EquipmentContext.withTool(player, tool, EquipmentSlot.CHEST), EquipmentSlot.CHEST, source, stats);
+    FormulaRecurrenceModule.finishDamageEvent(stats);
 
     assertThat(stats.preReduction()).isEqualTo(2);
-    assertThat(tool.getPersistentData().getFloat(KEY)).isEqualTo(1);
+    assertThat(entityData.getFloat(KEY)).isEqualTo(1);
+    assertThat(tool.getPersistentData().getFloat(KEY)).isZero();
     assertThat(armorInputs[0]).containsExactly(2.0, 0.0, 2.0, 8.0);
   }
 
   @Test
-  void armorTickDecaysStoredReduction() {
+  void recurrenceAggregatesArmorLevelsBeforeApplyingEntityPersistentData() {
+    double[][] damageInputs = new double[1][];
+    FormulaManager.applySync(Map.of(
+      ARMOR_STAT, formula(values -> values[0]),
+      DAMAGE, formula(values -> {
+        damageInputs[0] = values;
+        return values[0] + values[1] + values[2] + values[3];
+      }),
+      TICK, formula(values -> 0)
+    ), Map.of(ARMOR_STAT, "{}", DAMAGE, "{}", TICK, "{}"));
+    ModDataNBT entityData = new ModDataNBT();
+    entityData.putFloat(KEY, 2);
+    FormulaRecurrenceModule.setPersistentDataGetter(ignored -> entityData);
+    Player player = player(entityData);
+    DamageSource source = mock(DamageSource.class);
+    when(source.is(DamageTypeTags.BYPASSES_ARMOR)).thenReturn(false);
+    TestToolStack secondTool = new TestToolStack();
+    ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, 10);
+    FormulaRecurrenceModule module = FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY);
+
+    FormulaRecurrenceModule.beginDamageEvent(player);
+    module.addArmorDamageStats(tool, new ModifierEntry(ModifierIds.recurrence, 2), EquipmentContext.withTool(player, tool, EquipmentSlot.CHEST), EquipmentSlot.CHEST, source, stats);
+    module.addArmorDamageStats(secondTool, new ModifierEntry(ModifierIds.recurrence, 3), EquipmentContext.withTool(player, secondTool, EquipmentSlot.HEAD), EquipmentSlot.HEAD, source, stats);
+    FormulaRecurrenceModule.finishDamageEvent(stats);
+
+    assertThat(stats.preReduction()).isEqualTo(2);
+    assertThat(entityData.getFloat(KEY)).isEqualTo(18);
+    assertThat(damageInputs[0]).containsExactly(2.0, 3.0, 5.0, 8.0);
+  }
+
+  @Test
+  void armorTickDecaysStoredReductionOnceForAllArmorLevels() {
     FormulaManager.applySync(Map.of(
       ARMOR_STAT, formula(values -> 0),
       DAMAGE, formula(values -> 0),
       TICK, formula(values -> 4.0)
     ), Map.of(ARMOR_STAT, "{}", DAMAGE, "{}", TICK, "{}"));
-    tool.getPersistentData().putFloat(KEY, 5);
-    LivingEntity holder = mock(LivingEntity.class);
+    ModDataNBT entityData = new ModDataNBT();
+    entityData.putFloat(KEY, 5);
+    entityData.putInt(KEY.withSuffix("_tick_offset"), 20);
+    FormulaRecurrenceModule.setPersistentDataGetter(ignored -> entityData);
+    Player holder = player(entityData);
     holder.tickCount = 20;
-    net.minecraft.world.level.Level level = mock(net.minecraft.world.level.Level.class);
-    when(holder.level()).thenReturn(level);
-    when(level.isClientSide()).thenReturn(false);
 
-    FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY)
-      .onArmorTick(tool, new ModifierEntry(ModifierIds.recurrence, 2), EquipmentSlot.CHEST, holder);
+    FormulaRecurrenceModule module = FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY);
+    module.onArmorTick(tool, new ModifierEntry(ModifierIds.recurrence, 2), EquipmentSlot.CHEST, holder);
+    module.onArmorTick(new TestToolStack(), new ModifierEntry(ModifierIds.recurrence, 3), EquipmentSlot.HEAD, holder);
+    FormulaRecurrenceModule.flushArmorTicks(holder);
 
-    assertThat(tool.getPersistentData().getFloat(KEY)).isEqualTo(4);
-  }
-
-  @Test
-  void damageToPersistentUsesStoredPersistentValueInAccumulatorFormula() {
-    double[][] damageInputs = new double[1][];
-    FormulaManager.applySync(Map.of(
-      ARMOR_STAT, formula(values -> 0.0),
-      DAMAGE, formula(values -> {
-        damageInputs[0] = values;
-        return values[0] + values[1] + values[2] + values[3];
-      }),
-      TICK, formula(values -> 0.0)
-    ), Map.of(ARMOR_STAT, "{}", DAMAGE, "{}", TICK, "{}"));
-    tool.getPersistentData().putFloat(KEY, 2);
-    DamageSource source = mock(DamageSource.class);
-    when(source.is(DamageTypeTags.BYPASSES_ARMOR)).thenReturn(false);
-    Player player = mock(Player.class);
-    Level level = mock(Level.class);
-    when(player.getUUID()).thenReturn(TEST_PLAYER);
-    when(player.level()).thenReturn(level);
-    when(level.isClientSide()).thenReturn(false);
-
-    ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, 10);
-    FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY)
-      .onDamageToPersistent(tool, new ModifierEntry(ModifierIds.recurrence, 2), slimeknights.tconstruct.library.tools.context.EquipmentContext.withTool(player, tool, EquipmentSlot.CHEST), EquipmentSlot.CHEST, source, stats);
-
-    assertThat(tool.getPersistentData().getFloat(KEY)).isEqualTo(16);
-    assertThat(damageInputs[0]).containsExactly(2.0, 2.0, 2.0, 10.0);
+    assertThat(entityData.getFloat(KEY)).isEqualTo(4);
   }
 
   @Test
@@ -127,26 +139,34 @@ class FormulaRecurrenceModuleTest extends BaseMcTest {
       DAMAGE, formula(values -> 6.0),
       TICK, formula(values -> values[0])
     ), Map.of(ARMOR_STAT, "{}", DAMAGE, "{}", TICK, "{}"));
-    tool.getPersistentData().putFloat(KEY, 2);
+    ModDataNBT entityData = new ModDataNBT();
+    entityData.putFloat(KEY, 2);
+    FormulaRecurrenceModule.setPersistentDataGetter(ignored -> entityData);
     DamageSource source = mock(DamageSource.class);
     when(source.is(DamageTypeTags.BYPASSES_ARMOR)).thenReturn(false);
+    Player player = player(entityData);
+
+    PlayerPersistentDataCache.setDataGetter(ignored -> entityData);
+    ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, 10);
+    FormulaRecurrenceModule module = FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY);
+    FormulaRecurrenceModule.beginDamageEvent(player);
+    module.addArmorDamageStats(tool, new ModifierEntry(ModifierIds.recurrence, 2), EquipmentContext.withTool(player, tool, EquipmentSlot.CHEST), EquipmentSlot.CHEST, source, stats);
+    FormulaRecurrenceModule.finishDamageEvent(stats);
+
+    assertThat(entityData.getFloat(KEY)).isEqualTo(6);
+    entityData.putFloat(KEY, 6);
+    entityData.putLong(ResourceLocation.tryParse(KEY + "_expiry"), 77L);
+    PlayerPersistentDataCache.sync(TEST_PLAYER, entityData, packet -> PlayerPersistentDataCache.put(TEST_PLAYER, KEY.toString(), 6, 77L));
+    assertThat(PlayerPersistentDataCache.get(TEST_PLAYER, KEY.toString(), 0)).isEqualTo(6);
+  }
+
+  private static Player player(ModDataNBT data) {
     Player player = mock(Player.class);
     Level level = mock(Level.class);
     when(player.getUUID()).thenReturn(TEST_PLAYER);
     when(player.level()).thenReturn(level);
     when(level.isClientSide()).thenReturn(false);
-    PlayerPersistentDataCache.setDataGetter(ignored -> new ModDataNBT());
-
-    ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, 10);
-    FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY)
-      .onDamageToPersistent(tool, new ModifierEntry(ModifierIds.recurrence, 2), slimeknights.tconstruct.library.tools.context.EquipmentContext.withTool(player, tool, EquipmentSlot.CHEST), EquipmentSlot.CHEST, source, stats);
-
-    assertThat(tool.getPersistentData().getFloat(KEY)).isEqualTo(6);
-    ModDataNBT entityData = new ModDataNBT();
-    entityData.putFloat(KEY, 6);
-    entityData.putLong(ResourceLocation.tryParse(KEY + "_expiry"), 77L);
-    PlayerPersistentDataCache.sync(TEST_PLAYER, entityData, packet -> PlayerPersistentDataCache.put(TEST_PLAYER, KEY.toString(), 6, 77L));
-    assertThat(PlayerPersistentDataCache.get(TEST_PLAYER, KEY.toString(), 0)).isEqualTo(6);
+    return player;
   }
 
   private static IFormula formula(FormulaBody body) {
