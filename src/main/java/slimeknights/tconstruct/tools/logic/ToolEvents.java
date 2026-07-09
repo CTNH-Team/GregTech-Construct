@@ -463,6 +463,11 @@ public class ToolEvents {
     }
     if (!handledArmorDamage && context.hasModifiableArmor() && !source.is(DamageTypeTags.BYPASSES_ARMOR)) {
       float finalDamage = originalDamage;
+      if (armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0) {
+        finalDamage = ArmorUtil.getDamageAfterArmorExtensionAbsorb(finalDamage, armor, toughness, armorStrength, preReduction, postReduction, armorProtection, Mth.clamp(0.8f + armorAbsorptionCapModifier, 0.2f, 0.95f));
+      } else if (armor > 0) {
+        finalDamage = getDamageAfterAbsorb(finalDamage, armor, toughness);
+      }
       if (!SHARING_DAMAGE.get()) {
         finalDamage = Math.max(0, finalDamage - shareDamageWithNearbyGuardians(entity, source, finalDamage));
         sharedDamage = true;
@@ -472,14 +477,7 @@ public class ToolEvents {
         suppressHurtSound(entity);
       }
 
-      float armorDamage = finalDamage;
-      if (armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0) {
-        armorDamage = ArmorUtil.getDamageAfterArmorExtensionAbsorb(finalDamage, armor, toughness, armorStrength, preReduction, postReduction, armorProtection, Mth.clamp(0.8f + armorAbsorptionCapModifier, 0.2f, 0.95f));
-      } else if (armor > 0) {
-        armorDamage = getDamageAfterAbsorb(finalDamage, armor, toughness);
-      }
-
-      int damageMissed = getArmorDamage(originalDamage) - getArmorDamage(armorDamage);
+      int damageMissed = getArmorDamage(originalDamage) - getArmorDamage(finalDamage);
       if (damageMissed > 0 && entity instanceof Player) {
         ToolDamageUtil.runWithDeferredArmorDamage(() -> {
           for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {

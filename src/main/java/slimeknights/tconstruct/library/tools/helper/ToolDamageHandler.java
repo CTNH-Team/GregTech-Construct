@@ -23,7 +23,11 @@ public final class ToolDamageHandler {
     if (stack.isEmpty() || amount <= 0) {
       return;
     }
-    ToolDamageEntry entry = TOOL_DAMAGE_CACHE.computeIfAbsent(stack, key -> new ToolDamageEntry(tool, holder, amount, slot));
+    ToolDamageEntry entry = TOOL_DAMAGE_CACHE.get(stack);
+    if (entry == null) {
+      TOOL_DAMAGE_CACHE.put(stack, new ToolDamageEntry(tool, holder, amount, slot));
+      return;
+    }
     entry.tool = tool;
     entry.holder = holder;
     entry.amount += amount;

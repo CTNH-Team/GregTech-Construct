@@ -127,14 +127,18 @@ class ToolEventsPlatingDepletedFallbackTest extends BaseMcTest {
       enchantments.when(() -> EnchantmentHelper.getDamageProtection(player.getArmorSlots(), source)).thenReturn(0);
       toolStacks.when(() -> ToolStack.from(chest)).thenReturn(tool);
 
-      ToolEvents.livingHurt(new net.minecraftforge.event.entity.living.LivingHurtEvent(player, source, 8f));
+      net.minecraftforge.event.entity.living.LivingHurtEvent firstEvent = new net.minecraftforge.event.entity.living.LivingHurtEvent(player, source, 8f);
+      ToolEvents.livingHurt(firstEvent);
+      assertThat(firstEvent.getAmount()).isEqualTo(6.08f);
       ToolDamageHandler.flushPendingDamage();
       assertThat(capacityBar.amount).isZero();
-      int damageAfterFirstHit = damage.get();
+      assertThat(damage.get()).isZero();
 
-      ToolEvents.livingHurt(new net.minecraftforge.event.entity.living.LivingHurtEvent(player, source, 8f));
+      net.minecraftforge.event.entity.living.LivingHurtEvent secondEvent = new net.minecraftforge.event.entity.living.LivingHurtEvent(player, source, 8f);
+      ToolEvents.livingHurt(secondEvent);
+      assertThat(secondEvent.getAmount()).isEqualTo(6.08f);
       ToolDamageHandler.flushPendingDamage();
-      assertThat(damage.get()).isGreaterThan(damageAfterFirstHit);
+      assertThat(damage.get()).isEqualTo(1);
     }
   }
 
