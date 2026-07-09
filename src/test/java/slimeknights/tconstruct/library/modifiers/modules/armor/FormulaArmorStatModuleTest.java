@@ -72,6 +72,32 @@ class FormulaArmorStatModuleTest extends BaseMcTest {
     assertThat(inputs[0]).containsExactly(0.25, 3.0, 40.0, 20.0);
   }
 
+  @Test
+  void platingStyleStatTargetsArmorProtection() {
+    FormulaManager.applySync(Map.of(FORMULA, formula(values -> 0.15)), Map.of(FORMULA, "{}"));
+    ArmorDamageStats stats = new ArmorDamageStats(0, 0.4f, 0.2f, 0.25f);
+
+    FormulaArmorStatModule.stat(ArmorDamageStat.ARMOR_PROTECTION, FORMULA)
+      .addArmorDamageStats(TOOL, bind(new TestCapacityModifier(new TestCapacityBar(40, 20)), 2), null, null, DAMAGE, stats);
+
+    assertThat(stats.armorProtection()).isEqualTo(0.40f);
+    assertThat(stats.preReduction()).isEqualTo(0.4f);
+    assertThat(stats.postReduction()).isEqualTo(0.2f);
+  }
+
+  @Test
+  void crystalLatticeStyleStatTargetsPreReduction() {
+    FormulaManager.applySync(Map.of(FORMULA, formula(values -> 0.125)), Map.of(FORMULA, "{}"));
+    ArmorDamageStats stats = new ArmorDamageStats(0, 0.3f, 0.2f, 0.1f);
+
+    FormulaArmorStatModule.stat(ArmorDamageStat.PRE_REDUCTION, FORMULA)
+      .addArmorDamageStats(TOOL, bind(new TestCapacityModifier(new TestCapacityBar(25, 12)), 1), null, null, DAMAGE, stats);
+
+    assertThat(stats.preReduction()).isEqualTo(0.425f);
+    assertThat(stats.postReduction()).isEqualTo(0.2f);
+    assertThat(stats.armorProtection()).isEqualTo(0.1f);
+  }
+
   private static IFormula formula(FormulaBody body) {
     return new IFormula() {
       @Override
