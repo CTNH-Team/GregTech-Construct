@@ -1,0 +1,338 @@
+{
+  "parent": "tconstruct:smeltery/tinkers_anvil",
+  "criteria": {
+    "heavy_composite_boots": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:heavy_composite_boots"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "heavy_composite_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:heavy_composite_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "heavy_composite_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:heavy_composite_helmet"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "heavy_composite_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:heavy_composite_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "heavy_forged_boots": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:heavy_forged_boots"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "heavy_forged_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:heavy_forged_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "heavy_forged_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:heavy_forged_helmet"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "heavy_forged_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:heavy_forged_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "light_composite_boots": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:light_composite_boots"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "light_composite_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:light_composite_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "light_composite_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:light_composite_helmet"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "light_composite_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:light_composite_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "light_forged_boots": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:light_forged_boots"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "light_forged_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:light_forged_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "light_forged_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:light_forged_helmet"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "light_forged_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:light_forged_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_composite_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_composite_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_composite_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_composite_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_composite_other_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_composite_other_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_composite_other_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_composite_other_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_forged_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_forged_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_forged_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_forged_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_forged_other_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_forged_other_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_forged_other_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_forged_other_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.tconstruct.special.composite_or_forged.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "tconstruct:heavy_forged_chestplate",
+      "nbt": "{Damage:0,tic_broken:0b,tic_display:1b,tic_materials:[\"tconstruct:cobalt\",\"tconstruct:cobalt\",\"tconstruct:cobalt\",\"tconstruct:cobalt\"]}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.tconstruct.special.composite_or_forged.title"
+    }
+  },
+  "requirements": [
+    [
+      "light_composite_helmet",
+      "light_composite_chestplate",
+      "light_composite_leggings",
+      "light_composite_boots",
+      "heavy_composite_helmet",
+      "heavy_composite_chestplate",
+      "heavy_composite_leggings",
+      "heavy_composite_boots",
+      "light_forged_helmet",
+      "light_forged_chestplate",
+      "light_forged_leggings",
+      "light_forged_boots",
+      "heavy_forged_helmet",
+      "heavy_forged_chestplate",
+      "heavy_forged_leggings",
+      "heavy_forged_boots",
+      "mix_composite_chestplate",
+      "mix_composite_leggings",
+      "mix_composite_other_chestplate",
+      "mix_composite_other_leggings",
+      "mix_forged_chestplate",
+      "mix_forged_leggings",
+      "mix_forged_other_chestplate",
+      "mix_forged_other_leggings"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

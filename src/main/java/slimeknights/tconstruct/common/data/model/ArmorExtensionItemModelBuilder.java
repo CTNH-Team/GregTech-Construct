@@ -98,7 +98,7 @@ final class ArmorExtensionItemModelBuilder {
     model.add("parts", partArray);
 
     JsonArray modifierRoots = new JsonArray();
-    modifierRoots.add(TConstruct.MOD_ID + ":item/armor/" + family + "/" + slot + "/modifiers/");
+    modifierRoots.add(TConstruct.MOD_ID + ":" + family + "/" + slot);
     model.add("modifier_roots", modifierRoots);
 
     JsonArray firstModifiers = new JsonArray();
@@ -139,7 +139,7 @@ final class ArmorExtensionItemModelBuilder {
 
     JsonArray brokenRoots = new JsonArray();
     for (JsonElement element : base.getAsJsonArray("modifier_roots")) {
-      brokenRoots.add(element.getAsString() + "broken/");
+      brokenRoots.add(element.getAsString() + "_broken");
     }
     broken.add("modifier_roots", brokenRoots);
     return broken;

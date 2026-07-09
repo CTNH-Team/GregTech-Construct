@@ -8,6 +8,8 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.PackOutput.Target;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -22,6 +24,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import slimeknights.mantle.data.GenericDataProvider;
+import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.ItemObject;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
@@ -83,11 +86,13 @@ public class AdvancementsProvider extends GenericDataProvider {
         // tinkering path
         Advancement materialsAndYou = builder(TinkerCommons.materialsAndYou, resource("tools/materials_and_you"), resource("textures/gui/advancement_background.png"), FrameType.TASK, builder ->
                 builder.addCriterion("crafted_book", hasItem(TinkerCommons.materialsAndYou)));
-        builder(Items.TURTLE_HELMET, resource("combat/damage_limit"), materialsAndYou, FrameType.CHALLENGE, builder ->
+        Advancement armorRoot = builder(armorDisplay(TinkerTools.knightsArmor.get(ArmorItem.Type.CHESTPLATE), MaterialIds.manyullyn, MaterialIds.manyullyn, MaterialIds.wool), resource("root"), resource("textures/gui/advancement_background.png"), FrameType.TASK, true, false, false, builder ->
+                builder.addCriterion("has_armor", InventoryChangeTrigger.TriggerInstance.hasItems(armorItemsPredicate())));
+        builder(Items.TURTLE_HELMET, resource("combat/damage_limit"), armorRoot, FrameType.CHALLENGE, true, true, true, builder ->
                 builder.addCriterion("impossible", new ImpossibleTrigger.TriggerInstance()));
-        builder(Items.TOTEM_OF_UNDYING, resource("combat/shared_fate"), materialsAndYou, FrameType.CHALLENGE, builder ->
+        builder(Items.TOTEM_OF_UNDYING, resource("combat/shared_fate"), armorRoot, FrameType.CHALLENGE, true, true, true, builder ->
                 builder.addCriterion("impossible", new ImpossibleTrigger.TriggerInstance()));
-        builder(Items.SHIELD, resource("combat/sacrifice"), materialsAndYou, FrameType.CHALLENGE, builder ->
+        builder(Items.SHIELD, resource("combat/sacrifice"), armorRoot, FrameType.CHALLENGE, true, true, true, builder ->
                 builder.addCriterion("impossible", new ImpossibleTrigger.TriggerInstance()));
         Advancement partBuilder = builder(TinkerTables.partBuilder, resource("tools/part_builder"), materialsAndYou, FrameType.TASK, builder ->
                 builder.addCriterion("crafted_block", hasItem(TinkerTables.partBuilder)));
@@ -435,8 +440,8 @@ public class AdvancementsProvider extends GenericDataProvider {
 
         // 护甲成就
         // composite_or_forged：拥有任意复合或锻造护甲
-        Advancement compositeOrForged = builder(TinkerTools.lightCompositeArmor.get(ArmorItem.Type.CHESTPLATE).getRenderTool(),
-                resource("special/composite_or_forged"), tinkerTool, FrameType.TASK, builder -> {
+        Advancement compositeOrForged = builder(armorDisplay(TinkerTools.heavyForgedArmor.get(ArmorItem.Type.CHESTPLATE), MaterialIds.cobalt, MaterialIds.cobalt, MaterialIds.cobalt, MaterialIds.cobalt),
+                resource("special/composite_or_forged"), anvil, FrameType.GOAL, true, true, false, builder -> {
             TinkerTools.lightCompositeArmor.forEach((type, armor) -> builder.addCriterion("light_composite_" + type.getName(), hasItem(armor)));
             TinkerTools.heavyCompositeArmor.forEach((type, armor) -> builder.addCriterion("heavy_composite_" + type.getName(), hasItem(armor)));
             TinkerTools.lightForgedArmor.forEach((type, armor) -> builder.addCriterion("light_forged_" + type.getName(), hasItem(armor)));
@@ -449,14 +454,14 @@ public class AdvancementsProvider extends GenericDataProvider {
         });
 
         // knights：拥有骑士全套护甲
-        builder(TinkerTools.knightsArmor.get(ArmorItem.Type.CHESTPLATE).getRenderTool(),
-                resource("full_set/knights"), compositeOrForged, FrameType.CHALLENGE, builder -> {
+        builder(armorDisplay(TinkerTools.knightsArmor.get(ArmorItem.Type.LEGGINGS), MaterialIds.knightmetal, MaterialIds.knightmetal, MaterialIds.wool),
+                resource("full_set/knights"), compositeOrForged, FrameType.CHALLENGE, true, true, false, builder -> {
             TinkerTools.knightsArmor.forEach((type, armor) -> builder.addCriterion("knights_" + type.getName(), hasItem(armor)));
         });
 
         // mixed_armor：同时拥有混合型复合和锻造护甲
-        builder(TinkerTools.mixCompositeArmor.get(ArmorItem.Type.CHESTPLATE).getRenderTool(),
-                resource("special/mixed_armor"), compositeOrForged, FrameType.GOAL, builder -> {
+        builder(armorDisplay(TinkerTools.mixCompositeArmor.get(ArmorItem.Type.CHESTPLATE), MaterialIds.hepatizon, MaterialIds.gold, MaterialIds.hepatizon, MaterialIds.gold),
+                resource("special/mixed_armor"), anvil, FrameType.GOAL, true, false, true, builder -> {
             TinkerTools.mixCompositeArmor.forEach((type, armor) -> builder.addCriterion("mix_composite_" + type.getName(), hasItem(armor)));
             TinkerTools.mixCompositeOtherArmor.forEach((type, armor) -> builder.addCriterion("mix_composite_other_" + type.getName(), hasItem(armor)));
             TinkerTools.mixForgedArmor.forEach((type, armor) -> builder.addCriterion("mix_forged_" + type.getName(), hasItem(armor)));
@@ -468,6 +473,44 @@ public class AdvancementsProvider extends GenericDataProvider {
             builder.addCriterion("tick", new PlayerTrigger.TriggerInstance(CriteriaTriggers.TICK.getId(), ContextAwarePredicate.ANY));
             builder.rewards(AdvancementRewards.Builder.loot(TConstruct.getResource("gameplay/starting_book")));
         });
+    }
+
+    private static ItemPredicate armorItemsPredicate() {
+        List<ItemLike> items = new ArrayList<>();
+        addArmorItems(items, TinkerTools.travelersGear);
+        addArmorItems(items, TinkerTools.plateArmor);
+        addArmorItems(items, TinkerTools.slimesuit);
+        addArmorItems(items, TinkerTools.standardArmor);
+        addArmorItems(items, TinkerTools.knightsArmor);
+        addArmorItems(items, TinkerTools.explorersArmor);
+        addArmorItems(items, TinkerTools.lightCompositeArmor);
+        addArmorItems(items, TinkerTools.heavyCompositeArmor);
+        addArmorItems(items, TinkerTools.lightForgedArmor);
+        addArmorItems(items, TinkerTools.heavyForgedArmor);
+        addArmorItems(items, TinkerTools.mixCompositeArmor);
+        addArmorItems(items, TinkerTools.mixCompositeOtherArmor);
+        addArmorItems(items, TinkerTools.mixForgedArmor);
+        addArmorItems(items, TinkerTools.mixForgedOtherArmor);
+        return ItemPredicate.Builder.item().of(items.toArray(new ItemLike[0])).build();
+    }
+
+    private static void addArmorItems(List<ItemLike> items, EnumObject<ArmorItem.Type, ? extends ItemLike> armorSet) {
+        armorSet.forEach((type, armor) -> items.add(armor));
+    }
+
+    private static ItemStack armorDisplay(ItemLike item, MaterialId... materials) {
+        ItemStack stack = new ItemStack(item);
+        CompoundTag tag = new CompoundTag();
+        tag.putInt("Damage", 0);
+        tag.putBoolean("tic_broken", false);
+        tag.putBoolean("tic_display", true);
+        ListTag list = new ListTag();
+        for (MaterialId material : materials) {
+            list.add(StringTag.valueOf(material.toString()));
+        }
+        tag.put("tic_materials", list);
+        stack.setTag(tag);
+        return stack;
     }
 
     /** Gets a tank filled with the given fluid */
@@ -538,6 +581,10 @@ public class AdvancementsProvider extends GenericDataProvider {
         return builder(new ItemStack(display), name, parent, frame, consumer);
     }
 
+    protected Advancement builder(ItemLike display, ResourceLocation name, Advancement parent, FrameType frame, boolean showToast, boolean announceToChat, boolean hidden, Consumer<Advancement.Builder> consumer) {
+        return builder(new ItemStack(display), name, parent, frame, showToast, announceToChat, hidden, consumer);
+    }
+
     /**
      * Helper for making an advancement builder
      * @param display      Stack to display
@@ -553,6 +600,13 @@ public class AdvancementsProvider extends GenericDataProvider {
         });
     }
 
+    protected Advancement builder(ItemStack display, ResourceLocation name, Advancement parent, FrameType frame, boolean showToast, boolean announceToChat, boolean hidden, Consumer<Advancement.Builder> consumer) {
+        return builder(display, name, (ResourceLocation)null, frame, showToast, announceToChat, hidden, builder -> {
+            builder.parent(parent);
+            consumer.accept(builder);
+        });
+    }
+
     /**
      * Helper for making an advancement builder
      * @param display      Item to display
@@ -563,6 +617,10 @@ public class AdvancementsProvider extends GenericDataProvider {
      */
     protected Advancement builder(ItemLike display, ResourceLocation name, @Nullable ResourceLocation background, FrameType frame, Consumer<Advancement.Builder> consumer) {
         return builder(new ItemStack(display), name, background, frame, consumer);
+    }
+
+    protected Advancement builder(ItemLike display, ResourceLocation name, @Nullable ResourceLocation background, FrameType frame, boolean showToast, boolean announceToChat, boolean hidden, Consumer<Advancement.Builder> consumer) {
+        return builder(new ItemStack(display), name, background, frame, showToast, announceToChat, hidden, consumer);
     }
 
     /** Makes an advancement translation key from the given ID */
@@ -584,6 +642,16 @@ public class AdvancementsProvider extends GenericDataProvider {
                         Component.translatable(makeTranslationKey(name) + ".title"),
                         Component.translatable(makeTranslationKey(name) + ".description"),
                         background, frame, true, frame != FrameType.TASK, false);
+        consumer.accept(builder);
+        return builder.save(advancementConsumer, name.toString());
+    }
+
+    protected Advancement builder(ItemStack display, ResourceLocation name, @Nullable ResourceLocation background, FrameType frame, boolean showToast, boolean announceToChat, boolean hidden, Consumer<Advancement.Builder> consumer) {
+        Advancement.Builder builder = Advancement.Builder
+                .advancement().display(display,
+                        Component.translatable(makeTranslationKey(name) + ".title"),
+                        Component.translatable(makeTranslationKey(name) + ".description"),
+                        background, frame, showToast, announceToChat, hidden);
         consumer.accept(builder);
         return builder.save(advancementConsumer, name.toString());
     }

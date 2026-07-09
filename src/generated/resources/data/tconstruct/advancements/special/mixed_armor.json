@@ -1,0 +1,144 @@
+{
+  "parent": "tconstruct:smeltery/tinkers_anvil",
+  "criteria": {
+    "mix_composite_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_composite_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_composite_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_composite_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_composite_other_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_composite_other_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_composite_other_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_composite_other_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_forged_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_forged_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_forged_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_forged_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_forged_other_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_forged_other_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "mix_forged_other_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:mix_forged_other_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.tconstruct.special.mixed_armor.description"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "tconstruct:mix_composite_chestplate",
+      "nbt": "{Damage:0,tic_broken:0b,tic_display:1b,tic_materials:[\"tconstruct:hepatizon\",\"tconstruct:gold\",\"tconstruct:hepatizon\",\"tconstruct:gold\"]}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.tconstruct.special.mixed_armor.title"
+    }
+  },
+  "requirements": [
+    [
+      "mix_composite_chestplate"
+    ],
+    [
+      "mix_composite_leggings"
+    ],
+    [
+      "mix_composite_other_chestplate"
+    ],
+    [
+      "mix_composite_other_leggings"
+    ],
+    [
+      "mix_forged_chestplate"
+    ],
+    [
+      "mix_forged_leggings"
+    ],
+    [
+      "mix_forged_other_chestplate"
+    ],
+    [
+      "mix_forged_other_leggings"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
