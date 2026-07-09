@@ -148,7 +148,7 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
     assertThat(melee).contains("tconstruct:conditional_armor_stat", "pre_reduction", "tconstruct:protection/melee", "0.25", "0.75");
     assertThat(projectile).contains("tconstruct:conditional_armor_stat", "pre_reduction", "tconstruct:protection/projectile", "0.25", "0.75");
     assertThat(blast).contains("tconstruct:conditional_armor_stat", "pre_reduction", "tconstruct:protection/blast", "0.5", "1.0");
-    assertThat(physics).contains("tconstruct:conditional_armor_stat", "post_reduction", "tconstruct:physics", "0.5");
+    assertThat(physics).contains("tconstruct:conditional_armor_stat", "damage_block", "tconstruct:physics", "0.5");
     assertThat(guarding).contains("tconstruct:formula_guarding", "tconstruct:guarding/distance_factor_formula", "tconstruct:guarding/share_ratio_formula", "tconstruct:guarding/extra_protection_formula", "no_levels");
     assertThat(cushion).contains("tconstruct:formula_tool_damage", "tconstruct:cushion/formula", "no_levels");
     assertThat(plating).contains("tconstruct:stat_capacity_bar", "tconstruct:durability_bar_color", "tconstruct:formula_armor_stat", "armor_protection", "tconstruct:plating/stat_bonus", "tconstruct:tool_damage_capacity", "tconstruct:plating/tool_damage", "no_levels");
@@ -240,7 +240,7 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
           .source(DamageSourcePredicate.tag(TinkerTags.DamageTypes.BLAST_PROTECTION))
           .eachLevel(0.5f).highestEachLevel(1.0f).build());
       buildModifier(ModifierIds.physicsDefense)
-        .addModule(ConditionalArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION)
+        .addModule(ConditionalArmorStatModule.stat(ArmorDamageStat.DAMAGE_BLOCK)
           .source(DamageSourcePredicate.tag(TinkerTags.DamageTypes.PHYSICS))
           .eachLevel(0.5f).build());
       buildModifier(ModifierIds.guarding)
