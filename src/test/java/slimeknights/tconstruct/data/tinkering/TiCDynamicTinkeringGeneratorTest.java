@@ -39,6 +39,7 @@ import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.tools.ArmorDefinitions;
 import slimeknights.tconstruct.tools.data.ArmorFormulaProvider;
 import slimeknights.tconstruct.tools.data.ModifierIds;
+import slimeknights.tconstruct.tools.data.ToolDefinitionDataProvider;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import java.io.IOException;
@@ -175,6 +176,23 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
       .contains(".part(plating, 0.5f)\n                .part(plating, 0.5f)\n                .part(TinkerToolParts.maille.get(), 1f)")
       .doesNotContain(".part(TinkerToolParts.plating, 1)")
       .doesNotContain(".part(TinkerToolParts.maille, 1)");
+  }
+
+  @Test
+  void armorDefinitionProviderIncludesSourceSpeedPenaltyValues() throws IOException {
+    String provider = java.nio.file.Files.readString(java.nio.file.Path.of(
+      "src/main/java/slimeknights/tconstruct/tools/data/ToolDefinitionDataProvider.java"));
+
+    assertThat(provider)
+      .contains("ArmorStats.SPEED_PENALTY, 0.08f")
+      .contains("ArmorStats.SPEED_PENALTY, 0.15f")
+      .contains("ArmorStats.SPEED_PENALTY, 0.12f")
+      .contains("ArmorStats.SPEED_PENALTY, 0.06f")
+      .contains("ArmorItem.Type.HELMET, 0.03f")
+      .contains("ArmorItem.Type.LEGGINGS, 0.05f")
+      .contains("ArmorItem.Type.CHESTPLATE, 0.03f")
+      .contains("ArmorItem.Type.LEGGINGS, 0.025f")
+      .contains("ArmorItem.Type.BOOTS, 0.02f");
   }
 
   @Test

@@ -309,6 +309,10 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
       if (armorProtection != 0) {
         builder.put(TinkerAttributes.ARMOR_PROTECTION.get(), new AttributeModifier(uuid, "tconstruct.armor.armor_protection", armorProtection, AttributeModifier.Operation.ADDITION));
       }
+      double speedPenalty = statsNBT.get(ArmorStats.SPEED_PENALTY);
+      if (speedPenalty > 0) {
+        builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(uuid, "tconstruct.armor.movement_speed", -speedPenalty, AttributeModifier.Operation.MULTIPLY_TOTAL));
+      }
       // grab attributes from modifiers
       BiConsumer<Attribute,AttributeModifier> attributeConsumer = builder::put;
       for (ModifierEntry entry : tool.getModifierList()) {

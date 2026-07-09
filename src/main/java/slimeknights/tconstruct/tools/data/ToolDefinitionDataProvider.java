@@ -1015,10 +1015,26 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                         .part(maille, 1)
                         .part(linear, 1))
                 .module(defaultThree)
-                .module(baseStats(stats()
+                .module(ArmorItem.Type.HELMET, baseStats(stats()
                         .set(ToolStats.KNOCKBACK_RESISTANCE, 0.05f)
                         .set(ArmorStats.PRE_REDUCTION, 0.25f)
-                        .set(ArmorStats.PROTECTION, 0.025f)))
+                        .set(ArmorStats.PROTECTION, 0.025f)
+                        .set(ArmorStats.SPEED_PENALTY, 0.08f)))
+                .module(ArmorItem.Type.CHESTPLATE, baseStats(stats()
+                        .set(ToolStats.KNOCKBACK_RESISTANCE, 0.05f)
+                        .set(ArmorStats.PRE_REDUCTION, 0.25f)
+                        .set(ArmorStats.PROTECTION, 0.025f)
+                        .set(ArmorStats.SPEED_PENALTY, 0.15f)))
+                .module(ArmorItem.Type.LEGGINGS, baseStats(stats()
+                        .set(ToolStats.KNOCKBACK_RESISTANCE, 0.05f)
+                        .set(ArmorStats.PRE_REDUCTION, 0.25f)
+                        .set(ArmorStats.PROTECTION, 0.025f)
+                        .set(ArmorStats.SPEED_PENALTY, 0.12f)))
+                .module(ArmorItem.Type.BOOTS, baseStats(stats()
+                        .set(ToolStats.KNOCKBACK_RESISTANCE, 0.05f)
+                        .set(ArmorStats.PRE_REDUCTION, 0.25f)
+                        .set(ArmorStats.PROTECTION, 0.025f)
+                        .set(ArmorStats.SPEED_PENALTY, 0.06f)))
                 .module(multiply(1.75f, 1.1f, 1.25f, 1.25f))
                 .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.8f))
                 .module(slots(5, 1, 1))
@@ -1035,28 +1051,33 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(slots(1, 1, 2))
                 .module(FixedMaterialToolName.FIRST);
 
-        defineLayeredCompositeArmor(ArmorDefinitions.LIGHT_COMPOSITE, armorMail, defaultThree, defaultFour, null, multiply(null, 0.9f, 0.8f, 1.25f), 0.4f, slots(3, 1, 1));
+        defineLayeredCompositeArmor(ArmorDefinitions.LIGHT_COMPOSITE, armorMail, defaultThree, defaultFour, null, multiply(null, 0.9f, 0.8f, 1.25f), 0.4f, slots(3, 1, 1), null);
         defineLayeredCompositeArmor(ArmorDefinitions.HEAVY_COMPOSITE, armorPlate, defaultThree, defaultFour,
                 baseStats(stats().set(ArmorStats.ARMOR_STRENGTH, 1f).set(ToolStats.KNOCKBACK_RESISTANCE, 0.1f)),
-                multiply(1.25f, null, 0.8f, 1.25f), 0.5f, slots(4, 2, 1));
-        defineLayeredForgedArmor(ArmorDefinitions.LIGHT_FORGED, armorMail, defaultForgedSmall, defaultForgedLarge, null, multiply(1.4f, 0.9f, 1.25f, 0.8f), 0.4f, slots(1, 3, 1));
+                multiply(1.25f, null, 0.8f, 1.25f), 0.5f, slots(4, 2, 1),
+                java.util.Map.of(ArmorItem.Type.HELMET, 0.03f, ArmorItem.Type.CHESTPLATE, 0.06f, ArmorItem.Type.LEGGINGS, 0.05f, ArmorItem.Type.BOOTS, 0.02f));
+        defineLayeredForgedArmor(ArmorDefinitions.LIGHT_FORGED, armorMail, defaultForgedSmall, defaultForgedLarge, null, multiply(1.4f, 0.9f, 1.25f, 0.8f), 0.4f, slots(1, 3, 1), null);
         defineLayeredForgedArmor(ArmorDefinitions.HEAVY_FORGED, armorPlate, defaultForgedSmall, defaultForgedLarge,
                 baseStats(stats().set(ToolStats.ARMOR_TOUGHNESS, 1f).set(ToolStats.KNOCKBACK_RESISTANCE, 0.1f)),
-                multiply(1.4f, 0.9f, 1.25f, 0.8f), 0.4f, slots(2, 4, 1));
+                multiply(1.4f, 0.9f, 1.25f, 0.8f), 0.4f, slots(2, 4, 1),
+                java.util.Map.of(ArmorItem.Type.HELMET, 0.03f, ArmorItem.Type.CHESTPLATE, 0.06f, ArmorItem.Type.LEGGINGS, 0.05f, ArmorItem.Type.BOOTS, 0.02f));
 
-        defineMixedCompositeArmor(ArmorDefinitions.MIX_COMPOSITE, false, defaultFour);
-        defineMixedCompositeArmor(ArmorDefinitions.MIX_COMPOSITE_OTHER, true, defaultFour);
-        defineMixedForgedArmor(ArmorDefinitions.MIX_FORGED, false, defaultForgedLarge);
-        defineMixedForgedArmor(ArmorDefinitions.MIX_FORGED_OTHER, true, defaultForgedLarge);
+        defineMixedCompositeArmor(ArmorDefinitions.MIX_COMPOSITE, false, defaultFour, java.util.Map.of(ArmorItem.Type.CHESTPLATE, 0.03f, ArmorItem.Type.LEGGINGS, 0.025f));
+        defineMixedCompositeArmor(ArmorDefinitions.MIX_COMPOSITE_OTHER, true, defaultFour, java.util.Map.of(ArmorItem.Type.CHESTPLATE, 0.03f, ArmorItem.Type.LEGGINGS, 0.025f));
+        defineMixedForgedArmor(ArmorDefinitions.MIX_FORGED, false, defaultForgedLarge, java.util.Map.of(ArmorItem.Type.CHESTPLATE, 0.03f, ArmorItem.Type.LEGGINGS, 0.025f));
+        defineMixedForgedArmor(ArmorDefinitions.MIX_FORGED_OTHER, true, defaultForgedLarge, java.util.Map.of(ArmorItem.Type.CHESTPLATE, 0.03f, ArmorItem.Type.LEGGINGS, 0.025f));
     }
 
     private void defineLayeredCompositeArmor(ModifiableArmorMaterial material, Supplier<? extends IToolPart> layer, DefaultMaterialsModule smallMaterials,
-                                             DefaultMaterialsModule largeMaterials, ToolModule baseStats, ToolModule multipliers, float chestAttack, ToolModule slots) {
+                                             DefaultMaterialsModule largeMaterials, ToolModule baseStats, ToolModule multipliers, float chestAttack, ToolModule slots, java.util.Map<ArmorItem.Type, Float> speedPenalty) {
         ArmorDataBuilder builder = defineArmor(material);
         for (ArmorItem.Type type : ArmorItem.Type.values()) {
             boolean small = isSmallArmor(type);
             builder.module(type, compositeParts(type, layer, small ? 0.5f : 0.25f));
             builder.module(type, small ? smallMaterials : largeMaterials);
+            if (speedPenalty != null && speedPenalty.containsKey(type)) {
+                builder.module(type, baseStats(stats().set(ArmorStats.SPEED_PENALTY, speedPenalty.get(type))));
+            }
         }
         if (baseStats != null) {
             builder.module(baseStats);
@@ -1068,12 +1089,15 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
     }
 
     private void defineLayeredForgedArmor(ModifiableArmorMaterial material, Supplier<? extends IToolPart> layer, DefaultMaterialsModule smallMaterials,
-                                          DefaultMaterialsModule largeMaterials, ToolModule baseStats, ToolModule multipliers, float chestAttack, ToolModule slots) {
+                                          DefaultMaterialsModule largeMaterials, ToolModule baseStats, ToolModule multipliers, float chestAttack, ToolModule slots, java.util.Map<ArmorItem.Type, Float> speedPenalty) {
         ArmorDataBuilder builder = defineArmor(material);
         for (ArmorItem.Type type : ArmorItem.Type.values()) {
             boolean small = isSmallArmor(type);
             builder.module(type, forgedParts(type, layer, small ? 1f : 0.5f));
             builder.module(type, small ? smallMaterials : largeMaterials);
+            if (speedPenalty != null && speedPenalty.containsKey(type)) {
+                builder.module(type, baseStats(stats().set(ArmorStats.SPEED_PENALTY, speedPenalty.get(type))));
+            }
         }
         if (baseStats != null) {
             builder.module(baseStats);
@@ -1084,11 +1108,14 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(FixedMaterialToolName.FIRST);
     }
 
-    private void defineMixedCompositeArmor(ModifiableArmorMaterial material, boolean plateFirst, DefaultMaterialsModule materials) {
+    private void defineMixedCompositeArmor(ModifiableArmorMaterial material, boolean plateFirst, DefaultMaterialsModule materials, java.util.Map<ArmorItem.Type, Float> speedPenalty) {
         ArmorDataBuilder builder = defineArmor(material);
         for (ArmorItem.Type type : List.of(ArmorItem.Type.CHESTPLATE, ArmorItem.Type.LEGGINGS)) {
             builder.module(type, mixedCompositeParts(type, plateFirst));
             builder.module(type, materials);
+            if (speedPenalty.containsKey(type)) {
+                builder.module(type, baseStats(stats().set(ArmorStats.SPEED_PENALTY, speedPenalty.get(type))));
+            }
         }
         builder.module(multiply(1.25f, 0.95f, 0.8f, 1.25f))
                 .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.45f))
@@ -1096,11 +1123,14 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(FixedMaterialToolName.FIRST);
     }
 
-    private void defineMixedForgedArmor(ModifiableArmorMaterial material, boolean plateFirst, DefaultMaterialsModule materials) {
+    private void defineMixedForgedArmor(ModifiableArmorMaterial material, boolean plateFirst, DefaultMaterialsModule materials, java.util.Map<ArmorItem.Type, Float> speedPenalty) {
         ArmorDataBuilder builder = defineArmor(material);
         for (ArmorItem.Type type : List.of(ArmorItem.Type.CHESTPLATE, ArmorItem.Type.LEGGINGS)) {
             builder.module(type, mixedForgedParts(type, plateFirst));
             builder.module(type, materials);
+            if (speedPenalty.containsKey(type)) {
+                builder.module(type, baseStats(stats().set(ArmorStats.SPEED_PENALTY, speedPenalty.get(type))));
+            }
         }
         builder.module(baseStats(stats().set(ToolStats.ARMOR_TOUGHNESS, 1f).set(ToolStats.KNOCKBACK_RESISTANCE, 0.1f)))
                 .module(multiply(1.4f, 0.95f, 1.25f, 0.8f))
