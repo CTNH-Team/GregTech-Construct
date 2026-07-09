@@ -145,6 +145,18 @@ public abstract class AbstractMaterialTraitDataProvider extends GenericDataProvi
     material(location).addTraits(statsId, traits);
   }
 
+  protected void overrideTraits(MaterialId location, MaterialStatsId statsId, ModifierEntry... traits) {
+    material(location).setTraits(statsId, traits);
+  }
+
+  protected void overrideTraits(MaterialId location, MaterialStatsId statsId, ModifierId... traits) {
+    material(location).setTraits(statsId, traits);
+  }
+
+  protected void overrideTraits(MaterialId location, MaterialStatsId statsId, LazyModifier... traits) {
+    material(location).setTraits(statsId, traits);
+  }
+
   /** Builder for {@link MaterialTraits}. Unlike {@link MaterialTraits.Builder}, uses additive list building rather than replacing lists */
   @CanIgnoreReturnValue
   public static class MaterialTraitsBuilder {

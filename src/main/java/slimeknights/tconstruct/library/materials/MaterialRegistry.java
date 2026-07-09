@@ -127,13 +127,13 @@ public final class MaterialRegistry {
     registry.registerStatType(ArmorExtensionMaterialStats.ARMOR_PLATE, ARMOR);
     registry.registerStatType(ArmorExtensionMaterialStats.ARMOR_MAIL, ARMOR);
     for (MaterialStatType<?> type : ArmorExtensionMaterialStats.CAST_TYPES) {
-      registry.registerStatType(type, ARMOR);
+      registry.registerStatType(type);
     }
     for (MaterialStatType<?> type : ArmorExtensionMaterialStats.FRAME_TYPES) {
-      registry.registerStatType(type, ARMOR);
+      registry.registerStatType(type);
     }
     for (MaterialStatType<?> type : ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES) {
-      registry.registerStatType(type, ARMOR);
+      registry.registerStatType(type);
     }
     registry.registerStatType(StatlessMaterialStats.CUIRASS.getType(), ARMOR);
     registry.registerStatType(ArmorExtensionMaterialStats.MAILLE, ARMOR);
