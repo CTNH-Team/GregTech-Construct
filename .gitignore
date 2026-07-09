@@ -62,3 +62,6 @@ src/generated/resources/.cache/*
 .claude/settings.local.json
 .omo/
 /workspace/**
+/node_modules/
+package-lock.json
+package.json
