@@ -89,7 +89,7 @@ public interface ArmorDamageStatsModifierHook {
       switch (stat) {
         case ARMOR_STRENGTH -> armorStrength += value;
         case PRE_REDUCTION -> preReduction += value;
-        case POST_REDUCTION -> postReduction += value;
+        case POST_REDUCTION, DAMAGE_BLOCK -> postReduction += value;
         case ARMOR_PROTECTION -> armorProtection += value;
         case ARMOR_ABSORPTION_CAP -> armorAbsorptionCap += value;
       }
@@ -99,7 +99,7 @@ public interface ArmorDamageStatsModifierHook {
       switch (stat) {
         case ARMOR_STRENGTH -> highestArmorStrength = Math.max(highestArmorStrength, value);
         case PRE_REDUCTION -> highestPreReduction = Math.max(highestPreReduction, value);
-        case POST_REDUCTION -> highestPostReduction = Math.max(highestPostReduction, value);
+        case POST_REDUCTION, DAMAGE_BLOCK -> highestPostReduction = Math.max(highestPostReduction, value);
         case ARMOR_PROTECTION -> highestArmorProtection = Math.max(highestArmorProtection, value);
         case ARMOR_ABSORPTION_CAP -> highestArmorAbsorptionCap = Math.max(highestArmorAbsorptionCap, value);
       }
@@ -176,6 +176,7 @@ public interface ArmorDamageStatsModifierHook {
     ARMOR_STRENGTH,
     PRE_REDUCTION,
     POST_REDUCTION,
+    DAMAGE_BLOCK,
     ARMOR_PROTECTION,
     ARMOR_ABSORPTION_CAP
   }

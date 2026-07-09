@@ -63,7 +63,7 @@ public record FormulaArmorStatModule(ArmorDamageStat stat, ResourceLocation form
     return switch (stat) {
       case ARMOR_STRENGTH -> stats.armorStrength();
       case PRE_REDUCTION -> stats.preReduction();
-      case POST_REDUCTION -> stats.postReduction();
+      case POST_REDUCTION, DAMAGE_BLOCK -> stats.postReduction();
       case ARMOR_PROTECTION -> stats.armorProtection();
       case ARMOR_ABSORPTION_CAP -> stats.armorAbsorptionCap();
       default -> throw new IllegalStateException("Unhandled armor damage stat: " + stat);

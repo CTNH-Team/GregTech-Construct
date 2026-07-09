@@ -537,7 +537,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                         .source(DamageSourcePredicate.tag(TinkerTags.DamageTypes.BLAST_PROTECTION))
                         .eachLevel(0.5f).highestEachLevel(1.0f).build());
         buildModifier(ModifierIds.physicsDefense)
-                .addModule(ConditionalArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION)
+                .addModule(ConditionalArmorStatModule.stat(ArmorDamageStat.DAMAGE_BLOCK)
                         .source(DamageSourcePredicate.tag(TinkerTags.DamageTypes.PHYSICS))
                         .eachLevel(0.5f).build());
         buildModifier(ModifierIds.guarding)
@@ -590,7 +590,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .addModule(FormulaCapacityRegenerateModule.regenerate(
                         ModifierIds.crystalLattice,
                         TConstruct.getResource("crystalizing/regenerate_formula"),
-                        TConstruct.getResource("crystalizing/dura_consume_formula"),
+                        TConstruct.getResource("default/regenerate/dura_consume_formula"),
                         TConstruct.getResource("crystalizing/cool_down_formula")))
                 .addModule(StatBoostModule.add(StatCapacityBarManager.getOrCreateStat(ModifierIds.crystalLattice, 0xC687BD)).flat(25f));
         buildModifier(ModifierIds.crystalSolidity)
