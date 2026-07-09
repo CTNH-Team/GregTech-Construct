@@ -1201,8 +1201,9 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
         // traits - tier 4
         buildModifier(ModifierIds.overburn).addModules(OverburnModule.INSTANCE, StatBoostModule.add(ToolTankHelper.CAPACITY_STAT).flat(FluidType.BUCKET_VOLUME), ToolTankHelper.TANK_HANDLER);
         buildModifier(ModifierIds.overlord)
-                .addModule(StatCopyModule.copy(OverslimeModule.OVERSLIME_STAT, ToolStats.DURABILITY, 0.1f))
-                .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).amount(-0.15f, -0.15f));
+                .addModule(StatCopyModule.builder(OverslimeModule.OVERSLIME_STAT, ToolStats.DURABILITY).eachLevel(0.1f))
+                .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).levelRange(1, 6).eachLevel(-0.15f))
+                .addModule(StatBoostModule.multiplyBase(ToolStats.DURABILITY).minLevel(7).flat(-0.99999f));
         buildModifier(ModifierIds.fortified).priority(60).addModule(ModifierSlotModule.slot(SlotType.DEFENSE).eachLevel(1));
         buildModifier(ModifierIds.kinetic).addModule(KineticModule.INSTANCE);
         buildModifier(ModifierIds.recurrentProtection).addModule(new RecurrentProtectionModule(LevelingValue.flat(0.5f), LevelingInt.eachLevel(5 * 20)));
