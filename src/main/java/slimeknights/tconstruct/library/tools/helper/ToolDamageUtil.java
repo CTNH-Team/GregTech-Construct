@@ -27,7 +27,6 @@ import java.util.function.Consumer;
  */
 public class ToolDamageUtil {
   private static final ThreadLocal<Boolean> DEFER_ARMOR_DAMAGE = ThreadLocal.withInitial(() -> false);
-  private static final ThreadLocal<EquipmentSlot> DEFER_ARMOR_SLOT = new ThreadLocal<>();
 
   /**
    * Raw method to set a tool as broken. Bypasses {@link ToolStack} for the sake of things that may not be a full Tinker Tool
@@ -112,7 +111,7 @@ public class ToolDamageUtil {
     }
 
     if (DEFER_ARMOR_DAMAGE.get() && stack != null && !stack.isEmpty()) {
-      ToolDamageHandler.accumulate(stack, tool, entity, amount, DEFER_ARMOR_SLOT.get());
+      ToolDamageHandler.accumulate(stack, tool, entity, amount);
       return false;
     }
 
@@ -177,17 +176,7 @@ public class ToolDamageUtil {
   public static boolean damageAnimated(IToolStackView tool, int amount, LivingEntity entity, EquipmentSlot slot) {
     ItemStack stack = entity.getItemBySlot(slot);
     if (DEFER_ARMOR_DAMAGE.get() && slot.isArmor() && !stack.isEmpty()) {
-      EquipmentSlot previous = DEFER_ARMOR_SLOT.get();
-      DEFER_ARMOR_SLOT.set(slot);
-      try {
-        damage(tool, amount, entity, stack);
-      } finally {
-        if (previous == null) {
-          DEFER_ARMOR_SLOT.remove();
-        } else {
-          DEFER_ARMOR_SLOT.set(previous);
-        }
-      }
+      damage(tool, amount, entity, stack);
       return false;
     }
     if (damage(tool, amount, entity, stack)) {

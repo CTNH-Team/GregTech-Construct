@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.tools.helper;
 
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +16,9 @@ import slimeknights.tconstruct.test.BaseMcTest;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 class ToolDamageHandlerTest extends BaseMcTest {
   @AfterEach
@@ -27,22 +31,41 @@ class ToolDamageHandlerTest extends BaseMcTest {
     TrackingToolStack tool = new TrackingToolStack();
     ItemStack stack = new ItemStack(Items.IRON_CHESTPLATE);
 
-    ToolDamageHandler.accumulate(stack, tool, null, 1, EquipmentSlot.CHEST);
+    ToolDamageHandler.accumulate(stack, tool, null, 1);
     ToolDamageHandler.flushPendingDamage();
 
     assertThat(tool.damage.get()).isEqualTo(1);
+  }
+
+  @Test
+  void deferredDamageDoesNotBroadcastBreakEvent() {
+    TrackingToolStack tool = new TrackingToolStack(1);
+    ItemStack stack = new ItemStack(Items.IRON_CHESTPLATE);
+    LivingEntity holder = mock(LivingEntity.class);
+
+    ToolDamageHandler.accumulate(stack, tool, holder, 1);
+    ToolDamageHandler.flushPendingDamage();
+
+    verify(holder, never()).broadcastBreakEvent(EquipmentSlot.CHEST);
   }
 
   private static class TrackingToolStack extends DummyToolStack {
     private final AtomicInteger damage = new AtomicInteger();
 
     private TrackingToolStack() {
-      super(Items.IRON_CHESTPLATE, ModifierNBT.EMPTY, new ModDataNBT());
+      this(100);
     }
+
+    private TrackingToolStack(int durability) {
+      super(Items.IRON_CHESTPLATE, ModifierNBT.EMPTY, new ModDataNBT());
+      this.durability = durability;
+    }
+
+    private final int durability;
 
     @Override
     public StatsNBT getStats() {
-      return StatsNBT.builder().set(ToolStats.DURABILITY, 100f).build();
+      return StatsNBT.builder().set(ToolStats.DURABILITY, durability).build();
     }
 
     @Override
@@ -52,7 +75,7 @@ class ToolDamageHandlerTest extends BaseMcTest {
 
     @Override
     public int getCurrentDurability() {
-      return 100 - damage.get();
+      return durability - damage.get();
     }
 
     @Override

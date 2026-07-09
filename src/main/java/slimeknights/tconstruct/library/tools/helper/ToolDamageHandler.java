@@ -1,6 +1,5 @@
 package slimeknights.tconstruct.library.tools.helper;
 
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
@@ -19,21 +18,18 @@ public final class ToolDamageHandler {
 
   private ToolDamageHandler() {}
 
-  public static void accumulate(ItemStack stack, IToolStackView tool, @Nullable LivingEntity holder, int amount, @Nullable EquipmentSlot slot) {
+  public static void accumulate(ItemStack stack, IToolStackView tool, @Nullable LivingEntity holder, int amount) {
     if (stack.isEmpty() || amount <= 0) {
       return;
     }
     ToolDamageEntry entry = TOOL_DAMAGE_CACHE.get(stack);
     if (entry == null) {
-      TOOL_DAMAGE_CACHE.put(stack, new ToolDamageEntry(tool, holder, amount, slot));
+      TOOL_DAMAGE_CACHE.put(stack, new ToolDamageEntry(tool, holder, amount));
       return;
     }
     entry.tool = tool;
     entry.holder = holder;
     entry.amount += amount;
-    if (entry.slot == null) {
-      entry.slot = slot;
-    }
   }
 
   public static void flushPendingDamage() {
@@ -42,7 +38,7 @@ public final class ToolDamageHandler {
     }
     for (Map.Entry<ItemStack,ToolDamageEntry> entry : TOOL_DAMAGE_CACHE.entrySet()) {
       ToolDamageEntry queued = entry.getValue();
-      apply(queued.tool, queued.holder, queued.amount, entry.getKey(), queued.slot);
+      apply(queued.tool, queued.holder, queued.amount, entry.getKey());
     }
     TOOL_DAMAGE_CACHE.clear();
   }
@@ -51,7 +47,7 @@ public final class ToolDamageHandler {
     TOOL_DAMAGE_CACHE.clear();
   }
 
-  private static void apply(IToolStackView tool, @Nullable LivingEntity holder, int amount, ItemStack stack, @Nullable EquipmentSlot slot) {
+  private static void apply(IToolStackView tool, @Nullable LivingEntity holder, int amount, ItemStack stack) {
     if (amount <= 0 || tool.isBroken() || tool.isUnbreakable()) {
       return;
     }
@@ -59,10 +55,7 @@ public final class ToolDamageHandler {
     if (amount <= 0) {
       return;
     }
-    boolean broken = ToolDamageUtil.directDamage(tool, amount, holder, stack);
-    if (broken && holder != null && slot != null) {
-      holder.broadcastBreakEvent(slot);
-    }
+    ToolDamageUtil.directDamage(tool, amount, holder, stack);
   }
 
   @SubscribeEvent
@@ -76,14 +69,10 @@ public final class ToolDamageHandler {
     private IToolStackView tool;
     private LivingEntity holder;
     private int amount;
-    @Nullable
-    private EquipmentSlot slot;
-
-    private ToolDamageEntry(IToolStackView tool, @Nullable LivingEntity holder, int amount, @Nullable EquipmentSlot slot) {
+    private ToolDamageEntry(IToolStackView tool, @Nullable LivingEntity holder, int amount) {
       this.tool = tool;
       this.holder = holder;
       this.amount = amount;
-      this.slot = slot;
     }
   }
 }
