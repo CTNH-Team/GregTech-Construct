@@ -26,6 +26,9 @@ import java.util.function.Consumer;
  * Handles tool damage and repair, along with a quick broken check
  */
 public class ToolDamageUtil {
+  private static final ThreadLocal<Boolean> DEFER_ARMOR_DAMAGE = ThreadLocal.withInitial(() -> false);
+  private static final ThreadLocal<EquipmentSlot> DEFER_ARMOR_SLOT = new ThreadLocal<>();
+
   /**
    * Raw method to set a tool as broken. Bypasses {@link ToolStack} for the sake of things that may not be a full Tinker Tool
    * @param stack  Tool stack
@@ -108,6 +111,19 @@ public class ToolDamageUtil {
       return false;
     }
 
+    if (DEFER_ARMOR_DAMAGE.get() && stack != null && !stack.isEmpty()) {
+      ToolDamageHandler.accumulate(stack, tool, entity, amount, DEFER_ARMOR_SLOT.get());
+      return false;
+    }
+
+    amount = applyDamageHooks(tool, amount, entity, stack);
+    if (amount <= 0) {
+      return false;
+    }
+    return directDamage(tool, amount, entity, stack);
+  }
+
+  public static int applyDamageHooks(IToolStackView tool, int amount, @Nullable LivingEntity entity, @Nullable ItemStack stack) {
     List<HookModuleEntry> hooks = new ArrayList<>();
     for (ModifierEntry entry : tool.getModifierList()) {
       ToolDamageModifierHook hook = entry.getHook(ModifierHooks.TOOL_DAMAGE);
@@ -126,10 +142,10 @@ public class ToolDamageUtil {
     for (HookModuleEntry item : hooks) {
       amount = item.hook.onDamageTool(tool, item.entry, amount, entity, stack);
       if (amount <= 0) {
-        return false;
+        return 0;
       }
     }
-    return directDamage(tool, amount, entity, stack);
+    return amount;
   }
 
   private static int getPriority(ToolDamageModifierHook hook, ModifierEntry entry) {
@@ -141,6 +157,16 @@ public class ToolDamageUtil {
 
   private record HookModuleEntry(ToolDamageModifierHook hook, ModifierEntry entry, int priority) {}
 
+  public static void runWithDeferredArmorDamage(Runnable action) {
+    boolean previous = DEFER_ARMOR_DAMAGE.get();
+    DEFER_ARMOR_DAMAGE.set(true);
+    try {
+      action.run();
+    } finally {
+      DEFER_ARMOR_DAMAGE.set(previous);
+    }
+  }
+
   /**
    * Damages the tool and sends the break animation if it broke
    * @param tool    Tool to damage
@@ -149,7 +175,22 @@ public class ToolDamageUtil {
    * @param slot    Slot containing the stack
    */
   public static boolean damageAnimated(IToolStackView tool, int amount, LivingEntity entity, EquipmentSlot slot) {
-    if (damage(tool, amount, entity, entity.getItemBySlot(slot))) {
+    ItemStack stack = entity.getItemBySlot(slot);
+    if (DEFER_ARMOR_DAMAGE.get() && slot.isArmor() && !stack.isEmpty()) {
+      EquipmentSlot previous = DEFER_ARMOR_SLOT.get();
+      DEFER_ARMOR_SLOT.set(slot);
+      try {
+        damage(tool, amount, entity, stack);
+      } finally {
+        if (previous == null) {
+          DEFER_ARMOR_SLOT.remove();
+        } else {
+          DEFER_ARMOR_SLOT.set(previous);
+        }
+      }
+      return false;
+    }
+    if (damage(tool, amount, entity, stack)) {
       entity.broadcastBreakEvent(slot);
       return true;
     }

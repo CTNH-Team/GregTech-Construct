@@ -35,6 +35,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.util.Mth;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -103,6 +104,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static net.minecraft.world.item.Rarity.RARE;
+import static net.minecraft.world.damagesource.CombatRules.getDamageAfterAbsorb;
 import static net.minecraft.world.item.enchantment.Enchantment.Rarity.UNCOMMON;
 import static net.minecraft.world.item.enchantment.Enchantment.Rarity.VERY_RARE;
 import static slimeknights.tconstruct.common.config.Config.COMMON;
@@ -441,28 +443,26 @@ public class ToolEvents {
         int damageMissed = getArmorDamage(originalDamage) - getArmorDamage(finalDamage);
         // TODO: is this check sufficient for whether the armor should be damaged? I partly wonder if I need to use reflection to call damageArmor
         if (damageMissed > 0 && entity instanceof Player) {
-          for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
-            // for our own armor, saves effort to damage directly with our utility
-            IToolStackView tool = context.getToolInSlot(slotType);
-            if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !tool.getItem().isFireResistant())) {
-              // damaging the tool twice is generally not an issue, except for tanned where there is a difference between damaging by the sum and damaging twoce in pieces
-              // so work around this by hardcoding a tanned check. Not making this a hook as this whole chunk of code should hopefully be unneeded in 1.21
-              if (tool.getModifierLevel(TinkerModifiers.tanned.getId()) == 0) {
-                ToolDamageUtil.damageAnimated(tool, damageMissed, entity, slotType);
-              }
-            } else {
-              // if not our armor, damage using vanilla like logic
-              ItemStack armorStack = entity.getItemBySlot(slotType);
-              if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.getItem().isFireResistant()) && armorStack.getItem() instanceof ArmorItem) {
-                armorStack.hurtAndBreak(damageMissed, entity, e -> e.broadcastBreakEvent(slotType));
+          ToolDamageUtil.runWithDeferredArmorDamage(() -> {
+            for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
+              IToolStackView tool = context.getToolInSlot(slotType);
+              if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !tool.getItem().isFireResistant())) {
+                if (tool.getModifierLevel(TinkerModifiers.tanned.getId()) == 0) {
+                  ToolDamageUtil.damageAnimated(tool, damageMissed, entity, slotType);
+                }
+              } else {
+                ItemStack armorStack = entity.getItemBySlot(slotType);
+                if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.getItem().isFireResistant()) && armorStack.getItem() instanceof ArmorItem) {
+                  armorStack.hurtAndBreak(damageMissed, entity, e -> e.broadcastBreakEvent(slotType));
+                }
               }
             }
-          }
+          });
         }
       }
     }
     if (!handledArmorDamage && context.hasModifiableArmor() && !source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-      float finalDamage = ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap, armorStrength, preReduction, postReduction, armorProtection, armorAbsorptionCapModifier);
+      float finalDamage = originalDamage;
       if (!SHARING_DAMAGE.get()) {
         finalDamage = Math.max(0, finalDamage - shareDamageWithNearbyGuardians(entity, source, finalDamage));
         sharedDamage = true;
@@ -472,21 +472,30 @@ public class ToolEvents {
         suppressHurtSound(entity);
       }
 
-      int damageMissed = getArmorDamage(originalDamage) - getArmorDamage(finalDamage);
+      float armorDamage = finalDamage;
+      if (armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0) {
+        armorDamage = ArmorUtil.getDamageAfterArmorExtensionAbsorb(finalDamage, armor, toughness, armorStrength, preReduction, postReduction, armorProtection, Mth.clamp(0.8f + armorAbsorptionCapModifier, 0.2f, 0.95f));
+      } else if (armor > 0) {
+        armorDamage = getDamageAfterAbsorb(finalDamage, armor, toughness);
+      }
+
+      int damageMissed = getArmorDamage(originalDamage) - getArmorDamage(armorDamage);
       if (damageMissed > 0 && entity instanceof Player) {
-        for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
-          IToolStackView tool = context.getToolInSlot(slotType);
-          if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !tool.getItem().isFireResistant())) {
-            if (tool.getModifierLevel(TinkerModifiers.tanned.getId()) == 0) {
-              ToolDamageUtil.damageAnimated(tool, damageMissed, entity, slotType);
-            }
-          } else {
-            ItemStack armorStack = entity.getItemBySlot(slotType);
-            if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.getItem().isFireResistant()) && armorStack.getItem() instanceof ArmorItem) {
-              armorStack.hurtAndBreak(damageMissed, entity, e -> e.broadcastBreakEvent(slotType));
+        ToolDamageUtil.runWithDeferredArmorDamage(() -> {
+          for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
+            IToolStackView tool = context.getToolInSlot(slotType);
+            if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !tool.getItem().isFireResistant())) {
+              if (tool.getModifierLevel(TinkerModifiers.tanned.getId()) == 0) {
+                ToolDamageUtil.damageAnimated(tool, damageMissed, entity, slotType);
+              }
+            } else {
+              ItemStack armorStack = entity.getItemBySlot(slotType);
+              if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.getItem().isFireResistant()) && armorStack.getItem() instanceof ArmorItem) {
+                armorStack.hurtAndBreak(damageMissed, entity, e -> e.broadcastBreakEvent(slotType));
+              }
             }
           }
-        }
+        });
       }
     }
     if (!sharedDamage && !SHARING_DAMAGE.get()) {
