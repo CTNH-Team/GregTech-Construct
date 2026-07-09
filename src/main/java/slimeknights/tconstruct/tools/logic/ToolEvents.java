@@ -580,30 +580,29 @@ public class ToolEvents {
         }
       }
 
-      double nearbyGuardingRange = guardingScanRange(entity);
-      record GuardianCandidate(LivingEntity entity, double distance) {}
-      List<GuardianCandidate> nearbyGuardians = new ArrayList<>();
-      for (LivingEntity guardian : entity.level().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(nearbyGuardingRange), candidate -> {
-        if (candidate == entity || !candidate.isAlive() || !(candidate instanceof Player player)) {
-          return false;
+      if (entity instanceof Player self) {
+        record GuardianCandidate(Player player, double distance) {}
+        List<GuardianCandidate> nearbyGuardians = new ArrayList<>();
+        long gameTime = self.level().getGameTime();
+        for (Player guardian : self.level().players()) {
+          if (guardian == self || !guardian.isAlive()
+            || (!self.isAlliedTo(guardian) && GuardingCache.isHostile(self.getUUID(), guardian.getUUID(), gameTime))) {
+            continue;
+          }
+          double distance = guardian.distanceTo(self);
+          if (distance <= guardingScanRange(self) && GuardingCache.hasAnyHook(guardian.getUUID())) {
+            nearbyGuardians.add(new GuardianCandidate(guardian, distance));
+          }
         }
-        if (entity instanceof Player self
-          && !self.isAlliedTo(player)
-          && GuardingCache.isHostile(self.getUUID(), player.getUUID(), self.level().getGameTime())) {
-          return false;
-        }
-        return GuardingCache.hasAnyHook(player.getUUID());
-      })) {
-        nearbyGuardians.add(new GuardianCandidate(guardian, guardian.distanceTo(entity)));
-      }
-      nearbyGuardians.sort(Comparator.comparingDouble(GuardianCandidate::distance));
-      for (GuardianCandidate guardian : nearbyGuardians) {
-        float guardianShared = tryShareDamageWith(guardian.entity(), entity, source, remaining);
-        if (guardianShared > 0) {
-          shared += guardianShared;
-          remaining -= guardianShared;
-          if (remaining <= 0) {
-            return shared;
+        nearbyGuardians.sort(Comparator.comparingDouble(GuardianCandidate::distance));
+        for (GuardianCandidate guardian : nearbyGuardians) {
+          float guardianShared = tryShareDamageWith(guardian.player(), entity, source, remaining);
+          if (guardianShared > 0) {
+            shared += guardianShared;
+            remaining -= guardianShared;
+            if (remaining <= 0) {
+              return shared;
+            }
           }
         }
       }

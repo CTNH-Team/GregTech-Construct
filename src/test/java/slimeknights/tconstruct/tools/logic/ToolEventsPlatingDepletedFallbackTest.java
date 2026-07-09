@@ -6,6 +6,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -47,6 +48,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class ToolEventsPlatingDepletedFallbackTest extends BaseMcTest {
@@ -143,6 +146,22 @@ class ToolEventsPlatingDepletedFallbackTest extends BaseMcTest {
       ToolDamageHandler.flushPendingDamage();
       assertThat(damage.get()).isEqualTo(1);
     }
+  }
+
+  @Test
+  void guardingDoesNotScanNearbyPlayersForNonPlayerProtectedEntities() throws Exception {
+    LivingEntity protectedEntity = mock(LivingEntity.class);
+    Level level = mock(Level.class);
+    when(protectedEntity.level()).thenReturn(level);
+    when(protectedEntity.getPassengers()).thenReturn(java.util.List.of());
+
+    Method shareDamage = ToolEvents.class.getDeclaredMethod("shareDamageWithNearbyGuardians", LivingEntity.class, DamageSource.class, float.class);
+    shareDamage.setAccessible(true);
+    float shared = (float)shareDamage.invoke(null, protectedEntity, mock(DamageSource.class), 4f);
+
+    assertThat(shared).isZero();
+    verify(level, never()).getEntitiesOfClass(Mockito.eq(LivingEntity.class), any(AABB.class), any());
+    verify(level, never()).players();
   }
 
   private static void bindAttribute(RegistryObject<Attribute> object, Attribute value) throws Exception {
