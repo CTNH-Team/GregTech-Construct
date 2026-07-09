@@ -3,8 +3,9 @@ package slimeknights.tconstruct.library.modifiers.modules.armor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Items;
 import oftenoviour.util.formula.FormulaManager;
 import oftenoviour.util.formula.IFormula;
@@ -18,12 +19,14 @@ import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
 import slimeknights.tconstruct.library.modifiers.hook.special.CapacityBarHook;
 import slimeknights.tconstruct.library.module.ModuleHookMap;
+import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.nbt.DummyToolStack;
 import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
 import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
 import slimeknights.tconstruct.library.tools.nbt.StatsNBT;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.test.BaseMcTest;
+import slimeknights.tconstruct.tools.logic.GuardingCache;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -49,6 +52,7 @@ class FormulaGuardingModuleTest extends BaseMcTest {
   @AfterEach
   void restoreFormulaManager() {
     FormulaManager.applySync(previousFormulas, previousRawJson);
+    GuardingCache.clearForTests();
   }
 
   @Test
@@ -90,6 +94,57 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     String source = Files.readString(Path.of("src/main/java/slimeknights/tconstruct/library/modifiers/modules/armor/FormulaGuardingModule.java"));
     assertThat(source).contains("combat/shared_fate");
     assertThat(source).contains("combat/sacrifice");
+  }
+
+  @Test
+  void guardedPlayerWithSameModifierIsRejectedAsProtectedEntity() {
+    FormulaManager.applySync(Map.of(
+      DISTANCE, formula(values -> 1.0),
+      SHARE, formula(values -> 0.5),
+      PROTECTION, formula(values -> 0.0)
+    ), Map.of(DISTANCE, "{}", SHARE, "{}", PROTECTION, "{}"));
+
+    TestToolStack tool = new TestToolStack();
+    bindBar(new TestCapacityModifier(new TestCapacityBar(40, 20)));
+
+    Player protectedPlayer = mock(Player.class);
+    LivingEntity guardian = mock(LivingEntity.class);
+    DamageSource source = mock(DamageSource.class);
+    when(guardian.getHealth()).thenReturn(20f);
+    when(guardian.distanceTo(protectedPlayer)).thenReturn(2.0f);
+
+    GuardingCache.addHook(java.util.UUID.randomUUID(), TEST_MODIFIER_ID);
+    when(protectedPlayer.getUUID()).thenReturn(java.util.UUID.randomUUID());
+    GuardingCache.addHook(protectedPlayer.getUUID(), TEST_MODIFIER_ID);
+
+    float shared = FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)
+      .shareDamage(tool, new ModifierEntry(TEST_MODIFIER_ID, 2), guardian, EquipmentSlot.CHEST, protectedPlayer, source, 8f);
+
+    assertThat(shared).isZero();
+  }
+
+  @Test
+  void equipmentChangeOnlyTracksRealItemSwap() {
+    TestToolStack tool = new TestToolStack();
+    ModifierEntry entry = new ModifierEntry(TEST_MODIFIER_ID, 1);
+    Player player = mock(Player.class);
+    net.minecraft.world.level.Level level = mock(net.minecraft.world.level.Level.class);
+    when(player.level()).thenReturn(level);
+    when(level.isClientSide()).thenReturn(false);
+
+    EquipmentChangeContext sameItemContext = mock(EquipmentChangeContext.class);
+    when(sameItemContext.getEntity()).thenReturn(player);
+    when(sameItemContext.getLevel()).thenReturn(level);
+    when(sameItemContext.getReplacementTool()).thenReturn(tool);
+    FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION).onEquip(tool, entry, sameItemContext);
+    assertThat(GuardingCache.hasHook(player.getUUID(), TEST_MODIFIER_ID)).isFalse();
+
+    EquipmentChangeContext changedContext = mock(EquipmentChangeContext.class);
+    when(changedContext.getEntity()).thenReturn(player);
+    when(changedContext.getLevel()).thenReturn(level);
+    when(changedContext.getReplacementTool()).thenReturn(null);
+    FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION).onEquip(tool, entry, changedContext);
+    assertThat(GuardingCache.hasHook(player.getUUID(), TEST_MODIFIER_ID)).isTrue();
   }
 
   private static IFormula formula(FormulaBody body) {

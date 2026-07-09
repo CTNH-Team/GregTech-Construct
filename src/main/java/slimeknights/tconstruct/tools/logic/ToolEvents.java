@@ -301,6 +301,12 @@ public class ToolEvents {
   @SubscribeEvent(priority = EventPriority.LOW)
   static void livingHurt(LivingHurtEvent event) {
     LivingEntity entity = event.getEntity();
+    if (entity instanceof Player hurtPlayer) {
+      Entity attacker = event.getSource().getEntity();
+      if (attacker instanceof Player attackPlayer && attackPlayer != hurtPlayer && !hurtPlayer.isAlliedTo(attackPlayer)) {
+        GuardingCache.recordHostility(hurtPlayer.getUUID(), attackPlayer.getUUID(), hurtPlayer.level().getGameTime());
+      }
+    }
 
     // determine if there is any modifiable armor, if not nothing to do
     DamageSource source = event.getSource();
@@ -556,7 +562,18 @@ public class ToolEvents {
         }
       }
 
-      for (LivingEntity guardian : entity.level().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(16), candidate -> candidate != entity && candidate.isAlive() && entity.isAlliedTo(candidate))) {
+      for (LivingEntity guardian : entity.level().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(16), candidate -> {
+        if (candidate == entity || !candidate.isAlive() || !entity.isAlliedTo(candidate)) {
+          return false;
+        }
+        if (!(candidate instanceof Player player)) {
+          return false;
+        }
+        if (entity instanceof Player self && GuardingCache.isHostile(self.getUUID(), player.getUUID(), self.level().getGameTime())) {
+          return false;
+        }
+        return GuardingCache.hasAnyHook(player.getUUID());
+      })) {
         float guardianShared = tryShareDamageWith(guardian, entity, source, remaining);
         if (guardianShared > 0) {
           shared += guardianShared;

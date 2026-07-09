@@ -15,6 +15,7 @@ import slimeknights.mantle.data.registry.IdAwareComponentRegistry;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook;
+import slimeknights.tconstruct.library.modifiers.hook.armor.AroundEntityTickModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorWalkModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.DamageBlockModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ElytraFlightModifierHook;
@@ -260,6 +261,7 @@ public class ModifierHooks {
   public static final ModuleHook<ArmorDamageStatsModifierHook> ARMOR_DAMAGE_STATS = register("armor_damage_stats", ArmorDamageStatsModifierHook.class, ArmorDamageStatsModifierHook.AllMerger::new, (tool, modifier, context, slotType, source, stats) -> {});
 
   public static final ModuleHook<ShareDamageModifierHook> SHARE_DAMAGE = register("share_damage", ShareDamageModifierHook.class, ShareDamageModifierHook.AllMerger::new, (tool, modifier, guardian, slotType, protectedEntity, source, damage) -> 0);
+  public static final ModuleHook<AroundEntityTickModifierHook> AROUND_ENTITY_TICK = register("around_entity_tick", AroundEntityTickModifierHook.class, AroundEntityTickModifierHook.AllMerger::new, new AroundEntityTickModifierHook() {});
 
   /** Hook called when taking damage wearing this armor to cancel the damage */
   public static final ModuleHook<DamageBlockModifierHook> DAMAGE_BLOCK = register("damage_block", DamageBlockModifierHook.class, DamageBlockModifierHook.AnyMerger::new, (tool, modifier, context, slotType, source, amount) -> false);

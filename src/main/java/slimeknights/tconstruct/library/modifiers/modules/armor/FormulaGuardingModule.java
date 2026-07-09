@@ -6,6 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import oftenoviour.util.formula.FormulaManager;
 import oftenoviour.util.formula.IFormula;
 import org.jetbrains.annotations.ApiStatus.Internal;
@@ -16,6 +17,7 @@ import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.hook.armor.EquipmentChangeModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.special.CapacityBarHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ShareDamageModifierHook;
 import slimeknights.tconstruct.library.modifiers.modules.ModifierModule;
@@ -23,17 +25,19 @@ import slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition;
 import slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition.ConditionalModule;
 import slimeknights.tconstruct.library.module.HookProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
+import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.shared.AchievementEvents;
+import slimeknights.tconstruct.tools.logic.GuardingCache;
 
 import java.util.List;
 
 public record FormulaGuardingModule(float healthGround, int fullEffectRange, int effectiveRange,
                                     ResourceLocation distanceFactorFormula, ResourceLocation shareRatioFormula,
                                     ResourceLocation extraProtectionFormula, ModifierCondition<IToolStackView> condition)
-  implements ModifierModule, ShareDamageModifierHook, ConditionalModule<IToolStackView> {
-  private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<FormulaGuardingModule>defaultHooks(ModifierHooks.SHARE_DAMAGE);
+  implements ModifierModule, ShareDamageModifierHook, EquipmentChangeModifierHook, ConditionalModule<IToolStackView> {
+  private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<FormulaGuardingModule>defaultHooks(ModifierHooks.SHARE_DAMAGE, ModifierHooks.EQUIPMENT_CHANGE);
   public static final RecordLoadable<FormulaGuardingModule> LOADER = RecordLoadable.create(
     FloatLoadable.FROM_ZERO.defaultField("health_ground", 10f, FormulaGuardingModule::healthGround),
     IntLoadable.FROM_ZERO.defaultField("full_effect_range", 4, FormulaGuardingModule::fullEffectRange),
@@ -54,6 +58,9 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
   @Override
   public float shareDamage(IToolStackView tool, ModifierEntry modifier, LivingEntity guardian, EquipmentSlot slotType, LivingEntity protectedEntity, DamageSource source, float damage) {
     if (damage <= 0 || guardian.getHealth() <= healthGround || !condition.matches(tool, modifier)) {
+      return 0;
+    }
+    if (protectedEntity instanceof Player protectedPlayer && GuardingCache.hasHook(protectedPlayer.getUUID(), modifier.getId())) {
       return 0;
     }
 
@@ -106,6 +113,28 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
       }
     }
     return shared;
+  }
+
+  @Override
+  public void onEquip(IToolStackView tool, ModifierEntry modifier, EquipmentChangeContext context) {
+    if (!(context.getEntity() instanceof Player player) || context.getLevel().isClientSide()) {
+      return;
+    }
+    IToolStackView replacement = context.getReplacementTool();
+    if (replacement == null || replacement.getItem() != tool.getItem()) {
+      GuardingCache.addHook(player.getUUID(), modifier.getId());
+    }
+  }
+
+  @Override
+  public void onUnequip(IToolStackView tool, ModifierEntry modifier, EquipmentChangeContext context) {
+    if (!(context.getEntity() instanceof Player player) || context.getLevel().isClientSide()) {
+      return;
+    }
+    IToolStackView replacement = context.getReplacementTool();
+    if (replacement == null || replacement.getItem() != tool.getItem()) {
+      GuardingCache.removeHook(player.getUUID(), modifier.getId());
+    }
   }
 
   @Override
