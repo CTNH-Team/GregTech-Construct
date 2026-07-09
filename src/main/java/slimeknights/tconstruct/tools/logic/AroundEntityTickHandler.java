@@ -29,12 +29,15 @@ public final class AroundEntityTickHandler {
       return;
     }
 
+    EquipmentContext context = new EquipmentContext(player);
+    if (event.phase == TickEvent.Phase.START) {
+      runSelfAndArmorTicks(player, context);
+    }
     List<LivingEntity> targets = player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(SCAN_RANGE), entity -> entity != player && entity.isAlive());
     if (targets.isEmpty()) {
+      PlayerPersistentDataCache.syncFromEntity(player);
       return;
     }
-
-    EquipmentContext context = new EquipmentContext(player);
     for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
       IToolStackView tool = context.getToolInSlot(slotType);
       if (tool == null || tool.isBroken()) {
@@ -51,8 +54,22 @@ public final class AroundEntityTickHandler {
         }
       }
     }
+    PlayerPersistentDataCache.syncFromEntity(player);
     if (event.phase == TickEvent.Phase.END) {
       FormulaAreaEffectModule.flushPending(player);
+    }
+  }
+
+  private static void runSelfAndArmorTicks(Player player, EquipmentContext context) {
+    for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
+      IToolStackView tool = context.getToolInSlot(slotType);
+      if (tool == null || tool.isBroken()) {
+        continue;
+      }
+      for (ModifierEntry entry : tool.getModifierList()) {
+        entry.getHook(ModifierHooks.SELF_TICK).onSelfTick(tool, entry, slotType, player);
+        entry.getHook(ModifierHooks.ARMOR_TICK).onArmorTick(tool, entry, slotType, player);
+      }
     }
   }
 }

@@ -6,6 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import oftenoviour.util.formula.FormulaManager;
 import oftenoviour.util.formula.IFormula;
@@ -24,9 +25,12 @@ import slimeknights.tconstruct.library.tools.nbt.DummyToolStack;
 import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
 import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
 import slimeknights.tconstruct.library.tools.nbt.StatsNBT;
+import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.test.BaseMcTest;
+import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.logic.GuardingCache;
+import slimeknights.tconstruct.tools.logic.GuardingRuntimeHooks;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -72,7 +76,8 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     ), Map.of(DISTANCE, "{}", SHARE, "{}", PROTECTION, "{}"));
 
     TestToolStack tool = new TestToolStack();
-    bindBar(new TestCapacityModifier(new TestCapacityBar(40, 20)));
+    bindBar(new TestCapacityModifier(new TestCapacityBar(40, 20)), ModifierIds.plating);
+    tool.setModifierLevel(ModifierIds.plating, 1);
 
     LivingEntity guardian = mock(LivingEntity.class);
     LivingEntity protectedEntity = mock(LivingEntity.class);
@@ -105,7 +110,7 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     ), Map.of(DISTANCE, "{}", SHARE, "{}", PROTECTION, "{}"));
 
     TestToolStack tool = new TestToolStack();
-    bindBar(new TestCapacityModifier(new TestCapacityBar(40, 20)));
+    bindBar(new TestCapacityModifier(new TestCapacityBar(40, 20)), ModifierIds.plating);
 
     Player protectedPlayer = mock(Player.class);
     LivingEntity guardian = mock(LivingEntity.class);
@@ -147,6 +152,48 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     assertThat(GuardingCache.hasHook(player.getUUID(), TEST_MODIFIER_ID)).isTrue();
   }
 
+  @Test
+  void loginRegistrationAndUnequipTearDownDoNotLeaveStaleGuardingState() {
+    TestToolStack tool = new TestToolStack();
+    Player player = mock(Player.class);
+    net.minecraft.world.level.Level level = mock(net.minecraft.world.level.Level.class);
+    EntityType<?> type = mock(EntityType.class);
+    when(player.level()).thenReturn(level);
+    when(level.isClientSide()).thenReturn(false);
+    when(player.getType()).thenReturn((EntityType) type);
+    when(type.is(any())).thenReturn(false);
+    when(player.getItemBySlot(any())).thenReturn(ItemStack.EMPTY);
+    when(player.getItemBySlot(EquipmentSlot.HEAD)).thenReturn(ItemStack.EMPTY);
+    when(player.getItemBySlot(EquipmentSlot.LEGS)).thenReturn(ItemStack.EMPTY);
+    when(player.getItemBySlot(EquipmentSlot.FEET)).thenReturn(ItemStack.EMPTY);
+
+    ItemStack chest = mock(ItemStack.class);
+    when(chest.isEmpty()).thenReturn(false);
+    when(chest.is(org.mockito.ArgumentMatchers.eq(slimeknights.tconstruct.common.TinkerTags.Items.MODIFIABLE))).thenReturn(true);
+    when(player.getItemBySlot(EquipmentSlot.CHEST)).thenReturn(chest);
+
+    TestGuardingModifier modifier = new TestGuardingModifier();
+    bindBar(modifier, TEST_MODIFIER_ID);
+    ToolStack loginTool = mock(ToolStack.class);
+    ModifierNBT modifiers = ModifierNBT.EMPTY.withModifier(TEST_MODIFIER_ID, 1);
+    when(loginTool.getModifierList()).thenReturn(modifiers.getModifiers());
+    when(loginTool.isBroken()).thenReturn(false);
+    try (org.mockito.MockedStatic<slimeknights.tconstruct.library.tools.nbt.ToolStack> toolStacks = org.mockito.Mockito.mockStatic(slimeknights.tconstruct.library.tools.nbt.ToolStack.class)) {
+      toolStacks.when(() -> slimeknights.tconstruct.library.tools.nbt.ToolStack.from(chest)).thenReturn(loginTool);
+      GuardingRuntimeHooks.onPlayerLoggedIn(new net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent(player));
+    }
+
+    assertThat(GuardingCache.hasHook(player.getUUID(), TEST_MODIFIER_ID)).isTrue();
+
+    EquipmentChangeContext changedContext = mock(EquipmentChangeContext.class);
+    when(changedContext.getEntity()).thenReturn(player);
+    when(changedContext.getLevel()).thenReturn(level);
+    when(changedContext.getReplacementTool()).thenReturn(null);
+    FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION).onUnequip(tool, new ModifierEntry(TEST_MODIFIER_ID, 1), changedContext);
+
+    assertThat(GuardingCache.hasHook(player.getUUID(), TEST_MODIFIER_ID)).isFalse();
+  }
+
   private static IFormula formula(FormulaBody body) {
     return new IFormula() {
       @Override
@@ -162,6 +209,8 @@ class FormulaGuardingModuleTest extends BaseMcTest {
   }
 
   private static class TestToolStack extends DummyToolStack {
+    private final java.util.Map<ModifierId,Integer> levels = new java.util.HashMap<>();
+
     private TestToolStack() {
       super(Items.AIR, ModifierNBT.EMPTY, new ModDataNBT());
     }
@@ -174,6 +223,15 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     @Override
     public int getCurrentDurability() {
       return 75;
+    }
+
+    @Override
+    public int getModifierLevel(ModifierId id) {
+      return levels.getOrDefault(id, 0);
+    }
+
+    private void setModifierLevel(ModifierId id, int level) {
+      levels.put(id, level);
     }
   }
 
@@ -206,17 +264,24 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     }
   }
 
-  private static void bindBar(Modifier modifier) {
+  private static class TestGuardingModifier extends Modifier {
+    private TestGuardingModifier() {
+      super(ModuleHookMap.builder().addModule(FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)).build());
+    }
+  }
+
+
+  private static void bindBar(Modifier modifier, ModifierId id) {
     try {
       Method setId = Modifier.class.getDeclaredMethod("setId", ModifierId.class);
       setId.setAccessible(true);
-      setId.invoke(modifier, TEST_MODIFIER_ID);
+      setId.invoke(modifier, id);
 
       Field staticModifiers = ModifierManager.class.getDeclaredField("staticModifiers");
       staticModifiers.setAccessible(true);
       @SuppressWarnings("unchecked")
       Map<ModifierId,Modifier> modifiers = (Map<ModifierId,Modifier>) staticModifiers.get(ModifierManager.INSTANCE);
-      modifiers.put(TEST_MODIFIER_ID, modifier);
+      modifiers.put(id, modifier);
 
       Field dynamicModifiersLoaded = ModifierManager.class.getDeclaredField("dynamicModifiersLoaded");
       dynamicModifiersLoaded.setAccessible(true);

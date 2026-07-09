@@ -157,6 +157,10 @@ tasks.withType(Test).configureEach {
         exceptionFormat "full"
     }
 }
+tasks.named('processTestResources', ProcessResources).configure {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    exclude 'bin/**'
+}
 sourceSets {
     test {
         java.srcDir 'src/test/java'

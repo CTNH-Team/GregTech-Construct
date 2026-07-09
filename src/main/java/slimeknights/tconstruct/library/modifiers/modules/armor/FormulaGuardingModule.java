@@ -17,6 +17,8 @@ import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.ModifierManager;
+import slimeknights.tconstruct.library.modifiers.hook.armor.PlayerLoginModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.EquipmentChangeModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.special.CapacityBarHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ShareDamageModifierHook;
@@ -29,6 +31,7 @@ import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.shared.AchievementEvents;
+import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.logic.GuardingCache;
 
 import java.util.List;
@@ -36,8 +39,8 @@ import java.util.List;
 public record FormulaGuardingModule(float healthGround, int fullEffectRange, int effectiveRange,
                                     ResourceLocation distanceFactorFormula, ResourceLocation shareRatioFormula,
                                     ResourceLocation extraProtectionFormula, ModifierCondition<IToolStackView> condition)
-  implements ModifierModule, ShareDamageModifierHook, EquipmentChangeModifierHook, ConditionalModule<IToolStackView> {
-  private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<FormulaGuardingModule>defaultHooks(ModifierHooks.SHARE_DAMAGE, ModifierHooks.EQUIPMENT_CHANGE);
+  implements ModifierModule, ShareDamageModifierHook, EquipmentChangeModifierHook, PlayerLoginModifierHook, ConditionalModule<IToolStackView> {
+  private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<FormulaGuardingModule>defaultHooks(ModifierHooks.SHARE_DAMAGE, ModifierHooks.EQUIPMENT_CHANGE, ModifierHooks.PLAYER_LOGIN);
   public static final RecordLoadable<FormulaGuardingModule> LOADER = RecordLoadable.create(
     FloatLoadable.FROM_ZERO.defaultField("health_ground", 10f, FormulaGuardingModule::healthGround),
     IntLoadable.FROM_ZERO.defaultField("full_effect_range", 4, FormulaGuardingModule::fullEffectRange),
@@ -76,11 +79,12 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
       return 0;
     }
 
-    CapacityBarHook bar = modifier.getHook(ModifierHooks.CAPACITY_BAR);
-    int capacity = bar != ModifierHooks.CAPACITY_BAR.getDefaultInstance()
-      ? Math.max(1, bar.getCapacity(tool, modifier))
+    ModifierEntry plating = new ModifierEntry(ModifierManager.INSTANCE.get(ModifierIds.plating), Math.max(1, tool.getModifierLevel(ModifierIds.plating)));
+    CapacityBarHook bar = plating.getHook(ModifierHooks.CAPACITY_BAR);
+    int capacity = bar != ModifierHooks.CAPACITY_BAR.getDefaultInstance() && tool.getModifierLevel(ModifierIds.plating) > 0
+      ? Math.max(1, bar.getCapacity(tool, plating))
       : Math.max(1, tool.getStats().getInt(ToolStats.DURABILITY));
-    int amount = bar != ModifierHooks.CAPACITY_BAR.getDefaultInstance()
+    int amount = bar != ModifierHooks.CAPACITY_BAR.getDefaultInstance() && tool.getModifierLevel(ModifierIds.plating) > 0
       ? Math.max(0, bar.getAmount(tool))
       : Math.max(0, tool.getCurrentDurability());
     double level = modifier.getEffectiveLevel();
@@ -134,6 +138,13 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
     IToolStackView replacement = context.getReplacementTool();
     if (replacement == null || replacement.getItem() != tool.getItem()) {
       GuardingCache.removeHook(player.getUUID(), modifier.getId());
+    }
+  }
+
+  @Override
+  public void onPlayerLogin(IToolStackView tool, ModifierEntry modifier, Player player) {
+    if (!player.level().isClientSide()) {
+      GuardingCache.addHook(player.getUUID(), modifier.getId());
     }
   }
 

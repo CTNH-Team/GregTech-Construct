@@ -2,9 +2,8 @@ package slimeknights.tconstruct.library.modifiers.modules.armor;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
@@ -14,7 +13,7 @@ import slimeknights.mantle.data.predicate.entity.LivingEntityPredicate;
 import slimeknights.tconstruct.library.json.LevelingValue;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
-import slimeknights.tconstruct.library.modifiers.hook.interaction.InventoryTickModifierHook;
+import slimeknights.tconstruct.library.modifiers.hook.armor.SelfTickModifierHook;
 import slimeknights.tconstruct.library.modifiers.modules.ModifierModule;
 import slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition;
 import slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition.ConditionalModule;
@@ -35,9 +34,9 @@ public record SelfEffectModule(
     int intervalTicks,
     IJsonPredicate<LivingEntity> entityFilter,
     ModifierCondition<IToolStackView> condition
-) implements ModifierModule, InventoryTickModifierHook, ConditionalModule<IToolStackView> {
+) implements ModifierModule, SelfTickModifierHook, ConditionalModule<IToolStackView> {
 
-    private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<SelfEffectModule>defaultHooks(ModifierHooks.INVENTORY_TICK);
+    private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<SelfEffectModule>defaultHooks(ModifierHooks.SELF_TICK);
 
     public static final RecordLoadable<SelfEffectModule> LOADER = RecordLoadable.create(
         Loadables.MOB_EFFECT.requiredField("effect", SelfEffectModule::effect),
@@ -57,18 +56,16 @@ public record SelfEffectModule(
     }
 
     @Override
-    public void onInventoryTick(IToolStackView tool, ModifierEntry modifier, Level world, LivingEntity holder, int itemSlot, boolean isSelected, boolean isCorrectSlot, ItemStack stack) {
-        if (world.isClientSide || !isCorrectSlot || !condition.matches(tool, modifier)) {
+    public void onSelfTick(IToolStackView tool, ModifierEntry modifier, EquipmentSlot slotType, LivingEntity entity) {
+        if (entity.level().isClientSide || !condition.matches(tool, modifier)) {
             return;
         }
 
-        // 间隔 tick 检查
-        if (holder.tickCount % Math.max(1, intervalTicks) != 0) {
+        if (entity.tickCount % Math.max(1, intervalTicks) != 0) {
             return;
         }
 
-        // 实体过滤
-        if (!entityFilter.matches(holder)) {
+        if (!entityFilter.matches(entity)) {
             return;
         }
 
@@ -77,7 +74,7 @@ public record SelfEffectModule(
         int amp = (int) amplifier.compute(level);
 
         if (dur > 0 && amp >= 0) {
-            holder.addEffect(new MobEffectInstance(effect, dur, amp, false, false, true));
+            entity.addEffect(new MobEffectInstance(effect, dur, amp, false, false, true));
         }
     }
 

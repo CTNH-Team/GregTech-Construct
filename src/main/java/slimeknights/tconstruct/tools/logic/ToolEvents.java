@@ -397,6 +397,7 @@ public class ToolEvents {
             for (ModifierEntry entry : tool.getModifierList()) {
               modifierValue = entry.getHook(ModifierHooks.PROTECTION).getProtectionModifier(tool, entry, context, slotType, source, modifierValue);
               entry.getHook(ModifierHooks.ARMOR_DAMAGE_STATS).addArmorDamageStats(tool, entry, context, slotType, source, armorDamageStats);
+              entry.getHook(ModifierHooks.DAMAGE_TO_PERSISTENT).onDamageToPersistent(tool, entry, context, slotType, source, armorDamageStats);
             }
           }
         }
@@ -584,6 +585,7 @@ public class ToolEvents {
         }
       }
     } finally {
+      PlayerPersistentDataCache.syncFromEntity(entity);
       SHARING_DAMAGE.set(previous);
     }
     return shared;

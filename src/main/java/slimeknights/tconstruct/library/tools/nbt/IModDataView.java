@@ -102,6 +102,10 @@ public interface IModDataView {
     return get(name, CompoundTag::getFloat);
   }
 
+  default long getLong(ResourceLocation name) {
+    return get(name, CompoundTag::getLong);
+  }
+
   /**
    * Reads a string from the mod data
    * @param name  Name

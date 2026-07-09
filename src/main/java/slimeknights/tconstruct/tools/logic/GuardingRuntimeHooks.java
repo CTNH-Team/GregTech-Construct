@@ -29,9 +29,7 @@ public final class GuardingRuntimeHooks {
         continue;
       }
       for (ModifierEntry entry : tool.getModifierList()) {
-        if (entry.getHook(ModifierHooks.SHARE_DAMAGE) != ModifierHooks.SHARE_DAMAGE.getDefaultInstance()) {
-          GuardingCache.addHook(player.getUUID(), entry.getId());
-        }
+        entry.getHook(ModifierHooks.PLAYER_LOGIN).onPlayerLogin(tool, entry, player);
       }
     }
   }
@@ -40,5 +38,6 @@ public final class GuardingRuntimeHooks {
   public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
     GuardingCache.removePlayer(event.getEntity().getUUID());
     GuardingCache.clearHostilityFor(event.getEntity().getUUID());
+    PlayerPersistentDataCache.remove(event.getEntity().getUUID());
   }
 }
