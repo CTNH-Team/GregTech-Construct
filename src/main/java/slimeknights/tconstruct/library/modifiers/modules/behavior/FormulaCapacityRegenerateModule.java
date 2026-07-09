@@ -73,7 +73,7 @@ public record FormulaCapacityRegenerateModule(
 
   @Override
   public void onInventoryTick(IToolStackView tool, ModifierEntry modifier, Level world, LivingEntity holder, int itemSlot, boolean isSelected, boolean isCorrectSlot, ItemStack stack) {
-    if (world.isClientSide || tool.isBroken() || !isCorrectSlot || !condition.matches(tool, modifier)) {
+    if (world.isClientSide || tool.isBroken() || !condition.matches(tool, modifier)) {
       return;
     }
 
@@ -150,12 +150,12 @@ public record FormulaCapacityRegenerateModule(
       float duraRem = state.getFloat(KEY_REM_DURA) + (float) duraCost;
       int cost = (int) duraRem;
       if (cost > 0) {
-        if (cost >= durability) {
+        if (cost > durability) {
           persistentData.put(key, state);
           return; // 耐久度不够
         }
         duraRem -= cost;
-        ToolDamageUtil.directDamage(tool, cost, holder, stack);
+        ToolDamageUtil.directDamage(tool, cost, holder, null);
       }
       state.putFloat(KEY_REM_DURA, duraRem);
     }

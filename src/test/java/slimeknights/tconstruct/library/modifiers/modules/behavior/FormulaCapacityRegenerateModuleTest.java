@@ -74,6 +74,48 @@ class FormulaCapacityRegenerateModuleTest extends BaseMcTest {
     assertThat(consumeInputs[0]).containsExactly(3.0, 20.0, 40.0, 2.0);
   }
 
+  @Test
+  void regeneratesOutsideTheCorrectEquipmentSlot() {
+    FormulaManager.applySync(Map.of(
+      REGENERATE, formula(values -> 2.0),
+      CONSUME, formula(values -> 0.0),
+      COOLDOWN, formula(values -> 0.0)
+    ), Map.of(REGENERATE, "{}", CONSUME, "{}", COOLDOWN, "{}"));
+    when(level.isClientSide()).thenReturn(false);
+    when(level.getGameTime()).thenReturn(40L);
+
+    TestCapacityBar bar = new TestCapacityBar(40, 20);
+    bindBar(new TestCapacityModifier(bar));
+    StatCapacityBarManager.register(TEST_MODIFIER_ID, bar);
+
+    new FormulaCapacityRegenerateModule(TEST_MODIFIER_ID, REGENERATE, CONSUME, 1, COOLDOWN, null, slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition.ANY_TOOL)
+      .onInventoryTick(tool, new ModifierEntry(ModifierIds.hardening, 1), level, holder, 0, false, false, Items.AIR.getDefaultInstance());
+
+    assertThat(bar.amount).isEqualTo(22);
+  }
+
+  @Test
+  void consumesDurabilityWhenTheCostEqualsTheRemainingAmount() {
+    FormulaManager.applySync(Map.of(
+      REGENERATE, formula(values -> 2.0),
+      CONSUME, formula(values -> 2.0),
+      COOLDOWN, formula(values -> 0.0)
+    ), Map.of(REGENERATE, "{}", CONSUME, "{}", COOLDOWN, "{}"));
+    when(level.isClientSide()).thenReturn(false);
+    when(level.getGameTime()).thenReturn(40L);
+
+    TestCapacityBar bar = new TestCapacityBar(40, 20);
+    bindBar(new TestCapacityModifier(bar));
+    StatCapacityBarManager.register(TEST_MODIFIER_ID, bar);
+    TestToolStack depleted = new TestToolStack(2);
+
+    new FormulaCapacityRegenerateModule(TEST_MODIFIER_ID, REGENERATE, CONSUME, 1, COOLDOWN, null, slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition.ANY_TOOL)
+      .onInventoryTick(depleted, new ModifierEntry(ModifierIds.hardening, 1), level, holder, 0, false, true, Items.AIR.getDefaultInstance());
+
+    assertThat(depleted.damage).isEqualTo(2);
+    assertThat(bar.amount).isEqualTo(22);
+  }
+
   private static IFormula formula(FormulaBody body) {
     return new IFormula() {
       @Override
@@ -89,15 +131,21 @@ class FormulaCapacityRegenerateModuleTest extends BaseMcTest {
   }
 
   private static class TestToolStack extends DummyToolStack {
+    private final int durability;
     private int damage;
 
     private TestToolStack() {
+      this(100);
+    }
+
+    private TestToolStack(int durability) {
       super(Items.AIR, ModifierNBT.EMPTY, new ModDataNBT());
+      this.durability = durability;
     }
 
     @Override
     public StatsNBT getStats() {
-      return StatsNBT.builder().set(ToolStats.DURABILITY, 100).build();
+      return StatsNBT.builder().set(ToolStats.DURABILITY, durability).build();
     }
 
     @Override
@@ -107,7 +155,7 @@ class FormulaCapacityRegenerateModuleTest extends BaseMcTest {
 
     @Override
     public int getCurrentDurability() {
-      return 100 - damage;
+      return durability - damage;
     }
 
     @Override
