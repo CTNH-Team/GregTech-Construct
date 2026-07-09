@@ -4,15 +4,26 @@ import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialTraitDataProvider;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
+import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.data.ModifierIds;
+import slimeknights.tconstruct.tools.stats.ArmorExtensionMaterialStats;
 import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
 import slimeknights.tconstruct.tools.stats.SkullStats;
 
 import static slimeknights.tconstruct.library.materials.MaterialRegistry.*;
 
 public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvider {
+    private static final MaterialStatsId CAST_HELMET = ArmorExtensionMaterialStats.CAST_HELMET.getId();
+    private static final MaterialStatsId CAST_CHESTPLATE = ArmorExtensionMaterialStats.CAST_CHESTPLATE.getId();
+    private static final MaterialStatsId CAST_LEGGINGS = ArmorExtensionMaterialStats.CAST_LEGGINGS.getId();
+    private static final MaterialStatsId CAST_BOOTS = ArmorExtensionMaterialStats.CAST_BOOTS.getId();
+    private static final MaterialStatsId MASSIVE_CAST_HELMET = ArmorExtensionMaterialStats.MASSIVE_CAST_HELMET.getId();
+    private static final MaterialStatsId MASSIVE_CAST_CHESTPLATE = ArmorExtensionMaterialStats.MASSIVE_CAST_CHESTPLATE.getId();
+    private static final MaterialStatsId MASSIVE_CAST_LEGGINGS = ArmorExtensionMaterialStats.MASSIVE_CAST_LEGGINGS.getId();
+    private static final MaterialStatsId MASSIVE_CAST_BOOTS = ArmorExtensionMaterialStats.MASSIVE_CAST_BOOTS.getId();
+
     public MaterialTraitsDataProvider(PackOutput packOutput, AbstractMaterialDataProvider materials) {
         super(packOutput, materials);
     }
@@ -194,6 +205,54 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         noTraits(MaterialIds.clay);
         noTraits(MaterialIds.honey);
         noTraits(MaterialIds.phantom);
+
+        copyArmorTraitsToCasts(MaterialIds.aluminum);
+        copyArmorTraitsToCasts(MaterialIds.amethystBronze);
+        copyArmorTraitsToCasts(MaterialIds.ancient);
+        copyArmorTraitsToCasts(MaterialIds.bronze);
+        copyArmorTraitsToCasts(MaterialIds.cinderslime);
+        copyArmorTraitsToCasts(MaterialIds.cobalt);
+        copyArmorTraitsToCasts(MaterialIds.constantan);
+        copyArmorTraitsToCasts(MaterialIds.copper);
+        copyArmorTraitsToCasts(MaterialIds.fiery);
+        copyArmorTraitsToCasts(MaterialIds.gold);
+        copyArmorTraitsToCasts(MaterialIds.hepatizon);
+        copyArmorTraitsToCasts(MaterialIds.invar);
+        copyArmorTraitsToCasts(MaterialIds.iron);
+        copyArmorTraitsToCasts(MaterialIds.knightmetal);
+        copyArmorTraitsToCasts(MaterialIds.lead);
+        copyArmorTraitsToCasts(MaterialIds.manyullyn);
+        copyArmorTraitsToCasts(MaterialIds.obsidian);
+        copyArmorTraitsToCasts(MaterialIds.osmium);
+        copyArmorTraitsToCasts(MaterialIds.pewter);
+        copyArmorTraitsToCasts(MaterialIds.pigIron);
+        copyArmorTraitsToCasts(MaterialIds.queensSlime);
+        copyArmorTraitsToCasts(MaterialIds.roseGold);
+        copyArmorTraitsToCasts(MaterialIds.scorchedStone);
+        copyArmorTraitsToCasts(MaterialIds.searedStone);
+        copyArmorTraitsToCasts(MaterialIds.silver);
+        copyArmorTraitsToCasts(MaterialIds.slimesteel);
+        copyArmorTraitsToCasts(MaterialIds.steel);
+        copyArmorTraitsToCasts(MaterialIds.steeleaf);
+
+        material(MaterialIds.wool).setTraits(ARMOR, ModifierIds.cushion);
+        material(MaterialIds.leather).setTraits(ARMOR, TinkerModifiers.tanned.getId());
+        material(MaterialIds.knightmetal).setTraits(ARMOR, ModifierIds.guarding, ModifierIds.plating, ModifierIds.hardening);
+        material(MaterialIds.amethystBronze).setTraits(ARMOR, ModifierIds.crystalLattice, ModifierIds.crystalizing, ModifierIds.crystalSolidity);
+        material(MaterialIds.ancientHide).setTraits(ARMOR, ModifierIds.totem);
+        material(MaterialIds.hepatizon).setTraits(ARMOR, ModifierIds.recurrence);
+    }
+
+    private void copyArmorTraitsToCasts(MaterialId material) {
+        material(material)
+          .copyTraits(ARMOR, CAST_HELMET, 2, true)
+          .copyTraits(ARMOR, CAST_CHESTPLATE, 2, true)
+          .copyTraits(ARMOR, CAST_LEGGINGS, 2, true)
+          .copyTraits(ARMOR, CAST_BOOTS, 2, true)
+          .copyTraits(ARMOR, MASSIVE_CAST_HELMET, 2, true)
+          .copyTraits(ARMOR, MASSIVE_CAST_CHESTPLATE, 2, true)
+          .copyTraits(ARMOR, MASSIVE_CAST_LEGGINGS, 2, true)
+          .copyTraits(ARMOR, MASSIVE_CAST_BOOTS, 2, true);
     }
 
 }

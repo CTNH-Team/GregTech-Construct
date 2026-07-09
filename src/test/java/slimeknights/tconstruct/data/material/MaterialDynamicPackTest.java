@@ -43,7 +43,12 @@ class MaterialDynamicPackTest extends BaseMcTest {
     JsonObject armorTrait = perStatTraits.getAsJsonArray("tconstruct:armor").get(0).getAsJsonObject();
     assertThat(armorTrait.get("name").getAsString()).isEqualTo("tconstruct:projectile_protection");
     assertThat(armorTrait.get("level").getAsInt()).isEqualTo(1);
-    assertThat(perStatTraits.keySet()).doesNotContain("tconstruct:cast_helmet", "tconstruct:massive_cast_helmet");
+    JsonObject castHelmetTrait = perStatTraits.getAsJsonArray("tconstruct:cast_helmet").get(0).getAsJsonObject();
+    assertThat(castHelmetTrait.get("name").getAsString()).isEqualTo("tconstruct:projectile_protection");
+    assertThat(castHelmetTrait.get("level").getAsInt()).isEqualTo(2);
+    JsonObject massiveCastHelmetTrait = perStatTraits.getAsJsonArray("tconstruct:massive_cast_helmet").get(0).getAsJsonObject();
+    assertThat(massiveCastHelmetTrait.get("name").getAsString()).isEqualTo("tconstruct:projectile_protection");
+    assertThat(massiveCastHelmetTrait.get("level").getAsInt()).isEqualTo(2);
   }
 
   private JsonObject readJson(ResourceLocation location) throws Exception {

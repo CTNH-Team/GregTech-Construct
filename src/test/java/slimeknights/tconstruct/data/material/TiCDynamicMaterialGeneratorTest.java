@@ -101,6 +101,7 @@ class TiCDynamicMaterialGeneratorTest extends BaseMcTest {
     String hepatizonTraits = readString(new ResourceLocation("tconstruct", "tinkering/materials/traits/hepatizon.json"));
     assertThat(hepatizonTraits)
       .contains("tconstruct:armor", "tconstruct:recurrence")
+      .contains("tconstruct:cast_helmet", "tconstruct:recurrence")
       .doesNotContain("tconarmorex");
 
     String zincTraits = readString(new ResourceLocation("tinkersinnovation", "tinkering/materials/traits/zinc.json"));
