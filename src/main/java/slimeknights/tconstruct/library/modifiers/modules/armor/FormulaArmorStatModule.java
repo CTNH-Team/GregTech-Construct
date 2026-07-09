@@ -16,6 +16,7 @@ import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook.ArmorDamageStat;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook.ArmorDamageStats;
+import slimeknights.tconstruct.library.modifiers.hook.special.CapacityBarHook;
 import slimeknights.tconstruct.library.modifiers.modules.ModifierModule;
 import slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition;
 import slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition.ConditionalModule;
@@ -53,7 +54,8 @@ public record FormulaArmorStatModule(ArmorDamageStat stat, ResourceLocation form
 
     IFormula resolved = FormulaManager.getOrNull(formula);
     if (resolved != null) {
-      stats.add(stat, (float) resolved.accept(currentValue(stats), modifier.getEffectiveLevel(), capacity(tool), amount(tool)));
+      CapacityBarHook bar = modifier.getHook(ModifierHooks.CAPACITY_BAR);
+      stats.add(stat, (float) resolved.accept(currentValue(stats), modifier.getEffectiveLevel(), capacity(tool, modifier, bar), amount(tool, modifier, bar)));
     }
   }
 
@@ -64,14 +66,21 @@ public record FormulaArmorStatModule(ArmorDamageStat stat, ResourceLocation form
       case POST_REDUCTION -> stats.postReduction();
       case ARMOR_PROTECTION -> stats.armorProtection();
       case ARMOR_ABSORPTION_CAP -> stats.armorAbsorptionCap();
+      default -> throw new IllegalStateException("Unhandled armor damage stat: " + stat);
     };
   }
 
-  private static int capacity(IToolStackView tool) {
+  private static int capacity(IToolStackView tool, ModifierEntry modifier, CapacityBarHook bar) {
+    if (bar != ModifierHooks.CAPACITY_BAR.getDefaultInstance()) {
+      return Math.max(1, bar.getCapacity(tool, modifier));
+    }
     return Math.max(1, tool.getStats().getInt(ToolStats.DURABILITY));
   }
 
-  private static int amount(IToolStackView tool) {
+  private static int amount(IToolStackView tool, ModifierEntry modifier, CapacityBarHook bar) {
+    if (bar != ModifierHooks.CAPACITY_BAR.getDefaultInstance()) {
+      return Math.max(0, bar.getAmount(tool));
+    }
     return Math.max(0, tool.getCurrentDurability());
   }
 

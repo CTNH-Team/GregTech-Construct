@@ -16,6 +16,7 @@ import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.hook.special.CapacityBarHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ShareDamageModifierHook;
 import slimeknights.tconstruct.library.modifiers.modules.ModifierModule;
 import slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition;
@@ -68,8 +69,13 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
       return 0;
     }
 
-    int capacity = Math.max(1, tool.getStats().getInt(ToolStats.DURABILITY));
-    int amount = Math.max(0, tool.getCurrentDurability());
+    CapacityBarHook bar = modifier.getHook(ModifierHooks.CAPACITY_BAR);
+    int capacity = bar != ModifierHooks.CAPACITY_BAR.getDefaultInstance()
+      ? Math.max(1, bar.getCapacity(tool, modifier))
+      : Math.max(1, tool.getStats().getInt(ToolStats.DURABILITY));
+    int amount = bar != ModifierHooks.CAPACITY_BAR.getDefaultInstance()
+      ? Math.max(0, bar.getAmount(tool))
+      : Math.max(0, tool.getCurrentDurability());
     double level = modifier.getEffectiveLevel();
     float distanceFactor = Mth.clamp((float)distanceFormula.accept(distance, effectiveRange, fullEffectRange), 0, 1);
     float shareRatio = Mth.clamp((float)shareFormula.accept(0, level, capacity, amount), 0, 1) * distanceFactor;

@@ -138,7 +138,7 @@ public record FormulaCapacityRegenerateModule(
 
     // 计算恢复量和消耗
     double gain = regenFormula.accept(level, amount, capacity, lastAmount);
-    double duraCost = duraCostFormula.accept(level, gain, capacity, amount);
+    double duraCost = duraCostFormula.accept(level, amount, capacity, gain);
 
     if (gain <= 0) {
       persistentData.put(key, state);

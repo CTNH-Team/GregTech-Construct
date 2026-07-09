@@ -75,6 +75,7 @@ public record ToolDamageCapacityModule(
 
     int capacity = bar.getCapacity(tool, barModifier);
     int barAmount = bar.getAmount(tool);
+    int originalBarAmount = barAmount;
 
     IFormula capacityFormula = FormulaManager.getOrNull(this.capacityFormula);
     if (capacityFormula != null) {
@@ -94,7 +95,7 @@ public record ToolDamageCapacityModule(
       return amount;
     }
 
-    double damage = damageFormula.accept(modifier.getEffectiveLevel(), amount, capacity, barAmount);
+      double damage = damageFormula.accept(modifier.getEffectiveLevel(), amount, capacity, originalBarAmount);
     int wholeDamage = (int) damage;
     int roundedDamage = wholeDamage + (damage - wholeDamage > TConstruct.RANDOM.nextDouble() ? 1 : 0);
     return Math.max(0, roundedDamage);

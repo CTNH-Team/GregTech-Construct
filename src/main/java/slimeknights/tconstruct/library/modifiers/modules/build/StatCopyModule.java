@@ -79,7 +79,7 @@ public record StatCopyModule(
     }
 
     Number sourceValue = builder.getStat(source);
-    target.percent(builder, sourceValue.floatValue() * multiplier);
+    target.add(builder, sourceValue.floatValue() * multiplier);
   }
 
   @Override
@@ -92,4 +92,3 @@ public record StatCopyModule(
     return LOADER;
   }
 }
-

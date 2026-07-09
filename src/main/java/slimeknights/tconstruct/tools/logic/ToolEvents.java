@@ -418,6 +418,7 @@ public class ToolEvents {
     armorAbsorptionCapModifier = armorDamageStats.armorAbsorptionCap();
     boolean hasArmorExtensionStats = armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0;
     boolean sharedDamage = false;
+    boolean handledArmorDamage = false;
     if (vanillaModifier != modifierValue || (cap > 20 && vanillaModifier > 20) || (cap < 20 && vanillaModifier > cap) || hasArmorExtensionStats) {
 
       // set the final dealt damage
@@ -425,13 +426,14 @@ public class ToolEvents {
         ? ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap, armorStrength, preReduction, postReduction, armorProtection, armorAbsorptionCapModifier,
           damage -> armorDamageStats.applyDamageLimit(entity, (float)damage))
         : ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap, armorStrength, preReduction, postReduction, armorProtection, armorAbsorptionCapModifier);
+      handledArmorDamage = true;
       if (!SHARING_DAMAGE.get()) {
         finalDamage = Math.max(0, finalDamage - shareDamageWithNearbyGuardians(entity, source, finalDamage));
         sharedDamage = true;
       }
       event.setAmount(finalDamage);
       if (originalDamage > 0 && finalDamage <= 0) {
-        entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), Sounds.FULLY_REDUCTED.getSound(), SoundSource.AMBIENT, 1.0F, 1.0F);
+        suppressHurtSound(entity);
       }
 
       // armor is damaged less as a result of our math, so damage the armor based on the difference if there is one
@@ -459,15 +461,54 @@ public class ToolEvents {
         }
       }
     }
+    if (!handledArmorDamage && context.hasModifiableArmor() && !source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+      float finalDamage = ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap, armorStrength, preReduction, postReduction, armorProtection, armorAbsorptionCapModifier);
+      if (!SHARING_DAMAGE.get()) {
+        finalDamage = Math.max(0, finalDamage - shareDamageWithNearbyGuardians(entity, source, finalDamage));
+        sharedDamage = true;
+      }
+      event.setAmount(finalDamage);
+      if (originalDamage > 0 && finalDamage <= 0) {
+        suppressHurtSound(entity);
+      }
+
+      int damageMissed = getArmorDamage(originalDamage) - getArmorDamage(finalDamage);
+      if (damageMissed > 0 && entity instanceof Player) {
+        for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
+          IToolStackView tool = context.getToolInSlot(slotType);
+          if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !tool.getItem().isFireResistant())) {
+            if (tool.getModifierLevel(TinkerModifiers.tanned.getId()) == 0) {
+              ToolDamageUtil.damageAnimated(tool, damageMissed, entity, slotType);
+            }
+          } else {
+            ItemStack armorStack = entity.getItemBySlot(slotType);
+            if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.getItem().isFireResistant()) && armorStack.getItem() instanceof ArmorItem) {
+              armorStack.hurtAndBreak(damageMissed, entity, e -> e.broadcastBreakEvent(slotType));
+            }
+          }
+        }
+      }
+    }
     if (!sharedDamage && !SHARING_DAMAGE.get()) {
       float finalDamage = event.getAmount();
       if (finalDamage > 0) {
         float sharedFinalDamage = Math.max(0, finalDamage - shareDamageWithNearbyGuardians(entity, source, finalDamage));
         event.setAmount(sharedFinalDamage);
         if (sharedFinalDamage <= 0) {
-          entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), Sounds.FULLY_REDUCTED.getSound(), SoundSource.AMBIENT, 1.0F, 1.0F);
+          suppressHurtSound(entity);
         }
       }
+    }
+  }
+
+  private static void suppressHurtSound(LivingEntity entity) {
+    if (entity instanceof Player) {
+      HurtSoundHandler.mark(entity);
+      if (!entity.level().isClientSide()) {
+        TinkerNetwork.getInstance().sendToTrackingAndSelf(new slimeknights.tconstruct.common.network.SuppressHurtSoundPacket(entity.getId()), entity);
+      }
+    } else {
+      entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), Sounds.FULLY_REDUCTED.getSound(), SoundSource.AMBIENT, 1.0F, 1.0F);
     }
   }
 

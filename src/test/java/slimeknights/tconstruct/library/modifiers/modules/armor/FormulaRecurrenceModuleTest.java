@@ -88,6 +88,28 @@ class FormulaRecurrenceModuleTest extends BaseMcTest {
     assertThat(tool.getPersistentData().getFloat(KEY)).isEqualTo(4);
   }
 
+  @Test
+  void damageToPersistentUsesStoredPersistentValueInAccumulatorFormula() {
+    double[][] damageInputs = new double[1][];
+    FormulaManager.applySync(Map.of(
+      ARMOR_STAT, formula(values -> 0.0),
+      DAMAGE, formula(values -> {
+        damageInputs[0] = values;
+        return values[0] + values[1] + values[2] + values[3];
+      }),
+      TICK, formula(values -> 0.0)
+    ), Map.of(ARMOR_STAT, "{}", DAMAGE, "{}", TICK, "{}"));
+    tool.getPersistentData().putFloat(KEY, 2);
+    DamageSource source = mock(DamageSource.class);
+    when(source.is(DamageTypeTags.BYPASSES_ARMOR)).thenReturn(false);
+
+    ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, 10);
+    FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY)
+      .addArmorDamageStats(tool, new ModifierEntry(ModifierIds.recurrence, 2), null, EquipmentSlot.CHEST, source, stats);
+
+    assertThat(damageInputs[0]).containsExactly(0.0, 2.0, 2.0, 8.0);
+  }
+
   private static IFormula formula(FormulaBody body) {
     return new IFormula() {
       @Override

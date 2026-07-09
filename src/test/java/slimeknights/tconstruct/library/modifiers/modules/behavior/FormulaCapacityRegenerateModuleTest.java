@@ -1,8 +1,9 @@
-package slimeknights.tconstruct.library.modifiers.modules.armor;
+package slimeknights.tconstruct.library.modifiers.modules.behavior;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import oftenoviour.util.formula.FormulaManager;
 import oftenoviour.util.formula.IFormula;
 import org.junit.jupiter.api.AfterEach;
@@ -13,10 +14,9 @@ import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
-import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook.ArmorDamageStat;
-import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook.ArmorDamageStats;
 import slimeknights.tconstruct.library.modifiers.hook.special.CapacityBarHook;
 import slimeknights.tconstruct.library.module.ModuleHookMap;
+import slimeknights.tconstruct.library.modifiers.modules.capacity.StatCapacityBarManager;
 import slimeknights.tconstruct.library.tools.nbt.DummyToolStack;
 import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
 import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
@@ -31,12 +31,17 @@ import java.util.Arrays;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-class FormulaArmorStatModuleTest extends BaseMcTest {
-  private static final ResourceLocation FORMULA = TConstruct.getResource("test/armor_stat");
-  private static final DummyToolStack TOOL = new TestToolStack();
-  private static final DamageSource DAMAGE = null;
-  private static final ModifierId TEST_MODIFIER_ID = new ModifierId("test", "formula_armor_stat");
+class FormulaCapacityRegenerateModuleTest extends BaseMcTest {
+  private static final ResourceLocation REGENERATE = TConstruct.getResource("test/capacity_regen/regenerate");
+  private static final ResourceLocation CONSUME = TConstruct.getResource("test/capacity_regen/consume");
+  private static final ResourceLocation COOLDOWN = TConstruct.getResource("test/capacity_regen/cooldown");
+  private static final ModifierId TEST_MODIFIER_ID = new ModifierId("test", "capacity_regen_bar");
+  private final TestToolStack tool = new TestToolStack();
+  private final Level level = mock(Level.class);
+  private final LivingEntity holder = mock(LivingEntity.class);
   private final Map<ResourceLocation,IFormula> previousFormulas = FormulaManager.getAll();
   private final Map<ResourceLocation,String> previousRawJson = FormulaManager.getAllRawJson();
 
@@ -46,30 +51,27 @@ class FormulaArmorStatModuleTest extends BaseMcTest {
   }
 
   @Test
-  void missingFormulaDoesNotChangeStats() {
-    FormulaManager.applySync(Map.of(), Map.of());
-    ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0);
+  void duraConsumeFormulaReceivesAmountCapacityGainOrdering() {
+    double[][] consumeInputs = new double[1][];
+    FormulaManager.applySync(Map.of(
+      REGENERATE, formula(values -> 2.0),
+      CONSUME, formula(values -> {
+        consumeInputs[0] = values;
+        return 0.0;
+      }),
+      COOLDOWN, formula(values -> 0.0)
+    ), Map.of(REGENERATE, "{}", CONSUME, "{}", COOLDOWN, "{}"));
+    when(level.isClientSide()).thenReturn(false);
+    when(level.getGameTime()).thenReturn(40L);
 
-    FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, FORMULA)
-      .addArmorDamageStats(TOOL, new ModifierEntry(ModifierIds.crystalLattice, 2), null, null, DAMAGE, stats);
+    TestCapacityBar bar = new TestCapacityBar(40, 20);
+    bindBar(new TestCapacityModifier(bar));
+    StatCapacityBarManager.register(TEST_MODIFIER_ID, bar);
 
-    assertThat(stats.postReduction()).isZero();
-  }
+    new FormulaCapacityRegenerateModule(TEST_MODIFIER_ID, REGENERATE, CONSUME, 1, COOLDOWN, null, slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition.ANY_TOOL)
+      .onInventoryTick(tool, new ModifierEntry(ModifierIds.hardening, 3), level, holder, 0, false, true, Items.AIR.getDefaultInstance());
 
-  @Test
-  void formulaReceivesModifierLevelAndAddsArmorStat() {
-    double[][] inputs = new double[1][];
-    FormulaManager.applySync(Map.of(FORMULA, formula(values -> {
-      inputs[0] = values;
-      return 0.375;
-    })), Map.of(FORMULA, "{}"));
-    ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0.25f, 0);
-
-    FormulaArmorStatModule.stat(ArmorDamageStat.POST_REDUCTION, FORMULA)
-      .addArmorDamageStats(TOOL, bind(new TestCapacityModifier(new TestCapacityBar(40, 20)), 3), null, null, DAMAGE, stats);
-
-    assertThat(stats.postReduction()).isEqualTo(0.625f);
-    assertThat(inputs[0]).containsExactly(0.25, 3.0, 40.0, 20.0);
+    assertThat(consumeInputs[0]).containsExactly(3.0, 20.0, 40.0, 2.0);
   }
 
   private static IFormula formula(FormulaBody body) {
@@ -87,6 +89,8 @@ class FormulaArmorStatModuleTest extends BaseMcTest {
   }
 
   private static class TestToolStack extends DummyToolStack {
+    private int damage;
+
     private TestToolStack() {
       super(Items.AIR, ModifierNBT.EMPTY, new ModDataNBT());
     }
@@ -97,14 +101,24 @@ class FormulaArmorStatModuleTest extends BaseMcTest {
     }
 
     @Override
+    public int getDamage() {
+      return damage;
+    }
+
+    @Override
     public int getCurrentDurability() {
-      return 75;
+      return 100 - damage;
+    }
+
+    @Override
+    public void setDamage(int damage) {
+      this.damage = damage;
     }
   }
 
   private static class TestCapacityBar implements CapacityBarHook {
     private final int capacity;
-    private final int amount;
+    private int amount;
 
     private TestCapacityBar(int capacity, int amount) {
       this.capacity = capacity;
@@ -122,7 +136,9 @@ class FormulaArmorStatModuleTest extends BaseMcTest {
     }
 
     @Override
-    public void setAmount(slimeknights.tconstruct.library.tools.nbt.IToolStackView tool, ModifierEntry entry, int amount) {}
+    public void setAmount(slimeknights.tconstruct.library.tools.nbt.IToolStackView tool, ModifierEntry entry, int amount) {
+      this.amount = amount;
+    }
   }
 
   private static class TestCapacityModifier extends Modifier {
@@ -131,7 +147,7 @@ class FormulaArmorStatModuleTest extends BaseMcTest {
     }
   }
 
-  private static ModifierEntry bind(Modifier modifier, int level) {
+  private static void bindBar(Modifier modifier) {
     try {
       Method setId = Modifier.class.getDeclaredMethod("setId", ModifierId.class);
       setId.setAccessible(true);
@@ -146,7 +162,6 @@ class FormulaArmorStatModuleTest extends BaseMcTest {
       Field dynamicModifiersLoaded = ModifierManager.class.getDeclaredField("dynamicModifiersLoaded");
       dynamicModifiersLoaded.setAccessible(true);
       dynamicModifiersLoaded.setBoolean(ModifierManager.INSTANCE, true);
-      return new ModifierEntry(modifier, level);
     } catch (ReflectiveOperationException exception) {
       throw new AssertionError(exception);
     }
