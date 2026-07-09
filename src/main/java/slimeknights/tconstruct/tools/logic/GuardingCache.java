@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tools.logic;
 
 import slimeknights.tconstruct.library.modifiers.ModifierId;
+import slimeknights.tconstruct.common.config.Config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +10,6 @@ import java.util.UUID;
 public final class GuardingCache {
   private static final Map<UUID,Map<ModifierId,Integer>> MODIFIER_MARKS = new HashMap<>();
   private static final Map<UUID,Map<UUID,Long>> HOSTILITY = new HashMap<>();
-  private static final long HOSTILITY_DURATION_TICKS = 20L * 60L;
 
   private GuardingCache() {}
 
@@ -48,7 +48,7 @@ public final class GuardingCache {
   }
 
   public static void recordHostility(UUID first, UUID second, long gameTime) {
-    long expiry = gameTime + HOSTILITY_DURATION_TICKS;
+    long expiry = gameTime + 20L * Config.guardingHostilityDurationSeconds();
     HOSTILITY.computeIfAbsent(first, unused -> new HashMap<>()).put(second, expiry);
     HOSTILITY.computeIfAbsent(second, unused -> new HashMap<>()).put(first, expiry);
   }

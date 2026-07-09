@@ -7,6 +7,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaAreaEffectModule;
@@ -18,8 +19,6 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(modid = TConstruct.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class AroundEntityTickHandler {
-  private static final double SCAN_RANGE = 32.0D;
-
   private AroundEntityTickHandler() {}
 
   @SubscribeEvent
@@ -33,7 +32,7 @@ public final class AroundEntityTickHandler {
     if (event.phase == TickEvent.Phase.START) {
       runSelfAndArmorTicks(player, context);
     }
-    List<LivingEntity> targets = player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(SCAN_RANGE), entity -> entity != player && entity.isAlive());
+    List<LivingEntity> targets = player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(Config.guardingScanRange()), entity -> entity != player && entity.isAlive());
     if (targets.isEmpty()) {
       PlayerPersistentDataCache.syncFromEntity(player);
       return;

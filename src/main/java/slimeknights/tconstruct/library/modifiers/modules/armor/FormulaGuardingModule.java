@@ -29,7 +29,6 @@ import slimeknights.tconstruct.library.module.HookProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
 import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
-import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.shared.AchievementEvents;
 import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.logic.GuardingCache;
@@ -79,14 +78,17 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
       return 0;
     }
 
-    ModifierEntry plating = new ModifierEntry(ModifierManager.INSTANCE.get(ModifierIds.plating), Math.max(1, tool.getModifierLevel(ModifierIds.plating)));
+    int platingLevel = tool.getModifierLevel(ModifierIds.plating);
+    if (platingLevel <= 0) {
+      return 0;
+    }
+    ModifierEntry plating = new ModifierEntry(ModifierManager.INSTANCE.get(ModifierIds.plating), Math.max(1, platingLevel));
     CapacityBarHook bar = plating.getHook(ModifierHooks.CAPACITY_BAR);
-    int capacity = bar != ModifierHooks.CAPACITY_BAR.getDefaultInstance() && tool.getModifierLevel(ModifierIds.plating) > 0
-      ? Math.max(1, bar.getCapacity(tool, plating))
-      : Math.max(1, tool.getStats().getInt(ToolStats.DURABILITY));
-    int amount = bar != ModifierHooks.CAPACITY_BAR.getDefaultInstance() && tool.getModifierLevel(ModifierIds.plating) > 0
-      ? Math.max(0, bar.getAmount(tool))
-      : Math.max(0, tool.getCurrentDurability());
+    if (bar == ModifierHooks.CAPACITY_BAR.getDefaultInstance()) {
+      return 0;
+    }
+    int capacity = Math.max(1, bar.getCapacity(tool, plating));
+    int amount = Math.max(0, bar.getAmount(tool));
     double level = modifier.getEffectiveLevel();
     float distanceFactor = Mth.clamp((float)distanceFormula.accept(distance, effectiveRange, fullEffectRange), 0, 1);
     float shareRatio = Mth.clamp((float)shareFormula.accept(0, level, capacity, amount), 0, 1) * distanceFactor;

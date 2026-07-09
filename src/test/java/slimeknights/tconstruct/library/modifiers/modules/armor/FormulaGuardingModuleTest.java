@@ -95,6 +95,27 @@ class FormulaGuardingModuleTest extends BaseMcTest {
   }
 
   @Test
+  void guardingWithoutPlatingDoesNotFallbackToDurability() {
+    FormulaManager.applySync(Map.of(
+      DISTANCE, formula(values -> 1.0),
+      SHARE, formula(values -> 0.5),
+      PROTECTION, formula(values -> 0.0)
+    ), Map.of(DISTANCE, "{}", SHARE, "{}", PROTECTION, "{}"));
+
+    TestToolStack tool = new TestToolStack();
+    LivingEntity guardian = mock(LivingEntity.class);
+    LivingEntity protectedEntity = mock(LivingEntity.class);
+    DamageSource source = mock(DamageSource.class);
+    when(guardian.getHealth()).thenReturn(20f);
+    when(guardian.distanceTo(protectedEntity)).thenReturn(2.0f);
+
+    float shared = FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)
+      .shareDamage(tool, new ModifierEntry(TEST_MODIFIER_ID, 2), guardian, EquipmentSlot.CHEST, protectedEntity, source, 8f);
+
+    assertThat(shared).isZero();
+  }
+
+  @Test
   void sourceContainsAdvancementTriggersForSharedFateAndSacrifice() throws Exception {
     String source = Files.readString(Path.of("src/main/java/slimeknights/tconstruct/library/modifiers/modules/armor/FormulaGuardingModule.java"));
     assertThat(source).contains("combat/shared_fate");

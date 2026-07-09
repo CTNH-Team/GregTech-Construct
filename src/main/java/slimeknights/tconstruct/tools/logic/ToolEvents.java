@@ -98,6 +98,8 @@ import slimeknights.tconstruct.tools.network.SyncProjectileModifiersPacket;
 import slimeknights.tconstruct.tools.particle.ShareDamageParticleData;
 
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -549,9 +551,9 @@ public class ToolEvents {
         }
       }
 
-      if (entity instanceof net.minecraft.world.entity.TamableAnimal tamable) {
-        LivingEntity owner = tamable.getOwner();
-        if (owner != null && owner.isAlive()) {
+      if (entity instanceof net.minecraft.world.entity.TamableAnimal tamable && tamable.getOwner() instanceof Player owner && owner.isAlive()) {
+        float ownerDistance = owner.distanceTo(entity);
+        if (ownerDistance <= guardingScanRange(entity)) {
           float ownerShared = tryShareDamageWith(owner, entity, source, remaining);
           if (ownerShared > 0) {
             shared += ownerShared;
@@ -563,19 +565,25 @@ public class ToolEvents {
         }
       }
 
-      for (LivingEntity guardian : entity.level().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(16), candidate -> {
-        if (candidate == entity || !candidate.isAlive() || !entity.isAlliedTo(candidate)) {
+      double nearbyGuardingRange = guardingScanRange(entity);
+      record GuardianCandidate(LivingEntity entity, double distance) {}
+      List<GuardianCandidate> nearbyGuardians = new ArrayList<>();
+      for (LivingEntity guardian : entity.level().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(nearbyGuardingRange), candidate -> {
+        if (candidate == entity || !candidate.isAlive() || !(candidate instanceof Player player)) {
           return false;
         }
-        if (!(candidate instanceof Player player)) {
-          return false;
-        }
-        if (entity instanceof Player self && GuardingCache.isHostile(self.getUUID(), player.getUUID(), self.level().getGameTime())) {
+        if (entity instanceof Player self
+          && !self.isAlliedTo(player)
+          && GuardingCache.isHostile(self.getUUID(), player.getUUID(), self.level().getGameTime())) {
           return false;
         }
         return GuardingCache.hasAnyHook(player.getUUID());
       })) {
-        float guardianShared = tryShareDamageWith(guardian, entity, source, remaining);
+        nearbyGuardians.add(new GuardianCandidate(guardian, guardian.distanceTo(entity)));
+      }
+      nearbyGuardians.sort(Comparator.comparingDouble(GuardianCandidate::distance));
+      for (GuardianCandidate guardian : nearbyGuardians) {
+        float guardianShared = tryShareDamageWith(guardian.entity(), entity, source, remaining);
         if (guardianShared > 0) {
           shared += guardianShared;
           remaining -= guardianShared;
@@ -589,6 +597,10 @@ public class ToolEvents {
       SHARING_DAMAGE.set(previous);
     }
     return shared;
+  }
+
+  private static double guardingScanRange(LivingEntity protectedEntity) {
+    return Config.guardingScanRange();
   }
 
   private static float tryShareDamageWith(LivingEntity guardian, LivingEntity protectedEntity, DamageSource source, float damage) {
