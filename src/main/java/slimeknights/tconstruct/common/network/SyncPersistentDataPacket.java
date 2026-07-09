@@ -1,8 +1,6 @@
 package slimeknights.tconstruct.common.network;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent.Context;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
 import slimeknights.tconstruct.tools.logic.PlayerPersistentDataCache;
@@ -46,10 +44,7 @@ public class SyncPersistentDataPacket implements IThreadsafePacket {
   /** Handles client side only code safely */
   private static class HandleClient {
     private static void handle(SyncPersistentDataPacket packet) {
-      Player player = Minecraft.getInstance().player;
-      if (player != null) {
-        PlayerPersistentDataCache.put(packet.playerId, packet.key, packet.value, packet.expiry);
-      }
+      PlayerPersistentDataCache.put(packet.playerId, packet.key, packet.value, packet.expiry);
     }
   }
 }
