@@ -459,13 +459,9 @@ public class AdvancementsProvider extends GenericDataProvider {
             TinkerTools.knightsArmor.forEach((type, armor) -> builder.addCriterion("knights_" + type.getName(), hasItem(armor)));
         });
 
-        // mixed_armor：同时拥有混合型复合和锻造护甲
         builder(armorDisplay(TinkerTools.mixCompositeArmor.get(ArmorItem.Type.CHESTPLATE), MaterialIds.hepatizon, MaterialIds.gold, MaterialIds.hepatizon, MaterialIds.gold),
                 resource("special/mixed_armor"), anvil, FrameType.GOAL, true, false, true, builder -> {
-            TinkerTools.mixCompositeArmor.forEach((type, armor) -> builder.addCriterion("mix_composite_" + type.getName(), hasItem(armor)));
-            TinkerTools.mixCompositeOtherArmor.forEach((type, armor) -> builder.addCriterion("mix_composite_other_" + type.getName(), hasItem(armor)));
-            TinkerTools.mixForgedArmor.forEach((type, armor) -> builder.addCriterion("mix_forged_" + type.getName(), hasItem(armor)));
-            TinkerTools.mixForgedOtherArmor.forEach((type, armor) -> builder.addCriterion("mix_forged_other_" + type.getName(), hasItem(armor)));
+            builder.addCriterion("has_mixed", InventoryChangeTrigger.TriggerInstance.hasItems(mixedArmorItemsPredicate()));
         });
 
         // internal advancements
@@ -487,6 +483,15 @@ public class AdvancementsProvider extends GenericDataProvider {
         addArmorItems(items, TinkerTools.heavyCompositeArmor);
         addArmorItems(items, TinkerTools.lightForgedArmor);
         addArmorItems(items, TinkerTools.heavyForgedArmor);
+        addArmorItems(items, TinkerTools.mixCompositeArmor);
+        addArmorItems(items, TinkerTools.mixCompositeOtherArmor);
+        addArmorItems(items, TinkerTools.mixForgedArmor);
+        addArmorItems(items, TinkerTools.mixForgedOtherArmor);
+        return ItemPredicate.Builder.item().of(items.toArray(new ItemLike[0])).build();
+    }
+
+    private static ItemPredicate mixedArmorItemsPredicate() {
+        List<ItemLike> items = new ArrayList<>();
         addArmorItems(items, TinkerTools.mixCompositeArmor);
         addArmorItems(items, TinkerTools.mixCompositeOtherArmor);
         addArmorItems(items, TinkerTools.mixForgedArmor);
