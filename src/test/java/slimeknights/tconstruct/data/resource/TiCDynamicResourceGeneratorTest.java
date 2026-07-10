@@ -16,6 +16,7 @@ import slimeknights.tconstruct.library.client.armor.texture.FirstArmorTextureSup
 import slimeknights.tconstruct.library.client.armor.texture.FixedArmorTextureSupplier;
 import slimeknights.tconstruct.library.client.armor.texture.MaterialArmorTextureSupplier;
 import slimeknights.tconstruct.library.client.armor.texture.TrimArmorTextureSupplier;
+import slimeknights.tconstruct.library.client.data.spritetransformer.GreyToSpriteTransformer;
 import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.test.BaseMcTest;
 
@@ -192,6 +193,28 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
       .isNull();
 
     assertThat(pack.getNamespaces(PackType.CLIENT_RESOURCES)).doesNotContain("tconarmorex");
+  }
+
+  @Test
+  void armorExtensionSpritesAreRegisteredAndGeneratedDynamically() throws IOException {
+    GreyToSpriteTransformer.init();
+    runProvider("GeneratorPartTextureJsonGenerator");
+
+    assertThat(readClientResource(new ResourceLocation("tconstruct", "tinkering/generator_part_textures.json")))
+      .contains("tconstruct:tinker_armor/cast_armor")
+      .contains("tconstruct:tinker_armor/massive_cast_armor")
+      .contains("tconstruct:tinker_armor/frame_of_armor")
+      .contains("tconstruct:item/armor/shared/helmet/cast")
+      .contains("tconstruct:item/parts/massive_cast_chestplate")
+      .doesNotContain("tconarmorex");
+
+    runProvider("MaterialPartTextureGenerator");
+
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/cast_armor_tconstruct_manyullyn.png"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/item/armor/shared/chestplate/massive_cast_tconstruct_manyullyn.png"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/linear_armor_tconstruct_leather.png"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/maille_armor_tconstruct_leather.png"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/maille_armor_tconstruct_shulker.png"))).isNotNull();
   }
 
   private static void runProvider(String name) {

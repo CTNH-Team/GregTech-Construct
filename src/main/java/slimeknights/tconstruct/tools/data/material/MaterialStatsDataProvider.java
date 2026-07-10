@@ -7,9 +7,12 @@ import slimeknights.tconstruct.library.data.material.AbstractMaterialStatsDataPr
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.stats.IMaterialStats;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatType;
+import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.tools.modules.ArmorModuleBuilder;
 import slimeknights.tconstruct.tools.stats.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static net.minecraft.world.item.Tiers.*;
@@ -610,18 +613,71 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
             Map.entry(new MaterialId("tinkersinnovation", "zinc"), armorDefaults(39.0f, 2.0f, 4.0f, 3.0f, 2.0f, 0.0f, 0.0f, 0.1f, 0.01f, 0.0f, -0.25f, -0.15f, 0.0f, 0.0f))
     );
 
+    private static final List<MaterialId> ARMOR_EXTENSION_DEFAULT_MAILLE_MATERIALS = List.of(
+            MaterialIds.leather, MaterialIds.slimeskin, MaterialIds.skyslimeVine,
+            MaterialIds.ichorskin, MaterialIds.enderslimeVine
+    );
+    private static final List<MaterialId> ARMOR_EXTENSION_LINEAR_MATERIALS = List.of(
+            MaterialIds.leather, MaterialIds.slimeskin, MaterialIds.skyslimeVine,
+            MaterialIds.ichorskin, MaterialIds.enderslimeVine, MaterialIds.wool,
+            MaterialIds.ancientHide
+    );
+    private static final Map<MaterialId, IMaterialStats> ARMOR_EXTENSION_MAILLE_OVERRIDES = Map.of(
+            MaterialIds.dragonScale, ArmorExtensionMaterialStats.maille(-0.1f, 0.05f, 0.1f, 0f),
+            MaterialIds.shulker, ArmorExtensionMaterialStats.maille(0f, 0f, 0.1f, 0f),
+            MaterialIds.ancientHide, ArmorExtensionMaterialStats.maille(0.25f, 0.1f, 0f, 0f)
+    );
+    private static final List<MaterialStatsId> DEFAULT_ARMOR_EXTENSION_SPRITE_STATS = defaultArmorExtensionSpriteStats();
+    private static final List<MaterialStatsId> LINEAR_ARMOR_EXTENSION_SPRITE_STATS = List.of(StatlessMaterialStats.LINEAR.getIdentifier());
+    private static final List<MaterialStatsId> MAILLE_ARMOR_EXTENSION_SPRITE_STATS = List.of(ArmorExtensionMaterialStats.MAILLE.getId());
+    private static final List<MaterialStatsId> LINEAR_AND_MAILLE_ARMOR_EXTENSION_SPRITE_STATS = List.of(
+            StatlessMaterialStats.LINEAR.getIdentifier(), ArmorExtensionMaterialStats.MAILLE.getId()
+    );
+
     private void addArmorExtensionMaterialStats() {
         ARMOR_EXTENSION_DEFAULTS.forEach(this::addArmorDefaultStats);
         ARMOR_EXTENSION_COMPAT_DEFAULTS.forEach(this::addArmorDefaultStats);
-        addMaterialStats(MaterialIds.leather, StatlessMaterialStats.CUIRASS, ArmorExtensionMaterialStats.MAILLE_DEFAULT, StatlessMaterialStats.LINEAR);
-        addMaterialStats(MaterialIds.slimeskin, StatlessMaterialStats.CUIRASS, ArmorExtensionMaterialStats.MAILLE_DEFAULT, StatlessMaterialStats.LINEAR);
-        addMaterialStats(MaterialIds.skyslimeVine, StatlessMaterialStats.CUIRASS, ArmorExtensionMaterialStats.MAILLE_DEFAULT, StatlessMaterialStats.LINEAR);
-        addMaterialStats(MaterialIds.ichorskin, StatlessMaterialStats.CUIRASS, ArmorExtensionMaterialStats.MAILLE_DEFAULT, StatlessMaterialStats.LINEAR);
-        addMaterialStats(MaterialIds.enderslimeVine, StatlessMaterialStats.CUIRASS, ArmorExtensionMaterialStats.MAILLE_DEFAULT, StatlessMaterialStats.LINEAR);
+        for (MaterialId material : ARMOR_EXTENSION_DEFAULT_MAILLE_MATERIALS) {
+            addMaterialStats(material, StatlessMaterialStats.CUIRASS, ArmorExtensionMaterialStats.MAILLE_DEFAULT, StatlessMaterialStats.LINEAR);
+        }
         addMaterialStats(MaterialIds.wool, StatlessMaterialStats.LINEAR);
-        addMaterialStats(MaterialIds.dragonScale, ArmorExtensionMaterialStats.maille(-0.1f, 0.05f, 0.1f, 0f));
-        addMaterialStats(MaterialIds.shulker, ArmorExtensionMaterialStats.maille(0f, 0f, 0.1f, 0f));
-        addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR, ArmorExtensionMaterialStats.maille(0.25f, 0.1f, 0f, 0f));
+        addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
+        ARMOR_EXTENSION_MAILLE_OVERRIDES.forEach((material, maille) -> addMaterialStats(material, maille));
+    }
+
+    public static List<MaterialStatsId> getArmorExtensionSpriteStats(MaterialId material) {
+        if (ARMOR_EXTENSION_DEFAULTS.containsKey(material) || ARMOR_EXTENSION_COMPAT_DEFAULTS.containsKey(material)) {
+            return DEFAULT_ARMOR_EXTENSION_SPRITE_STATS;
+        }
+        boolean linear = ARMOR_EXTENSION_LINEAR_MATERIALS.contains(material);
+        boolean maille = ARMOR_EXTENSION_DEFAULT_MAILLE_MATERIALS.contains(material) || ARMOR_EXTENSION_MAILLE_OVERRIDES.containsKey(material);
+        if (linear && maille) {
+            return LINEAR_AND_MAILLE_ARMOR_EXTENSION_SPRITE_STATS;
+        }
+        if (linear) {
+            return LINEAR_ARMOR_EXTENSION_SPRITE_STATS;
+        }
+        if (maille) {
+            return MAILLE_ARMOR_EXTENSION_SPRITE_STATS;
+        }
+        return List.of();
+    }
+
+    private static List<MaterialStatsId> defaultArmorExtensionSpriteStats() {
+        List<MaterialStatsId> stats = new ArrayList<>();
+        stats.add(ArmorExtensionMaterialStats.ARMOR_PLATE.getId());
+        stats.add(ArmorExtensionMaterialStats.ARMOR_MAIL.getId());
+        stats.add(ArmorExtensionMaterialStats.MAILLE.getId());
+        addSpriteStats(stats, ArmorExtensionMaterialStats.CAST_TYPES);
+        addSpriteStats(stats, ArmorExtensionMaterialStats.FRAME_TYPES);
+        addSpriteStats(stats, ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES);
+        return List.copyOf(stats);
+    }
+
+    private static void addSpriteStats(List<MaterialStatsId> stats, List<? extends MaterialStatType<?>> types) {
+        for (MaterialStatType<?> type : types) {
+            stats.add(type.getId());
+        }
     }
 
     private void addArmorDefaultStats(MaterialId material, ArmorDefaults defaults) {

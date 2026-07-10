@@ -5,8 +5,11 @@ import net.minecraft.world.item.DyeColor;
 import slimeknights.tconstruct.library.client.data.material.AbstractMaterialSpriteProvider;
 import slimeknights.tconstruct.library.client.data.spritetransformer.*;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
+import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
+import slimeknights.tconstruct.tools.data.material.MaterialStatsDataProvider;
+import slimeknights.tconstruct.tools.stats.ArmorExtensionMaterialStats;
 import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
 import slimeknights.tconstruct.tools.stats.LimbMaterialStats;
 import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
@@ -26,6 +29,13 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
         return "Tinkers' Construct Materials";
     }
 
+    @Override
+    protected MaterialSpriteInfoBuilder buildMaterial(MaterialId material) {
+        MaterialSpriteInfoBuilder builder = super.buildMaterial(material);
+        MaterialStatsDataProvider.getArmorExtensionSpriteStats(material).forEach(builder::statType);
+        return builder;
+    }
+
     @SuppressWarnings("removal")
     @Override
     protected void addAllMaterials() {
@@ -35,6 +45,8 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
                 // not using the helper to avoid catching armor models
                 .statType(PlatingMaterialStats.TYPES)
                 .statType(StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS)
+                .statType(ArmorExtensionMaterialStats.ARMOR_PLATE, ArmorExtensionMaterialStats.ARMOR_MAIL, ArmorExtensionMaterialStats.MAILLE)
+                .statType(ArmorExtensionMaterialStats.CAST_TYPES).statType(ArmorExtensionMaterialStats.FRAME_TYPES).statType(ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES)
                 .colorMapper(GreyToColorMapping.builder().addARGB(63, 0xFF000000).addARGB(102, 0xFF222222).addARGB(103, 0x00000000).build());
 
         // tier 1
@@ -415,12 +427,16 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
         buildMaterial(MaterialIds.dragonScale)
                 .arrowHead().maille()
                 .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF0B090C).addARGB(102, 0xFF161417).addARGB(140, 0xFF221F22).addARGB(178, 0xFF2A282B).addARGB(216, 0xFF393738).addARGB(255, 0xFF474747).build());
+        buildMaterial(MaterialIds.shulker)
+                .arrowHead().maille()
+                .fallbacks("metal")
+                .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF2E998C).addARGB(102, 0xFF4C8E70).addARGB(140, 0xFF6A7F3A).addARGB(178, 0xFF8B2C6F).addARGB(216, 0xFFADD967).addARGB(255, 0xFFC7551C).build());
 
         // wool for arrows
         for (DyeColor color : DyeColor.values()) {
             String name = color.getName();
             MaterialSpriteInfoBuilder builder = buildMaterial(MaterialVariantId.create(MaterialIds.wool, name));
-            builder.arrowHead().transformer(transformerFromSprite(ResourceLocation.tryParse("block/" + name + "_wool"), 0, 0));
+            builder.arrowHead().statType(StatlessMaterialStats.LINEAR).transformer(transformerFromSprite(ResourceLocation.tryParse("block/" + name + "_wool"), 0, 0));
             if (color == DyeColor.WHITE) {
                 builder.fletching();
             } else {
@@ -470,7 +486,6 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
 //      .colorMapper(GreyToColorMapping.builder().addARGB(0, 0xE07F7F7F).addARGB(63, 0xE59B9B9B).addARGB(102, 0xE6A1A1A1).addARGB(140, 0xE9A7A7A7).addARGB(178, 0xEDBBBBBB).addARGB(216, 0xF3D4D4D4).addARGB(255, 0xF8EFEFEF).build());
     }
 
-    /** Creates a palette for a sprite that tints it for borders */
     public static ISpriteTransformer transformerFromSprite(ResourceLocation texture, int frames, int highlightColor) {
         GreyToSpriteTransformer.Builder builder = GreyToSpriteTransformer.builderFromBlack();
         builder.addTexture( 63, texture, 0xFF404040)
