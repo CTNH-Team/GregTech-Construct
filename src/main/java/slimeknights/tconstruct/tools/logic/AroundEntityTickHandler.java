@@ -39,6 +39,9 @@ public final class AroundEntityTickHandler {
     }
     PlayerPersistentDataCache.syncFromEntity(player);
     if (targets.isEmpty()) {
+      if (event.phase == TickEvent.Phase.END) {
+        FormulaAreaEffectModule.flushPending(player);
+      }
       return;
     }
     for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {

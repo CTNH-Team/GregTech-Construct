@@ -185,6 +185,10 @@ public record FormulaAreaEffectModule(ResourceLocation effect, ResourceLocation 
     }
   }
 
+  public static void clearPending(UUID playerId) {
+    PENDING_TAMED_EFFECTS.remove(playerId);
+  }
+
   private record AreaEffectKey(FormulaAreaEffectModule module, slimeknights.tconstruct.library.modifiers.ModifierId modifierId) {}
 
   private static final class PendingAreaEffect {

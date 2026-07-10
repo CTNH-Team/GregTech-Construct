@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.Mod;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaAreaEffectModule;
 import slimeknights.tconstruct.library.tools.context.EquipmentContext;
 import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
@@ -36,8 +37,10 @@ public final class GuardingRuntimeHooks {
 
   @SubscribeEvent
   public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-    GuardingCache.removePlayer(event.getEntity().getUUID());
-    GuardingCache.clearHostilityFor(event.getEntity().getUUID());
-    PlayerPersistentDataCache.remove(event.getEntity().getUUID());
+    var playerId = event.getEntity().getUUID();
+    GuardingCache.removePlayer(playerId);
+    GuardingCache.clearHostilityFor(playerId);
+    FormulaAreaEffectModule.clearPending(playerId);
+    PlayerPersistentDataCache.remove(playerId);
   }
 }

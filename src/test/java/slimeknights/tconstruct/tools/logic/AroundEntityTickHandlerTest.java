@@ -227,7 +227,7 @@ class AroundEntityTickHandlerTest extends BaseMcTest {
   }
 
   @Test
-  void endPhaseFlushesAggregatedTamedEffect() throws Exception {
+  void endPhaseFlushesAggregatedTamedEffectAfterTargetsDisappear() throws Exception {
     PlayerPersistentDataCache.setDataGetter(player -> new ModDataNBT());
     FormulaManager.applySync(Map.of(
       RANGE, formula(values -> 8),
@@ -271,7 +271,7 @@ class AroundEntityTickHandlerTest extends BaseMcTest {
     when(player.getItemBySlot(EquipmentSlot.HEAD)).thenReturn(ItemStack.EMPTY);
     when(player.getItemBySlot(EquipmentSlot.LEGS)).thenReturn(ItemStack.EMPTY);
     when(player.getItemBySlot(EquipmentSlot.FEET)).thenReturn(ItemStack.EMPTY);
-    when(level.getEntitiesOfClass(org.mockito.Mockito.eq(LivingEntity.class), any(AABB.class), any())).thenReturn(List.of(target));
+    when(level.getEntitiesOfClass(org.mockito.Mockito.eq(LivingEntity.class), any(AABB.class), any())).thenReturn(List.of(target), List.of());
     when(target.isAlive()).thenReturn(true);
     when(target.getItemBySlot(EquipmentSlot.CHEST)).thenReturn(ItemStack.EMPTY);
     when(target.getItemBySlot(EquipmentSlot.HEAD)).thenReturn(ItemStack.EMPTY);
