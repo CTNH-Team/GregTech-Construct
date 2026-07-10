@@ -12,7 +12,7 @@ import oftenoviour.util.formula.IFormula;
 import slimeknights.tconstruct.common.Sounds;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
-import slimeknights.tconstruct.library.modifiers.modules.capacity.OverslimeModule;
+import slimeknights.tconstruct.library.modifiers.hook.special.CapacityBarHook;
 import slimeknights.tconstruct.library.tools.context.EquipmentContext;
 import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
@@ -106,12 +106,14 @@ public interface ArmorDamageStatsModifierHook {
     }
 
     public void addDamageLimit(IToolStackView tool, EquipmentSlot slotType, float level, float limit, ResourceLocation perArmorRatioFormula,
-                               ResourceLocation armorDamageFormula, ResourceLocation overshieldDamageFormula) {
+                               ResourceLocation armorDamageFormula, ResourceLocation overshieldDamageFormula,
+                               ModifierEntry capacityEntry, CapacityBarHook capacityBar) {
       if (limit <= 0) {
         return;
       }
       damageLimit = Math.min(damageLimit, limit);
-      damageLimits.add(new DamageLimitEntry(tool, slotType, level, perArmorRatioFormula, armorDamageFormula, overshieldDamageFormula));
+      damageLimits.add(new DamageLimitEntry(tool, slotType, level, perArmorRatioFormula, armorDamageFormula, overshieldDamageFormula,
+        capacityEntry, capacityBar));
     }
 
     public boolean hasDamageLimit() {
@@ -152,20 +154,22 @@ public interface ArmorDamageStatsModifierHook {
     }
 
     private record DamageLimitEntry(IToolStackView tool, EquipmentSlot slotType, float level, ResourceLocation perArmorRatioFormula,
-                                    ResourceLocation armorDamageFormula, ResourceLocation overshieldDamageFormula) {
+                                    ResourceLocation armorDamageFormula, ResourceLocation overshieldDamageFormula,
+                                    ModifierEntry capacityEntry, CapacityBarHook capacityBar) {
       private void apply(LivingEntity entity, double totalLevel, float originalDamage, float overflow, float ratio) {
         IFormula armorDamage = FormulaManager.getOrNull(armorDamageFormula);
         if (armorDamage != null) {
           int currentDurability = Math.max(0, tool.getCurrentDurability());
-          ToolDamageUtil.damageAnimated(tool, randomRound(armorDamage.accept(currentDurability, totalLevel, originalDamage, overflow) * ratio), entity, slotType);
+          ToolDamageUtil.directDamage(tool, randomRound(armorDamage.accept(currentDurability, totalLevel, originalDamage, overflow) * ratio),
+            null, null);
         }
 
         IFormula overshieldDamage = FormulaManager.getOrNull(overshieldDamageFormula);
         if (overshieldDamage != null) {
-          int overslime = OverslimeModule.INSTANCE.getAmount(tool);
-          int amount = Math.min(overslime, randomRound(overshieldDamage.accept(overslime, totalLevel, originalDamage, overflow) * ratio));
+          int capacity = capacityBar.getAmount(tool);
+          int amount = Math.min(capacity, randomRound(overshieldDamage.accept(capacity, totalLevel, originalDamage, overflow) * ratio));
           if (amount > 0) {
-            OverslimeModule.INSTANCE.removeAmount(tool, amount);
+            capacityBar.removeAmount(tool, capacityEntry, amount);
           }
         }
       }

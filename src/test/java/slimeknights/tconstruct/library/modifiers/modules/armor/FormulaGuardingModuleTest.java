@@ -18,6 +18,7 @@ import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
+import slimeknights.tconstruct.library.modifiers.hook.armor.ShareDamageModifierHook.ShareDamageContext;
 import slimeknights.tconstruct.library.modifiers.hook.special.CapacityBarHook;
 import slimeknights.tconstruct.library.module.ModuleHookMap;
 import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
@@ -41,7 +42,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -84,12 +84,14 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     DamageSource source = mock(DamageSource.class);
     when(guardian.getHealth()).thenReturn(20f);
     when(guardian.distanceTo(protectedEntity)).thenReturn(2.0f);
-    when(guardian.hurt(any(DamageSource.class), anyFloat())).thenReturn(true);
+    RecordingShareContext context = new RecordingShareContext();
+    boolean claimed = FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)
+      .collectShareDamage(tool, new ModifierEntry(TEST_MODIFIER_ID, 2), guardian, EquipmentSlot.CHEST, protectedEntity, source, context);
 
-    float shared = FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)
-      .shareDamage(tool, new ModifierEntry(TEST_MODIFIER_ID, 2), guardian, EquipmentSlot.CHEST, protectedEntity, source, 8f);
-
-    assertThat(shared).isEqualTo(4f);
+    assertThat(claimed).isTrue();
+    assertThat(context.shareRatio).isEqualTo(0.5f);
+    assertThat(context.extraProtection).isEqualTo(0.25f);
+    assertThat(context.distanceFactor).isEqualTo(1f);
     assertThat(shareInputs[0]).containsExactly(0.0, 2.0, 40.0, 20.0);
     assertThat(protectionInputs[0]).containsExactly(0.0, 2.0, 40.0, 20.0);
   }
@@ -109,15 +111,17 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     when(guardian.getHealth()).thenReturn(20f);
     when(guardian.distanceTo(protectedEntity)).thenReturn(2.0f);
 
-    float shared = FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)
-      .shareDamage(tool, new ModifierEntry(TEST_MODIFIER_ID, 2), guardian, EquipmentSlot.CHEST, protectedEntity, source, 8f);
+    RecordingShareContext context = new RecordingShareContext();
+    boolean claimed = FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)
+      .collectShareDamage(tool, new ModifierEntry(TEST_MODIFIER_ID, 2), guardian, EquipmentSlot.CHEST, protectedEntity, source, context);
 
-    assertThat(shared).isZero();
+    assertThat(claimed).isFalse();
+    assertThat(context.called).isFalse();
   }
 
   @Test
   void sourceContainsAdvancementTriggersForSharedFateAndSacrifice() throws Exception {
-    String source = Files.readString(Path.of("src/main/java/slimeknights/tconstruct/library/modifiers/modules/armor/FormulaGuardingModule.java"));
+    String source = Files.readString(Path.of("src/main/java/slimeknights/tconstruct/tools/logic/ToolEvents.java"));
     assertThat(source).contains("combat/shared_fate");
     assertThat(source).contains("combat/sacrifice");
   }
@@ -143,10 +147,12 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     when(protectedPlayer.getUUID()).thenReturn(java.util.UUID.randomUUID());
     GuardingCache.addHook(protectedPlayer.getUUID(), TEST_MODIFIER_ID);
 
-    float shared = FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)
-      .shareDamage(tool, new ModifierEntry(TEST_MODIFIER_ID, 2), guardian, EquipmentSlot.CHEST, protectedPlayer, source, 8f);
+    RecordingShareContext context = new RecordingShareContext();
+    boolean claimed = FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)
+      .collectShareDamage(tool, new ModifierEntry(TEST_MODIFIER_ID, 2), guardian, EquipmentSlot.CHEST, protectedPlayer, source, context);
 
-    assertThat(shared).isZero();
+    assertThat(claimed).isFalse();
+    assertThat(context.called).isFalse();
   }
 
   @Test
@@ -277,6 +283,23 @@ class FormulaGuardingModuleTest extends BaseMcTest {
 
     @Override
     public void setAmount(slimeknights.tconstruct.library.tools.nbt.IToolStackView tool, ModifierEntry entry, int amount) {}
+  }
+
+  private static class RecordingShareContext implements ShareDamageContext {
+    private boolean called;
+    private float shareRatio;
+    private float extraProtection;
+    private float healthGround;
+    private float distanceFactor;
+
+    @Override
+    public void add(float shareRatio, float extraProtection, float healthGround, float distanceFactor) {
+      this.called = true;
+      this.shareRatio = shareRatio;
+      this.extraProtection = extraProtection;
+      this.healthGround = healthGround;
+      this.distanceFactor = distanceFactor;
+    }
   }
 
   private static class TestCapacityModifier extends Modifier {

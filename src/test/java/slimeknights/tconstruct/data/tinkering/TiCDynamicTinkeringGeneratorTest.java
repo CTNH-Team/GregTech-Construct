@@ -157,7 +157,7 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
     assertThat(hardening).contains("\"modifier_level\":{\"min\":10}", "\"flat\":-0.99999");
     assertThat(crystalLattice).contains("tconstruct:stat_capacity_bar", "tconstruct:durability_bar_color", "tconstruct:formula_armor_stat", "pre_reduction", "tconstruct:crystal_lattice/stat_bonus", "tconstruct:tool_damage_capacity", "tconstruct:crystal_lattice/damage_capacity", "no_levels");
     assertThat(crystalizing).contains("tconstruct:formula_capacity_regenerate", "tconstruct:crystal_lattice", "tconstruct:crystalizing/regenerate_formula", "tconstruct:default/regenerate/dura_consume_formula", "tconstruct:crystalizing/cool_down_formula").doesNotContain("formula_repair");
-    assertThat(crystalSolidity).contains("tconstruct:formula_damage_limit", "tconstruct:crystal_solidity/cap_formula", "tconstruct:crystal_solidity/condition_formula", "tconstruct:crystal_solidity/per_armor_ratio", "tconstruct:crystal_solidity/finalizer/armor_damage_formula", "tconstruct:crystal_solidity/finalizer/overshield_damage_formula", "no_levels");
+    assertThat(crystalSolidity).contains("tconstruct:formula_damage_limit", "tconstruct:crystal_solidity/cap_formula", "tconstruct:crystal_solidity/condition_formula", "tconstruct:crystal_solidity/per_armor_ratio", "tconstruct:crystal_solidity/finalizer/armor_damage_formula", "tconstruct:crystal_solidity/finalizer/overshield_damage_formula", "\"capacity_modifier\":\"tconstruct:crystal_lattice\"", "no_levels");
     assertThat(totem).contains("tconstruct:modifier_slot", "defense", "each_level", "1",
       "tconstruct:formula_area_effect", "tconstruct:triggered", "tconstruct:totem/range_formula",
       "tconstruct:totem/accumulator/duration_formula", "tconstruct:totem/accumulator/level_formula",
@@ -300,7 +300,8 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
           TConstruct.getResource("crystal_solidity/condition_formula"),
           TConstruct.getResource("crystal_solidity/per_armor_ratio"),
           TConstruct.getResource("crystal_solidity/finalizer/armor_damage_formula"),
-          TConstruct.getResource("crystal_solidity/finalizer/overshield_damage_formula")));
+          TConstruct.getResource("crystal_solidity/finalizer/overshield_damage_formula"),
+          ModifierIds.crystalLattice));
       buildModifier(ModifierIds.totem)
         .addModule(ModifierSlotModule.slot(slimeknights.tconstruct.library.tools.SlotType.DEFENSE).eachLevel(1))
         .addModule(FormulaAreaEffectModule.tamed(

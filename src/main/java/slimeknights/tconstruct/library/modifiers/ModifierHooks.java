@@ -264,7 +264,7 @@ public class ModifierHooks {
 
   public static final ModuleHook<ArmorDamageStatsModifierHook> ARMOR_DAMAGE_STATS = register("armor_damage_stats", ArmorDamageStatsModifierHook.class, ArmorDamageStatsModifierHook.AllMerger::new, (tool, modifier, context, slotType, source, stats) -> {});
 
-  public static final ModuleHook<ShareDamageModifierHook> SHARE_DAMAGE = register("share_damage", ShareDamageModifierHook.class, ShareDamageModifierHook.AllMerger::new, (tool, modifier, guardian, slotType, protectedEntity, source, damage) -> 0);
+  public static final ModuleHook<ShareDamageModifierHook> SHARE_DAMAGE = register("share_damage", ShareDamageModifierHook.class, ShareDamageModifierHook.AllMerger::new, (tool, modifier, guardian, slotType, protectedEntity, source, context) -> false);
   public static final ModuleHook<AroundEntityTickModifierHook> AROUND_ENTITY_TICK = register("around_entity_tick", AroundEntityTickModifierHook.class, AroundEntityTickModifierHook.AllMerger::new, new AroundEntityTickModifierHook() {});
   public static final ModuleHook<SelfTickModifierHook> SELF_TICK = register("self_tick", SelfTickModifierHook.class, SelfTickModifierHook.AllMerger::new, new SelfTickModifierHook() {});
   public static final ModuleHook<ArmorTickModifierHook> ARMOR_TICK = register("armor_tick", ArmorTickModifierHook.class, ArmorTickModifierHook.AllMerger::new, new ArmorTickModifierHook() {});

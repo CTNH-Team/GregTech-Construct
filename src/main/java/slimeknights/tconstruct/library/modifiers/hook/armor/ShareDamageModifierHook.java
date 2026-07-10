@@ -9,24 +9,22 @@ import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import java.util.Collection;
 
 public interface ShareDamageModifierHook {
-  float shareDamage(IToolStackView tool, ModifierEntry modifier, LivingEntity guardian, EquipmentSlot slotType, LivingEntity protectedEntity, DamageSource source, float damage);
+  boolean collectShareDamage(IToolStackView tool, ModifierEntry modifier, LivingEntity guardian, EquipmentSlot slotType,
+                             LivingEntity protectedEntity, DamageSource source, ShareDamageContext context);
+
+  interface ShareDamageContext {
+    void add(float shareRatio, float extraProtection, float healthGround, float distanceFactor);
+  }
 
   record AllMerger(Collection<ShareDamageModifierHook> modules) implements ShareDamageModifierHook {
     @Override
-    public float shareDamage(IToolStackView tool, ModifierEntry modifier, LivingEntity guardian, EquipmentSlot slotType, LivingEntity protectedEntity, DamageSource source, float damage) {
-      float shared = 0;
-      float remaining = damage;
+    public boolean collectShareDamage(IToolStackView tool, ModifierEntry modifier, LivingEntity guardian, EquipmentSlot slotType,
+                                      LivingEntity protectedEntity, DamageSource source, ShareDamageContext context) {
+      boolean claimed = false;
       for (ShareDamageModifierHook module : modules) {
-        float amount = module.shareDamage(tool, modifier, guardian, slotType, protectedEntity, source, remaining);
-        if (amount > 0) {
-          shared += amount;
-          remaining -= amount;
-          if (remaining <= 0) {
-            break;
-          }
-        }
+        claimed |= module.collectShareDamage(tool, modifier, guardian, slotType, protectedEntity, source, context);
       }
-      return shared;
+      return claimed;
     }
   }
 }

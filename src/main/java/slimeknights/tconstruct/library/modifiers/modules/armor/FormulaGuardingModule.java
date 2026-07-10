@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.library.modifiers.modules.armor;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -29,7 +28,6 @@ import slimeknights.tconstruct.library.module.HookProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
 import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
-import slimeknights.tconstruct.shared.AchievementEvents;
 import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.logic.GuardingCache;
 
@@ -58,67 +56,41 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
   }
 
   @Override
-  public float shareDamage(IToolStackView tool, ModifierEntry modifier, LivingEntity guardian, EquipmentSlot slotType, LivingEntity protectedEntity, DamageSource source, float damage) {
-    if (damage <= 0 || guardian.getHealth() <= healthGround || !condition.matches(tool, modifier)) {
-      return 0;
+  public boolean collectShareDamage(IToolStackView tool, ModifierEntry modifier, LivingEntity guardian, EquipmentSlot slotType,
+                                    LivingEntity protectedEntity, DamageSource source, ShareDamageContext context) {
+    if (guardian.getHealth() <= healthGround || !condition.matches(tool, modifier)) {
+      return false;
     }
     if (protectedEntity instanceof Player protectedPlayer && GuardingCache.hasHook(protectedPlayer.getUUID(), modifier.getId())) {
-      return 0;
+      return false;
     }
 
     double distance = guardian.distanceTo(protectedEntity);
     if (distance > effectiveRange) {
-      return 0;
+      return false;
     }
 
     IFormula distanceFormula = FormulaManager.getOrNull(distanceFactorFormula);
     IFormula shareFormula = FormulaManager.getOrNull(shareRatioFormula);
     IFormula protectionFormula = FormulaManager.getOrNull(extraProtectionFormula);
-    if (distanceFormula == null || shareFormula == null || protectionFormula == null) {
-      return 0;
-    }
 
     int platingLevel = tool.getModifierLevel(ModifierIds.plating);
     if (platingLevel <= 0) {
-      return 0;
+      return false;
     }
     ModifierEntry plating = new ModifierEntry(ModifierManager.INSTANCE.get(ModifierIds.plating), Math.max(1, platingLevel));
     CapacityBarHook bar = plating.getHook(ModifierHooks.CAPACITY_BAR);
     if (bar == ModifierHooks.CAPACITY_BAR.getDefaultInstance()) {
-      return 0;
+      return false;
     }
     int capacity = Math.max(1, bar.getCapacity(tool, plating));
     int amount = Math.max(0, bar.getAmount(tool));
     double level = modifier.getEffectiveLevel();
-    float distanceFactor = Mth.clamp((float)distanceFormula.accept(distance, effectiveRange, fullEffectRange), 0, 1);
-    float shareRatio = Mth.clamp((float)shareFormula.accept(0, level, capacity, amount), 0, 1) * distanceFactor;
-    if (shareRatio <= 0) {
-      return 0;
-    }
-
-    float shared = damage * shareRatio;
-    float guardianDamage = shared * (1 - Mth.clamp((float)protectionFormula.accept(0, level, capacity, amount), 0, 1));
-    float maxGuardianDamage = Math.max(0, guardian.getHealth() - healthGround);
-    boolean protectedByHealthGround = guardianDamage > maxGuardianDamage;
-    if (protectedByHealthGround) {
-      float scale = maxGuardianDamage / guardianDamage;
-      guardianDamage = maxGuardianDamage;
-      shared *= scale;
-    }
-    if (guardianDamage <= 0 || shared <= 0) {
-      return 0;
-    }
-
-    guardian.hurt(source, guardianDamage);
-    if (guardian instanceof ServerPlayer player) {
-      if (shared / damage >= 0.9f) {
-        AchievementEvents.grantAdvancement(player, TConstruct.getResource("combat/shared_fate"));
-      }
-      if (protectedByHealthGround && guardianDamage >= 10f) {
-        AchievementEvents.grantAdvancement(player, TConstruct.getResource("combat/sacrifice"));
-      }
-    }
-    return shared;
+    float distanceFactor = distanceFormula == null ? 1f : Mth.clamp((float)distanceFormula.accept(distance, effectiveRange, fullEffectRange), 0, 1);
+    float shareRatio = shareFormula == null ? 0f : Mth.clamp((float)shareFormula.accept(0, level, capacity, amount), 0, 1);
+    float extraProtection = protectionFormula == null ? 0f : Mth.clamp((float)protectionFormula.accept(0, level, capacity, amount), 0, 1);
+    context.add(shareRatio, extraProtection, healthGround, distanceFactor);
+    return true;
   }
 
   @Override

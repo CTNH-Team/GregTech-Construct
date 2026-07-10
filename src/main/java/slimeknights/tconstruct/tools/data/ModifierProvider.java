@@ -600,7 +600,8 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                         TConstruct.getResource("crystal_solidity/condition_formula"),
                         TConstruct.getResource("crystal_solidity/per_armor_ratio"),
                         TConstruct.getResource("crystal_solidity/finalizer/armor_damage_formula"),
-                        TConstruct.getResource("crystal_solidity/finalizer/overshield_damage_formula")));
+                        TConstruct.getResource("crystal_solidity/finalizer/overshield_damage_formula"),
+                        ModifierIds.crystalLattice));
         buildModifier(ModifierIds.totem)
                 .addModule(ModifierSlotModule.slot(SlotType.DEFENSE).eachLevel(1))
                 .addModule(FormulaAreaEffectModule.tamed(

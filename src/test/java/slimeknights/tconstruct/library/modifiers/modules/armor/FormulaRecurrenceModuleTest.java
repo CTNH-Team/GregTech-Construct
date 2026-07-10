@@ -12,6 +12,7 @@ import oftenoviour.util.formula.IFormula;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook.ArmorDamageStats;
 import slimeknights.tconstruct.library.tools.context.EquipmentContext;
@@ -64,8 +65,7 @@ class FormulaRecurrenceModuleTest extends BaseMcTest {
     entityData.putFloat(KEY, 2);
     FormulaRecurrenceModule.setPersistentDataGetter(ignored -> entityData);
     Player player = player(entityData);
-    DamageSource source = mock(DamageSource.class);
-    when(source.is(DamageTypeTags.BYPASSES_ARMOR)).thenReturn(false);
+    DamageSource source = recurrenceSource();
 
     ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, 10);
     FormulaRecurrenceModule module = FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY);
@@ -94,8 +94,7 @@ class FormulaRecurrenceModuleTest extends BaseMcTest {
     entityData.putFloat(KEY, 2);
     FormulaRecurrenceModule.setPersistentDataGetter(ignored -> entityData);
     Player player = player(entityData);
-    DamageSource source = mock(DamageSource.class);
-    when(source.is(DamageTypeTags.BYPASSES_ARMOR)).thenReturn(false);
+    DamageSource source = recurrenceSource();
     TestToolStack secondTool = new TestToolStack();
     ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, 10);
     FormulaRecurrenceModule module = FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY);
@@ -142,8 +141,7 @@ class FormulaRecurrenceModuleTest extends BaseMcTest {
     ModDataNBT entityData = new ModDataNBT();
     entityData.putFloat(KEY, 2);
     FormulaRecurrenceModule.setPersistentDataGetter(ignored -> entityData);
-    DamageSource source = mock(DamageSource.class);
-    when(source.is(DamageTypeTags.BYPASSES_ARMOR)).thenReturn(false);
+    DamageSource source = recurrenceSource();
     Player player = player(entityData);
 
     PlayerPersistentDataCache.setDataGetter(ignored -> entityData);
@@ -158,6 +156,84 @@ class FormulaRecurrenceModuleTest extends BaseMcTest {
     entityData.putLong(ResourceLocation.tryParse(KEY + "_expiry"), 77L);
     PlayerPersistentDataCache.sync(TEST_PLAYER, entityData, packet -> PlayerPersistentDataCache.put(TEST_PLAYER, KEY.toString(), 6, 77L));
     assertThat(PlayerPersistentDataCache.get(TEST_PLAYER, KEY.toString(), 0)).isEqualTo(6);
+  }
+
+  @Test
+  void acceptsTcaeEligibleDamageEvenWhenItBypassesArmor() {
+    FormulaManager.applySync(Map.of(
+      ARMOR_STAT, formula(values -> values[0]),
+      DAMAGE, formula(values -> values[0]),
+      TICK, formula(values -> 0)
+    ), Map.of(ARMOR_STAT, "{}", DAMAGE, "{}", TICK, "{}"));
+    ModDataNBT entityData = new ModDataNBT();
+    entityData.putFloat(KEY, 2);
+    FormulaRecurrenceModule.setPersistentDataGetter(ignored -> entityData);
+    Player player = player(entityData);
+    DamageSource source = mock(DamageSource.class);
+    when(source.is(DamageTypeTags.BYPASSES_ARMOR)).thenReturn(true);
+    when(source.is(TinkerTags.DamageTypes.MAGIC_PROTECTION)).thenReturn(true);
+
+    ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, 10);
+    FormulaRecurrenceModule module = FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY);
+    FormulaRecurrenceModule.beginDamageEvent(player);
+    module.addArmorDamageStats(tool, new ModifierEntry(ModifierIds.recurrence, 1), EquipmentContext.withTool(player, tool, EquipmentSlot.CHEST), EquipmentSlot.CHEST, source, stats);
+    FormulaRecurrenceModule.finishDamageEvent(stats);
+
+    assertThat(stats.preReduction()).isEqualTo(2);
+    assertThat(entityData.getFloat(KEY)).isEqualTo(2);
+  }
+
+  @Test
+  void ignoresDamageOutsideTcaeAllPredicate() {
+    FormulaManager.applySync(Map.of(
+      ARMOR_STAT, formula(values -> values[0]),
+      DAMAGE, formula(values -> values[0]),
+      TICK, formula(values -> 0)
+    ), Map.of(ARMOR_STAT, "{}", DAMAGE, "{}", TICK, "{}"));
+    ModDataNBT entityData = new ModDataNBT();
+    entityData.putFloat(KEY, 2);
+    FormulaRecurrenceModule.setPersistentDataGetter(ignored -> entityData);
+    Player player = player(entityData);
+
+    ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, 10);
+    FormulaRecurrenceModule module = FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY);
+    FormulaRecurrenceModule.beginDamageEvent(player);
+    module.addArmorDamageStats(tool, new ModifierEntry(ModifierIds.recurrence, 1), EquipmentContext.withTool(player, tool, EquipmentSlot.CHEST), EquipmentSlot.CHEST, mock(DamageSource.class), stats);
+    FormulaRecurrenceModule.finishDamageEvent(stats);
+
+    assertThat(stats.preReduction()).isZero();
+    assertThat(entityData.getFloat(KEY)).isEqualTo(2);
+  }
+
+  @Test
+  void bypassMechanismStoresDamageWithoutApplyingPersistentReduction() {
+    FormulaManager.applySync(Map.of(
+      ARMOR_STAT, formula(values -> 0),
+      DAMAGE, formula(values -> values[0] + values[3]),
+      TICK, formula(values -> 0)
+    ), Map.of(ARMOR_STAT, "{}", DAMAGE, "{}", TICK, "{}"));
+    ModDataNBT entityData = new ModDataNBT();
+    entityData.putFloat(KEY, 2);
+    FormulaRecurrenceModule.setPersistentDataGetter(ignored -> entityData);
+    Player player = player(entityData);
+    DamageSource source = recurrenceSource();
+
+    ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, 8);
+    FormulaRecurrenceModule module = FormulaRecurrenceModule.recurrence(ARMOR_STAT, DAMAGE, TICK, KEY);
+    FormulaRecurrenceModule.beginDamageEvent(player);
+    module.onDamageToPersistent(tool, new ModifierEntry(ModifierIds.recurrence, 2),
+      EquipmentContext.withTool(player, tool, EquipmentSlot.CHEST), EquipmentSlot.CHEST, source, stats);
+    FormulaRecurrenceModule.finishBypassDamageEvent(stats);
+
+    assertThat(stats.preReduction()).isZero();
+    assertThat(entityData.getFloat(KEY)).isEqualTo(10);
+  }
+
+  private static DamageSource recurrenceSource() {
+    DamageSource source = mock(DamageSource.class);
+    when(source.is(TinkerTags.DamageTypes.MELEE_PROTECTION)).thenReturn(true);
+    when(source.isIndirect()).thenReturn(false);
+    return source;
   }
 
   private static Player player(ModDataNBT data) {

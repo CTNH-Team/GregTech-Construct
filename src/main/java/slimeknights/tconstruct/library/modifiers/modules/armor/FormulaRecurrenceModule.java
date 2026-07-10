@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.library.modifiers.modules.armor;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -14,6 +13,9 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import slimeknights.mantle.client.TooltipKey;
 import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
+import slimeknights.mantle.data.predicate.IJsonPredicate;
+import slimeknights.mantle.data.predicate.damage.DamageSourcePredicate;
+import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
@@ -46,6 +48,14 @@ public record FormulaRecurrenceModule(ResourceLocation persistentArmorStatFormul
                                       int intervalTicks, ModifierCondition<IToolStackView> condition)
   implements ModifierModule, ArmorDamageStatsModifierHook, DamageToPersistentModifierHook, ArmorTickModifierHook, TooltipModifierHook, ConditionalModule<IToolStackView> {
   private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<FormulaRecurrenceModule>defaultHooks(ModifierHooks.ARMOR_DAMAGE_STATS, ModifierHooks.DAMAGE_TO_PERSISTENT, ModifierHooks.ARMOR_TICK, ModifierHooks.TOOLTIP);
+  private static final IJsonPredicate<DamageSource> RECURRENCE_DAMAGE_SOURCES = DamageSourcePredicate.or(
+    DamageSourcePredicate.and(
+      DamageSourcePredicate.tag(TinkerTags.DamageTypes.MELEE_PROTECTION),
+      DamageSourcePredicate.IS_INDIRECT.inverted()),
+    DamageSourcePredicate.tag(TinkerTags.DamageTypes.PROJECTILE_PROTECTION),
+    DamageSourcePredicate.tag(TinkerTags.DamageTypes.BLAST_PROTECTION),
+    DamageSourcePredicate.tag(TinkerTags.DamageTypes.FIRE_PROTECTION),
+    DamageSourcePredicate.tag(TinkerTags.DamageTypes.MAGIC_PROTECTION));
   public static final RecordLoadable<FormulaRecurrenceModule> LOADER = RecordLoadable.create(
     Loadables.RESOURCE_LOCATION.requiredField("persistent_armor_stat_formula", FormulaRecurrenceModule::persistentArmorStatFormula),
     Loadables.RESOURCE_LOCATION.requiredField("damage_to_persistent_formula", FormulaRecurrenceModule::damageToPersistentFormula),
@@ -80,6 +90,14 @@ public record FormulaRecurrenceModule(ResourceLocation persistentArmorStatFormul
   }
 
   public static void finishDamageEvent(ArmorDamageStats stats) {
+    finishDamageEvent(stats, true);
+  }
+
+  public static void finishBypassDamageEvent(ArmorDamageStats stats) {
+    finishDamageEvent(stats, false);
+  }
+
+  private static void finishDamageEvent(ArmorDamageStats stats, boolean applyPersistentArmorStat) {
     Deque<DamageState> states = DAMAGE_STATES.get();
     if (states.isEmpty()) {
       return;
@@ -90,13 +108,18 @@ public record FormulaRecurrenceModule(ResourceLocation persistentArmorStatFormul
     }
     float reduced = Math.max(0, stats.originalDamage() - stats.preReduction());
     for (DamageEntry entry : state.entries.values()) {
-      IFormula persistentArmorStat = FormulaManager.getOrNull(entry.module.persistentArmorStatFormula);
       IFormula damageToPersistent = FormulaManager.getOrNull(entry.module.damageToPersistentFormula);
-      if (persistentArmorStat == null || damageToPersistent == null) {
+      if (damageToPersistent == null) {
         continue;
       }
       float value = Math.max(0, entry.data.getFloat(entry.module.key));
-      value = Math.max(0, (float)persistentArmorStat.accept(value, 0, entry.totalLevel, reduced));
+      if (applyPersistentArmorStat) {
+        IFormula persistentArmorStat = FormulaManager.getOrNull(entry.module.persistentArmorStatFormula);
+        if (persistentArmorStat == null) {
+          continue;
+        }
+        value = Math.max(0, (float)persistentArmorStat.accept(value, 0, entry.totalLevel, reduced));
+      }
       value = Math.max(0, (float)damageToPersistent.accept(value, entry.maxLevel, entry.totalLevel, reduced));
       store(entry.data, entry.module.key, value, state.entity);
     }
@@ -125,7 +148,7 @@ public record FormulaRecurrenceModule(ResourceLocation persistentArmorStatFormul
 
   @Override
   public void addArmorDamageStats(IToolStackView tool, ModifierEntry modifier, EquipmentContext context, EquipmentSlot slotType, DamageSource source, ArmorDamageStats stats) {
-    if (source == null || source.is(DamageTypeTags.BYPASSES_ARMOR) || !condition.matches(tool, modifier)) {
+    if (source == null || !RECURRENCE_DAMAGE_SOURCES.matches(source) || !condition.matches(tool, modifier)) {
       return;
     }
     DamageState state = currentDamageState(context);
@@ -146,6 +169,18 @@ public record FormulaRecurrenceModule(ResourceLocation persistentArmorStatFormul
 
   @Override
   public void onDamageToPersistent(IToolStackView tool, ModifierEntry modifier, EquipmentContext context, EquipmentSlot slotType, DamageSource source, ArmorDamageStats stats) {
+    if (source == null || !RECURRENCE_DAMAGE_SOURCES.matches(source) || !condition.matches(tool, modifier)) {
+      return;
+    }
+    DamageState state = currentDamageState(context);
+    if (state == null) {
+      return;
+    }
+    DamageEntry entry = state.entries.computeIfAbsent(this, module -> new DamageEntry(module, persistentDataGetter.apply(state.entity)));
+    if (!entry.applied) {
+      entry.totalLevel += modifier.getEffectiveLevel();
+      entry.maxLevel = Math.max(entry.maxLevel, modifier.getEffectiveLevel());
+    }
   }
 
   @Override

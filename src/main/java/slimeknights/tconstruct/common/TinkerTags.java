@@ -865,6 +865,10 @@ public class TinkerTags {
         public static final TagKey<DamageType> FALL_PROTECTION = local("protection/fall");
         public static final TagKey<DamageType> PHYSICS = local("physics");
 
+        public static final TagKey<DamageType> BYPASSES_REDUCTION = local("bypasses_reduction");
+        public static final TagKey<DamageType> BYPASSES_BLOCKING = local("bypasses_blocking");
+        public static final TagKey<DamageType> BYPASSES_PROTECTION = local("bypasses_protection");
+
         /** Damage types that can use modifiers. */
         public static final TagKey<DamageType> MODIFIER_WHITELIST = local("modifier_whitelist");
 

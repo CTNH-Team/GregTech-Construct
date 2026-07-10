@@ -1,0 +1,11 @@
+{
+  "values": [
+    "#minecraft:bypasses_effects",
+    "#minecraft:bypasses_invulnerability",
+    "#minecraft:bypasses_enchantments",
+    "#minecraft:bypasses_armor",
+    "#tconstruct:protection/magic",
+    "#tconstruct:protection/fire",
+    "#tconstruct:protection/fall"
+  ]
+}
