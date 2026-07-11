@@ -139,7 +139,7 @@ public class ToolCastingRecipe extends PartSwapCastingRecipe implements IMultiRe
   }
 
 
-  /* JEI display */
+  /* EMI display */
 
   @Override
   public List<IDisplayableCastingRecipe> getRecipes(RegistryAccess access) {

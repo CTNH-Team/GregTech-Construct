@@ -190,7 +190,7 @@ public class ModifierRecipe extends AbstractModifierRecipe {
   }
 
 
-  /* JEI display */
+  /* EMI display */
 
   @Override
   public int getInputCount() {

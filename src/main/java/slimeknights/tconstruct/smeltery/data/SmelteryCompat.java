@@ -21,7 +21,7 @@ import java.util.Optional;
 import static slimeknights.mantle.Mantle.commonResource;
 
 /**
- * Enum holding all relevant smeltery compat, used in datagen and JEI.
+ * Enum holding all relevant smeltery compat, used in datagen and EMI.
  * Internal usage - you can do all the same things this does through your own datagen easily.
  * @see slimeknights.tconstruct.library.data.recipe.SmelteryRecipeBuilder
  */
@@ -79,14 +79,14 @@ public enum SmelteryCompat {
     @Nullable
     private final MaterialId material;
 
-    /** Creates a compat using a material for the JEI condition. Will show fluids if the material is present. */
+    /** Creates a compat using a material for the EMI condition. Will show fluids if the material is present. */
     SmelteryCompat(FluidObject<? extends ForgeFlowingFluid> fluid, CompatType type, @Nullable MaterialId material) {
         this.fluid = fluid;
         this.type = type;
         this.material = material;
     }
 
-    /** Creates compat using just the local name as JEI condition. */
+    /** Creates compat using just the local name as an EMI condition. */
     SmelteryCompat(FluidObject<? extends ForgeFlowingFluid> fluid, CompatType type) {
         this(fluid, type, null);
     }

@@ -291,7 +291,7 @@ public class MaterialBlockModel implements IUnbakedGeometry<MaterialBlockModel> 
     /** Cache of texture name to baked model */
     private final Cache<MaterialIdNBT, BakedModel> cache = CacheBuilder
       .newBuilder()
-      // ensure we can display every single tool that shows in JEI, plus a couple extra
+      // ensure we can display every single tool that shows in EMI, plus a couple extra
       .maximumSize(MaterialRenderInfoLoader.INSTANCE.getAllRenderInfos().size() * 3L / 2)
       .build();
 

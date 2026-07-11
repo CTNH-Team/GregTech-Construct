@@ -66,7 +66,7 @@ public class ItemCastingRecipe extends AbstractCastingRecipe implements IDisplay
   }
 
 
-  /* JEI */
+  /* EMI */
 
   @Override
   public ResourceLocation getRecipeId() {
@@ -90,7 +90,7 @@ public class ItemCastingRecipe extends AbstractCastingRecipe implements IDisplay
   }
 
   /**
-   * Gets a list of valid fluid inputs for this recipe, for display in JEI
+   * Gets a list of valid fluid inputs for this recipe, for display in EMI
    * @return  List of fluids
    */
   @Override

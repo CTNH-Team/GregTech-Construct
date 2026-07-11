@@ -136,7 +136,7 @@ public class ArmorDyeingRecipe implements ITinkerStationRecipe, IMultiRecipe<IDi
   }
 
 
-  /* JEI */
+  /* EMI */
 
   @Nullable
   private List<IDisplayModifierRecipe> displayRecipes;

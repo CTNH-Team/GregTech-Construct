@@ -99,7 +99,7 @@ public class MultilevelIncrementalModifierRecipe extends IncrementalModifierReci
   }
 
 
-  /* JEI display */
+  /* EMI display */
 
   private List<IDisplayModifierRecipe> displayRecipes = null;
 

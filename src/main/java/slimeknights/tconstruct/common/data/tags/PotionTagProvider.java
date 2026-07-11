@@ -20,7 +20,7 @@ public class PotionTagProvider extends BuiltinRegistryTagProvider<Potion> {
 
   @Override
   protected void addTags(Provider provider) {
-    tag(TinkerTags.Potions.HIDDEN_FLUID).addOptional(TinkerTags.HIDDEN_FROM_RECIPE_VIEWERS);
+    tag(TinkerTags.Potions.HIDDEN_FLUID).addOptional(TinkerTags.HIDDEN_FROM_EMI);
   }
 
   @Override

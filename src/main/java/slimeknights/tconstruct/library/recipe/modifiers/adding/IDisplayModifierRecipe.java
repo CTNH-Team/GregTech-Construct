@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-/** Common interface for modifier recipes that can show in JEI */
+/** Common interface for modifier recipes that can show in EMI */
 public interface IDisplayModifierRecipe extends IModifierRecipe {
   /** Gets the ID of this recipe. If this is a generated display recipe, uses the parent recipe ID */
   @Nullable
@@ -41,7 +41,7 @@ public interface IDisplayModifierRecipe extends IModifierRecipe {
   int getInputCount();
 
   /**
-   * Gets an ingredients to display in JEI.
+   * Gets an ingredients to display in EMI.
    * @param  slot  Slot index to display
    * @return  Display item list
    */

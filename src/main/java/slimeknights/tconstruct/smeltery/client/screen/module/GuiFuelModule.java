@@ -36,7 +36,7 @@ public class GuiFuelModule implements IScreenWithFluidTank, ClickableTankModule 
   private final FuelModule fuelModule;
   /** location to draw the tank */
   private final int x, y, width, height;
-  /** Location of the fluid for JEI */
+  /** Location of the fluid for EMI */
   private final Rect2i fluidLoc;
   /** location to draw the fire */
   private final int fireX, fireY;

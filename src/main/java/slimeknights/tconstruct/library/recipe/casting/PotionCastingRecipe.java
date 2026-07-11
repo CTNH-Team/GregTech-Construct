@@ -105,7 +105,7 @@ public class PotionCastingRecipe implements ICastingRecipe, IMultiRecipe<Display
   }
 
 
-  /* JEI */
+  /* EMI */
   protected List<DisplayCastingRecipe> displayRecipes = null;
 
   @Override

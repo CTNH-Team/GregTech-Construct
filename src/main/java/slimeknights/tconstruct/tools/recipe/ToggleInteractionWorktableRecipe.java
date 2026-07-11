@@ -43,7 +43,7 @@ public class ToggleInteractionWorktableRecipe extends AbstractWorktableRecipe {
   /** Loader instance */
   public static final RecordLoadable<ToggleInteractionWorktableRecipe> LOADER = RecordLoadable.create(ContextKey.ID.requiredField(), TOOL_FIELD, INPUTS_FIELD, ToggleInteractionWorktableRecipe::new);
 
-  /** Cached list of modifiers shown in JEI */
+  /** Cached list of modifiers shown in EMI */
   private List<ModifierEntry> filteredModifiers = null;
 
   public ToggleInteractionWorktableRecipe(ResourceLocation id, Ingredient toolRequirement, List<SizedIngredient> inputs) {

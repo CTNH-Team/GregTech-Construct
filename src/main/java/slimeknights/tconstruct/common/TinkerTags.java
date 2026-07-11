@@ -52,14 +52,14 @@ public class TinkerTags {
         MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, TagsUpdatedEvent.class, event -> tagsLoaded = true);
     }
 
-    /** Resource location of the hidden from recipe tags used in JEI. */
+    /** Resource location of the hidden from recipe tags used in EMI. */
     @SuppressWarnings("removal")
-    public static final ResourceLocation HIDDEN_FROM_RECIPE_VIEWERS = ResourceLocation.tryBuild("c", "hidden_from_recipe_viewers");
+    public static final ResourceLocation HIDDEN_FROM_EMI = ResourceLocation.tryBuild("c", "hidden_from_recipe_viewers");
 
-    /** Creates a tag that hides things from JEI */
+    /** Creates a tag that hides things from EMI */
     @SuppressWarnings("SameParameterValue") // there really is no benefit to migrating to new constructors early; just lose Neo compat
-    private static <R> TagKey<R> hiddenFromRecipeViewers(ResourceKey<? extends Registry<R>> registry) {
-        return TagKey.create(registry, HIDDEN_FROM_RECIPE_VIEWERS);
+    private static <R> TagKey<R> hiddenFromEMI(ResourceKey<? extends Registry<R>> registry) {
+        return TagKey.create(registry, HIDDEN_FROM_EMI);
     }
 
     public static class Blocks {
@@ -369,7 +369,7 @@ public class TinkerTags {
          */
         /** Anything that can be stored in the part chest */
         public static final TagKey<Item> CHEST_PARTS = local("chest_parts");
-        /** All material items, used to populate several lists such as books or subtypes in JEI */
+        /** All material items, used to populate several lists such as books or subtypes in EMI */
         public static final TagKey<Item> TOOL_PARTS = local("parts");
         /** Tool parts that piglins may barter to the player. Will contain random nether materials from {@link Materials#BARTERED} */
         public static final TagKey<Item> BARTERED_PARTS = local("parts/bartered");
@@ -381,7 +381,7 @@ public class TinkerTags {
 
         /** Modifiable items that contain multiple parts. TODO 1.21: rename to modifiable/parts? */
         public static final TagKey<Item> MULTIPART_TOOL = local("modifiable/multipart");
-        /** Modifiable items that contain exactly 1 tool part, special cased in JEI */
+        /** Modifiable items that contain exactly 1 tool part, special cased in EMI */
         public static final TagKey<Item> SINGLEPART_TOOL = local("modifiable/multipart/single");
         /** Modifiable items that can have range increased */
         public static final TagKey<Item> AOE = local("modifiable/aoe");
@@ -531,8 +531,8 @@ public class TinkerTags {
         /** Tag of trophies from bosses, to grant an additional upgrade slot to tools. Meant for Twilight Forest boss trophies, but suppose you can add other bosses that are not easily farmed. */
         public static final TagKey<Item> BOSS_TROPHIES = local("boss_trophies");
 
-        /** Fluids in this tag won't show in JEI */
-        public static final TagKey<Item> HIDDEN_IN_RECIPE_VIEWERS = hiddenFromRecipeViewers(Registries.ITEM);
+        /** Fluids in this tag won't show in EMI */
+        public static final TagKey<Item> HIDDEN_IN_EMI = hiddenFromEMI(Registries.ITEM);
 
         /** Makes a tag in the tinkers domain */
         private static TagKey<Item> local(String name) {
@@ -597,8 +597,8 @@ public class TinkerTags {
 
         /** Fluids in this tag won't show in the creative filled tanks */
         public static final TagKey<Fluid> HIDE_IN_CREATIVE_TANKS = local("hide_in_creative_tanks");
-        /** Fluids in this tag won't show in JEI */
-        public static final TagKey<Fluid> HIDDEN_IN_RECIPE_VIEWERS = hiddenFromRecipeViewers(Registries.FLUID);
+        /** Fluids in this tag won't show in EMI */
+        public static final TagKey<Fluid> HIDDEN_IN_EMI = hiddenFromEMI(Registries.FLUID);
 
         /** Any fluids in this tag will have block {@link slimeknights.tconstruct.library.modifiers.fluid.FluidEffects} run when fired using the chem thrower */
         public static final TagKey<Fluid> CHEMTHROWER_BLOCK_EFFECTS = local("chemthrower_effects/block");
@@ -774,8 +774,8 @@ public class TinkerTags {
         public static final TagKey<Modifier> BONUS_SLOTLESS = local("slotless/bonus");
         public static final TagKey<Modifier> COSMETIC_SLOTLESS = local("slotless/cosmetic");
 
-        // JEI
-        public static final TagKey<Modifier> HIDDEN_FROM_RECIPE_VIEWERS = hiddenFromRecipeViewers(ModifierManager.REGISTRY_KEY);
+        // EMI
+        public static final TagKey<Modifier> HIDDEN_FROM_EMI = hiddenFromEMI(ModifierManager.REGISTRY_KEY);
 
 
         private static TagKey<Modifier> local(String name) {
@@ -887,7 +887,7 @@ public class TinkerTags {
     public static class Potions {
         private static void init() {}
 
-        /** Any potion variants in this tag will be hidden from the variants of the potion fluid shown in JEI. */
+        /** Any potion variants in this tag will be hidden from the variants of the potion fluid shown in EMI. */
         public static final TagKey<Potion> HIDDEN_FLUID = TagKey.create(Registries.POTION, getResource("hide_in_fluid"));
     }
 }

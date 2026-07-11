@@ -11,7 +11,7 @@ import java.util.List;
  * Hook for recipe display of modifier requirements. Note that the actual requirement are implemented via {@link slimeknights.tconstruct.library.modifiers.hook.build.ValidateModifierHook}
  */
 public interface RequirementsModifierHook {
-  /** Gets the list of modifiers to display on tools in recipe viewers */
+  /** Gets the list of modifiers to display on tools in EMI */
   default List<ModifierEntry> displayModifiers(ModifierEntry entry) {
     return List.of();
   }

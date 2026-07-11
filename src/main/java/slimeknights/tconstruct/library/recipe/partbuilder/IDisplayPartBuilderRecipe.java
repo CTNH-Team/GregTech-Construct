@@ -12,8 +12,8 @@ import slimeknights.tconstruct.library.recipe.material.MaterialRecipeCache;
 import java.util.List;
 
 /**
- * Part builder recipes that can show in JEI.
- * TODO 1.21: make this no longer extend {@link IPartBuilderRecipe}; copy the needed methods for JEI to this interface.
+ * Part builder recipes that can show in EMI.
+ * TODO 1.21: make this no longer extend {@link IPartBuilderRecipe}; copy the needed methods for EMI to this interface.
  */
 public interface IDisplayPartBuilderRecipe extends IPartBuilderRecipe {
   /**

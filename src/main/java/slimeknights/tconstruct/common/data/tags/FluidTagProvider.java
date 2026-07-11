@@ -232,9 +232,9 @@ public class FluidTagProvider extends FluidTagsProvider {
         this.tag(MantleTags.Fluids.SOUP).addTag(TinkerFluids.meatSoup.getTag()).addOptionalTag(TinkerTags.Fluids.SOUP_TOOLTIPS.location());
 
         // hide upcoming fluids
-        tag(TinkerTags.Fluids.HIDDEN_IN_RECIPE_VIEWERS).add(TinkerFluids.moltenKnightslime.get(), TinkerFluids.moltenSoulsteel.get());
+        tag(TinkerTags.Fluids.HIDDEN_IN_EMI).add(TinkerFluids.moltenKnightslime.get(), TinkerFluids.moltenSoulsteel.get());
         // hide upcoming fluids that require NBT. Can expand this list if other mods report problems
-        tag(TinkerTags.Fluids.HIDE_IN_CREATIVE_TANKS).add(TinkerFluids.potion.get()).addTag(TinkerTags.Fluids.HIDDEN_IN_RECIPE_VIEWERS);
+        tag(TinkerTags.Fluids.HIDE_IN_CREATIVE_TANKS).add(TinkerFluids.potion.get()).addTag(TinkerTags.Fluids.HIDDEN_IN_EMI);
 
         addonTags.accept(new FluidTagRegistrar());
     }

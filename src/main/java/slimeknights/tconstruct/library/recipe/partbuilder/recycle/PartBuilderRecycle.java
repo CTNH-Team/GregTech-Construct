@@ -177,7 +177,7 @@ public class PartBuilderRecycle implements IPartBuilderRecipe, IMultiRecipe<Disp
   }
 
 
-  /* JEI */
+  /* EMI */
   private List<DisplayPartRecipe> displayRecipes;
 
   @Override

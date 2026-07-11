@@ -47,7 +47,7 @@ public class SeveringRecipe implements ICustomOutputRecipe<IEmptyContainer> {
   }
 
   /**
-   * Gets the output for this recipe for display in JEI, needs to be consistent
+   * Gets the output for this recipe for display in EMI, needs to be consistent
    * @return  Display output
    */
   public ItemStack getOutput() {

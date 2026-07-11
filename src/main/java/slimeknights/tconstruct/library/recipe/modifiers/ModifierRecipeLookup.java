@@ -27,7 +27,7 @@ public class ModifierRecipeLookup {
   private static final Multimap<SlotType,LazyModifier> RECIPE_MODIFIERS = HashMultimap.create();
   /** Map of slot type to modifier IDs added via that slot, better for lookup */
   private static final Multimap<SlotType,ModifierId> RECIPE_MODIFIER_IDS = HashMultimap.create();
-  /** List of modifiers to show in JEI */
+  /** List of modifiers to show in EMI */
   private static List<ModifierEntry> RECIPE_MODIFIER_LIST = null;
 
   /** Listener for clearing the caches on recipe reload */
@@ -79,6 +79,7 @@ public class ModifierRecipeLookup {
     LISTENER.checkClear();
     RECIPE_MODIFIERS.put(slotType, modifier);
     RECIPE_MODIFIER_IDS.put(slotType, modifier.getId());
+    RECIPE_MODIFIER_LIST = null;
   }
 
   /** Gets a stream of all modifiers obtainable via recipes */
@@ -86,7 +87,7 @@ public class ModifierRecipeLookup {
     return RECIPE_MODIFIERS.values().stream().map(LazyModifier::get).distinct();
   }
 
-  /** Gets a list of modifier entries for display in JEI, basically the same as creating your own, but the result is cached */
+  /** Gets a list of modifier entries for display in EMI, basically the same as creating your own, but the result is cached */
   public static List<ModifierEntry> getRecipeModifierList() {
     // do not cache an empty list during game start, recipes have not yet loaded
     if (RECIPE_MODIFIERS.isEmpty()) {

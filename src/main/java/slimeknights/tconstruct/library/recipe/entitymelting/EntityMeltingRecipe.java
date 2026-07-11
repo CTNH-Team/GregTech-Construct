@@ -65,7 +65,7 @@ public class EntityMeltingRecipe implements ICustomOutputRecipe<IEmptyContainer>
   }
 
   /**
-   * Gets a collection of inputs for filtering in JEI
+   * Gets a collection of inputs for filtering in EMI
    * @return  Collection of types
    */
   public Collection<EntityType<?>> getInputs() {

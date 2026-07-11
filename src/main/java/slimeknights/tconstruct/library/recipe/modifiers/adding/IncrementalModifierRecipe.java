@@ -157,7 +157,7 @@ public class IncrementalModifierRecipe extends AbstractModifierRecipe {
   }
 
 
-  /* JEI display */
+  /* EMI display */
 
   @Override
   public boolean isIncremental() {

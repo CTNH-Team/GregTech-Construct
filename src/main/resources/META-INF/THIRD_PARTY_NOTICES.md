@@ -25,3 +25,11 @@ This branch incorporates selected ideas and generated-data outputs from third-pa
 - License: MIT
 - Notice: Selected Create/Tinkers' Construct integration code and generated-data outputs in this project are adapted from TinkersGears. This integration is not a bundled standalone copy of that mod.
 - License text: `docs/third_party/TinkersGears-LICENSE`
+
+## TConJEI
+
+- Upstream project: `https://github.com/paypur/TConJEI.git`
+- Author: paypur
+- License: MIT
+- Notice: The EMI material-stat views are adapted from TConJEI's material-stat presentation and material-part lookup behavior; the runtime integration is implemented against the current EMI API.
+- License text: `docs/third_party/TConJEI-LICENSE`

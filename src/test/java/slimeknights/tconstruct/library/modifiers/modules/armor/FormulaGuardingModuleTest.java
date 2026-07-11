@@ -300,6 +300,11 @@ class FormulaGuardingModuleTest extends BaseMcTest {
       this.healthGround = healthGround;
       this.distanceFactor = distanceFactor;
     }
+
+    @Override
+    public void add(float shareRatio, float extraProtection, float healthGround, float distanceFactor, int color) {
+      add(shareRatio, extraProtection, healthGround, distanceFactor);
+    }
   }
 
   private static class TestCapacityModifier extends Modifier {

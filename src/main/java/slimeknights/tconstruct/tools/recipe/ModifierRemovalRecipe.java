@@ -166,7 +166,7 @@ public class ModifierRemovalRecipe extends AbstractWorktableRecipe {
 
 
 
-  /* JEI */
+  /* EMI */
 
   /** Gets a list of tools to display */
   @Override

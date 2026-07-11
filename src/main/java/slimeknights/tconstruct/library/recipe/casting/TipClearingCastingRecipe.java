@@ -55,7 +55,7 @@ public class TipClearingCastingRecipe extends PotionCastingRecipe {
   }
 
 
-  /* JEI */
+  /* EMI */
 
   @Override
   public List<DisplayCastingRecipe> getRecipes(RegistryAccess access) {

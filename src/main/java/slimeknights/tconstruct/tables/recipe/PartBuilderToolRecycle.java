@@ -226,7 +226,7 @@ public class PartBuilderToolRecycle implements IPartBuilderRecipe, IMultiRecipe<
   }
 
 
-  /* JEI */
+  /* EMI */
   private List<DisplayPartRecipe> displayRecipes;
 
   private record PartIndex(IMaterialItem part, int index) {};

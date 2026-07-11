@@ -198,8 +198,8 @@ public class ItemTagProvider extends ItemTagsProvider {
                 TinkerWorld.earthGeode.asItem(), TinkerWorld.skyGeode.asItem(), TinkerWorld.ichorGeode.asItem(), TinkerWorld.enderGeode.asItem()
         );
 
-        // items to fully hide from JEI
-        IntrinsicTagAppender<Item> hidden = tag(HIDDEN_IN_RECIPE_VIEWERS);
+        // items to fully hide from EMI
+        IntrinsicTagAppender<Item> hidden = tag(HIDDEN_IN_EMI);
         hidden.add(
                 // internal item for modifiers
                 TinkerTools.crystalshotItem.asItem(),
@@ -435,11 +435,11 @@ public class ItemTagProvider extends ItemTagsProvider {
         // tags for modifiers
         copy(TinkerTags.Blocks.CHRYSOPHILITE_ORES, TinkerTags.Items.CHRYSOPHILITE_ORES);
 
-        // tag for tool parts, mostly used by JEI right now
+        // tag for tool parts, mostly used by EMI right now
         this.tag(TinkerTags.Items.TOOL_PARTS).add(
                 // arrow part bartering is weird as they have such low tiers
                 TinkerToolParts.arrowHead.get(), TinkerToolParts.arrowShaft.get(), TinkerToolParts.fletching.get(),
-                // repair kit is not strictly a tool part, but this list just helps out JEI
+                // repair kit is not strictly a tool part, but this list just helps out EMI
                 TinkerToolParts.repairKit.get(), TinkerToolParts.fakeIngot.get(), TinkerToolParts.fakeStorageBlock.asItem()
         ).addTag(TinkerTags.Items.BARTERED_PARTS); // all bartered parts must be tool parts
         this.tag(TinkerTags.Items.BARTERED_PARTS)
