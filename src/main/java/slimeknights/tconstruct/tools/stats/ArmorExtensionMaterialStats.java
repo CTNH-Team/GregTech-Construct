@@ -9,6 +9,7 @@ import slimeknights.tconstruct.library.materials.stats.IMaterialStats;
 import slimeknights.tconstruct.library.materials.stats.IRepairableMaterialStats;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatType;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
+import slimeknights.tconstruct.library.tools.stat.IToolStat;
 import slimeknights.tconstruct.library.tools.stat.ModifierStatsBuilder;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 
@@ -37,6 +38,11 @@ public final class ArmorExtensionMaterialStats {
 
   private ArmorExtensionMaterialStats() {}
 
+  private static Component formatProtection(float value) {
+    return IToolStat.formatNumberPercent(
+      ArmorStats.PROTECTION.getTranslationKey(), ArmorStats.PROTECTION.getColor(), value);
+  }
+
   private static MaterialStatType<MailleStats> mailleType(String name) {
     return new MaterialStatType<MailleStats>(new MaterialStatsId(TConstruct.MOD_ID, name), (MaterialStatType<MailleStats> type) -> new MailleStats(type, 0f, 0f, 0f, 0f), MailleStats.LOADABLE);
   }
@@ -57,20 +63,30 @@ public final class ArmorExtensionMaterialStats {
     return new MaterialStatType<ArmorFrameStats>(new MaterialStatsId(TConstruct.MOD_ID, name), (MaterialStatType<ArmorFrameStats> type) -> new ArmorFrameStats(type, 1, 0f, 0f, 0f, 0f), ArmorFrameStats.LOADABLE);
   }
 
-  private static List<Component> emptyInfo() {
-    return List.of(Component.empty());
-  }
-
-
   public record MailleStats(MaterialStatType<?> getType, float durability, float armor, float armorStrength, float toughness) implements IMaterialStats {
     private static final LoadableField<Float, MailleStats> DURABILITY = FloatLoadable.ANY.defaultField("durability", 0f, MailleStats::durability);
     private static final LoadableField<Float, MailleStats> ARMOR = FloatLoadable.ANY.defaultField("armor", 0f, MailleStats::armor);
     private static final LoadableField<Float, MailleStats> ARMOR_STRENGTH = FloatLoadable.ANY.defaultField("armor_strength", 0f, MailleStats::armorStrength);
     private static final LoadableField<Float, MailleStats> TOUGHNESS = FloatLoadable.ANY.defaultField("toughness", 0f, MailleStats::toughness);
     private static final RecordLoadable<MailleStats> LOADABLE = RecordLoadable.create(MaterialStatType.CONTEXT_KEY.requiredField(), DURABILITY, ARMOR, ARMOR_STRENGTH, TOUGHNESS, MailleStats::new);
+    private static final String DURABILITY_PREFIX = IMaterialStats.makeTooltipKey(TConstruct.getResource("durability"));
+    private static final String ARMOR_PREFIX = IMaterialStats.makeTooltipKey(TConstruct.getResource("armor"));
+    private static final String ARMOR_STRENGTH_PREFIX = IMaterialStats.makeTooltipKey(TConstruct.getResource("armor_strength"));
+    private static final String ARMOR_TOUGHNESS_PREFIX = IMaterialStats.makeTooltipKey(TConstruct.getResource("armor_toughness"));
+    private static final List<Component> DESCRIPTION = List.of(
+      ToolStats.DURABILITY.getDescription(),
+      ToolStats.ARMOR.getDescription(),
+      ArmorStats.ARMOR_STRENGTH.getDescription(),
+      ToolStats.ARMOR_TOUGHNESS.getDescription());
 
-    @Override public List<Component> getLocalizedInfo() { return emptyInfo(); }
-    @Override public List<Component> getLocalizedDescriptions() { return emptyInfo(); }
+    @Override public List<Component> getLocalizedInfo() {
+      return List.of(
+        IToolStat.formatColoredPercentBoost(DURABILITY_PREFIX, durability),
+        IToolStat.formatColoredPercentBoost(ARMOR_PREFIX, armor),
+        IToolStat.formatColoredPercentBoost(ARMOR_STRENGTH_PREFIX, armorStrength),
+        IToolStat.formatColoredPercentBoost(ARMOR_TOUGHNESS_PREFIX, toughness));
+    }
+    @Override public List<Component> getLocalizedDescriptions() { return DESCRIPTION; }
     @Override public void apply(ModifierStatsBuilder builder, float scale) {
       ToolStats.DURABILITY.percent(builder, durability * scale);
       ToolStats.ARMOR.percent(builder, armor * scale);
@@ -87,9 +103,37 @@ public final class ArmorExtensionMaterialStats {
     private static final LoadableField<Float, ArmorLayerStats> REDUCTION = FloatLoadable.FROM_ZERO.defaultField("reduction", 0f, ArmorLayerStats::reduction);
     private static final LoadableField<Float, ArmorLayerStats> PROTECTION = FloatLoadable.PERCENT.defaultField("protection", 0f, ArmorLayerStats::protection);
     private static final RecordLoadable<ArmorLayerStats> LOADABLE = RecordLoadable.create(MaterialStatType.CONTEXT_KEY.requiredField(), DURABILITY, ARMOR, ARMOR_STRENGTH, TOUGHNESS, REDUCTION, PROTECTION, ArmorLayerStats::new);
+    private static final String DURABILITY_PREFIX = IMaterialStats.makeTooltipKey(TConstruct.getResource("durability"));
+    private static final String ARMOR_PREFIX = IMaterialStats.makeTooltipKey(TConstruct.getResource("armor"));
+    private static final List<Component> ARMOR_MAIL_DESCRIPTION = List.of(
+      ToolStats.DURABILITY.getDescription(),
+      ToolStats.ARMOR.getDescription(),
+      ArmorStats.ARMOR_STRENGTH.getDescription(),
+      ToolStats.ARMOR_TOUGHNESS.getDescription(),
+      ArmorStats.PROTECTION.getDescription());
+    private static final List<Component> ARMOR_PLATE_DESCRIPTION = List.of(
+      ToolStats.DURABILITY.getDescription(),
+      ToolStats.ARMOR.getDescription(),
+      ArmorStats.ARMOR_STRENGTH.getDescription(),
+      ToolStats.ARMOR_TOUGHNESS.getDescription(),
+      ArmorStats.PRE_REDUCTION.getDescription(),
+      ArmorStats.PROTECTION.getDescription());
 
-    @Override public List<Component> getLocalizedInfo() { return emptyInfo(); }
-    @Override public List<Component> getLocalizedDescriptions() { return emptyInfo(); }
+    @Override public List<Component> getLocalizedInfo() {
+      List<Component> info = new java.util.ArrayList<>(List.of(
+        IToolStat.formatColoredPercentBoost(DURABILITY_PREFIX, durability),
+        IToolStat.formatColoredPercentBoost(ARMOR_PREFIX, armor),
+        ArmorStats.ARMOR_STRENGTH.formatValue(armorStrength),
+        ToolStats.ARMOR_TOUGHNESS.formatValue(toughness)));
+      if (getType == ARMOR_PLATE) {
+        info.add(ArmorStats.PRE_REDUCTION.formatValue(reduction));
+      }
+      info.add(formatProtection(protection));
+      return info;
+    }
+    @Override public List<Component> getLocalizedDescriptions() {
+      return getType == ARMOR_PLATE ? ARMOR_PLATE_DESCRIPTION : ARMOR_MAIL_DESCRIPTION;
+    }
     @Override public void apply(ModifierStatsBuilder builder, float scale) {
       ToolStats.DURABILITY.percent(builder, durability * scale);
       ToolStats.ARMOR.percent(builder, armor * scale);
@@ -108,9 +152,26 @@ public final class ArmorExtensionMaterialStats {
     private static final LoadableField<Float, ArmorPieceStats> PROTECTION = FloatLoadable.PERCENT.defaultField("protection", 0f, ArmorPieceStats::protection);
     private static final LoadableField<Float, ArmorPieceStats> KNOCKBACK_RESISTANCE = FloatLoadable.FROM_ZERO.defaultField("knockback_resistance", 0f, ArmorPieceStats::knockbackResistance);
     private static final RecordLoadable<ArmorPieceStats> LOADABLE = RecordLoadable.create(MaterialStatType.CONTEXT_KEY.requiredField(), IRepairableMaterialStats.DURABILITY_FIELD, ARMOR, ARMOR_STRENGTH, TOUGHNESS, REDUCTION, PROTECTION, KNOCKBACK_RESISTANCE, ArmorPieceStats::new);
+    private static final List<Component> DESCRIPTION = List.of(
+      ToolStats.DURABILITY.getDescription(),
+      ToolStats.ARMOR.getDescription(),
+      ArmorStats.ARMOR_STRENGTH.getDescription(),
+      ToolStats.ARMOR_TOUGHNESS.getDescription(),
+      ArmorStats.PRE_REDUCTION.getDescription(),
+      ArmorStats.PROTECTION.getDescription(),
+      ToolStats.KNOCKBACK_RESISTANCE.getDescription());
 
-    @Override public List<Component> getLocalizedInfo() { return emptyInfo(); }
-    @Override public List<Component> getLocalizedDescriptions() { return emptyInfo(); }
+    @Override public List<Component> getLocalizedInfo() {
+      return List.of(
+        ToolStats.DURABILITY.formatValue(durability),
+        ToolStats.ARMOR.formatValue(armor),
+        ArmorStats.ARMOR_STRENGTH.formatValue(armorStrength),
+        ToolStats.ARMOR_TOUGHNESS.formatValue(toughness),
+        ArmorStats.PRE_REDUCTION.formatValue(reduction),
+        formatProtection(protection),
+        ToolStats.KNOCKBACK_RESISTANCE.formatValue(knockbackResistance * 10));
+    }
+    @Override public List<Component> getLocalizedDescriptions() { return DESCRIPTION; }
     @Override public void apply(ModifierStatsBuilder builder, float scale) {
       ToolStats.DURABILITY.update(builder, durability * scale);
       ToolStats.ARMOR.update(builder, armor * scale);
@@ -128,9 +189,24 @@ public final class ArmorExtensionMaterialStats {
     private static final LoadableField<Float, ArmorFrameStats> TOUGHNESS = FloatLoadable.ANY.defaultField("toughness", 0f, ArmorFrameStats::toughness);
     private static final LoadableField<Float, ArmorFrameStats> KNOCKBACK_RESISTANCE = FloatLoadable.FROM_ZERO.defaultField("knockback_resistance", 0f, ArmorFrameStats::knockbackResistance);
     private static final RecordLoadable<ArmorFrameStats> LOADABLE = RecordLoadable.create(MaterialStatType.CONTEXT_KEY.requiredField(), IRepairableMaterialStats.DURABILITY_FIELD, ARMOR, ARMOR_STRENGTH, TOUGHNESS, KNOCKBACK_RESISTANCE, ArmorFrameStats::new);
+    private static final String ARMOR_STRENGTH_PREFIX = IMaterialStats.makeTooltipKey(TConstruct.getResource("armor_strength"));
+    private static final String ARMOR_TOUGHNESS_PREFIX = IMaterialStats.makeTooltipKey(TConstruct.getResource("armor_toughness"));
+    private static final List<Component> DESCRIPTION = List.of(
+      ToolStats.DURABILITY.getDescription(),
+      ToolStats.ARMOR.getDescription(),
+      ArmorStats.ARMOR_STRENGTH.getDescription(),
+      ToolStats.ARMOR_TOUGHNESS.getDescription(),
+      ToolStats.KNOCKBACK_RESISTANCE.getDescription());
 
-    @Override public List<Component> getLocalizedInfo() { return emptyInfo(); }
-    @Override public List<Component> getLocalizedDescriptions() { return emptyInfo(); }
+    @Override public List<Component> getLocalizedInfo() {
+      return List.of(
+        ToolStats.DURABILITY.formatValue(durability),
+        ToolStats.ARMOR.formatValue(armor),
+        IToolStat.formatColoredPercentBoost(ARMOR_STRENGTH_PREFIX, armorStrength),
+        IToolStat.formatColoredPercentBoost(ARMOR_TOUGHNESS_PREFIX, toughness),
+        ToolStats.KNOCKBACK_RESISTANCE.formatValue(knockbackResistance));
+    }
+    @Override public List<Component> getLocalizedDescriptions() { return DESCRIPTION; }
     @Override public void apply(ModifierStatsBuilder builder, float scale) {
       ToolStats.DURABILITY.update(builder, durability * scale);
       ToolStats.ARMOR.update(builder, armor * scale);
