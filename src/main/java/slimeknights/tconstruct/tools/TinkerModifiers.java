@@ -64,7 +64,9 @@ import slimeknights.tconstruct.library.modifiers.modules.armor.*;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.*;
 import slimeknights.tconstruct.library.modifiers.modules.build.*;
 import slimeknights.tconstruct.library.modifiers.modules.capacity.*;
+import slimeknights.tconstruct.library.modifiers.modules.carriage.*;
 import slimeknights.tconstruct.library.modifiers.modules.combat.*;
+import slimeknights.tconstruct.library.modifiers.modules.parameter.*;
 import slimeknights.tconstruct.library.modifiers.modules.display.DurabilityBarColorModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.MaterialVariantColorModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.ModifierVariantColorModule;
@@ -736,6 +738,21 @@ public final class TinkerModifiers extends TinkerModule {
             // protection
             ProtectionVariable.LOADER.register(getResource("constant"), ProtectionVariable.Constant.LOADER);
             ProtectionVariable.LOADER.register(getResource("entity"), EntityProtectionVariable.LOADER);
+
+            // TCAE port: parameter provider type loaders
+            ParameterProviderLoadable.register("durability", DurabilityInfo.LOADER);
+            ParameterProviderLoadable.register("holder", HolderInfo.LOADER);
+            ParameterProviderLoadable.register("damage", DamageInfo.LOADER);
+            ParameterProviderLoadable.register("capacity_bar", CapacityBarInfo.LOADER);
+            ParameterProviderLoadable.register("modifier_level", ModifierLevelInfo.LOADER);
+            ParameterProviderLoadable.register("material_count", MaterialCountInfo.LOADER);
+
+            // TCAE port: carriage type loaders
+            CarriageLoadable.register("damage_tool", DamageTool.LOADER);
+            CarriageLoadable.register("average_damage_armor", AverageDamageArmor.LOADER);
+            CarriageLoadable.register("damage_capacity", DamageCapacity.LOADER);
+            CarriageLoadable.register("average_damage_capacity", AverageDamageCapacity.LOADER);
+            CarriageLoadable.register("hurt_holder", HurtHolder.LOADER);
         }
     }
 
