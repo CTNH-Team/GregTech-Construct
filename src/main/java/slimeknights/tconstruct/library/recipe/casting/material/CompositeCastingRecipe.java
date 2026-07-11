@@ -66,7 +66,7 @@ public class CompositeCastingRecipe extends MaterialCastingRecipe {
     return MaterialCastingLookup.getCompositeFluid(fluid, IMaterialItem.getMaterialFromStack(inv.getStack()), materials);
   }
 
-  /* JEI display */
+  /* EMI display */
   @Override
   public List<IDisplayableCastingRecipe> getRecipes(RegistryAccess access) {
     if (multiRecipes == null) {

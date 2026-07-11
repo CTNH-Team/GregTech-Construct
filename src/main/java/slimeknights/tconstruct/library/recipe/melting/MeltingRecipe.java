@@ -56,7 +56,7 @@ public class MeltingRecipe implements IMeltingRecipe {
     this(id, group, input, output, temperature, time, byproducts, true);
   }
 
-  /** Constructor that allows canceling the lookup addition, for generated recipes in JEI */
+  /** Constructor that allows canceling the lookup addition, for generated recipes in EMI */
   public MeltingRecipe(ResourceLocation id, String group, Ingredient input, FluidOutput output, int temperature, int time, List<FluidOutput> byproducts, boolean addLookup) {
     this.id = id;
     this.group = group;
@@ -131,7 +131,7 @@ public class MeltingRecipe implements IMeltingRecipe {
     });
   }
 
-  /** Gets the recipe output for foundry display in JEI */
+  /** Gets the recipe output for foundry display in EMI */
   public List<List<FluidStack>> getOutputWithByproducts() {
     if (outputWithByproducts == null) {
       outputWithByproducts = Stream.concat(Stream.of(output), byproducts.stream()).map(fluid -> List.of(fluid.get())).toList();

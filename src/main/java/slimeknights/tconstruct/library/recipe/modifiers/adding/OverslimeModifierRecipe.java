@@ -117,7 +117,7 @@ public class OverslimeModifierRecipe implements ITinkerStationRecipe, IDisplayMo
     return TinkerModifiers.overslimeSerializer.get();
   }
 
-  /* JEI display */
+  /* EMI display */
   /** Cache of modifier result, same for all overslime */
   private static final ModifierEntry RESULT = new ModifierEntry(TinkerModifiers.overslime, 1);
   /** Cache of input and output tools for display */

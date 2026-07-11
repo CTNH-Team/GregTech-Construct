@@ -37,11 +37,11 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies.tconstruct]]
-modId="jei"
+modId="emi"
 mandatory=false
-versionRange="${jei_range}"
+versionRange="${emi_range}"
 ordering="NONE"
-side="BOTH"
+side="CLIENT"
 
 [[dependencies.tconstruct]]
 modId="jsonthings"

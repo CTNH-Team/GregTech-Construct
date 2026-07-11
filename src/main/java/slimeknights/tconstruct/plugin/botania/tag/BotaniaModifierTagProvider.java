@@ -14,6 +14,6 @@ public final class BotaniaModifierTagProvider {
 
     public static void addTags(DatagenTagProviderRegistrar.ModifierTagRegistrar tags) {
         tags.add(TinkerTags.Modifiers.GENERAL_UPGRADES, BotaniaModifierIds.manafix, BotaniaModifierIds.terrarecover);
-        tags.add(TinkerTags.Modifiers.HIDDEN_FROM_RECIPE_VIEWERS, BotaniaModifierIds.ancientWill);
+        tags.add(TinkerTags.Modifiers.HIDDEN_FROM_EMI, BotaniaModifierIds.ancientWill);
     }
 }

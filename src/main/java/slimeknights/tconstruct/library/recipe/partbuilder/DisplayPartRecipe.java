@@ -12,7 +12,7 @@ import slimeknights.tconstruct.library.materials.definition.MaterialVariant;
 
 import java.util.List;
 
-/** Part builder recipe for JEI display with full control over display. */
+/** Part builder recipe for EMI display with full control over display. */
 @RequiredArgsConstructor
 @Getter
 public class DisplayPartRecipe implements IDisplayPartBuilderRecipe {

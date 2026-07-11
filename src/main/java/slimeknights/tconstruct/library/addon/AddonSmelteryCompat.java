@@ -114,7 +114,7 @@ public interface AddonSmelteryCompat {
   }
 
   record Entry(String name, FlowingFluidObject<ForgeFlowingFluid> fluid, CompatType type, @Nullable MaterialId material) {
-    /** Checks if this compat is present for recipe viewer visibility. */
+    /** Checks if this compat is present for EMI visibility. */
     public boolean isPresent() {
       if (material != null && MaterialRegistry.getMaterial(material) != IMaterial.UNKNOWN) {
         return true;

@@ -60,6 +60,9 @@ legacyForge {
             client()
             sourceSet = sourceSets.main
             programArguments.addAll('--refresh-dependencies')
+            systemProperty 'mixin.env.remapRefMap', 'true'
+            // LegacyForge/ModDev generates the SRG-to-named mapping here.
+            systemProperty 'mixin.env.refMapRemappingFile', file('build/moddev/artifacts/intermediateToNamed.srg').absolutePath
             systemProperty('forge.enabledGameTestNamespaces', project.mod_id)
         }
         server {
@@ -124,7 +127,7 @@ tasks.named('processResources', ProcessResources).configure {
         'forge_range': forge_range,
         'minecraft_range': minecraft_range,
         'mantle_range': mantle_range,
-        'jei_range': jei_range,
+        'emi_range': emi_range,
         'json_things_range': json_things_range
 
 

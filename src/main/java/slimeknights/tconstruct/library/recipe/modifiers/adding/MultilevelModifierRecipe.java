@@ -101,7 +101,7 @@ public class MultilevelModifierRecipe extends ModifierRecipe implements IMultiRe
   }
 
 
-  /* JEI display */
+  /* EMI display */
 
   private List<IDisplayModifierRecipe> displayRecipes = null;
 

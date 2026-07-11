@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nullable;
 
 /**
- * Interface for JEI support to determine the ingredient under the mouse
+ * Interface for EMI support to determine the ingredient under the mouse
  */
 public interface IScreenWithFluidTank {
   /**
@@ -18,6 +18,6 @@ public interface IScreenWithFluidTank {
   @Nullable
   FluidLocation getFluidUnderMouse(int mouseX, int mouseY);
 
-  /** Return from the fluid under mouse, maps to a JEI fluid */
+  /** Return from the fluid under mouse, maps to an EMI fluid */
   record FluidLocation(FluidStack fluid, Rect2i location) {}
 }

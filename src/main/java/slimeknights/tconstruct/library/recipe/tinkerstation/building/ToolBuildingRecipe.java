@@ -55,7 +55,7 @@ import java.util.Objects;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ToolBuildingRecipe implements ITinkerStationRecipe {
-  // placement of recipes in JEI
+  // placement of recipes in EMI
   public static final int X_OFFSET = -6;
   public static final int Y_OFFSET = -15;
   public static final int SLOT_SIZE = 18;
@@ -83,7 +83,7 @@ public class ToolBuildingRecipe implements ITinkerStationRecipe {
   protected final IModifiable output;
   /** Size of the result */
   protected final int outputCount;
-  /** Layout for slots in JEI */
+  /** Layout for slots in EMI */
   @Nullable
   protected final ResourceLocation layoutSlot;
   /** List of input ingredients required in addition to the parts */
@@ -93,7 +93,7 @@ public class ToolBuildingRecipe implements ITinkerStationRecipe {
   protected final List<IToolPart> parts;
   /** List of materials to apply after the parts */
   protected final List<MaterialVariantId> materials;
-  // JEI cache
+  // EMI cache
   protected List<LayoutSlot> layoutSlots;
   protected List<List<ItemStack>> allToolParts;
   protected List<ItemStack> displayOutput;
@@ -215,7 +215,7 @@ public class ToolBuildingRecipe implements ITinkerStationRecipe {
   }
 
 
-  /* JEI */
+  /* EMI */
 
   /** Helper to determine if an anvil is required */
   public boolean requiresAnvil() {
@@ -231,7 +231,7 @@ public class ToolBuildingRecipe implements ITinkerStationRecipe {
   }
 
   /**
-   * Gets all tool parts as and all its variants for JEI input lookups.
+   * Gets all tool parts as and all its variants for EMI input lookups.
    */
   public List<List<ItemStack>> getAllToolParts() {
     if (allToolParts == null) {

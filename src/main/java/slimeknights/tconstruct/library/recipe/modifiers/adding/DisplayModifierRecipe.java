@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-/** Recipe instance to return in JEI from recipes that contain multiple display recipes */
+/** Recipe instance to return in EMI from recipes that contain multiple display recipes */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class DisplayModifierRecipe implements IDisplayModifierRecipe {
   @Getter

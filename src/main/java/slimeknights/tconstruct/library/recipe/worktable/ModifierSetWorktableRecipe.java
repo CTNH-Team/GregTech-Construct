@@ -57,7 +57,7 @@ public class ModifierSetWorktableRecipe extends AbstractWorktableRecipe {
     BooleanLoadable.INSTANCE.defaultField("allow_traits", false, r -> r.allowTraits),
     ModifierSetWorktableRecipe::new);
 
-  /** Title to display in the UI and JEI */
+  /** Title to display in the UI and EMI */
   @Getter
   private final Component title;
   /** Description to display when valid */
@@ -72,7 +72,7 @@ public class ModifierSetWorktableRecipe extends AbstractWorktableRecipe {
   private final boolean addToSet;
   /** If true, traits can be targeted. If false, only recipe modifiers */
   private final boolean allowTraits;
-  /** Cached list of modifiers shown in JEI */
+  /** Cached list of modifiers shown in EMI */
   private List<ModifierEntry> filteredModifiers = null;
 
   public ModifierSetWorktableRecipe(ResourceLocation id, ResourceLocation dataKey, List<SizedIngredient> inputs, Ingredient toolRequirement, IJsonPredicate<ModifierId> modifierPredicate, boolean addToSet, boolean allowTraits) {

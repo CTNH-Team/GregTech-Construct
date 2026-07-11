@@ -614,7 +614,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
     // contains all the baked models since they'll never change, cleared automatically as the baked model is discarded
     private final Cache<ToolCacheKey, BakedModel> cache = CacheBuilder
       .newBuilder()
-      // ensure we can display every single tool that shows in JEI, plus a couple extra
+      // ensure we can display every single tool that shows in EMI, plus a couple extra
       .maximumSize(MaterialRenderInfoLoader.INSTANCE.getAllRenderInfos().size() * 3L / 2)
       .build();
 

@@ -108,11 +108,11 @@ public abstract class AbstractModifierRecipe implements ITinkerStationRecipe, ID
     return maxToolSize;
   }
 
-  /* JEI display */
+  /* EMI display */
   /** Cache of input items shared between result and input */
   @Nullable
   private List<ItemStack> toolInputs = null;
-  /** Cache of modifier slots produced by this recipe for JEI display */
+  /** Cache of modifier slots produced by this recipe for EMI display */
   @Nullable
   protected List<SlotCount> resultSlots = null;
 

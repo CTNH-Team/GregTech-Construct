@@ -250,15 +250,15 @@ public class Config {
     public final ForgeConfigSpec.BooleanValue modifiersIDsInAdvancedTooltips;
     public final ForgeConfigSpec.IntValue maxSmelteryItemQuads;
 
-    // JEI
-    public final BooleanValue showModifiersInJEI;
+    // EMI
+    public final BooleanValue showModifiersInEMI;
     public final ConfigValue<String> showOnlyToolMaterial;
     public final ConfigValue<String> showOnlyPartMaterial;
     public final BooleanValue showAllTableVariants;
     public final BooleanValue showAllAnvilVariants;
     public final BooleanValue showAllSmelteryVariants;
     public final BooleanValue showFilledFluidTanks;
-    public final BooleanValue showPotionFluidInJEI;
+    public final BooleanValue showPotionFluidInEMI;
 
     // framed modifier
     public final ForgeConfigSpec.BooleanValue renderItemFrame;
@@ -277,7 +277,7 @@ public class Config {
       builder.comment("Client only settings").push("client");
 
 //      this.temperatureInCelsius = builder
-//        .comment("If true, temperatures in the smeltery and in JEI will display in celsius. If false they will use the internal units of Kelvin, which may be better for developers")
+//        .comment("If true, temperatures in the smeltery and in EMI will display in celsius. If false they will use the internal units of Kelvin, which may be better for developers")
 //        .translation("tconstruct.configgui.temperatureInCelsius")
 //        .define("temperatureInCelsius", true);
 
@@ -299,49 +299,49 @@ public class Config {
         .translation("tconstruct.configgui.logMissingMaterialTextures")
         .define("logMissingModifierTextures", false);
 
-      builder.comment("JEI configuration").push("jei");
+      builder.comment("EMI configuration").push("jei");
       {
-        this.showModifiersInJEI = builder
-          .comment("If true, modifiers will be added to the JEI ingredient list. If false, they will only be visible in the modifiers recipe tab.")
-          .translation("tconstruct.configgui.showModifiersInJEI")
+        this.showModifiersInEMI = builder
+          .comment("If true, modifiers will be added to the EMI ingredient list. If false, they will only be visible in the modifiers recipe tab.")
+          .translation("tconstruct.configgui.showModifiersInEMI")
           .define("showModifiers", true);
 
         this.showOnlyToolMaterial = builder
-          .comment("If non-empty, only this material will be shown on tools in JEI (or the first valid material if this is invalid for the tool).", "If empty, all materials will show")
+          .comment("If non-empty, only this material will be shown on tools in EMI (or the first valid material if this is invalid for the tool).", "If empty, all materials will show")
           .translation("tconstruct.configgui.showOnlyToolMaterial")
           .worldRestart()
           .define("showOnlyToolMaterial", "");
 
         this.showOnlyPartMaterial = builder
-          .comment("If non-empty, only material will be shown on parts in JEI (or the first valid material if this is invalid for the part).", "If empty, all materials will show")
+          .comment("If non-empty, only material will be shown on parts in EMI (or the first valid material if this is invalid for the part).", "If empty, all materials will show")
           .translation("tconstruct.configgui.showOnlyPartMaterial")
           .worldRestart()
           .define("showOnlyPartMaterial", "");
 
         this.showAllTableVariants = builder
-          .comment("If true, tables such as the part builder and tinker station will show all variants in JEI. If false the variants only show in the tables tab")
+          .comment("If true, tables such as the part builder and tinker station will show all variants in EMI. If false the variants only show in the tables tab")
           .translation("tconstruct.configgui.showAllTableVariants")
           .define("showAllTableVariants", false);
 
         this.showAllAnvilVariants = builder
-          .comment("If true, anvils will show all metal variants in JEI. If false, the variants only show in the tables tab")
+          .comment("If true, anvils will show all metal variants in EMI. If false, the variants only show in the tables tab")
           .translation("tconstruct.configgui.showAllAnvilVariants")
           .define("showAllAnvilVariants", true);
 
         this.showAllSmelteryVariants = builder
-          .comment("If true, smeltery and foundry controllers, drains, ducts, and chutes will show all variants in JEI. If false, the variants only shows in the smeltery tab")
+          .comment("If true, smeltery and foundry controllers, drains, ducts, and chutes will show all variants in EMI. If false, the variants only shows in the smeltery tab")
           .translation("tconstruct.configgui.showAllSmelteryVariants")
           .define("showAllSmelteryVariants", false);
 
         this.showFilledFluidTanks = builder
-          .comment("If true, filled copper cans and fluid gauges will show in JEI. If false only empty ones will show")
+          .comment("If true, filled copper cans and fluid gauges will show in EMI. If false only empty ones will show")
           .define("showFilledFluidTanks", false);
 
-        this.showPotionFluidInJEI = builder
-          .comment("If true, variants of our potion fluid for every potion will show in JEI. If false it will be hidden, but still usable.")
+        this.showPotionFluidInEMI = builder
+          .comment("If true, variants of our potion fluid for every potion will show in EMI. If false it will be hidden, but still usable.")
           .define("showPotionFluid", true);
       }
-      builder.pop(); // jei
+      builder.pop(); // EMI
 
 
 

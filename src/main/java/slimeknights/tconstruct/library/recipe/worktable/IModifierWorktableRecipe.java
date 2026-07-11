@@ -29,19 +29,19 @@ public interface IModifierWorktableRecipe extends ICommonRecipe<ITinkerableConta
   @Override
   boolean matches(ITinkerableContainer inv, Level world);
 
-  /** Gets the title for display in JEI and in the info panel */
+  /** Gets the title for display in EMI and in the info panel */
   Component getTitle();
 
   /**
    * Gets the description of this recipe, or display an error if this recipe matches but currently has no modifiers
-   * @param inv  Recipe inventory, null when fetching in JEI
+   * @param inv  Recipe inventory, null when fetching in EMI
    */
   Component getDescription(@Nullable ITinkerableContainer inv);
 
   /**
    * Gets a list of modifier buttons for the given input. May be empty.
    * It will not be automatically sorted, you must ensure the order is consistent on both client and server.
-   * @param inv  Recipe inventory, null when fetching in JEI
+   * @param inv  Recipe inventory, null when fetching in EMI
    */
   List<ModifierEntry> getModifierOptions(@Nullable ITinkerableContainer inv);
 
@@ -75,7 +75,7 @@ public interface IModifierWorktableRecipe extends ICommonRecipe<ITinkerableConta
   List<ItemStack> getInputTools();
 
   /**
-   * Gets an ingredients to display in JEI.
+   * Gets an ingredients to display in EMI.
    * @param  slot  Slot index to display
    * @return  Display item list
    */

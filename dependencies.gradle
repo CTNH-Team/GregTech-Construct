@@ -11,11 +11,9 @@ dependencies {
     // would ideally use API for this, but that does not work well with fg.deobf in my understanding
     modImplementation("slimeknights.mantle:Mantle:${minecraft_version}-${mantle_version}")
 
-    // compile against the JEI API but do not include it at runtime
-    modCompileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    modCompileOnly("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-    // at runtime, use the full JEI jar
-    modRuntimeOnly("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    // Compile and run against the optional EMI Forge integration.
+    modCompileOnly("curse.maven:emi-580555:8081375")
+    modRuntimeOnly("curse.maven:emi-580555:8081375")
 
     // modImplementation("mcjty.theoneprobe:TheOneProbe-${minecraft_base_version}:${minecraft_base_version}-${probe_version}")
 

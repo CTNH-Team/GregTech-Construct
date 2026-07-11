@@ -133,7 +133,7 @@ public class ArmorTrimRecipe implements ITinkerStationRecipe, IMultiRecipe<IDisp
   }
 
 
-  /* JEI */
+  /* EMI */
 
   private List<IDisplayModifierRecipe> displayRecipes = null;
 

@@ -164,7 +164,7 @@ public class PartRecipe implements IPartBuilderRecipe, IMultiRecipe<IDisplayPart
     return this.getRecipeOutput(material.getVariant(), count);
   }
 
-  /** Cache of recipes for display in JEI */
+  /** Cache of recipes for display in EMI */
   @Nullable
   private List<IDisplayPartBuilderRecipe> multiRecipes;
 

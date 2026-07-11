@@ -7,7 +7,7 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nullable;
 import java.util.List;
 
-/** Interface for casting recipes that are displayable in JEI */
+/** Interface for casting recipes that are displayable in EMI */
 public interface IDisplayableCastingRecipe {
   /** Gets the ID of this recipe. If this is a generated display recipe, uses the parent recipe ID */
   @Nullable

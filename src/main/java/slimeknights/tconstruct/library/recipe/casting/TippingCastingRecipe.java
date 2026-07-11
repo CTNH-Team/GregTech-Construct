@@ -70,7 +70,7 @@ public class TippingCastingRecipe extends PotionCastingRecipe {
   }
 
 
-  /* JEI */
+  /* EMI */
 
   @Override
   public List<DisplayCastingRecipe> getRecipes(RegistryAccess access) {

@@ -187,7 +187,7 @@ public final class TinkerTools extends TinkerModule {
     public static final ItemObject<ModifiableItem> swasher = ITEMS.register("swasher", () -> new ModifiableItem(UNSTACKABLE_PROPS, ToolDefinitions.SWASHER));
     public static final ItemObject<ModifiableItem> minotaurAxe;
     static {
-        // conditionally register minotaur axe as it's the easiest way to keep it out of JEI display
+        // conditionally register minotaur axe as it's the easiest way to keep it out of EMI display
         if (isModLoaded("twilightforest")) {
             minotaurAxe = ITEMS.register("minotaur_axe", () -> new ModifiableItem(UNSTACKABLE_PROPS, ToolDefinitions.MINOTAUR_AXE));
         } else {

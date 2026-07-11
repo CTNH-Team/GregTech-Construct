@@ -74,7 +74,7 @@ public class MaterialCastingRecipe extends AbstractMaterialCastingRecipe impleme
     return result.withMaterial(getFluidRecipe(inv).getOutput().getVariant());
   }
 
-  /* JEI display */
+  /* EMI display */
   protected List<IDisplayableCastingRecipe> multiRecipes;
 
   @Override

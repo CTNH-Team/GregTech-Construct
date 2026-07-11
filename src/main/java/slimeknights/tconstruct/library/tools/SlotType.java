@@ -77,7 +77,7 @@ public final class SlotType {
 
   /**
    * Gets an existing slot type, or creates it if missing.
-   * Note that you will also want to define a texture for the creative modifier and JEI using {@link slimeknights.mantle.client.model.NBTKeyModel#registerExtraTexture(ResourceLocation, String, ResourceLocation)}
+   * Note that you will also want to define a texture for the creative modifier and EMI using {@link slimeknights.mantle.client.model.NBTKeyModel#registerExtraTexture(ResourceLocation, String, ResourceLocation)}
    * @param name     Name of the slot type
    * @return  Slot type instance for the name, only once instance for each name
    * @throws IllegalArgumentException  Error if a name is invalid

@@ -189,7 +189,7 @@ public class PartSwapCastingRecipe extends AbstractMaterialCastingRecipe impleme
   }
 
 
-  /* JEI display */
+  /* EMI display */
   protected List<IDisplayableCastingRecipe> multiRecipes;
 
   /** Gets the max fluid amount from a list of fluids */

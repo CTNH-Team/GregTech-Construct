@@ -36,7 +36,7 @@ public abstract class AbstractWorktableRecipe implements IModifierWorktableRecip
   protected final Ingredient toolRequirement;
   protected final List<SizedIngredient> inputs;
 
-  /* JEI */
+  /* EMI */
   @Nullable
   protected List<ItemStack> tools;
 
@@ -66,7 +66,7 @@ public abstract class AbstractWorktableRecipe implements IModifierWorktableRecip
   }
 
 
-  /* JEI */
+  /* EMI */
 
   /** Gets a list of tools to display */
   @Override

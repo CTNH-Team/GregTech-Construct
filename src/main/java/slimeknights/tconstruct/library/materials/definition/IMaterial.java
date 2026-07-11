@@ -34,7 +34,7 @@ public interface IMaterial extends Comparable<IMaterial> {
   boolean isCraftable();
 
   /**
-   * If true, this material is hidden from display, such as in JEI and the books.
+   * If true, this material is hidden from display, such as in EMI and the books.
    * TODO 1.21: move to material tags.
    */
   boolean isHidden();

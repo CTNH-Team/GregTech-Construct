@@ -186,7 +186,7 @@ public class ModifierHooks {
     }
   });
 
-  /** Hook for displaying a list of requirements on teh tool and a hint for the requirements in recipe viewers */
+  /** Hook for displaying a list of requirements on teh tool and a hint for the requirements in EMI */
   public static final ModuleHook<RequirementsModifierHook> REQUIREMENTS = register("requirements", RequirementsModifierHook.class, RequirementsModifierHook.FirstMerger::new, new RequirementsModifierHook() {});
 
 

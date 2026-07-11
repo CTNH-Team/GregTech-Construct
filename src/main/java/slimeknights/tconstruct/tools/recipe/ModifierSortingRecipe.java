@@ -32,7 +32,7 @@ import java.util.stream.IntStream;
 /** Reorders modifiers ion a tool */
 public class ModifierSortingRecipe extends AbstractWorktableRecipe {
   private static final Component TITLE = TConstruct.makeTranslation("recipe", "modifier_sorting.title");
-  /** JEI description */
+  /** EMI description */
   private static final Component DESCRIPTION = TConstruct.makeTranslation("recipe", "modifier_sorting.description");
   /** Forward sorting description */
   private static final Component DESCRIPTION_FORWARD = TConstruct.makeTranslation("recipe", "modifier_sorting.description.forward");
@@ -78,8 +78,8 @@ public class ModifierSortingRecipe extends AbstractWorktableRecipe {
         return DESCRIPTION_REVERSE;
       }
     }
-    // if we have multiple inputs, show the forwards description in JEI instead of the generic one
-    // if we have just the one input, use a more generic one in JEI
+    // if we have multiple inputs, show the forwards description in EMI instead of the generic one
+    // if we have just the one input, use a more generic one in EMI
     if (inv != null || inputs.size() > 1) {
       return DESCRIPTION_FORWARD;
     }

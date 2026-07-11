@@ -40,7 +40,7 @@ public class CastDuplicationRecipe extends ItemCastingRecipe implements IMultiRe
     return items.length == 0 ? ItemStack.EMPTY : items[0];
   }
 
-  /* JEI */
+  /* EMI */
   private List<DisplayCastingRecipe> displayRecipes = null;
 
   @Override

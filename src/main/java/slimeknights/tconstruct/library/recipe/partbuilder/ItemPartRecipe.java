@@ -129,7 +129,7 @@ public class ItemPartRecipe implements IDisplayPartBuilderRecipe {
   }
 
 
-  /* JEI */
+  /* EMI */
 
   private List<ItemStack> materialItems;
 

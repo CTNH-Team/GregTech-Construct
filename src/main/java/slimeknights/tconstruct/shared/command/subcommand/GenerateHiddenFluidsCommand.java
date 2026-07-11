@@ -49,7 +49,7 @@ public class GenerateHiddenFluidsCommand {
     GeneratePackHelper.saveMcmeta(pack);
 
     // fetch existing tag, if it exists
-    ResourceLocation tag = Fluids.HIDDEN_IN_RECIPE_VIEWERS.location();
+    ResourceLocation tag = Fluids.HIDDEN_IN_EMI.location();
     Path tagPath = pack.resolve(PackType.SERVER_DATA.getDirectory() + '/' + tag.getNamespace() + '/' + TagManager.getTagDir(Registries.FLUID) + '/' + tag.getPath() + ".json");
 
     // load in existing tag from the path, not using resource managers as we are just modifying locally

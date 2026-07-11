@@ -102,7 +102,7 @@ public class MaterialMeltingRecipe implements IMeltingRecipe, IMultiRecipe<Melti
   }
 
 
-  /* JEI display */
+  /* EMI display */
   private List<MeltingRecipe> multiRecipes = null;
 
   @Override
