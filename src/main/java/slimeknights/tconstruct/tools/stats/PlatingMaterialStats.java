@@ -19,19 +19,22 @@ import slimeknights.tconstruct.tools.modules.ArmorModuleBuilder.ArmorShieldModul
 import java.util.List;
 
 /** Material stat class handling all four plating types */
-public record PlatingMaterialStats(MaterialStatType<?> getType, int durability, float armor, float toughness, float knockbackResistance) implements IRepairableMaterialStats {
+public record PlatingMaterialStats(MaterialStatType<?> getType, int durability, float armor, float armorStrength, float toughness, float knockbackResistance) implements IRepairableMaterialStats {
+  private static final LoadableField<Float,PlatingMaterialStats> ARMOR_STRENGTH = FloatLoadable.FROM_ZERO.defaultField("armor_strength", 0f, PlatingMaterialStats::armorStrength);
   private static final LoadableField<Float,PlatingMaterialStats> TOUGHNESS = FloatLoadable.FROM_ZERO.defaultField("toughness", 0f, PlatingMaterialStats::toughness);
   private static final LoadableField<Float,PlatingMaterialStats> KNOCKBACK_RESISTANCE = FloatLoadable.FROM_ZERO.defaultField("knockback_resistance", 0f, PlatingMaterialStats::knockbackResistance);
   private static final RecordLoadable<PlatingMaterialStats> LOADABLE = RecordLoadable.create(
     MaterialStatType.CONTEXT_KEY.requiredField(),
     IRepairableMaterialStats.DURABILITY_FIELD,
     FloatLoadable.FROM_ZERO.defaultField("armor", 0f, true, PlatingMaterialStats::armor),
+    ARMOR_STRENGTH,
     TOUGHNESS,
     KNOCKBACK_RESISTANCE,
     PlatingMaterialStats::new);
   private static final List<Component> DESCRIPTION = List.of(
     ToolStats.DURABILITY.getDescription(),
     ToolStats.ARMOR.getDescription(),
+    ArmorStats.ARMOR_STRENGTH.getDescription(),
     ToolStats.ARMOR_TOUGHNESS.getDescription(),
     ToolStats.KNOCKBACK_RESISTANCE.getDescription());
   private static final List<Component> SHIELD_DESCRIPTION = List.of(
@@ -44,9 +47,9 @@ public record PlatingMaterialStats(MaterialStatType<?> getType, int durability, 
   public static final MaterialStatType<PlatingMaterialStats> LEGGINGS = makeType("plating_leggings");
   public static final MaterialStatType<PlatingMaterialStats> BOOTS = makeType("plating_boots");
   /** Shield loadable does not support armor */
-  public static final MaterialStatType<PlatingMaterialStats> SHIELD = new MaterialStatType<PlatingMaterialStats>(new MaterialStatsId(TConstruct.MOD_ID, "plating_shield"), type -> new PlatingMaterialStats(type, 1, 0, 0, 0), RecordLoadable.create(
+  public static final MaterialStatType<PlatingMaterialStats> SHIELD = new MaterialStatType<PlatingMaterialStats>(new MaterialStatsId(TConstruct.MOD_ID, "plating_shield"), type -> new PlatingMaterialStats(type, 1, 0, 0, 0, 0), RecordLoadable.create(
     MaterialStatType.CONTEXT_KEY.requiredField(), IRepairableMaterialStats.DURABILITY_FIELD, TOUGHNESS, KNOCKBACK_RESISTANCE,
-    (type, durability, toughness, knockbackResistance) -> new PlatingMaterialStats(type, durability, 0, toughness, knockbackResistance)));
+    (type, durability, toughness, knockbackResistance) -> new PlatingMaterialStats(type, durability, 0, 0, toughness, knockbackResistance)));
   /** All types including shield */
   public static final List<MaterialStatType<PlatingMaterialStats>> TYPES = List.of(HELMET, CHESTPLATE, LEGGINGS, BOOTS, SHIELD);
 
@@ -58,7 +61,7 @@ public record PlatingMaterialStats(MaterialStatType<?> getType, int durability, 
     if (getType == SHIELD) {
       return List.of(durability, toughness, knockbackResistance);
     }
-    return List.of(durability, ToolStats.ARMOR.formatValue(this.armor), toughness, knockbackResistance);
+    return List.of(durability, ToolStats.ARMOR.formatValue(this.armor), ArmorStats.ARMOR_STRENGTH.formatValue(this.armorStrength), toughness, knockbackResistance);
   }
 
   @Override
@@ -70,13 +73,14 @@ public record PlatingMaterialStats(MaterialStatType<?> getType, int durability, 
   public void apply(ModifierStatsBuilder builder, float scale) {
     ToolStats.DURABILITY.update(builder, durability * scale);
     ToolStats.ARMOR.update(builder, armor * scale);
+    ArmorStats.ARMOR_STRENGTH.update(builder, armorStrength * scale);
     ToolStats.ARMOR_TOUGHNESS.update(builder, toughness * scale);
     ToolStats.KNOCKBACK_RESISTANCE.update(builder, knockbackResistance * scale);
   }
 
   /** Makes a stat type for the given name */
   private static MaterialStatType<PlatingMaterialStats> makeType(String name) {
-    return new MaterialStatType<PlatingMaterialStats>(new MaterialStatsId(TConstruct.MOD_ID, name), type -> new PlatingMaterialStats(type, 1, 0, 0, 0), LOADABLE);
+    return new MaterialStatType<PlatingMaterialStats>(new MaterialStatsId(TConstruct.MOD_ID, name), type -> new PlatingMaterialStats(type, 1, 0, 0, 0, 0), LOADABLE);
   }
 
 
@@ -91,6 +95,7 @@ public record PlatingMaterialStats(MaterialStatType<?> getType, int durability, 
     private final int[] durability = new int[4];
     private int shieldDurability = 0;
     private final float[] armor = new float[4];
+    private float armorStrength = 0;
     private float toughness = 0;
     private float knockbackResistance = 0;
 
@@ -103,7 +108,7 @@ public record PlatingMaterialStats(MaterialStatType<?> getType, int durability, 
         durability[index] = (int)(ArmorModuleBuilder.MAX_DAMAGE_ARRAY[index] * maxDamageFactor);
       }
       if (shieldDurability == 0) {
-        shieldDurability = (int)(maxDamageFactor * 18);
+        shieldDurability = (int)(maxDamageFactor * ArmorModuleBuilder.SHIELD_DAMAGE);
       }
       return this;
     }
@@ -120,12 +125,12 @@ public record PlatingMaterialStats(MaterialStatType<?> getType, int durability, 
     @Override
     public PlatingMaterialStats build(ArmorItem.Type slot) {
       int index = slot.ordinal();
-      return new PlatingMaterialStats(TYPES.get(index), durability[index], armor[index], toughness, knockbackResistance);
+      return new PlatingMaterialStats(TYPES.get(index), durability[index], armor[index], armorStrength, toughness, knockbackResistance);
     }
 
     @Override
     public PlatingMaterialStats buildShield() {
-      return new PlatingMaterialStats(PlatingMaterialStats.SHIELD, shieldDurability, 0, toughness, knockbackResistance);
+      return new PlatingMaterialStats(PlatingMaterialStats.SHIELD, shieldDurability, 0, armorStrength, toughness, knockbackResistance);
     }
   }
 }

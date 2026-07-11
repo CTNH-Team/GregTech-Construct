@@ -80,6 +80,10 @@ public class ModDataNBT implements IModDataView {
     data.putFloat(name.toString(), value);
   }
 
+  public void putLong(ResourceLocation name, long value) {
+    data.putLong(name.toString(), value);
+  }
+
   /**
    * Reads a string from the mod data
    * @param name  Name

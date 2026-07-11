@@ -25,9 +25,24 @@
     "tconstruct:crowbar_head",
     "tconstruct:mortar_head",
     "tconstruct:mortar_bowl",
+    "tconstruct:armor_plate",
+    "tconstruct:armor_mail",
+    "tconstruct:linear",
     "tconstruct:helmet_plating",
     "tconstruct:chestplate_plating",
     "tconstruct:leggings_plating",
-    "tconstruct:boots_plating"
+    "tconstruct:boots_plating",
+    "tconstruct:cast_helmet",
+    "tconstruct:cast_chestplate",
+    "tconstruct:cast_leggings",
+    "tconstruct:cast_boots",
+    "tconstruct:frame_of_helmet",
+    "tconstruct:frame_of_chestplate",
+    "tconstruct:frame_of_leggings",
+    "tconstruct:frame_of_boots",
+    "tconstruct:massive_cast_helmet",
+    "tconstruct:massive_cast_chestplate",
+    "tconstruct:massive_cast_leggings",
+    "tconstruct:massive_cast_boots"
   ]
 }

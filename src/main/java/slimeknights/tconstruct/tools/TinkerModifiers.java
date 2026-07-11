@@ -51,6 +51,7 @@ import slimeknights.tconstruct.library.json.variable.stat.ConditionalStatVariabl
 import slimeknights.tconstruct.library.json.variable.stat.EntityConditionalStatVariable;
 import slimeknights.tconstruct.library.json.variable.tool.*;
 import slimeknights.tconstruct.library.modifiers.Modifier;
+import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectManager;
@@ -63,7 +64,9 @@ import slimeknights.tconstruct.library.modifiers.modules.armor.*;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.*;
 import slimeknights.tconstruct.library.modifiers.modules.build.*;
 import slimeknights.tconstruct.library.modifiers.modules.capacity.*;
+import slimeknights.tconstruct.library.modifiers.modules.carriage.*;
 import slimeknights.tconstruct.library.modifiers.modules.combat.*;
+import slimeknights.tconstruct.library.modifiers.modules.parameter.*;
 import slimeknights.tconstruct.library.modifiers.modules.display.DurabilityBarColorModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.MaterialVariantColorModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.ModifierVariantColorModule;
@@ -189,6 +192,10 @@ public final class TinkerModifiers extends TinkerModule {
     public static final ItemObject<Item> goldReinforcement = ITEMS.register("gold_reinforcement", ITEM_PROPS);
     public static final ItemObject<Item> cobaltReinforcement = ITEMS.register("cobalt_reinforcement", ITEM_PROPS);
     public static final ItemObject<Item> obsidianReinforcement = ITEMS.register("obsidian_reinforcement", ITEM_PROPS);
+    public static final ItemObject<Item> manyullynReinforcement = ITEMS.register("manyullyn_reinforcement", ITEM_PROPS);
+    public static final ItemObject<Item> hepatizonReinforcement = ITEMS.register("hepatizon_reinforcement", ITEM_PROPS);
+    public static final ItemObject<Item> queensSlimeReinforcement = ITEMS.register("queens_slime_reinforcement", ITEM_PROPS);
+    public static final ItemObject<Item> netheriteReinforcement = ITEMS.register("netherite_reinforcement", ITEM_PROPS);
     // special
     public static final ItemObject<Item> modifierCrystal = ITEMS.register("modifier_crystal", () -> new ModifierCrystalItem(new Item.Properties().stacksTo(16)));
     public static final ItemObject<CreativeSlotItem> creativeSlotItem = ITEMS.register("creative_slot", () -> new CreativeSlotItem(ITEM_PROPS));
@@ -542,12 +549,25 @@ public final class TinkerModifiers extends TinkerModule {
             ModifierModule.LOADER.register(getResource("block_damage"), BlockDamageSourceModule.LOADER);
             ModifierModule.LOADER.register(getResource("cover_ground"), CoverGroundWalkerModule.LOADER);
             ModifierModule.LOADER.register(getResource("armor_piece_damage_reduction"), ArmorPieceDamageReductionModule.LOADER);
+            ModifierModule.LOADER.register(getResource("conditional_armor_stat"), ConditionalArmorStatModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_area_effect"), FormulaAreaEffectModule.LOADER);
+            ModifierModule.LOADER.register(getResource("self_effect"), SelfEffectModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_armor_stat"), FormulaArmorStatModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_damage_limit"), FormulaDamageLimitModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_guarding"), FormulaGuardingModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_recurrence"), FormulaRecurrenceModule.LOADER);
             ModifierModule.LOADER.register(getResource("protection"), ProtectionModule.LOADER);
             ModifierModule.LOADER.register(getResource("replace_fluid"), ReplaceBlockWalkerModule.LOADER);
             ModifierModule.LOADER.register(getResource("tool_action_walk_transform"), ToolActionWalkerTransformModule.LOADER);
+            // TCAE port: carriage/parameter module loaders
+            ModifierModule.LOADER.register(getResource("carrier"), CarrierModule.LOADER);
+            ModifierModule.LOADER.register(getResource("parameter_provider"), ParameterProviderModule.LOADER);
             // behavior
             ModifierModule.LOADER.register(getResource("attribute"), AttributeModule.LOADER);
             ModifierModule.LOADER.register(getResource("reduce_tool_damage"), ReduceToolDamageModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_tool_damage"), FormulaToolDamageModule.LOADER);
+            ModifierModule.LOADER.register(getResource("priority_tool_damage"), PriorityToolDamageModule.LOADER);
+            ModifierModule.LOADER.register(getResource("tool_damage_capacity"), ToolDamageCapacityModule.LOADER);
             // TODO 1.21: rename to repair_factor?
             ModifierModule.LOADER.register(getResource("repair"), RepairModule.LOADER);
             ModifierModule.LOADER.register(getResource("material_repair"), MaterialRepairModule.LOADER);
@@ -557,6 +577,7 @@ public final class TinkerModifiers extends TinkerModule {
             // build
             ModifierModule.LOADER.register(getResource("conditional_stat"), ConditionalStatModule.LOADER);
             ModifierModule.LOADER.register(getResource("modifier_slot"), ModifierSlotModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_modifier_slot"), FormulaModifierSlotModule.LOADER);
             ModifierModule.LOADER.register(getResource("rarity"), RarityModule.LOADER);
             ModifierModule.LOADER.register(getResource("requirements"), ModifierRequirementsModule.LOADER);
             ModifierModule.LOADER.register(getResource("swappable_slot"), SwappableSlotModule.LOADER);
@@ -592,6 +613,7 @@ public final class TinkerModifiers extends TinkerModule {
             ModifierModule.LOADER.register(getResource("conditional_mining_speed"), ConditionalMiningSpeedModule.LOADER);
             // capacity
             ModifierModule.LOADER.register(getResource("capacity_bar"), CapacityBarModule.LOADER);
+            ModifierModule.LOADER.register(getResource("stat_capacity_bar"), StatCapacityBarModule.LOADER);
             ModifierModule.LOADER.register(getResource("durability_as_capacity"), DurabilityAsCapacityModule.LOADER);
             ModifierModule.LOADER.register(getResource("durability_shield"), DurabilityShieldModule.LOADER);
             ModifierModule.LOADER.register(getResource("loot_to_capacity"), LootToCapacityModule.LOADER);
@@ -629,6 +651,8 @@ public final class TinkerModifiers extends TinkerModule {
             ModifierModule.LOADER.register(getResource("overgrowth"), OvergrowthModule.LOADER);
             ModifierModule.LOADER.register(getResource("overburn"), OverburnModule.INSTANCE.getLoader());
             ModifierModule.LOADER.register(getResource("overshield"), OvershieldModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_repair"), FormulaRepairModule.LOADER);
+            ModifierModule.LOADER.register(getResource("formula_capacity_regenerate"), FormulaCapacityRegenerateModule.LOADER);
             // combat
             ModifierModule.LOADER.register(getResource("fiery_attack"), FieryAttackModule.LOADER);
             ModifierModule.LOADER.register(getResource("freezing_attack"), FreezingAttackModule.LOADER);
@@ -717,6 +741,21 @@ public final class TinkerModifiers extends TinkerModule {
             // protection
             ProtectionVariable.LOADER.register(getResource("constant"), ProtectionVariable.Constant.LOADER);
             ProtectionVariable.LOADER.register(getResource("entity"), EntityProtectionVariable.LOADER);
+
+            // TCAE port: parameter provider type loaders
+            ParameterProviderLoadable.register("durability", DurabilityInfo.LOADER);
+            ParameterProviderLoadable.register("holder", HolderInfo.LOADER);
+            ParameterProviderLoadable.register("damage", DamageInfo.LOADER);
+            ParameterProviderLoadable.register("capacity_bar", CapacityBarInfo.LOADER);
+            ParameterProviderLoadable.register("modifier_level", ModifierLevelInfo.LOADER);
+            ParameterProviderLoadable.register("material_count", MaterialCountInfo.LOADER);
+
+            // TCAE port: carriage type loaders
+            CarriageLoadable.register("damage_tool", DamageTool.LOADER);
+            CarriageLoadable.register("average_damage_armor", AverageDamageArmor.LOADER);
+            CarriageLoadable.register("damage_capacity", DamageCapacity.LOADER);
+            CarriageLoadable.register("average_damage_capacity", AverageDamageCapacity.LOADER);
+            CarriageLoadable.register("hurt_holder", HurtHolder.LOADER);
         }
     }
 
@@ -741,6 +780,10 @@ public final class TinkerModifiers extends TinkerModule {
         output.accept(goldReinforcement);
         output.accept(cobaltReinforcement);
         output.accept(obsidianReinforcement);
+        output.accept(manyullynReinforcement);
+        output.accept(hepatizonReinforcement);
+        output.accept(queensSlimeReinforcement);
+        output.accept(netheriteReinforcement);
         creativeSlotItem.get().addVariants(output::accept);
         // modifier crystal is handled by tool parts tab
     }

@@ -1,0 +1,84 @@
+{
+  "parent": "tconstruct:special/composite_or_forged",
+  "criteria": {
+    "knights_boots": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:knights_boots"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "knights_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:knights_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "knights_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:knights_helmet"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "knights_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:knights_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.tconstruct.full_set.knights.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "tconstruct:knights_leggings",
+      "nbt": "{Damage:0,tic_broken:0b,tic_display:1b,tic_materials:[\"tconstruct:knightmetal\",\"tconstruct:knightmetal\",\"tconstruct:wool\"]}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.tconstruct.full_set.knights.title"
+    }
+  },
+  "requirements": [
+    [
+      "knights_helmet"
+    ],
+    [
+      "knights_chestplate"
+    ],
+    [
+      "knights_leggings"
+    ],
+    [
+      "knights_boots"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

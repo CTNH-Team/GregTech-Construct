@@ -1,0 +1,7 @@
+{
+  "values": [
+    "#minecraft:bypasses_effects",
+    "#minecraft:bypasses_invulnerability",
+    "#minecraft:bypasses_enchantments"
+  ]
+}

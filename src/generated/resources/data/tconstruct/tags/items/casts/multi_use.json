@@ -35,6 +35,21 @@
     "#tconstruct:casts/multi_use/chestplate_plating",
     "#tconstruct:casts/multi_use/leggings_plating",
     "#tconstruct:casts/multi_use/boots_plating",
-    "#tconstruct:casts/multi_use/maille"
+    "#tconstruct:casts/multi_use/maille",
+    "#tconstruct:casts/multi_use/armor_plate",
+    "#tconstruct:casts/multi_use/armor_mail",
+    "#tconstruct:casts/multi_use/cast_helmet",
+    "#tconstruct:casts/multi_use/cast_chestplate",
+    "#tconstruct:casts/multi_use/cast_leggings",
+    "#tconstruct:casts/multi_use/cast_boots",
+    "#tconstruct:casts/multi_use/frame_of_helmet",
+    "#tconstruct:casts/multi_use/frame_of_chestplate",
+    "#tconstruct:casts/multi_use/frame_of_leggings",
+    "#tconstruct:casts/multi_use/frame_of_boots",
+    "#tconstruct:casts/multi_use/massive_cast_helmet",
+    "#tconstruct:casts/multi_use/massive_cast_chestplate",
+    "#tconstruct:casts/multi_use/massive_cast_leggings",
+    "#tconstruct:casts/multi_use/massive_cast_boots",
+    "#tconstruct:casts/multi_use/linear"
   ]
 }

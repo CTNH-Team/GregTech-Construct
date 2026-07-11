@@ -2,6 +2,13 @@
   "values": [
     "tconstruct:travelers_helmet",
     "tconstruct:plate_helmet",
-    "tconstruct:slime_helmet"
+    "tconstruct:slime_helmet",
+    "tconstruct:standard_helmet",
+    "tconstruct:knights_helmet",
+    "tconstruct:explorers_helmet",
+    "tconstruct:light_composite_helmet",
+    "tconstruct:heavy_composite_helmet",
+    "tconstruct:light_forged_helmet",
+    "tconstruct:heavy_forged_helmet"
   ]
 }

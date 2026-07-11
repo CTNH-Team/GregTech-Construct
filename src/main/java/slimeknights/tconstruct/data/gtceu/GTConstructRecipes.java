@@ -21,6 +21,7 @@ import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.tools.TinkerToolParts;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 import slimeknights.tconstruct.tools.data.material.MaterialStatsDataProvider;
+import slimeknights.tconstruct.tools.stats.ArmorExtensionMaterialStats;
 import slimeknights.tconstruct.tools.stats.GripMaterialStats;
 import slimeknights.tconstruct.tools.stats.HandleMaterialStats;
 import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
@@ -75,6 +76,21 @@ public class GTConstructRecipes {
     new SolidifierPart("leggings_plating", () -> TinkerToolParts.plating.get(ArmorItem.Type.LEGGINGS), 5, TinkerSmeltery.leggingsPlatingCast, material -> MATERIAL_SUPPORT.hasStat(material, PlatingMaterialStats.LEGGINGS.getId()), false),
     new SolidifierPart("boots_plating", () -> TinkerToolParts.plating.get(ArmorItem.Type.BOOTS), 2, TinkerSmeltery.bootsPlatingCast, material -> MATERIAL_SUPPORT.hasStat(material, PlatingMaterialStats.BOOTS.getId()), false),
     new SolidifierPart("maille", TinkerToolParts.maille::get, 2, TinkerSmeltery.mailleCast, material -> MATERIAL_SUPPORT.hasStat(material, StatlessMaterialStats.MAILLE.getIdentifier())),
+    new SolidifierPart("armor_plate", TinkerToolParts.armorPlate::get, 2, TinkerSmeltery.armorPlateCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.ARMOR_PLATE.getId())),
+    new SolidifierPart("armor_mail", TinkerToolParts.armorMail::get, 1, TinkerSmeltery.armorMailCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.ARMOR_MAIL.getId())),
+    new SolidifierPart("cast_helmet", () -> TinkerToolParts.armorCast.get(ArmorItem.Type.HELMET), 4, TinkerSmeltery.armorCastHelmetCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.CAST_TYPES.get(ArmorItem.Type.HELMET.ordinal()).getId())),
+    new SolidifierPart("cast_chestplate", () -> TinkerToolParts.armorCast.get(ArmorItem.Type.CHESTPLATE), 8, TinkerSmeltery.armorCastChestplateCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.CAST_TYPES.get(ArmorItem.Type.CHESTPLATE.ordinal()).getId())),
+    new SolidifierPart("cast_leggings", () -> TinkerToolParts.armorCast.get(ArmorItem.Type.LEGGINGS), 7, TinkerSmeltery.armorCastLeggingsCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.CAST_TYPES.get(ArmorItem.Type.LEGGINGS.ordinal()).getId())),
+    new SolidifierPart("cast_boots", () -> TinkerToolParts.armorCast.get(ArmorItem.Type.BOOTS), 3, TinkerSmeltery.armorCastBootsCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.CAST_TYPES.get(ArmorItem.Type.BOOTS.ordinal()).getId())),
+    new SolidifierPart("frame_of_helmet", () -> TinkerToolParts.armorFrame.get(ArmorItem.Type.HELMET), 3, TinkerSmeltery.frameHelmetCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.FRAME_TYPES.get(ArmorItem.Type.HELMET.ordinal()).getId())),
+    new SolidifierPart("frame_of_chestplate", () -> TinkerToolParts.armorFrame.get(ArmorItem.Type.CHESTPLATE), 6, TinkerSmeltery.frameChestplateCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.FRAME_TYPES.get(ArmorItem.Type.CHESTPLATE.ordinal()).getId())),
+    new SolidifierPart("frame_of_leggings", () -> TinkerToolParts.armorFrame.get(ArmorItem.Type.LEGGINGS), 5, TinkerSmeltery.frameLeggingsCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.FRAME_TYPES.get(ArmorItem.Type.LEGGINGS.ordinal()).getId())),
+    new SolidifierPart("frame_of_boots", () -> TinkerToolParts.armorFrame.get(ArmorItem.Type.BOOTS), 2, TinkerSmeltery.frameBootsCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.FRAME_TYPES.get(ArmorItem.Type.BOOTS.ordinal()).getId())),
+    new SolidifierPart("massive_cast_helmet", () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.HELMET), 8, TinkerSmeltery.massiveCastHelmetCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES.get(ArmorItem.Type.HELMET.ordinal()).getId())),
+    new SolidifierPart("massive_cast_chestplate", () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.CHESTPLATE), 14, TinkerSmeltery.massiveCastChestplateCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES.get(ArmorItem.Type.CHESTPLATE.ordinal()).getId())),
+    new SolidifierPart("massive_cast_leggings", () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.LEGGINGS), 12, TinkerSmeltery.massiveCastLeggingsCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES.get(ArmorItem.Type.LEGGINGS.ordinal()).getId())),
+    new SolidifierPart("massive_cast_boots", () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.BOOTS), 6, TinkerSmeltery.massiveCastBootsCast, material -> MATERIAL_SUPPORT.hasStat(material, ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES.get(ArmorItem.Type.BOOTS.ordinal()).getId())),
+    new SolidifierPart("linear", TinkerToolParts.linear::get, 2, TinkerSmeltery.linearCast, material -> MATERIAL_SUPPORT.hasStat(material, StatlessMaterialStats.LINEAR.getIdentifier())),
     // gt tool heads
     new SolidifierPart("wrench_head", TinkerToolParts.wrenchHead::get, 2, TinkerSmeltery.wrenchHeadCast, material -> MATERIAL_SUPPORT.hasStat(material, HeadMaterialStats.ID)),
     new SolidifierPart("wire_cutter_head", TinkerToolParts.wireCutterHead::get, 2, TinkerSmeltery.wireCutterHeadCast, material -> MATERIAL_SUPPORT.hasStat(material, HeadMaterialStats.ID)),

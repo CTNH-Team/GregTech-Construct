@@ -27,6 +27,7 @@ import slimeknights.tconstruct.tools.modifiers.effect.BleedingEffect;
 import slimeknights.tconstruct.tools.modifiers.effect.MagneticEffect;
 import slimeknights.tconstruct.tools.modifiers.effect.NoMilkEffect;
 import slimeknights.tconstruct.tools.modifiers.effect.RepulsiveEffect;
+import slimeknights.tconstruct.tools.modifiers.effect.TriggeredEffect;
 import slimeknights.tconstruct.tools.modifiers.traits.skull.SelfDestructiveModifier.SelfDestructiveEffect;
 import slimeknights.tconstruct.world.TinkerWorld;
 
@@ -50,6 +51,7 @@ public class TinkerEffects extends TinkerModule {
   public static final RegistryObject<MagneticEffect> magnetic = MOB_EFFECTS.register("magnetic", MagneticEffect::new);
   public static final RegistryObject<TinkerEffect> selfDestructing = MOB_EFFECTS.register("self_destructing", SelfDestructiveEffect::new);
   public static final RegistryObject<RepulsiveEffect> repulsive = MOB_EFFECTS.register("repulsive", RepulsiveEffect::new);
+  public static final RegistryObject<TriggeredEffect> triggered = MOB_EFFECTS.register("triggered", TriggeredEffect::new);
   public static final RegistryObject<TinkerEffect> pierce = MOB_EFFECTS.register("pierce", () -> new NoMilkEffect(MobEffectCategory.HARMFUL, 0xD1D37A, true).addAttributeModifier(Attributes.ARMOR, "cd45be7c-c86f-4a7e-813b-42a44a054f44", -1, Operation.ADDITION));
   // damage boost
   public static final RegistryObject<TinkerEffect> conductive = MOB_EFFECTS.register("conductive", () -> new TinkerEffect(MobEffectCategory.HARMFUL, 0xF2D500, true));

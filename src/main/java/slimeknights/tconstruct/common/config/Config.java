@@ -53,6 +53,8 @@ public class Config {
     public final BooleanValue allowIngotlessAlloys;
     public final DoubleValue chemthrowerShotValue;
     public final BooleanValue allowMonsterMeleeModifiers;
+    public final IntValue guardingScanRange;
+    public final IntValue guardingHostilityDurationSeconds;
 
     // debug
     public final BooleanValue forceIntegrationMaterials;
@@ -199,6 +201,10 @@ public class Config {
           .comment("If true, monsters will run melee modifiers when attacking with a modifiable weapon. Provided to work around potential issues with addons allowing more monsters to use tools.",
             "Note that if its just a specific mob or damage source that has an issue, there are tag blacklists.")
           .define("allowMonsterMeleeModifiers", true);
+        this.guardingScanRange = builder
+          .defineInRange("guardingScanRange", 32, 4, 256);
+        this.guardingHostilityDurationSeconds = builder
+          .defineInRange("guardingHostilityDurationSeconds", 60, 1, 86400);
       }
       builder.pop();
 
@@ -425,6 +431,14 @@ public class Config {
   public static void init() {
     ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.commonSpec);
     ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.clientSpec);
+  }
+
+  public static int guardingScanRange() {
+    return COMMON.guardingScanRange.get();
+  }
+
+  public static int guardingHostilityDurationSeconds() {
+    return COMMON.guardingHostilityDurationSeconds.get();
   }
 
   /** Method of syncing the tool inventory on open to prevent desyncs down the line. */

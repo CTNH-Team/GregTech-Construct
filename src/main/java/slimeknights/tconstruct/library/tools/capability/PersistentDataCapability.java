@@ -19,8 +19,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import slimeknights.tconstruct.TConstruct;
-import slimeknights.tconstruct.common.network.SyncPersistentDataPacket;
-import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
 
 import javax.annotation.Nonnull;
@@ -75,11 +73,6 @@ public class PersistentDataCapability {
     }
   }
 
-  /** Syncs the data to the given player */
-  private static void sync(Player player) {
-    player.getCapability(CAPABILITY).ifPresent(data -> TinkerNetwork.getInstance().sendTo(new SyncPersistentDataPacket(data.getCopy()), player));
-  }
-
   /** copy caps when the player respawns/returns from the end */
   private static void playerClone(PlayerEvent.Clone event) {
     Player original = event.getOriginal();
@@ -95,17 +88,14 @@ public class PersistentDataCapability {
 
   /** sync caps when the player respawns/returns from the end */
   private static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-    sync(event.getEntity());
   }
 
   /** sync caps when the player changes dimensions */
   private static void playerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-    sync(event.getEntity());
   }
 
   /** sync caps when the player logs in */
   private static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-    sync(event.getEntity());
   }
 
   /** Capability provider instance */

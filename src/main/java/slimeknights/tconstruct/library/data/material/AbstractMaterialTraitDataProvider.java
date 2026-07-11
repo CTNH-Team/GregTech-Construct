@@ -145,6 +145,18 @@ public abstract class AbstractMaterialTraitDataProvider extends GenericDataProvi
     material(location).addTraits(statsId, traits);
   }
 
+  protected void overrideTraits(MaterialId location, MaterialStatsId statsId, ModifierEntry... traits) {
+    material(location).setTraits(statsId, traits);
+  }
+
+  protected void overrideTraits(MaterialId location, MaterialStatsId statsId, ModifierId... traits) {
+    material(location).setTraits(statsId, traits);
+  }
+
+  protected void overrideTraits(MaterialId location, MaterialStatsId statsId, LazyModifier... traits) {
+    material(location).setTraits(statsId, traits);
+  }
+
   /** Builder for {@link MaterialTraits}. Unlike {@link MaterialTraits.Builder}, uses additive list building rather than replacing lists */
   @CanIgnoreReturnValue
   public static class MaterialTraitsBuilder {
@@ -186,6 +198,24 @@ public abstract class AbstractMaterialTraitDataProvider extends GenericDataProvi
       return this;
     }
 
+    public MaterialTraitsBuilder setDefaultTraits(ModifierEntry... traits) {
+      defaultTraits.clear();
+      Collections.addAll(defaultTraits, traits);
+      return this;
+    }
+
+    public MaterialTraitsBuilder setDefaultTraits(LazyModifier... traits) {
+      defaultTraits.clear();
+      addAll(defaultTraits, traits);
+      return this;
+    }
+
+    public MaterialTraitsBuilder setDefaultTraits(ModifierId... traits) {
+      defaultTraits.clear();
+      addAll(defaultTraits, traits);
+      return this;
+    }
+
 
     /* Per stat */
 
@@ -209,6 +239,43 @@ public abstract class AbstractMaterialTraitDataProvider extends GenericDataProvi
     /** Adds the passed traits to the builder. */
     public MaterialTraitsBuilder addTraits(MaterialStatsId statsId, ModifierId... traits) {
       addAll(getList(statsId, traits.length), traits);
+      return this;
+    }
+
+    public MaterialTraitsBuilder setTraits(MaterialStatsId statsId, ModifierEntry... traits) {
+      List<ModifierEntry> list = getList(statsId, traits.length);
+      list.clear();
+      Collections.addAll(list, traits);
+      return this;
+    }
+
+    public MaterialTraitsBuilder setTraits(MaterialStatsId statsId, LazyModifier... traits) {
+      List<ModifierEntry> list = getList(statsId, traits.length);
+      list.clear();
+      addAll(list, traits);
+      return this;
+    }
+
+    public MaterialTraitsBuilder setTraits(MaterialStatsId statsId, ModifierId... traits) {
+      List<ModifierEntry> list = getList(statsId, traits.length);
+      list.clear();
+      addAll(list, traits);
+      return this;
+    }
+
+    public MaterialTraitsBuilder copyTraits(MaterialStatsId source, MaterialStatsId target, float scale, boolean fallbackToDefault) {
+      List<ModifierEntry> sourceTraits = perStats.get(source);
+      if ((sourceTraits == null || sourceTraits.isEmpty()) && fallbackToDefault) {
+        sourceTraits = defaultTraits;
+      }
+      if (sourceTraits == null || sourceTraits.isEmpty()) {
+        return this;
+      }
+      List<ModifierEntry> targetTraits = getList(target, sourceTraits.size());
+      targetTraits.clear();
+      for (ModifierEntry trait : sourceTraits) {
+        targetTraits.add(new ModifierEntry(trait.getId(), (int)(trait.getLevel() * scale)));
+      }
       return this;
     }
 

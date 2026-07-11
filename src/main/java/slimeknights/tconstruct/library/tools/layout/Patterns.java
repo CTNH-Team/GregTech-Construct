@@ -19,6 +19,23 @@ public class Patterns {
   public static final Pattern REPAIR = pattern("button_repair");
   /** Icon with multiple plate armor pieces */
   public static final Pattern PLATE_ARMOR = pattern("plate_armor");
+  public static final Pattern STANDARD_ARMOR = pattern("standard");
+  public static final Pattern KNIGHTS_ARMOR = pattern("knights");
+  public static final Pattern EXPLORERS_ARMOR = pattern("explorers");
+  public static final Pattern COMPOSITE_ARMOR_SMALL = pattern("composite_small");
+  public static final Pattern COMPOSITE_ARMOR_LARGE = pattern("composite_large");
+  public static final Pattern FORGED_ARMOR_SMALL = pattern("forged_small");
+  public static final Pattern FORGED_ARMOR_LARGE = pattern("forged_large");
+  public static final Pattern PLATE_ARMOR_SMALL = pattern("plate_small");
+  public static final Pattern PLATE_ARMOR_LARGE = pattern("plate_large");
+  public static final Pattern ARMOR_CAST = pattern("armor_cast");
+  public static final Pattern MASSIVE_ARMOR_CAST = pattern("massive_armor_cast");
+  public static final Pattern ARMOR_FRAME = pattern("armor_frame");
+  public static final Pattern ARMOR_FRAME_SMALL = pattern("armor_frame_small");
+  public static final Pattern ARMOR_FRAME_LARGE = pattern("armor_frame_large");
+  public static final Pattern MAIL_PLATE = pattern("mail_plate");
+  public static final Pattern PLATING_SMALL = pattern("plating_small");
+  public static final Pattern PLATING_LARGE = pattern("plating_large");
   /** Icon with multiple ammo items */
   public static final Pattern THROWN_AMMO = pattern("thrown_ammo");
   /** Pattern for generic plating */

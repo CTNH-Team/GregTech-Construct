@@ -1,6 +1,7 @@
 {
   "values": [
     "tconstruct:protection",
+    "tconstruct:physics_defense",
     "tconstruct:bursting",
     "tconstruct:wetting"
   ]

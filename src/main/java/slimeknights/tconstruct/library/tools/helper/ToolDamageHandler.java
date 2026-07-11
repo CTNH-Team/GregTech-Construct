@@ -1,0 +1,78 @@
+package slimeknights.tconstruct.library.tools.helper;
+
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
+
+import javax.annotation.Nullable;
+import java.util.IdentityHashMap;
+import java.util.Map;
+
+@Mod.EventBusSubscriber(modid = TConstruct.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+public final class ToolDamageHandler {
+  private static final Map<ItemStack,ToolDamageEntry> TOOL_DAMAGE_CACHE = new IdentityHashMap<>();
+
+  private ToolDamageHandler() {}
+
+  public static void accumulate(ItemStack stack, IToolStackView tool, @Nullable LivingEntity holder, int amount) {
+    if (stack.isEmpty() || amount <= 0) {
+      return;
+    }
+    ToolDamageEntry entry = TOOL_DAMAGE_CACHE.get(stack);
+    if (entry == null) {
+      TOOL_DAMAGE_CACHE.put(stack, new ToolDamageEntry(tool, holder, amount));
+      return;
+    }
+    entry.tool = tool;
+    entry.holder = holder;
+    entry.amount += amount;
+  }
+
+  public static void flushPendingDamage() {
+    if (TOOL_DAMAGE_CACHE.isEmpty()) {
+      return;
+    }
+    for (Map.Entry<ItemStack,ToolDamageEntry> entry : TOOL_DAMAGE_CACHE.entrySet()) {
+      ToolDamageEntry queued = entry.getValue();
+      apply(queued.tool, queued.holder, queued.amount, entry.getKey());
+    }
+    TOOL_DAMAGE_CACHE.clear();
+  }
+
+  public static void clearPendingDamageForTests() {
+    TOOL_DAMAGE_CACHE.clear();
+  }
+
+  private static void apply(IToolStackView tool, @Nullable LivingEntity holder, int amount, ItemStack stack) {
+    if (amount <= 0 || tool.isBroken() || tool.isUnbreakable()) {
+      return;
+    }
+    amount = ToolDamageUtil.applyDamageHooks(tool, amount, holder, stack);
+    if (amount <= 0) {
+      return;
+    }
+    ToolDamageUtil.directDamage(tool, amount, holder, stack);
+  }
+
+  @SubscribeEvent
+  public static void onServerTick(TickEvent.ServerTickEvent event) {
+    if (event.phase == TickEvent.Phase.END) {
+      flushPendingDamage();
+    }
+  }
+
+  private static final class ToolDamageEntry {
+    private IToolStackView tool;
+    private LivingEntity holder;
+    private int amount;
+    private ToolDamageEntry(IToolStackView tool, @Nullable LivingEntity holder, int amount) {
+      this.tool = tool;
+      this.holder = holder;
+      this.amount = amount;
+    }
+  }
+}

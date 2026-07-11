@@ -11,17 +11,23 @@ import net.minecraft.world.item.ItemStack;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.hook.behavior.PriorityToolDamageModifierHook;
+import slimeknights.tconstruct.library.modifiers.hook.behavior.ToolDamageModifierHook;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
  * Handles tool damage and repair, along with a quick broken check
  */
 public class ToolDamageUtil {
+  private static final ThreadLocal<Boolean> DEFER_ARMOR_DAMAGE = ThreadLocal.withInitial(() -> false);
+
   /**
    * Raw method to set a tool as broken. Bypasses {@link ToolStack} for the sake of things that may not be a full Tinker Tool
    * @param stack  Tool stack
@@ -104,15 +110,60 @@ public class ToolDamageUtil {
       return false;
     }
 
-    // try each modifier
-    for (ModifierEntry entry : tool.getModifierList()) {
-      amount = entry.getHook(ModifierHooks.TOOL_DAMAGE).onDamageTool(tool, entry, amount, entity, stack);
-      // if no more damage, done
-      if (amount <= 0) {
-        return false;
-      }
+    if (DEFER_ARMOR_DAMAGE.get() && stack != null && !stack.isEmpty()) {
+      ToolDamageHandler.accumulate(stack, tool, entity, amount);
+      return false;
+    }
+
+    amount = applyDamageHooks(tool, amount, entity, stack);
+    if (amount <= 0) {
+      return false;
     }
     return directDamage(tool, amount, entity, stack);
+  }
+
+  public static int applyDamageHooks(IToolStackView tool, int amount, @Nullable LivingEntity entity, @Nullable ItemStack stack) {
+    List<HookModuleEntry> hooks = new ArrayList<>();
+    for (ModifierEntry entry : tool.getModifierList()) {
+      ToolDamageModifierHook hook = entry.getHook(ModifierHooks.TOOL_DAMAGE);
+      if (hook instanceof ToolDamageModifierHook.Merger merger) {
+        for (ToolDamageModifierHook module : merger.modules()) {
+          hooks.add(new HookModuleEntry(module, entry, getPriority(module, entry)));
+        }
+      } else {
+        hooks.add(new HookModuleEntry(hook, entry, getPriority(hook, entry)));
+      }
+    }
+    // 按优先级降序排序
+    hooks.sort((a, b) -> b.priority - a.priority);
+
+    // 按优先级顺序执行
+    for (HookModuleEntry item : hooks) {
+      amount = item.hook.onDamageTool(tool, item.entry, amount, entity, stack);
+      if (amount <= 0) {
+        return 0;
+      }
+    }
+    return amount;
+  }
+
+  private static int getPriority(ToolDamageModifierHook hook, ModifierEntry entry) {
+    if (hook instanceof PriorityToolDamageModifierHook priorityHook) {
+      return priorityHook.getToolDamagePriority();
+    }
+    return entry.getModifier().getPriority();
+  }
+
+  private record HookModuleEntry(ToolDamageModifierHook hook, ModifierEntry entry, int priority) {}
+
+  public static void runWithDeferredArmorDamage(Runnable action) {
+    boolean previous = DEFER_ARMOR_DAMAGE.get();
+    DEFER_ARMOR_DAMAGE.set(true);
+    try {
+      action.run();
+    } finally {
+      DEFER_ARMOR_DAMAGE.set(previous);
+    }
   }
 
   /**
@@ -123,7 +174,12 @@ public class ToolDamageUtil {
    * @param slot    Slot containing the stack
    */
   public static boolean damageAnimated(IToolStackView tool, int amount, LivingEntity entity, EquipmentSlot slot) {
-    if (damage(tool, amount, entity, entity.getItemBySlot(slot))) {
+    ItemStack stack = entity.getItemBySlot(slot);
+    if (DEFER_ARMOR_DAMAGE.get() && slot.isArmor() && !stack.isEmpty()) {
+      damage(tool, amount, entity, stack);
+      return false;
+    }
+    if (damage(tool, amount, entity, stack)) {
       entity.broadcastBreakEvent(slot);
       return true;
     }

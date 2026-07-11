@@ -67,6 +67,19 @@ class GTConstructRecipesTest extends BaseMcTest {
   void defaultSolidifierPartsRemainAvailableForCoreMaterials() {
     assertThat(GTConstructRecipes.getSupportedParts(MaterialIds.iron, GTConstructRecipes.getDefaultSolidifierParts()))
       .extracting(GTConstructRecipes.SolidifierPart::path)
-      .contains("pick_head", "tool_handle", "repair_kit");
+      .contains("pick_head", "tool_handle", "repair_kit", "armor_plate", "armor_mail", "cast_helmet", "frame_of_helmet", "massive_cast_helmet");
+  }
+
+  @Test
+  void defaultSolidifierPartsIncludeNativeArmorExtensionParts() {
+    assertThat(GTConstructRecipes.getDefaultSolidifierParts())
+      .extracting(GTConstructRecipes.SolidifierPart::path)
+      .contains(
+        "armor_plate", "armor_mail",
+        "cast_helmet", "cast_chestplate", "cast_leggings", "cast_boots",
+        "frame_of_helmet", "frame_of_chestplate", "frame_of_leggings", "frame_of_boots",
+        "massive_cast_helmet", "massive_cast_chestplate", "massive_cast_leggings", "massive_cast_boots",
+        "linear"
+      );
   }
 }

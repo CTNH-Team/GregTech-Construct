@@ -3,6 +3,7 @@ package slimeknights.tconstruct.tools.logic;
 import com.google.common.collect.Multiset;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -34,6 +36,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.util.Mth;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -47,8 +50,10 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import org.joml.Vector3f;
 import slimeknights.mantle.data.predicate.damage.DamageSourcePredicate;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.common.Sounds;
 import slimeknights.tconstruct.common.TinkerEffect;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.config.Config;
@@ -57,12 +62,18 @@ import slimeknights.tconstruct.library.events.TinkerToolEvent.ToolHarvestEvent;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
+import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook;
+import slimeknights.tconstruct.library.modifiers.hook.armor.ArmorDamageStatsModifierHook.ArmorDamageStats;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ModifyDamageModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.OnAttackedModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ProtectionModifierHook;
+import slimeknights.tconstruct.library.modifiers.hook.armor.ShareDamageModifierHook.ShareDamageContext;
 import slimeknights.tconstruct.library.modifiers.hook.mining.BreakSpeedContext;
 import slimeknights.tconstruct.library.modifiers.hook.ranged.ProjectileHitModifierHook;
 import slimeknights.tconstruct.library.modifiers.modules.armor.MobDisguiseModule;
+import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaDamageLimitModule;
+import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaRecurrenceModule;
+import slimeknights.tconstruct.library.modifiers.modules.armor.FormulaArmorStatModule;
 import slimeknights.tconstruct.library.modifiers.modules.technical.ArmorStatModule;
 import slimeknights.tconstruct.library.module.ModuleHook;
 import slimeknights.tconstruct.library.tools.capability.EntityModifierCapability;
@@ -87,17 +98,24 @@ import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.utils.BlockSideHitListener;
 import slimeknights.tconstruct.shared.TinkerAttributes;
 import slimeknights.tconstruct.shared.TinkerEffects;
+import slimeknights.tconstruct.shared.AchievementEvents;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.network.SyncProjectileModifiersPacket;
+import slimeknights.tconstruct.tools.particle.ShareDamageParticleData;
 
 
+import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import static net.minecraft.world.item.Rarity.RARE;
+import static net.minecraft.world.damagesource.CombatRules.getDamageAfterAbsorb;
 import static net.minecraft.world.item.enchantment.Enchantment.Rarity.UNCOMMON;
 import static net.minecraft.world.item.enchantment.Enchantment.Rarity.VERY_RARE;
 import static slimeknights.tconstruct.common.config.Config.COMMON;
@@ -107,6 +125,19 @@ import static slimeknights.tconstruct.common.config.Config.COMMON;
  */
 @EventBusSubscriber(modid = TConstruct.MOD_ID, bus = Bus.FORGE)
 public class ToolEvents {
+  private static final ThreadLocal<Boolean> SHARING_DAMAGE = ThreadLocal.withInitial(() -> false);
+  private static final ThreadLocal<Deque<GuardianHurtContext>> GUARDIAN_HURT_CONTEXTS = ThreadLocal.withInitial(ArrayDeque::new);
+  private static final Vector3f[] SHARE_DAMAGE_PARTICLE_COLORS = {
+    new Vector3f(0.654f, 0.713f, 0.580f),
+    new Vector3f(0.727f, 0.792f, 0.644f),
+    new Vector3f(0.774f, 0.839f, 0.692f),
+    new Vector3f(0.564f, 0.624f, 0.509f),
+    new Vector3f(0.760f, 0.839f, 0.682f),
+    new Vector3f(0.604f, 0.674f, 0.539f),
+    new Vector3f(0.804f, 0.878f, 0.729f),
+    new Vector3f(0.692f, 0.754f, 0.612f)
+  };
+
   @SuppressWarnings("removal")
   @SubscribeEvent
   static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
@@ -282,6 +313,13 @@ public class ToolEvents {
   @SubscribeEvent(priority = EventPriority.LOW)
   static void livingHurt(LivingHurtEvent event) {
     LivingEntity entity = event.getEntity();
+    GuardianHurtContext guardianHurt = currentGuardianHurtContext(entity);
+    if (entity instanceof Player hurtPlayer) {
+      Entity attacker = event.getSource().getEntity();
+      if (attacker instanceof Player attackPlayer && attackPlayer != hurtPlayer && !hurtPlayer.isAlliedTo(attackPlayer)) {
+        GuardingCache.recordHostility(hurtPlayer.getUUID(), attackPlayer.getUUID(), hurtPlayer.level().getGameTime());
+      }
+    }
 
     // determine if there is any modifiable armor, if not nothing to do
     DamageSource source = event.getSource();
@@ -289,6 +327,7 @@ public class ToolEvents {
     int vanillaModifier = 0;
     float modifierValue = 0;
     float originalDamage = event.getAmount();
+    boolean canProtect = DamageSourcePredicate.CAN_PROTECT.matches(source);
 
     Entity attacker = source.getEntity();
     if (attacker instanceof LivingEntity living) {
@@ -334,6 +373,19 @@ public class ToolEvents {
     // ensure any changes made so far apply, though we may change it again
     event.setAmount(originalDamage);
 
+    float armor = 0, toughness = 0, armorStrength = 0, preReduction = 0, postReduction = 0, armorProtection = 0, armorAbsorptionCapModifier = 0;
+    if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+      armor = entity.getArmorValue();
+      toughness = (float)entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+      armorStrength = (float)entity.getAttributeValue(TinkerAttributes.ARMOR_STRENGTH.get());
+      preReduction = (float)entity.getAttributeValue(TinkerAttributes.PRE_REDUCTION.get());
+    }
+    if (canProtect) {
+      armorProtection = (float)entity.getAttributeValue(TinkerAttributes.ARMOR_PROTECTION.get());
+    }
+    ArmorDamageStats armorDamageStats = new ArmorDamageStats(armorStrength, preReduction, postReduction, armorProtection, originalDamage);
+    ArmorDamageStats guardianCommonStats = null;
+
     // for our own armor, we have boosts from modifiers to consider
     if (context.hasModifiableArmor()) {
       // first, allow modifiers to change the damage being dealt and respond to it happening
@@ -346,20 +398,50 @@ public class ToolEvents {
 
       // remaining logic is reducing damage like vanilla protection
       // fetch vanilla enchant level, assuming its not bypassed in vanilla
-      if (DamageSourcePredicate.CAN_PROTECT.matches(source)) {
+      if (canProtect) {
         modifierValue = vanillaModifier = EnchantmentHelper.getDamageProtection(entity.getArmorSlots(), source);
       }
 
-      // next, determine how much tinkers armor wants to change it
-      // note that armor modifiers can choose to block "absolute damage" if they wish, currently just starving damage I think
-      for (EquipmentSlot slotType : EquipmentSlot.values()) {
-        if (ModifierUtil.validArmorSlot(entity, slotType)) {
-          IToolStackView tool = context.getToolInSlot(slotType);
-          if (tool != null && !tool.isBroken()) {
-            for (ModifierEntry entry : tool.getModifierList()) {
-              modifierValue = entry.getHook(ModifierHooks.PROTECTION).getProtectionModifier(tool, entry, context, slotType, source, modifierValue);
+      if (guardianHurt != null) {
+        for (EquipmentSlot slotType : EquipmentSlot.values()) {
+          if (ModifierUtil.validArmorSlot(entity, slotType)) {
+            IToolStackView tool = context.getToolInSlot(slotType);
+            if (tool != null && !tool.isBroken()) {
+              for (ModifierEntry entry : tool.getModifierList()) {
+                modifierValue = entry.getHook(ModifierHooks.PROTECTION).getProtectionModifier(tool, entry, context, slotType, source, modifierValue);
+              }
             }
           }
+        }
+        guardianCommonStats = collectGuardianCommonHooks(entity, context, source, originalDamage);
+      } else {
+        FormulaRecurrenceModule.beginDamageEvent(entity);
+        try {
+          // next, determine how much tinkers armor wants to change it
+          // note that armor modifiers can choose to block "absolute damage" if they wish, currently just starving damage I think
+          for (EquipmentSlot slotType : EquipmentSlot.values()) {
+            if (ModifierUtil.validArmorSlot(entity, slotType)) {
+              IToolStackView tool = context.getToolInSlot(slotType);
+              if (tool != null && !tool.isBroken()) {
+                for (ModifierEntry entry : tool.getModifierList()) {
+                  modifierValue = entry.getHook(ModifierHooks.PROTECTION).getProtectionModifier(tool, entry, context, slotType, source, modifierValue);
+                  entry.getHook(ModifierHooks.ARMOR_DAMAGE_STATS).addArmorDamageStats(tool, entry, context, slotType, source, armorDamageStats);
+                }
+              }
+            }
+          }
+          for (EquipmentSlot slotType : EquipmentSlot.values()) {
+            if (ModifierUtil.validArmorSlot(entity, slotType)) {
+              IToolStackView tool = context.getToolInSlot(slotType);
+              if (tool != null && !tool.isBroken()) {
+                for (ModifierEntry entry : tool.getModifierList()) {
+                  entry.getHook(ModifierHooks.DAMAGE_TO_PERSISTENT).onDamageToPersistent(tool, entry, context, slotType, source, armorDamageStats);
+                }
+              }
+            }
+          }
+        } finally {
+          FormulaRecurrenceModule.finishDamageEvent(armorDamageStats);
         }
       }
 
@@ -367,7 +449,7 @@ public class ToolEvents {
       if (entity.getType().is(TinkerTags.EntityTypes.SMALL_ARMOR)) {
         modifierValue *= 4;
       }
-    } else if (DamageSourcePredicate.CAN_PROTECT.matches(source) && entity.getType().is(TinkerTags.EntityTypes.SMALL_ARMOR)) {
+    } else if (canProtect && entity.getType().is(TinkerTags.EntityTypes.SMALL_ARMOR)) {
       vanillaModifier = EnchantmentHelper.getDamageProtection(entity.getArmorSlots(), source);
       modifierValue = vanillaModifier * 4;
     }
@@ -380,42 +462,499 @@ public class ToolEvents {
     if (modifierValue > 0) {
       cap = (float) ProtectionModifierHook.getProtectionCap(entity, context.getTinkerData());
     }
-    if (vanillaModifier != modifierValue || (cap > 20 && vanillaModifier > 20) || (cap < 20 && vanillaModifier > cap)) {
-      // fetch armor and toughness if blockable, passing in 0 to the logic will skip the armor calculations
-      float armor = 0, toughness = 0;
-      if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-        armor = entity.getArmorValue();
-        toughness = (float)entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
-      }
+    if (guardianHurt != null) {
+      guardianHurt.applyToEvent(event, originalDamage, armor, toughness, vanillaModifier, modifierValue, cap, guardianCommonStats);
+      return;
+    }
+    armorStrength = armorDamageStats.armorStrength();
+    preReduction = armorDamageStats.preReduction();
+    postReduction = armorDamageStats.postReduction();
+    armorProtection = armorDamageStats.armorProtection();
+    armorAbsorptionCapModifier = armorDamageStats.armorAbsorptionCap();
+    boolean hasArmorExtensionStats = armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0;
+    float sharedRawDamage = 0;
+    if (!SHARING_DAMAGE.get()) {
+      sharedRawDamage = shareDamageWithNearbyGuardians(entity, source, originalDamage);
+      originalDamage = Math.max(0, originalDamage - sharedRawDamage);
+    }
+    boolean handledArmorDamage = false;
+    if (vanillaModifier != modifierValue || (cap > 20 && vanillaModifier > 20) || (cap < 20 && vanillaModifier > cap)
+      || hasArmorExtensionStats || armorDamageStats.hasDamageLimit()) {
 
       // set the final dealt damage
-      float finalDamage = ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap);
+      float finalDamage = armorDamageStats.hasDamageLimit()
+        ? ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap, armorStrength, preReduction, postReduction, armorProtection, armorAbsorptionCapModifier,
+          damage -> armorDamageStats.applyDamageLimit(entity, (float)damage))
+        : ArmorUtil.getDamageForEvent(originalDamage, armor, toughness, vanillaModifier, modifierValue, cap, armorStrength, preReduction, postReduction, armorProtection, armorAbsorptionCapModifier);
+      handledArmorDamage = true;
       event.setAmount(finalDamage);
+      if (originalDamage > 0 && finalDamage <= 0) {
+        suppressHurtSound(entity);
+      }
 
       // armor is damaged less as a result of our math, so damage the armor based on the difference if there is one
       if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
         int damageMissed = getArmorDamage(originalDamage) - getArmorDamage(finalDamage);
-        // TODO: is this check sufficient for whether the armor should be damaged? I partly wonder if I need to use reflection to call damageArmor
-        if (damageMissed > 0 && entity instanceof Player) {
-          for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
-            // for our own armor, saves effort to damage directly with our utility
-            IToolStackView tool = context.getToolInSlot(slotType);
-            if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !tool.getItem().isFireResistant())) {
-              // damaging the tool twice is generally not an issue, except for tanned where there is a difference between damaging by the sum and damaging twoce in pieces
-              // so work around this by hardcoding a tanned check. Not making this a hook as this whole chunk of code should hopefully be unneeded in 1.21
-              if (tool.getModifierLevel(TinkerModifiers.tanned.getId()) == 0) {
-                ToolDamageUtil.damageAnimated(tool, damageMissed, entity, slotType);
-              }
-            } else {
-              // if not our armor, damage using vanilla like logic
-              ItemStack armorStack = entity.getItemBySlot(slotType);
-              if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.getItem().isFireResistant()) && armorStack.getItem() instanceof ArmorItem) {
-                armorStack.hurtAndBreak(damageMissed, entity, e -> e.broadcastBreakEvent(slotType));
-              }
-            }
+        damageArmorFromMissed(entity, source, context, damageMissed);
+      }
+    }
+    if (!handledArmorDamage && context.hasModifiableArmor() && !source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+      float finalDamage = originalDamage;
+      if (armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0) {
+        finalDamage = ArmorUtil.getDamageAfterArmorExtensionAbsorb(finalDamage, armor, toughness, armorStrength, preReduction, postReduction, armorProtection, Mth.clamp(0.8f + armorAbsorptionCapModifier, 0.2f, 0.95f));
+      } else if (armor > 0) {
+        finalDamage = getDamageAfterAbsorb(finalDamage, armor, toughness);
+      }
+      event.setAmount(finalDamage);
+      if (originalDamage > 0 && finalDamage <= 0) {
+        suppressHurtSound(entity);
+      }
+
+      int damageMissed = getArmorDamage(originalDamage) - getArmorDamage(finalDamage);
+      damageArmorFromMissed(entity, source, context, damageMissed);
+    }
+  }
+
+  private static void suppressHurtSound(LivingEntity entity) {
+    if (entity instanceof Player) {
+      HurtSoundHandler.mark(entity);
+      if (!entity.level().isClientSide()) {
+        TinkerNetwork.getInstance().sendToTrackingAndSelf(new slimeknights.tconstruct.common.network.SuppressHurtSoundPacket(entity.getId()), entity);
+      }
+    } else {
+      entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), Sounds.FULLY_REDUCTED.getSound(), SoundSource.AMBIENT, 1.0F, 1.0F);
+    }
+  }
+
+  /** Shared helper: damage all armor pieces for the missed amount, skipping tanned armor. */
+  private static void damageArmorFromMissed(LivingEntity entity, DamageSource source, EquipmentContext context, int damageMissed) {
+    if (damageMissed <= 0 || !(entity instanceof Player)) return;
+    ToolDamageUtil.runWithDeferredArmorDamage(() -> {
+      for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
+        IToolStackView tool = context.getToolInSlot(slotType);
+        if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !tool.getItem().isFireResistant())) {
+          if (tool.getModifierLevel(TinkerModifiers.tanned.getId()) == 0) {
+            ToolDamageUtil.damageAnimated(tool, damageMissed, entity, slotType);
+          }
+        } else {
+          ItemStack armorStack = entity.getItemBySlot(slotType);
+          if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.getItem().isFireResistant()) && armorStack.getItem() instanceof ArmorItem) {
+            armorStack.hurtAndBreak(damageMissed, entity, e -> e.broadcastBreakEvent(slotType));
           }
         }
       }
+    });
+  }
+
+  private static float shareDamageWithNearbyGuardians(LivingEntity entity, DamageSource source, float rawDamage) {
+    if (rawDamage <= 0 || entity.level().isClientSide || SHARING_DAMAGE.get()) {
+      return 0;
+    }
+
+    boolean previous = SHARING_DAMAGE.get();
+    SHARING_DAMAGE.set(true);
+    try {
+      for (Entity passenger : entity.getPassengers()) {
+        if (passenger instanceof LivingEntity rider && rider.isAlive()) {
+          ShareDamageResult riderResult = tryShareDamageWith(rider, entity, source, rawDamage);
+          if (riderResult.claimed()) {
+            return riderResult.sharedRawDamage();
+          }
+        }
+      }
+
+      if (entity instanceof net.minecraft.world.entity.TamableAnimal tamable && tamable.getOwner() instanceof Player owner && owner.isAlive()) {
+        float ownerDistance = owner.distanceTo(entity);
+        if (ownerDistance <= guardingScanRange(entity)) {
+          ShareDamageResult ownerResult = tryShareDamageWith(owner, entity, source, rawDamage);
+          if (ownerResult.claimed()) {
+            return ownerResult.sharedRawDamage();
+          }
+        }
+      }
+
+      if (entity instanceof Player self) {
+        record GuardianCandidate(Player player, double distance) {}
+        List<GuardianCandidate> nearbyGuardians = new ArrayList<>();
+        long gameTime = self.level().getGameTime();
+        for (Player guardian : self.level().players()) {
+          if (guardian == self || !guardian.isAlive()
+            || (!self.isAlliedTo(guardian) && GuardingCache.isHostile(self.getUUID(), guardian.getUUID(), gameTime))) {
+            continue;
+          }
+          double distance = guardian.distanceTo(self);
+          if (distance <= guardingScanRange(self) && GuardingCache.hasAnyHook(guardian.getUUID())) {
+            nearbyGuardians.add(new GuardianCandidate(guardian, distance));
+          }
+        }
+        nearbyGuardians.sort(Comparator.comparingDouble(GuardianCandidate::distance));
+        for (GuardianCandidate guardian : nearbyGuardians) {
+          ShareDamageResult guardianResult = tryShareDamageWith(guardian.player(), entity, source, rawDamage);
+          if (guardianResult.claimed()) {
+            return guardianResult.sharedRawDamage();
+          }
+        }
+      }
+    } finally {
+      PlayerPersistentDataCache.syncFromEntity(entity);
+      SHARING_DAMAGE.set(previous);
+    }
+    return 0;
+  }
+
+  private static double guardingScanRange(LivingEntity protectedEntity) {
+    return Config.guardingScanRange();
+  }
+
+  private static ShareDamageResult tryShareDamageWith(LivingEntity guardian, LivingEntity protectedEntity, DamageSource source, float rawDamage) {
+    EquipmentContext guardianContext = new EquipmentContext(guardian);
+    if (!guardianContext.hasModifiableArmor()) {
+      return ShareDamageResult.NONE;
+    }
+
+    GuardingTransfer transfer = new GuardingTransfer();
+    for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
+      IToolStackView tool = guardianContext.getToolInSlot(slotType);
+      if (tool == null || tool.isBroken()) {
+        continue;
+      }
+      for (ModifierEntry entry : tool.getModifierList()) {
+        entry.getHook(ModifierHooks.SHARE_DAMAGE).collectShareDamage(tool, entry, guardian, slotType, protectedEntity, source, transfer);
+      }
+    }
+    if (!transfer.claimed()) {
+      return ShareDamageResult.NONE;
+    }
+    return transfer.apply(guardian, protectedEntity, source, rawDamage);
+  }
+
+  private static ArmorDamageStats collectGuardianCommonHooks(LivingEntity guardian, EquipmentContext context, DamageSource source, float originalDamage) {
+    ArmorDamageStats stats = new ArmorDamageStats(0, 0, 0, 0, originalDamage);
+    FormulaRecurrenceModule.beginDamageEvent(guardian);
+    try {
+      for (EquipmentSlot slotType : EquipmentSlot.values()) {
+        if (!ModifierUtil.validArmorSlot(guardian, slotType)) {
+          continue;
+        }
+        IToolStackView tool = context.getToolInSlot(slotType);
+        if (tool == null || tool.isBroken()) {
+          continue;
+        }
+        for (ModifierEntry entry : tool.getModifierList()) {
+          entry.getHook(ModifierHooks.DAMAGE_TO_PERSISTENT).onDamageToPersistent(tool, entry, context, slotType, source, stats);
+          collectGuardianDamageLimit(entry.getHook(ModifierHooks.ARMOR_DAMAGE_STATS), tool, entry, context, slotType, source, stats);
+        }
+      }
+    } finally {
+      FormulaRecurrenceModule.finishBypassDamageEvent(stats);
+    }
+    return stats;
+  }
+
+  private static void collectGuardianDamageLimit(ArmorDamageStatsModifierHook hook, IToolStackView tool, ModifierEntry entry,
+                                                 EquipmentContext context, EquipmentSlot slotType, DamageSource source,
+                                                 ArmorDamageStats stats) {
+    if (hook instanceof FormulaDamageLimitModule module) {
+      module.addArmorDamageStats(tool, entry, context, slotType, source, stats);
+    } else if (hook instanceof ArmorDamageStatsModifierHook.AllMerger merger) {
+      for (ArmorDamageStatsModifierHook module : merger.modules()) {
+        collectGuardianDamageLimit(module, tool, entry, context, slotType, source, stats);
+      }
+    }
+  }
+
+  private record ShareDamageResult(boolean claimed, float sharedRawDamage) {
+    private static final ShareDamageResult NONE = new ShareDamageResult(false, 0);
+  }
+
+  private static final class GuardingTransfer implements ShareDamageContext {
+    private boolean claimed;
+    private float remainingRatio = 1f;
+    private float extraFactor = 1f;
+    private float healthGround = Float.NEGATIVE_INFINITY;
+    private float distanceFactor = 1f;
+    private int particleColor = -1;
+
+    @Override
+    public void add(float shareRatio, float extraProtection, float healthGround, float distanceFactor) {
+      add(shareRatio, extraProtection, healthGround, distanceFactor, -1);
+    }
+
+    @Override
+    public void add(float shareRatio, float extraProtection, float healthGround, float distanceFactor, int color) {
+      claimed = true;
+      remainingRatio *= 1f - Mth.clamp(shareRatio, 0, 1);
+      extraFactor *= 1f - Mth.clamp(extraProtection, 0, 1);
+      this.healthGround = Math.max(this.healthGround, healthGround);
+      this.distanceFactor = Math.min(this.distanceFactor, Mth.clamp(distanceFactor, 0, 1));
+      if (color != -1) this.particleColor = color;
+    }
+
+    private boolean claimed() {
+      return claimed;
+    }
+
+    private ShareDamageResult apply(LivingEntity guardian, LivingEntity protectedEntity, DamageSource source, float rawDamage) {
+      float shareRatio = (1f - remainingRatio) * distanceFactor;
+      if (shareRatio <= 0.01f) {
+        return new ShareDamageResult(true, 0);
+      }
+      float requestedRawDamage = rawDamage * shareRatio;
+      GuardianDamageProfile profile = GuardianDamageProfile.capture(guardian, source, rawDamage);
+      float finalGuardianDamage = profile.apply(requestedRawDamage) * extraFactor;
+      GuardianHurtContext hurtContext = new GuardianHurtContext(guardian, finalGuardianDamage, healthGround);
+      if (finalGuardianDamage > 0) {
+        hurtGuardian(guardian, source, hurtContext);
+        applyShareKnockback(protectedEntity, guardian, hurtContext.appliedProfileFinalDamage(), distanceFactor);
+      }
+      float blockedRawDamage = hurtContext.blockedFinalDamage() > 0 && extraFactor > 0
+        ? profile.revert(hurtContext.blockedFinalDamage() / extraFactor)
+        : 0;
+      float sharedRawDamage = Math.max(0, requestedRawDamage - Math.min(requestedRawDamage, blockedRawDamage));
+      if (guardian instanceof ServerPlayer player) {
+        if (rawDamage > 0 && sharedRawDamage / rawDamage >= 0.9f) {
+          AchievementEvents.grantAdvancement(player, TConstruct.getResource("combat/shared_fate"));
+        }
+        if (hurtContext.blockedFinalDamage() > 0 && hurtContext.appliedFinalDamage() >= 10f) {
+          AchievementEvents.grantAdvancement(player, TConstruct.getResource("combat/sacrifice"));
+        }
+      }
+      if (sharedRawDamage > 0) {
+        spawnShareDamageParticles(protectedEntity, guardian, particleColor);
+      }
+      return new ShareDamageResult(true, sharedRawDamage);
+    }
+  }
+
+  private record GuardianDamageProfile(float preReduction, float strengthFactor, float armorFactor, float postReduction, float protectionFactor) {
+    private static GuardianDamageProfile capture(LivingEntity guardian, DamageSource source, float rawDamage) {
+      float armor = 0;
+      float toughness = 0;
+      float armorStrength = 0;
+      if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+        armor = guardian.getArmorValue();
+        toughness = (float)guardian.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+        armorStrength = (float)guardian.getAttributeValue(TinkerAttributes.ARMOR_STRENGTH.get());
+      }
+
+      ArmorDamageStats stats = new ArmorDamageStats(
+        armorStrength,
+        source.is(TinkerTags.DamageTypes.BYPASSES_REDUCTION) ? 0 : (float)guardian.getAttributeValue(TinkerAttributes.PRE_REDUCTION.get()),
+        0,
+        source.is(TinkerTags.DamageTypes.BYPASSES_PROTECTION) ? 0 : (float)guardian.getAttributeValue(TinkerAttributes.ARMOR_PROTECTION.get()),
+        rawDamage);
+      collectFrozenGuardianAttributeStats(guardian, source, stats);
+      armorStrength = source.is(DamageTypeTags.BYPASSES_ARMOR) ? 0 : stats.armorStrength();
+      float preReduction = source.is(TinkerTags.DamageTypes.BYPASSES_REDUCTION) ? 0 : stats.preReduction();
+      float postReduction = source.is(TinkerTags.DamageTypes.BYPASSES_BLOCKING) ? 0 : stats.postReduction();
+      float armorProtection = source.is(TinkerTags.DamageTypes.BYPASSES_PROTECTION) ? 0 : stats.armorProtection();
+
+      float toughnessFactor = Math.max(2.0f, 2.0f + toughness / 4.0f);
+      float reducedDamage = Math.max(0, rawDamage - preReduction);
+      float effectiveStrength = Math.max(0, armorStrength - reducedDamage / toughnessFactor);
+      float strengthFactor = (float)Math.pow(0.8f, effectiveStrength / 4.0f);
+      float strengthAbsorbedDamage = reducedDamage * strengthFactor;
+      float effectiveArmor = Math.max((armor + toughness) / 5.0f, Math.min(armor, armor + effectiveStrength - strengthAbsorbedDamage / toughnessFactor));
+      float armorFactor = Math.max(0.2f, 1.0f - effectiveArmor * 0.04f);
+      return new GuardianDamageProfile(preReduction, strengthFactor, armorFactor, postReduction, 1.0f - Mth.clamp(armorProtection, 0, 0.8f));
+    }
+
+    private static void collectFrozenGuardianAttributeStats(LivingEntity guardian, DamageSource source, ArmorDamageStats stats) {
+      EquipmentContext context = new EquipmentContext(guardian);
+      if (!context.hasModifiableArmor()) {
+        return;
+      }
+      for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
+        IToolStackView tool = context.getToolInSlot(slotType);
+        if (tool == null || tool.isBroken()) {
+          continue;
+        }
+        for (ModifierEntry entry : tool.getModifierList()) {
+          collectFrozenGuardianAttributeStats(entry.getHook(ModifierHooks.ARMOR_DAMAGE_STATS), tool, entry, context, slotType, source, stats);
+        }
+      }
+    }
+
+    private static void collectFrozenGuardianAttributeStats(ArmorDamageStatsModifierHook hook, IToolStackView tool, ModifierEntry entry,
+                                                            EquipmentContext context, EquipmentSlot slotType, DamageSource source,
+                                                            ArmorDamageStats stats) {
+      if (hook instanceof FormulaArmorStatModule module) {
+        if (module.stat() != ArmorDamageStatsModifierHook.ArmorDamageStat.ARMOR_ABSORPTION_CAP) {
+          module.addArmorDamageStats(tool, entry, context, slotType, source, stats);
+        }
+      } else if (hook instanceof ArmorDamageStatsModifierHook.AllMerger merger) {
+        for (ArmorDamageStatsModifierHook module : merger.modules()) {
+          collectFrozenGuardianAttributeStats(module, tool, entry, context, slotType, source, stats);
+        }
+      }
+    }
+
+    private float apply(float rawDamage) {
+      float damage = Math.max(0, rawDamage - preReduction);
+      damage *= strengthFactor;
+      damage *= armorFactor;
+      damage = Math.max(0, damage - postReduction);
+      return damage * protectionFactor;
+    }
+
+    private float revert(float finalDamage) {
+      if (finalDamage <= 0) {
+        return 0;
+      }
+      float damage = finalDamage / protectionFactor;
+      damage += postReduction;
+      damage /= armorFactor;
+      damage /= strengthFactor;
+      return damage + preReduction;
+    }
+  }
+
+  private static void applyShareKnockback(LivingEntity protectedEntity, LivingEntity guardian, float damage, float distanceFactor) {
+    double x = protectedEntity.getX() - guardian.getX();
+    double z = protectedEntity.getZ() - guardian.getZ();
+    double distance = Math.sqrt(x * x + z * z);
+    if (distance > 0.01) {
+      guardian.knockback(Math.min(damage * 0.05f, 0.5f) * distanceFactor, x / distance, z / distance);
+    }
+  }
+
+  private static GuardianHurtContext currentGuardianHurtContext(LivingEntity entity) {
+    Deque<GuardianHurtContext> contexts = GUARDIAN_HURT_CONTEXTS.get();
+    if (contexts.isEmpty()) {
+      return null;
+    }
+    GuardianHurtContext context = contexts.peek();
+    return context.guardian() == entity ? context : null;
+  }
+
+  private static void hurtGuardian(LivingEntity guardian, DamageSource source, GuardianHurtContext context) {
+    Deque<GuardianHurtContext> contexts = GUARDIAN_HURT_CONTEXTS.get();
+    contexts.push(context);
+    try {
+      guardian.hurt(source, context.requestedFinalDamage());
+    } finally {
+      contexts.pop();
+      if (contexts.isEmpty()) {
+        GUARDIAN_HURT_CONTEXTS.remove();
+      }
+    }
+  }
+
+  private static final class GuardianHurtContext {
+    private final LivingEntity guardian;
+    private final float requestedFinalDamage;
+    private final float healthGround;
+    private float blockedFinalDamage;
+    private float appliedFinalDamage;
+
+    private GuardianHurtContext(LivingEntity guardian, float requestedFinalDamage, float healthGround) {
+      this.guardian = guardian;
+      this.requestedFinalDamage = requestedFinalDamage;
+      this.healthGround = healthGround;
+    }
+
+    private LivingEntity guardian() {
+      return guardian;
+    }
+
+    private float requestedFinalDamage() {
+      return requestedFinalDamage;
+    }
+
+    private float appliedProfileFinalDamage() {
+      return Math.max(0, requestedFinalDamage - blockedFinalDamage);
+    }
+
+    private float blockedFinalDamage() {
+      return blockedFinalDamage;
+    }
+
+    private float appliedFinalDamage() {
+      return appliedFinalDamage;
+    }
+
+    private void applyToEvent(LivingHurtEvent event, float damage, float armor, float toughness, int vanillaModifier, float modifierValue, float cap,
+                              ArmorDamageStats commonStats) {
+      if (commonStats != null && commonStats.hasDamageLimit()) {
+        damage = commonStats.applyDamageLimit(guardian, damage);
+      }
+      float protectedDamage = ArmorUtil.getDamageAfterMagicAbsorb(damage, modifierValue, cap);
+      float allowedDamage = Math.max(0, guardian.getHealth() - healthGround);
+      float appliedDamage = Math.min(protectedDamage, allowedDamage);
+      appliedFinalDamage = appliedDamage;
+      float blockedDamage = protectedDamage - appliedDamage;
+      if (blockedDamage > 0) {
+        float protectionFactor = 1f - Mth.clamp(modifierValue, -20f, cap) / 25f;
+        if (protectionFactor > 0) {
+          blockedFinalDamage = blockedDamage / protectionFactor;
+        }
+      }
+      if (vanillaModifier > 0) {
+        appliedDamage = ArmorUtil.getDamageBeforeMagicAbsorb(appliedDamage, vanillaModifier);
+      }
+      if (!event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)) {
+        appliedDamage = ArmorUtil.getDamageBeforeArmorAbsorb(appliedDamage, armor, toughness);
+      }
+      event.setAmount(appliedDamage);
+    }
+  }
+
+  private static void spawnShareDamageParticles(LivingEntity protectedEntity, LivingEntity guardian, int color) {
+    if (!(protectedEntity.level() instanceof ServerLevel level)) {
+      return;
+    }
+    // derive 8 color variants from the modifier color (TCAE style)
+    Vector3f[] colors;
+    if (color == -1) {
+      colors = SHARE_DAMAGE_PARTICLE_COLORS;
+    } else {
+      int r = (color >> 16) & 0xFF;
+      int g = (color >> 8) & 0xFF;
+      int b = color & 0xFF;
+      colors = new Vector3f[8];
+      for (int i = 0; i < 8; i++) {
+        float var = 0.85F + level.random.nextFloat() * 0.3F;
+        colors[i] = new Vector3f(
+          Math.min(1.0F, (r / 255F) * var),
+          Math.min(1.0F, (g / 255F) * var),
+          Math.min(1.0F, (b / 255F) * var)
+        );
+      }
+    }
+    Vec3 from = protectedEntity.position().add(0, protectedEntity.getBbHeight() / 2.0, 0);
+    Vec3 to = guardian.position().add(0, guardian.getBbHeight() / 2.0, 0);
+    Vec3 offset = to.subtract(from);
+    double distance = offset.length();
+    if (distance < 0.01 || distance > 32.0) {
+      return;
+    }
+
+    Vec3 direction = offset.normalize();
+    Vec3 random = new Vec3(level.random.nextGaussian(), level.random.nextGaussian(), level.random.nextGaussian());
+    double dot = random.dot(direction);
+    Vec3 bendDirection = random.subtract(direction.x * dot, direction.y * dot, direction.z * dot);
+    if (bendDirection.lengthSqr() < 1.0E-4) {
+      bendDirection = new Vec3(-direction.z, 0, direction.x);
+    }
+    bendDirection = bendDirection.normalize();
+
+    int count = Math.max(4, (int)Math.ceil(distance) * 4);
+    double height = Math.min(10.0, distance) * (0.1 + level.random.nextDouble() * 0.15);
+    for (int i = 1; i <= count; i++) {
+      double progress = (double)i / count;
+      double bend = height * Math.sin(Math.PI * progress);
+      Vec3 pos = from.add(direction.scale(distance * progress)).add(bendDirection.scale(bend));
+      level.sendParticles(new ShareDamageParticleData(colors[level.random.nextInt(colors.length)], 0.5f), pos.x, pos.y, pos.z, 0, 0, 0, 0, 0);
+    }
+
+    for (int i = 0; i < 12; i++) {
+      double x = to.x + (level.random.nextDouble() - 0.5) * 0.2;
+      double y = to.y + (level.random.nextDouble() - 0.5) * 0.02;
+      double z = to.z + (level.random.nextDouble() - 0.5) * 0.2;
+      double xd = direction.x + level.random.nextDouble() - 0.5;
+      double yd = 0.5 * (level.random.nextDouble() - 0.5);
+      double zd = direction.z + level.random.nextDouble() - 0.5;
+      level.sendParticles(new ShareDamageParticleData(colors[level.random.nextInt(colors.length)], 0.5f), x, y, z, 0, xd, yd, zd, 0.2);
     }
   }
 

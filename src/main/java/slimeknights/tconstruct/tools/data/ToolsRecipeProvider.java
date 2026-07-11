@@ -258,7 +258,7 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
 
         // plate armor
         String plateFolder = armorFolder + "plate/";
-        TinkerTools.plateArmor.forEach(item -> toolBuilding(consumer, item, plateFolder, Patterns.PLATE_ARMOR));
+        TinkerTools.plateArmor.forEach((type, item) -> toolBuilding(consumer, item, plateFolder, plateArmorLayout(type)));
         MaterialCastingRecipeBuilder.tableRecipe(TinkerTools.plateShield.get())
                 .setCast(MaterialIngredient.of(TinkerToolParts.shieldCore), CastPurpose.FIRST_MATERIAL)
                 .setItemCost(3)
@@ -271,6 +271,18 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
                 .save(consumer, location(plateFolder + "leggings_swapping"));
         PartSwapCastingRecipeBuilder.tableRecipe(Ingredient.of(TinkerTools.plateArmor.get(ArmorItem.Type.BOOTS)), 2)
                 .save(consumer, location(plateFolder + "boots_swapping"));
+
+        TinkerTools.standardArmor.forEach((type, item) -> toolBuilding(consumer, item, armorFolder + "standard/", Patterns.STANDARD_ARMOR));
+        TinkerTools.knightsArmor.forEach((type, item) -> toolBuilding(consumer, item, armorFolder + "knights/", Patterns.KNIGHTS_ARMOR));
+        TinkerTools.explorersArmor.forEach((type, item) -> toolBuilding(consumer, item, armorFolder + "explorers/", Patterns.EXPLORERS_ARMOR));
+        TinkerTools.lightCompositeArmor.forEach((type, item) -> toolBuilding(consumer, item, armorFolder + "light_composite/", compositeArmorLayout(type)));
+        TinkerTools.heavyCompositeArmor.forEach((type, item) -> toolBuilding(consumer, item, armorFolder + "heavy_composite/", compositeArmorLayout(type)));
+        TinkerTools.lightForgedArmor.forEach((type, item) -> toolBuilding(consumer, item, armorFolder + "light_forged/", forgedArmorLayout(type)));
+        TinkerTools.heavyForgedArmor.forEach((type, item) -> toolBuilding(consumer, item, armorFolder + "heavy_forged/", forgedArmorLayout(type)));
+        TinkerTools.mixCompositeArmor.forEach((type, item) -> toolBuilding(consumer, item, armorFolder + "mix_composite/", Patterns.COMPOSITE_ARMOR_LARGE));
+        TinkerTools.mixCompositeOtherArmor.forEach((type, item) -> toolBuilding(consumer, item, armorFolder + "mix_composite_other/", Patterns.COMPOSITE_ARMOR_LARGE));
+        TinkerTools.mixForgedArmor.forEach((type, item) -> toolBuilding(consumer, item, armorFolder + "mix_forged/", Patterns.FORGED_ARMOR_LARGE));
+        TinkerTools.mixForgedOtherArmor.forEach((type, item) -> toolBuilding(consumer, item, armorFolder + "mix_forged_other/", Patterns.FORGED_ARMOR_LARGE));
 
         // slimeskull
         slimeskullCasting(consumer, MaterialIds.glass,        Items.CREEPER_HEAD,          armorFolder);
@@ -453,11 +465,26 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
         partRecipes(consumer, TinkerToolParts.toolHandle,   TinkerSmeltery.toolHandleCast,   1, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.toughHandle,  TinkerSmeltery.toughHandleCast,  3, partFolder, castFolder);
         // armor
-        partWithDummy(consumer, TinkerToolParts.plating.get(ArmorItem.Type.HELMET),     TinkerSmeltery.dummyPlating.get(ArmorItem.Type.HELMET),     TinkerSmeltery.helmetPlatingCast,     3, partFolder, castFolder);
-        partWithDummy(consumer, TinkerToolParts.plating.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.dummyPlating.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.chestplatePlatingCast, 6, partFolder, castFolder);
-        partWithDummy(consumer, TinkerToolParts.plating.get(ArmorItem.Type.LEGGINGS),   TinkerSmeltery.dummyPlating.get(ArmorItem.Type.LEGGINGS),   TinkerSmeltery.leggingsPlatingCast,   5, partFolder, castFolder);
+        partWithDummy(consumer, TinkerToolParts.plating.get(ArmorItem.Type.HELMET),     TinkerSmeltery.dummyPlating.get(ArmorItem.Type.HELMET),     TinkerSmeltery.helmetPlatingCast,     2, partFolder, castFolder);
+        partWithDummy(consumer, TinkerToolParts.plating.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.dummyPlating.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.chestplatePlatingCast, 3, partFolder, castFolder);
+        partWithDummy(consumer, TinkerToolParts.plating.get(ArmorItem.Type.LEGGINGS),   TinkerSmeltery.dummyPlating.get(ArmorItem.Type.LEGGINGS),   TinkerSmeltery.leggingsPlatingCast,   3, partFolder, castFolder);
         partWithDummy(consumer, TinkerToolParts.plating.get(ArmorItem.Type.BOOTS),      TinkerSmeltery.dummyPlating.get(ArmorItem.Type.BOOTS),      TinkerSmeltery.bootsPlatingCast,      2, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.maille, TinkerSmeltery.mailleCast, 2, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorPlate, TinkerSmeltery.armorPlateCast, 2, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorMail, TinkerSmeltery.armorMailCast, 1, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorCast.get(ArmorItem.Type.HELMET), TinkerSmeltery.armorCastHelmetCast, 4, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorCast.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.armorCastChestplateCast, 8, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorCast.get(ArmorItem.Type.LEGGINGS), TinkerSmeltery.armorCastLeggingsCast, 7, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorCast.get(ArmorItem.Type.BOOTS), TinkerSmeltery.armorCastBootsCast, 3, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorFrame.get(ArmorItem.Type.HELMET), TinkerSmeltery.frameHelmetCast, 3, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorFrame.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.frameChestplateCast, 6, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorFrame.get(ArmorItem.Type.LEGGINGS), TinkerSmeltery.frameLeggingsCast, 5, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorFrame.get(ArmorItem.Type.BOOTS), TinkerSmeltery.frameBootsCast, 2, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.HELMET), TinkerSmeltery.massiveCastHelmetCast, 8, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.massiveCastChestplateCast, 14, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.LEGGINGS), TinkerSmeltery.massiveCastLeggingsCast, 12, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.BOOTS), TinkerSmeltery.massiveCastBootsCast, 6, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.linear, TinkerSmeltery.linearCast, 2, partFolder, castFolder);
 
         // bowstrings and shield cores are part builder exclusive. Shield core additionally disallows anything that conflicts with casting shield plating (obsidian/nahuatl conflict)
         uncastablePart(consumer, TinkerToolParts.bowstring.get(), 1, null, partFolder);
@@ -491,5 +518,21 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
                 .setCast(skull, true)
                 .setFluidAndTime(TinkerFluids.enderSlime, FluidValues.SLIME_CONGEALED * 5)
                 .save(consumer, location(folder + "slime_skull/" + material.getPath()));
+    }
+
+    private static Pattern compositeArmorLayout(ArmorItem.Type type) {
+        return isSmallArmor(type) ? Patterns.COMPOSITE_ARMOR_SMALL : Patterns.COMPOSITE_ARMOR_LARGE;
+    }
+
+    private static Pattern forgedArmorLayout(ArmorItem.Type type) {
+        return isSmallArmor(type) ? Patterns.FORGED_ARMOR_SMALL : Patterns.FORGED_ARMOR_LARGE;
+    }
+
+    private static Pattern plateArmorLayout(ArmorItem.Type type) {
+        return isSmallArmor(type) ? Patterns.PLATE_ARMOR_SMALL : Patterns.PLATE_ARMOR_LARGE;
+    }
+
+    private static boolean isSmallArmor(ArmorItem.Type type) {
+        return type == ArmorItem.Type.HELMET || type == ArmorItem.Type.BOOTS;
     }
 }

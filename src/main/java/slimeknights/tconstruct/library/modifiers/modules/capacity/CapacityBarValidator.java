@@ -36,7 +36,7 @@ public record CapacityBarValidator(CapacityBarHook bar) implements HookProvider,
   public Component validate(IToolStackView tool, ModifierEntry modifier) {
     // clear excess amount
     int cap = bar.getCapacity(tool, modifier);
-    if (bar.getCapacity(tool, modifier) > cap) {
+    if (bar.getAmount(tool) > cap) {
       bar.setAmount(tool, modifier, cap);
     }
     return null;

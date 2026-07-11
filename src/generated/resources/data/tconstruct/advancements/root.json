@@ -1,0 +1,86 @@
+{
+  "criteria": {
+    "has_armor": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:travelers_helmet",
+              "tconstruct:travelers_chestplate",
+              "tconstruct:travelers_leggings",
+              "tconstruct:travelers_boots",
+              "tconstruct:plate_helmet",
+              "tconstruct:plate_chestplate",
+              "tconstruct:plate_leggings",
+              "tconstruct:plate_boots",
+              "tconstruct:slime_helmet",
+              "tconstruct:slime_chestplate",
+              "tconstruct:slime_leggings",
+              "tconstruct:slime_boots",
+              "tconstruct:standard_helmet",
+              "tconstruct:standard_chestplate",
+              "tconstruct:standard_leggings",
+              "tconstruct:standard_boots",
+              "tconstruct:knights_helmet",
+              "tconstruct:knights_chestplate",
+              "tconstruct:knights_leggings",
+              "tconstruct:knights_boots",
+              "tconstruct:explorers_helmet",
+              "tconstruct:explorers_chestplate",
+              "tconstruct:explorers_leggings",
+              "tconstruct:explorers_boots",
+              "tconstruct:light_composite_helmet",
+              "tconstruct:light_composite_chestplate",
+              "tconstruct:light_composite_leggings",
+              "tconstruct:light_composite_boots",
+              "tconstruct:heavy_composite_helmet",
+              "tconstruct:heavy_composite_chestplate",
+              "tconstruct:heavy_composite_leggings",
+              "tconstruct:heavy_composite_boots",
+              "tconstruct:light_forged_helmet",
+              "tconstruct:light_forged_chestplate",
+              "tconstruct:light_forged_leggings",
+              "tconstruct:light_forged_boots",
+              "tconstruct:heavy_forged_helmet",
+              "tconstruct:heavy_forged_chestplate",
+              "tconstruct:heavy_forged_leggings",
+              "tconstruct:heavy_forged_boots",
+              "tconstruct:mix_composite_chestplate",
+              "tconstruct:mix_composite_leggings",
+              "tconstruct:mix_composite_other_chestplate",
+              "tconstruct:mix_composite_other_leggings",
+              "tconstruct:mix_forged_chestplate",
+              "tconstruct:mix_forged_leggings",
+              "tconstruct:mix_forged_other_chestplate",
+              "tconstruct:mix_forged_other_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "tconstruct:textures/gui/advancement_background.png",
+    "description": {
+      "translate": "advancements.tconstruct.root.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "tconstruct:knights_chestplate",
+      "nbt": "{Damage:0,tic_broken:0b,tic_display:1b,tic_materials:[\"tconstruct:manyullyn\",\"tconstruct:manyullyn\",\"tconstruct:wool\"]}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.tconstruct.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_armor"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

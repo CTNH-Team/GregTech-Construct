@@ -24,6 +24,7 @@ public enum StatlessMaterialStats implements IMaterialStats {
   REPAIR_KIT("repair_kit"),
   /** Leather part for travelers gear. Generally supports leather and leather composites. */
   CUIRASS("cuirass"),
+  LINEAR("linear"),
 
   // ammo
   /** Stat type for the heads of arrows, shurikens, and throwing axes. */

@@ -19,6 +19,7 @@ import slimeknights.tconstruct.library.data.RuntimeResourceProvider;
 import slimeknights.tconstruct.common.registration.CastItemObject;
 import slimeknights.tconstruct.library.tools.part.MaterialItem;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
+import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.TinkerToolParts;
 import slimeknights.tconstruct.world.TinkerWorld;
 
@@ -27,6 +28,7 @@ import static slimeknights.tconstruct.TConstruct.getResource;
 @SuppressWarnings("UnusedReturnValue")
 public class TinkerItemModelProvider extends ItemModelProvider implements RuntimeResourceProvider {
     private final UncheckedModelFile GENERATED = new UncheckedModelFile("item/generated");
+
     public TinkerItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, TConstruct.MOD_ID, existingFileHelper);
     }
@@ -71,6 +73,12 @@ public class TinkerItemModelProvider extends ItemModelProvider implements Runtim
         });
         part(TinkerToolParts.maille);
         part(TinkerToolParts.shieldCore, "armor/plate/shield/core");
+        part(TinkerToolParts.armorPlate);
+        part(TinkerToolParts.armorMail);
+        TinkerToolParts.armorCast.forEach((slot, item) -> part(item, "parts/" + id(item).getPath()));
+        TinkerToolParts.armorFrame.forEach((slot, item) -> part(item, "parts/" + id(item).getPath()));
+        TinkerToolParts.massiveArmorCast.forEach((slot, item) -> part(item, "parts/" + id(item).getPath()));
+        part(TinkerToolParts.linear);
         //gt
         part(TinkerToolParts.wrenchHead, "wrench/head_part");
         part(TinkerToolParts.wireCutterHead, "wire_cutter/head_part");
@@ -83,6 +91,10 @@ public class TinkerItemModelProvider extends ItemModelProvider implements Runtim
         // gauges
         generated(TinkerSmeltery.copperGauge, "block/smeltery/io/gauge");
         generated(TinkerSmeltery.obsidianGauge, "block/foundry/io/gauge");
+        generated(TinkerModifiers.manyullynReinforcement, "item/reinforcement/manyullyn");
+        generated(TinkerModifiers.hepatizonReinforcement, "item/reinforcement/hepatizon");
+        generated(TinkerModifiers.queensSlimeReinforcement, "item/reinforcement/queens_slime");
+        generated(TinkerModifiers.netheriteReinforcement, "item/reinforcement/netherite");
 
         // casts //
         // basic
@@ -133,6 +145,21 @@ public class TinkerItemModelProvider extends ItemModelProvider implements Runtim
         cast(TinkerSmeltery.leggingsPlatingCast);
         cast(TinkerSmeltery.bootsPlatingCast);
         cast(TinkerSmeltery.mailleCast);
+        cast(TinkerSmeltery.armorPlateCast);
+        cast(TinkerSmeltery.armorMailCast);
+        cast(TinkerSmeltery.armorCastHelmetCast);
+        cast(TinkerSmeltery.armorCastChestplateCast);
+        cast(TinkerSmeltery.armorCastLeggingsCast);
+        cast(TinkerSmeltery.armorCastBootsCast);
+        cast(TinkerSmeltery.frameHelmetCast);
+        cast(TinkerSmeltery.frameChestplateCast);
+        cast(TinkerSmeltery.frameLeggingsCast);
+        cast(TinkerSmeltery.frameBootsCast);
+        cast(TinkerSmeltery.massiveCastHelmetCast);
+        cast(TinkerSmeltery.massiveCastChestplateCast);
+        cast(TinkerSmeltery.massiveCastLeggingsCast);
+        cast(TinkerSmeltery.massiveCastBootsCast);
+        cast(TinkerSmeltery.linearCast);
         // dummy parts
         basicEnumItems(TinkerSmeltery.dummyPlating, "tool/parts/plating_");
 
@@ -151,6 +178,7 @@ public class TinkerItemModelProvider extends ItemModelProvider implements Runtim
         generatedModels.clear();
         registerModels();
         RuntimeResourceWriter.writeModels(this, registrar);
+        ArmorExtensionItemModelBuilder.write(registrar);
         generatedModels.clear();
     }
 

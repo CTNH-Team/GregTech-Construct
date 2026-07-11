@@ -9,6 +9,7 @@ import slimeknights.tconstruct.library.addon.DynamicPackProviderFactory;
 import slimeknights.tconstruct.library.addon.DynamicProviderRegistrar;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
 import slimeknights.tconstruct.library.data.RuntimeDataProvider;
+import slimeknights.tconstruct.tools.data.ArmorFormulaProvider;
 import slimeknights.tconstruct.tools.data.EnchantmentToModifierProvider;
 import slimeknights.tconstruct.tools.data.FluidEffectProvider;
 import slimeknights.tconstruct.tools.data.ModifierProvider;
@@ -52,6 +53,7 @@ public final class TiCDynamicTinkeringGenerator {
     registrar.addDataProvider(FluidEffectProvider.class);
     registrar.addDataProvider(EnchantmentToModifierProvider.class);
     registrar.addDataProvider(MobEquipmentProvider.class);
+    registrar.addDataProvider(ArmorFormulaProvider.class);
   }
 
   static List<TinkeringProviderEntry> createProviderEntries() {

@@ -58,10 +58,13 @@ public final class AchievementEvents {
     }
   }
 
-  private static void grantAdvancement(ServerPlayer playerMP, String advancementResource) {
+  public static void grantAdvancement(ServerPlayer playerMP, ResourceLocation advancementResource) {
+    if (advancementResource == null) {
+      return;
+    }
     MinecraftServer server = playerMP.getServer();
     if (server != null) {
-      Advancement advancement = server.getAdvancements().getAdvancement(ResourceLocation.tryParse(advancementResource));
+      Advancement advancement = server.getAdvancements().getAdvancement(advancementResource);
       if (advancement != null) {
         AdvancementProgress advancementProgress = playerMP.getAdvancements().getOrStartProgress(advancement);
         if (!advancementProgress.isDone()) {
@@ -70,6 +73,10 @@ public final class AchievementEvents {
         }
       }
     }
+  }
+
+  private static void grantAdvancement(ServerPlayer playerMP, String advancementResource) {
+    grantAdvancement(playerMP, ResourceLocation.tryParse(advancementResource));
   }
 
   private AchievementEvents() {}

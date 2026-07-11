@@ -19,8 +19,13 @@ import java.util.function.Consumer;
 public class MultilayerArmorItem extends ModifiableArmorItem {
   private final ResourceLocation name;
   public MultilayerArmorItem(ModifiableArmorMaterial material, ArmorItem.Type slot, Properties properties) {
+    this(material, slot, properties, false);
+  }
+
+  public MultilayerArmorItem(ModifiableArmorMaterial material, ArmorItem.Type slot, Properties properties, boolean slotAwareModel) {
     super(material, slot, properties);
-    this.name = material.getId();
+    ResourceLocation materialId = material.getId();
+    this.name = slotAwareModel ? materialId.withPath(path -> path + "/" + slot.getName()) : materialId;
   }
 
   public MultilayerArmorItem(ArmorMaterial material, ArmorItem.Type slot, Properties properties, ToolDefinition toolDefinition) {

@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tools;
 
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
@@ -50,6 +51,7 @@ import slimeknights.tconstruct.library.tools.capability.ToolEnergyCapability;
 import slimeknights.tconstruct.library.tools.capability.fluid.ToolFluidCapability;
 import slimeknights.tconstruct.library.tools.capability.fluid.ToolTankHelper;
 import slimeknights.tconstruct.library.tools.capability.inventory.ToolInventoryCapability;
+import slimeknights.tconstruct.library.tools.definition.ModifiableArmorMaterial;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
 import slimeknights.tconstruct.library.tools.definition.module.ToolHooks;
 import slimeknights.tconstruct.library.tools.definition.module.ToolModule;
@@ -101,6 +103,8 @@ import slimeknights.tconstruct.tools.logic.ModifiableArrowDispenserBehavior;
 import slimeknights.tconstruct.tools.logic.ModifiableShurikenDispenserBehavior;
 import slimeknights.tconstruct.tools.menu.ToolContainerMenu;
 import slimeknights.tconstruct.tools.modules.MeltingFluidEffectiveModule;
+import slimeknights.tconstruct.tools.particle.ShareDamageParticleData;
+import slimeknights.tconstruct.tools.stats.ArmorStats;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -184,7 +188,7 @@ public final class TinkerTools extends TinkerModule {
     public static final ItemObject<ModifiableItem> minotaurAxe;
     static {
         // conditionally register minotaur axe as it's the easiest way to keep it out of JEI display
-        if (ModList.get().isLoaded("twilightforest")) {
+        if (isModLoaded("twilightforest")) {
             minotaurAxe = ITEMS.register("minotaur_axe", () -> new ModifiableItem(UNSTACKABLE_PROPS, ToolDefinitions.MINOTAUR_AXE));
         } else {
             minotaurAxe = new ItemObject<>(RegistryObject.create(getResource("minotaur_axe"), ForgeRegistries.ITEMS));
@@ -192,12 +196,24 @@ public final class TinkerTools extends TinkerModule {
     }
 
     // armor
+    private static final ArmorItem.Type[] CHEST_AND_LEGS = {ArmorItem.Type.CHESTPLATE, ArmorItem.Type.LEGGINGS};
     public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> travelersGear = ITEMS.registerEnum("travelers", ArmorItem.Type.values(), type -> new MultilayerArmorItem(ArmorDefinitions.TRAVELERS, type, UNSTACKABLE_PROPS));
     public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> plateArmor = ITEMS.registerEnum("plate", ArmorItem.Type.values(), type -> new MultilayerArmorItem(ArmorDefinitions.PLATE, type, UNSTACKABLE_PROPS));
     public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> slimesuit = new EnumObject.Builder<ArmorItem.Type,ModifiableArmorItem>(ArmorItem.Type.class)
             .putAll(ITEMS.registerEnum("slime", new ArmorItem.Type[] {ArmorItem.Type.BOOTS, ArmorItem.Type.LEGGINGS, ArmorItem.Type.CHESTPLATE}, type -> new MultilayerArmorItem(ArmorDefinitions.SLIMESUIT, type, UNSTACKABLE_PROPS)))
             .put(ArmorItem.Type.HELMET, ITEMS.register("slime_helmet", () -> new SlimeskullItem(ArmorDefinitions.SLIMESUIT, UNSTACKABLE_PROPS)))
             .build();
+    public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> standardArmor = ITEMS.registerEnum("standard", ArmorItem.Type.values(), type -> slotAwareArmor(ArmorDefinitions.STANDARD, type));
+    public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> knightsArmor = ITEMS.registerEnum("knights", ArmorItem.Type.values(), type -> slotAwareArmor(ArmorDefinitions.KNIGHTS, type));
+    public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> explorersArmor = ITEMS.registerEnum("explorers", ArmorItem.Type.values(), type -> slotAwareArmor(ArmorDefinitions.EXPLORERS, type));
+    public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> lightCompositeArmor = ITEMS.registerEnum("light_composite", ArmorItem.Type.values(), type -> slotAwareArmor(ArmorDefinitions.LIGHT_COMPOSITE, type));
+    public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> heavyCompositeArmor = ITEMS.registerEnum("heavy_composite", ArmorItem.Type.values(), type -> slotAwareArmor(ArmorDefinitions.HEAVY_COMPOSITE, type));
+    public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> lightForgedArmor = ITEMS.registerEnum("light_forged", ArmorItem.Type.values(), type -> slotAwareArmor(ArmorDefinitions.LIGHT_FORGED, type));
+    public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> heavyForgedArmor = ITEMS.registerEnum("heavy_forged", ArmorItem.Type.values(), type -> slotAwareArmor(ArmorDefinitions.HEAVY_FORGED, type));
+    public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> mixCompositeArmor = ITEMS.registerEnum("mix_composite", CHEST_AND_LEGS, type -> slotAwareArmor(ArmorDefinitions.MIX_COMPOSITE, type));
+    public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> mixCompositeOtherArmor = ITEMS.registerEnum("mix_composite_other", CHEST_AND_LEGS, type -> slotAwareArmor(ArmorDefinitions.MIX_COMPOSITE_OTHER, type));
+    public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> mixForgedArmor = ITEMS.registerEnum("mix_forged", CHEST_AND_LEGS, type -> slotAwareArmor(ArmorDefinitions.MIX_FORGED, type));
+    public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> mixForgedOtherArmor = ITEMS.registerEnum("mix_forged_other", CHEST_AND_LEGS, type -> slotAwareArmor(ArmorDefinitions.MIX_FORGED_OTHER, type));
 
 
     // shields
@@ -211,6 +227,7 @@ public final class TinkerTools extends TinkerModule {
     public static final RegistryObject<SimpleParticleType> hammerAttackParticle = PARTICLE_TYPES.register("hammer_attack", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> axeAttackParticle = PARTICLE_TYPES.register("axe_attack", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> bonkAttackParticle = PARTICLE_TYPES.register("bonk", () -> new SimpleParticleType(true));
+    public static final RegistryObject<ParticleType<ShareDamageParticleData>> shareDamageParticle = PARTICLE_TYPES.register("share_damage", ShareDamageParticleData.Type::new);
 
     /* Entities */
     public static final RegistryObject<EntityType<IndestructibleItemEntity>> indestructibleItem = ENTITIES.register("indestructible_item", () ->
@@ -273,6 +290,7 @@ public final class TinkerTools extends TinkerModule {
             ToolStats.register(OverslimeModule.OVERSLIME_STAT);
             ToolStats.register(ToolTankHelper.CAPACITY_STAT);
             ToolStats.register(ToolEnergyCapability.MAX_STAT);
+            ArmorStats.init();
 
             ToolModule.LOADER.register(getResource("empty"), ToolModule.EMPTY.getLoader());
             // tool definition components
@@ -384,7 +402,7 @@ public final class TinkerTools extends TinkerModule {
         acceptTool(output, warPick);
         acceptTool(output, battlesign);
         acceptTool(output, swasher);
-        if (ModList.get().isLoaded("twilightforest")) {
+        if (isModLoaded("twilightforest")) {
             acceptTool(output, minotaurAxe);
         }
 
@@ -394,6 +412,17 @@ public final class TinkerTools extends TinkerModule {
         acceptTools(output, plateArmor);
         acceptTool(output, plateShield);
         acceptTools(output, slimesuit);
+        acceptTools(output, standardArmor);
+        acceptTools(output, knightsArmor);
+        acceptTools(output, explorersArmor);
+        acceptTools(output, lightCompositeArmor);
+        acceptTools(output, heavyCompositeArmor);
+        acceptTools(output, lightForgedArmor);
+        acceptTools(output, heavyForgedArmor);
+        acceptTools(output, mixCompositeArmor);
+        acceptTools(output, mixCompositeOtherArmor);
+        acceptTools(output, mixForgedArmor);
+        acceptTools(output, mixForgedOtherArmor);
     }
 
     /** Adds a tool to the tab */
@@ -404,6 +433,15 @@ public final class TinkerTools extends TinkerModule {
     /** Adds a tool to the tab */
     private static void acceptTools(Consumer<ItemStack> output, EnumObject<?,? extends IModifiable> tools) {
         tools.forEach(tool -> ToolBuildHandler.addVariants(output, tool, ""));
+    }
+
+    private static boolean isModLoaded(String modId) {
+        ModList modList = ModList.get();
+        return modList != null && modList.isLoaded(modId);
+    }
+
+    private static MultilayerArmorItem slotAwareArmor(ModifiableArmorMaterial material, ArmorItem.Type type) {
+        return new MultilayerArmorItem(material, type, UNSTACKABLE_PROPS, true);
     }
 
     /**

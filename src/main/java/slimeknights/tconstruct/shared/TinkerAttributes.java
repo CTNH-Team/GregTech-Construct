@@ -29,6 +29,10 @@ public class TinkerAttributes {
   public static final RegistryObject<Attribute> USE_ITEM_SPEED = ATTRIBUTES.registerPercent("player.use_item_speed", 0.2f, true);
   /** Changes the speed debuff when the player moves while using an item */
   public static final RegistryObject<Attribute> PROTECTION_CAP = ATTRIBUTES.register("generic.protection_cap", 0.8, 0, 0.95f, true);
+  public static final RegistryObject<Attribute> ARMOR_STRENGTH = ATTRIBUTES.register("generic.armor_strength", 0, 0, 2048, true);
+  public static final RegistryObject<Attribute> PRE_REDUCTION = ATTRIBUTES.register("generic.pre_reduction", 0, 0, 2048, true);
+  public static final RegistryObject<Attribute> ARMOR_PROTECTION = ATTRIBUTES.register("generic.armor_protection", 0, 0, 0.8f, true);
+  public static final RegistryObject<Attribute> POST_REDUCTION = ATTRIBUTES.register("generic.post_reduction", 0, 0, 2048, true);
   /** Percentage boost to critical hits for any airborne attacker, used for {@link slimeknights.tconstruct.tools.data.ModifierIds#dragonborn} */
   public static final RegistryObject<Attribute> CRITICAL_DAMAGE = ATTRIBUTES.register("player.critical_damage", 1.5f, 0, 100, false);
 
@@ -67,6 +71,10 @@ public class TinkerAttributes {
     // general attributes
     addToAll(event, BOUNCY);
     addToAll(event, PROTECTION_CAP);
+    addToAll(event, ARMOR_STRENGTH);
+    addToAll(event, PRE_REDUCTION);
+    addToAll(event, ARMOR_PROTECTION);
+    addToAll(event, POST_REDUCTION);
     addToAll(event, JUMP_BOOST);
     addToAll(event, SAFE_FALL_DISTANCE);
     addToAll(event, CROUCH_DAMAGE_MULTIPLIER);

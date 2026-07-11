@@ -2,6 +2,13 @@
   "values": [
     "tconstruct:travelers_boots",
     "tconstruct:plate_boots",
-    "tconstruct:slime_boots"
+    "tconstruct:slime_boots",
+    "tconstruct:standard_boots",
+    "tconstruct:knights_boots",
+    "tconstruct:explorers_boots",
+    "tconstruct:light_composite_boots",
+    "tconstruct:heavy_composite_boots",
+    "tconstruct:light_forged_boots",
+    "tconstruct:heavy_forged_boots"
   ]
 }

@@ -13,7 +13,6 @@ Thumbs.db
 #gradle stuff
 /.gradle
 /build/
-/libs/
 /run*/
 /ui/
 *.launch
@@ -45,7 +44,9 @@ options.txt
 /resources/assets/tinker
 /resources/assets/unused
 /design
-/docs/
+/docs/*
+!/docs/third_party/
+!/docs/third_party/**
 /classes/
 #custom
 *.tmp
@@ -59,3 +60,7 @@ options.txt
 src/generated/resources/.cache/*
 .claude/settings.local.json
 .omo/
+/workspace/**
+/node_modules/
+package-lock.json
+package.json

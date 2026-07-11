@@ -1,3 +1,8 @@
 {
-  "values": []
+  "values": [
+    "tconstruct:knights_helmet",
+    "tconstruct:knights_chestplate",
+    "tconstruct:knights_leggings",
+    "tconstruct:knights_boots"
+  ]
 }
