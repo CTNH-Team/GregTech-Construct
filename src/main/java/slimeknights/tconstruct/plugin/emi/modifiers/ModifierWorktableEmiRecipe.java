@@ -4,7 +4,6 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.resources.ResourceLocation;
-import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.recipe.worktable.IModifierWorktableRecipe;
 import slimeknights.tconstruct.plugin.emi.EMIConstants;
 import slimeknights.tconstruct.plugin.emi.TConstructEmiRecipe;
@@ -35,12 +34,7 @@ public final class ModifierWorktableEmiRecipe extends TConstructEmiRecipe {
   }
 
   private static List<EmiStack> outputs(IModifierWorktableRecipe recipe) {
-    if (!recipe.isModifierOutput()) {
-      return List.of();
-    }
-    return recipe.getModifierOptions(null).stream()
-        .map(entry -> (EmiStack) new ModifierEmiStack(entry))
-        .toList();
+    return List.of();
   }
 
   private static List<EmiIngredient> createInputs(IModifierWorktableRecipe recipe) {

@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import static slimeknights.tconstruct.library.recipe.tinkerstation.building.ToolBuildingRecipe.X_OFFSET;
 import static slimeknights.tconstruct.library.recipe.tinkerstation.building.ToolBuildingRecipe.Y_OFFSET;
+import static slimeknights.tconstruct.library.recipe.tinkerstation.building.ToolBuildingRecipe.SLOT_SIZE;
 
 public final class ToolBuildingEmiRecipe extends TConstructEmiRecipe {
   private static final Component ANVIL_TOOLTIP =
@@ -64,7 +65,7 @@ public final class ToolBuildingEmiRecipe extends TConstructEmiRecipe {
         : recipe.getOutput().asItem().getDefaultInstance();
     widgets.addDrawable(5, 6, 70, 60, (graphics, x, y, delta) -> {
       graphics.pose().pushPose();
-      graphics.pose().translate(0, 0.5, 0);
+      graphics.pose().translate(0, 0.5, -100);
       graphics.pose().scale(3.7f, 3.7f, 1);
       graphics.renderItem(preview, 0, 0);
       graphics.pose().popPose();
@@ -80,9 +81,27 @@ public final class ToolBuildingEmiRecipe extends TConstructEmiRecipe {
     });
 
     List<LayoutSlot> layoutSlots = recipe.getLayoutSlots();
+    widgets.addDrawable(0, 0, getDisplayWidth(), getDisplayHeight(), (graphics, x, y, delta) -> {
+      RenderSystem.enableBlend();
+      RenderSystem.disableDepthTest();
+      RenderSystem.setShaderColor(1, 1, 1, 0.28f);
+      for (LayoutSlot slot : layoutSlots) {
+        graphics.blit(EMIConstants.TINKER_STATION_TEXTURE,
+            slot.getX() + X_OFFSET - 1, slot.getY() + Y_OFFSET - 1,
+            144, 59, SLOT_SIZE, SLOT_SIZE, 256, 256);
+      }
+      RenderSystem.setShaderColor(1, 1, 1, 1);
+      for (LayoutSlot slot : layoutSlots) {
+        graphics.blit(EMIConstants.TINKER_STATION_TEXTURE,
+            slot.getX() + X_OFFSET - 1, slot.getY() + Y_OFFSET - 1,
+            162, 59, SLOT_SIZE, SLOT_SIZE, 256, 256);
+      }
+      RenderSystem.disableBlend();
+      RenderSystem.enableDepthTest();
+    });
     for (int index = 0; index < layoutSlots.size(); index++) {
       LayoutSlot slot = layoutSlots.get(index);
-      EmiRenderHelper.slotWithBackground(widgets, ingredients.get(index),
+      EmiRenderHelper.slot(widgets, ingredients.get(index),
           slot.getX() + X_OFFSET, slot.getY() + Y_OFFSET);
     }
 

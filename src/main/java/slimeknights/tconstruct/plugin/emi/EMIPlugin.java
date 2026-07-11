@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -224,8 +225,11 @@ public final class EMIPlugin implements EmiPlugin {
     ModifierRecipeLookup.getRecipeModifierList().stream()
         .filter(ModifierEntry::isBound)
         .filter(entry -> !ModifierManager.isInTag(entry.getId(), TinkerTags.Modifiers.HIDDEN_FROM_EMI))
-        .map(ModifierEmiStack::new)
-        .forEach(registry::addEmiStack);
+        .forEach(entry -> {
+          ModifierEmiStack stack = new ModifierEmiStack(entry);
+          registry.addEmiStack(stack);
+          registry.addAlias(stack, Component.translatable("emi.tconstruct.modifiers.title"));
+        });
   }
 
   private static void addWorkstations(EmiRegistry registry, RecipeManager manager) {
