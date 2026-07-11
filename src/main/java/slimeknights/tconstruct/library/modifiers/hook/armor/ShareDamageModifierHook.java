@@ -14,6 +14,7 @@ public interface ShareDamageModifierHook {
 
   interface ShareDamageContext {
     void add(float shareRatio, float extraProtection, float healthGround, float distanceFactor);
+    void add(float shareRatio, float extraProtection, float healthGround, float distanceFactor, int color);
   }
 
   record AllMerger(Collection<ShareDamageModifierHook> modules) implements ShareDamageModifierHook {

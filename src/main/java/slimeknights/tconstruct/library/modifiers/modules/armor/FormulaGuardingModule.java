@@ -12,30 +12,36 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.data.loadable.primitive.FloatLoadable;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
+import slimeknights.mantle.data.loadable.primitive.StringLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
-import slimeknights.tconstruct.library.modifiers.ModifierManager;
+import slimeknights.tconstruct.library.modifiers.hook.armor.ParameterProviderHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.PlayerLoginModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.EquipmentChangeModifierHook;
-import slimeknights.tconstruct.library.modifiers.hook.special.CapacityBarHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ShareDamageModifierHook;
 import slimeknights.tconstruct.library.modifiers.modules.ModifierModule;
+import slimeknights.tconstruct.library.modifiers.modules.parameter.Parameter;
+import slimeknights.tconstruct.library.modifiers.modules.parameter.ParameterProvider;
 import slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition;
 import slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition.ConditionalModule;
 import slimeknights.tconstruct.library.module.HookProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
 import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
-import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.logic.GuardingCache;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public record FormulaGuardingModule(float healthGround, int fullEffectRange, int effectiveRange,
                                     ResourceLocation distanceFactorFormula, ResourceLocation shareRatioFormula,
-                                    ResourceLocation extraProtectionFormula, ModifierCondition<IToolStackView> condition)
+                                    ResourceLocation extraProtectionFormula,
+                                    @Nullable List<String> parameter,
+                                    @Nullable List<String> carrier,
+                                    ModifierCondition<IToolStackView> condition)
   implements ModifierModule, ShareDamageModifierHook, EquipmentChangeModifierHook, PlayerLoginModifierHook, ConditionalModule<IToolStackView> {
   private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<FormulaGuardingModule>defaultHooks(ModifierHooks.SHARE_DAMAGE, ModifierHooks.EQUIPMENT_CHANGE, ModifierHooks.PLAYER_LOGIN);
   public static final RecordLoadable<FormulaGuardingModule> LOADER = RecordLoadable.create(
@@ -45,6 +51,8 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
     Loadables.RESOURCE_LOCATION.requiredField("distance_factor_formula", FormulaGuardingModule::distanceFactorFormula),
     Loadables.RESOURCE_LOCATION.requiredField("share_ratio_formula", FormulaGuardingModule::shareRatioFormula),
     Loadables.RESOURCE_LOCATION.requiredField("extra_protection_formula", FormulaGuardingModule::extraProtectionFormula),
+    StringLoadable.DEFAULT.list(0).nullableField("parameter", FormulaGuardingModule::parameter),
+    StringLoadable.DEFAULT.list(0).nullableField("carrier", FormulaGuardingModule::carrier),
     ModifierCondition.TOOL_FIELD,
     FormulaGuardingModule::new);
 
@@ -52,7 +60,7 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
   public FormulaGuardingModule {}
 
   public static FormulaGuardingModule guarding(ResourceLocation distanceFactorFormula, ResourceLocation shareRatioFormula, ResourceLocation extraProtectionFormula) {
-    return new FormulaGuardingModule(10f, 4, 16, distanceFactorFormula, shareRatioFormula, extraProtectionFormula, ModifierCondition.ANY_TOOL);
+    return new FormulaGuardingModule(10f, 4, 16, distanceFactorFormula, shareRatioFormula, extraProtectionFormula, null, null, ModifierCondition.ANY_TOOL);
   }
 
   @Override
@@ -74,22 +82,38 @@ public record FormulaGuardingModule(float healthGround, int fullEffectRange, int
     IFormula shareFormula = FormulaManager.getOrNull(shareRatioFormula);
     IFormula protectionFormula = FormulaManager.getOrNull(extraProtectionFormula);
 
-    int platingLevel = tool.getModifierLevel(ModifierIds.plating);
-    if (platingLevel <= 0) {
-      return false;
+    // resolve parameter provider inputs into a double[] for formulas
+    double[] params = new double[4];
+    params[0] = 0;           // stored_value (accumulator placeholder)
+    params[1] = modifier.getEffectiveLevel();
+    params[2] = 1;           // capacity (default)
+    params[3] = 0;           // amount (default)
+	  if (parameter != null && !parameter.isEmpty()) {
+	      ParameterProviderHook hook = modifier.getHook(ModifierHooks.PARAMETER_PROVIDER);
+      if (hook != null) {
+        java.util.List<ParameterProvider> providers = new java.util.ArrayList<>();
+        hook.collectProviders(parameter.get(0), providers);
+        int extraLen = 0;
+        for (var p : providers) extraLen = p.fieldCount(extraLen);
+        if (extraLen > 0) {
+          var pa = new Parameter(extraLen);
+          for (var p : providers) p.pushTo(pa, tool, modifier, null, false);
+          var extraArr = pa.get();
+          params = new double[4 + extraLen];
+          params[0] = 0;
+          params[1] = modifier.getEffectiveLevel();
+          params[2] = 1;
+          params[3] = 0;
+          System.arraycopy(extraArr, 0, params, 4, extraLen);
+        }
+      }
     }
-    ModifierEntry plating = new ModifierEntry(ModifierManager.INSTANCE.get(ModifierIds.plating), Math.max(1, platingLevel));
-    CapacityBarHook bar = plating.getHook(ModifierHooks.CAPACITY_BAR);
-    if (bar == ModifierHooks.CAPACITY_BAR.getDefaultInstance()) {
-      return false;
-    }
-    int capacity = Math.max(1, bar.getCapacity(tool, plating));
-    int amount = Math.max(0, bar.getAmount(tool));
+
     double level = modifier.getEffectiveLevel();
     float distanceFactor = distanceFormula == null ? 1f : Mth.clamp((float)distanceFormula.accept(distance, effectiveRange, fullEffectRange), 0, 1);
-    float shareRatio = shareFormula == null ? 0f : Mth.clamp((float)shareFormula.accept(0, level, capacity, amount), 0, 1);
-    float extraProtection = protectionFormula == null ? 0f : Mth.clamp((float)protectionFormula.accept(0, level, capacity, amount), 0, 1);
-    context.add(shareRatio, extraProtection, healthGround, distanceFactor);
+    float shareRatio = shareFormula == null ? 0f : Mth.clamp((float)shareFormula.accept(params[0], level, params[2], params[3]), 0, 1);
+    float extraProtection = protectionFormula == null ? 0f : Mth.clamp((float)protectionFormula.accept(params[0], level, params[2], params[3]), 0, 1);
+    context.add(shareRatio, extraProtection, healthGround, distanceFactor, modifier.getModifier().getColor());
     return true;
   }
 

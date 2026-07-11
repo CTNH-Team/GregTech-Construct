@@ -673,14 +673,21 @@ public class ToolEvents {
     private float extraFactor = 1f;
     private float healthGround = Float.NEGATIVE_INFINITY;
     private float distanceFactor = 1f;
+    private int particleColor = -1;
 
     @Override
     public void add(float shareRatio, float extraProtection, float healthGround, float distanceFactor) {
+      add(shareRatio, extraProtection, healthGround, distanceFactor, -1);
+    }
+
+    @Override
+    public void add(float shareRatio, float extraProtection, float healthGround, float distanceFactor, int color) {
       claimed = true;
       remainingRatio *= 1f - Mth.clamp(shareRatio, 0, 1);
       extraFactor *= 1f - Mth.clamp(extraProtection, 0, 1);
       this.healthGround = Math.max(this.healthGround, healthGround);
       this.distanceFactor = Math.min(this.distanceFactor, Mth.clamp(distanceFactor, 0, 1));
+      if (color != -1) this.particleColor = color;
     }
 
     private boolean claimed() {
@@ -713,7 +720,7 @@ public class ToolEvents {
         }
       }
       if (sharedRawDamage > 0) {
-        spawnShareDamageParticles(protectedEntity, guardian);
+        spawnShareDamageParticles(protectedEntity, guardian, particleColor);
       }
       return new ShareDamageResult(true, sharedRawDamage);
     }
@@ -892,9 +899,27 @@ public class ToolEvents {
     }
   }
 
-  private static void spawnShareDamageParticles(LivingEntity protectedEntity, LivingEntity guardian) {
+  private static void spawnShareDamageParticles(LivingEntity protectedEntity, LivingEntity guardian, int color) {
     if (!(protectedEntity.level() instanceof ServerLevel level)) {
       return;
+    }
+    // derive 8 color variants from the modifier color (TCAE style)
+    Vector3f[] colors;
+    if (color == -1) {
+      colors = SHARE_DAMAGE_PARTICLE_COLORS;
+    } else {
+      int r = (color >> 16) & 0xFF;
+      int g = (color >> 8) & 0xFF;
+      int b = color & 0xFF;
+      colors = new Vector3f[8];
+      for (int i = 0; i < 8; i++) {
+        float var = 0.85F + level.random.nextFloat() * 0.3F;
+        colors[i] = new Vector3f(
+          Math.min(1.0F, (r / 255F) * var),
+          Math.min(1.0F, (g / 255F) * var),
+          Math.min(1.0F, (b / 255F) * var)
+        );
+      }
     }
     Vec3 from = protectedEntity.position().add(0, protectedEntity.getBbHeight() / 2.0, 0);
     Vec3 to = guardian.position().add(0, guardian.getBbHeight() / 2.0, 0);
@@ -919,7 +944,7 @@ public class ToolEvents {
       double progress = (double)i / count;
       double bend = height * Math.sin(Math.PI * progress);
       Vec3 pos = from.add(direction.scale(distance * progress)).add(bendDirection.scale(bend));
-      level.sendParticles(shareDamageParticle(level, 0.5f), pos.x, pos.y, pos.z, 0, 0, 0, 0, 0);
+      level.sendParticles(new ShareDamageParticleData(colors[level.random.nextInt(colors.length)], 0.5f), pos.x, pos.y, pos.z, 0, 0, 0, 0, 0);
     }
 
     for (int i = 0; i < 12; i++) {
@@ -929,12 +954,8 @@ public class ToolEvents {
       double xd = direction.x + level.random.nextDouble() - 0.5;
       double yd = 0.5 * (level.random.nextDouble() - 0.5);
       double zd = direction.z + level.random.nextDouble() - 0.5;
-      level.sendParticles(shareDamageParticle(level, 0.5f), x, y, z, 0, xd, yd, zd, 0.2);
+      level.sendParticles(new ShareDamageParticleData(colors[level.random.nextInt(colors.length)], 0.5f), x, y, z, 0, xd, yd, zd, 0.2);
     }
-  }
-
-  private static ShareDamageParticleData shareDamageParticle(ServerLevel level, float scale) {
-    return new ShareDamageParticleData(SHARE_DAMAGE_PARTICLE_COLORS[level.random.nextInt(SHARE_DAMAGE_PARTICLE_COLORS.length)], scale);
   }
 
   @SubscribeEvent
