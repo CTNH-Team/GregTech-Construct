@@ -35,3 +35,20 @@ Reusable mod API and core implementations for materials, modifiers, tools, recip
 - This is the highest-volume Java domain; prefer an existing subpackage over a new top-level library package.
 - `library/addon` is the boundary for reflection and Forge scan data; keep that mechanism localized.
 - Changes here often affect tools, tables, plugins, and tests even when callers are reflective.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/library`, including API contracts consumed by other domains and addons.
+
+## READ WHEN
+- Changing materials, modifiers, hooks, tool views, recipes, loadables, capabilities, or addon discovery.
+- Removing code where reflection or framework callbacks may hide callers.
+
+## SOURCE OF TRUTH
+- API contracts: interfaces, views, hooks, and loader types.
+- Runtime registration: `MaterialRegistry`, `ModifierManager`, and related lifecycle owners.
+- Compatibility behavior: addon discovery and integration tests, not unused-looking call sites alone.
+
+## WORKFLOW
+1. Find callers and callback registrations before simplifying a shared API.
+2. Lock behavior with the narrowest library or integration test.
+3. Run focused tests, then the full `.\gradlew.bat test` for cross-domain API changes.

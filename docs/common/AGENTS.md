@@ -34,3 +34,21 @@ Shared registration, configuration, networking, common events, and most static d
 ## CHANGE IMPACT
 - Registration changes can affect every module that extends `TinkerModule`.
 - Network changes require packet and affected feature tests.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/common` except the more specific `common/data` guide.
+
+## READ WHEN
+- Adding or changing a deferred register, config key, packet, common event, or shared tag.
+- Changing a module constructor or code used by several domains.
+
+## SOURCE OF TRUTH
+- Internal register ownership: `TinkerModule.java`.
+- Packet registration: `common/network/TinkerNetwork.java`.
+- Configuration: `common/config`.
+- Static providers: `common/data` and its dedicated guide.
+
+## WORKFLOW
+1. Confirm the owning module and lifecycle event.
+2. Keep common code server-safe and avoid optional integration imports.
+3. Run focused tests, then `.\gradlew.bat test` for shared registration changes.

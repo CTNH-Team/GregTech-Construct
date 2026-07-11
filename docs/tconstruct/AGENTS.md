@@ -49,3 +49,22 @@ slimeknights/tconstruct/
 - Do not move optional integrations into base modules.
 - Do not make client-only classes reachable from common construction paths.
 - Do not bypass the runtime pack registrars with ad hoc global state.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct` and its child packages. It is a reference guide loaded through the root routing table, not an additional source-tree instruction file.
+
+## READ WHEN
+- A change crosses two or more top-level domains.
+- A change affects module construction, Forge event flow, registration order, or addon discovery.
+- A cleanup pass cannot tell whether a callback is reflective or framework-owned.
+
+## SOURCE OF TRUTH
+- Runtime order: `TConstruct.java` and `TinkerModule.java`.
+- Forge metadata and mixins: `src/main/resources/META-INF/mods.toml` and `tconstruct.mixins.json`.
+- Static generated data: providers plus `src/generated/resources`, never the generated files alone.
+
+## WORKFLOW
+1. Map the changed symbol to its domain and read that domain guide.
+2. Check constructor order, event registration, and reflective entry points.
+3. Run the narrowest test or Forge task for the affected surface.
+4. Re-read the root routing table if the change introduces a new domain boundary.

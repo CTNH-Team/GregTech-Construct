@@ -33,3 +33,18 @@ Static Forge data generation for tags, loot, recipes, advancements, and related 
 
 ## TESTING
 - Prefer the matching provider test under `src/test/java/slimeknights/tconstruct/data`.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/common/data` and the static data providers it owns.
+
+## READ WHEN
+- Adding a provider, changing a registry id, changing tags/loot/recipes, or reviewing generated-resource churn.
+
+## SOURCE OF TRUTH
+- Provider Java code and authored resources in `src/main/resources`.
+- Generated output in `src/generated/resources` is a build product, not the design source.
+
+## WORKFLOW
+1. Change the provider or authored input.
+2. Run the relevant provider test, then `.\gradlew.bat runData` when regeneration is required.
+3. Inspect the generated diff for expected namespaces, ids, and file count.

@@ -34,3 +34,19 @@ Optional compatibility integrations discovered and initialized only when their t
 
 ## CHANGE IMPACT
 - Dependency metadata and plugin guards must change together when an integration API changes.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/plugin` and integration-specific mixins, data, and tests.
+
+## READ WHEN
+- Adding or changing support for JEI, Botania, Create, GTCEU, Apotheosis, Json Things, or another optional mod.
+
+## SOURCE OF TRUTH
+- Integration guard and registration path in the integration package.
+- Optional dependency declarations in `dependencies.gradle` and `mods.toml`.
+- Integration behavior tests under `src/test/java/slimeknights/tconstruct/plugin`.
+
+## WORKFLOW
+1. Confirm the integration remains optional in metadata and runtime loading.
+2. Test both the integration-present and integration-absent paths where practical.
+3. Check client/server separation before running the matching Forge task.

@@ -35,3 +35,19 @@ src/test/java/slimeknights/
 - Do not rely on local runtime state in `run/` for unit-test fixtures.
 - Do not bypass `BaseMcTest` when a test touches Forge registries, mod containers, or Minecraft-backed types.
 - Do not add GameTest annotations and assume they run; this repository has no implemented GameTest suite.
+
+## SCOPE
+Applies to `src/test/java`, `src/test/resources`, and test-only fixtures used by the production source tree.
+
+## READ WHEN
+- Adding regression coverage, changing test harness setup, changing fixtures, or evaluating behavior coverage during cleanup.
+
+## SOURCE OF TRUTH
+- Test lifecycle: `BaseMcTest` and the existing JUnit extensions.
+- Fixture contracts: `fixture/` and `src/test/resources`.
+- Production behavior: the source domain guide plus the implementation under test.
+
+## WORKFLOW
+1. Identify the observable behavior and the narrowest existing test surface.
+2. Add or update a focused test before removing non-obvious production code.
+3. Run the focused class, then `.\gradlew.bat test` for shared harness or fixture changes.

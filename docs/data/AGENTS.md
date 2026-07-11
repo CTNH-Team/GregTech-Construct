@@ -36,3 +36,19 @@ Runtime generation of addon, material, recipe, tinkering, and resource-pack cont
 
 ## TESTING
 - Cover both generated content and pack reload/reset behavior when changing a generator.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/data`; it does not own static `runData` providers.
+
+## READ WHEN
+- Changing runtime resource packs, addon callbacks, material generation, recipe generation, or reload behavior.
+
+## SOURCE OF TRUTH
+- Pack installation: `TConstruct.registerPackFinders()`.
+- Runtime output: the dynamic registrars and in-memory pack classes.
+- Static output: `common/data` and `runData`, kept separate from this domain.
+
+## WORKFLOW
+1. Trace the pack finder and registrar that owns the output.
+2. Keep output in memory; never write it into `src/generated/resources`.
+3. Run dynamic-pack tests and a client/server reload scenario when lifecycle behavior changes.

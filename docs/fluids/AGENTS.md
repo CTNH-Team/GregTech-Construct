@@ -32,3 +32,19 @@ Fluid registration plus fluid blocks, items, client presentation, data providers
 
 ## TESTING
 - Pair registry tests with at least one consumer test when changing a fluid id or tag.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/fluids` and its fluid registration, block, item, data, and utility code.
+
+## READ WHEN
+- Changing fluid ids, tags, transfer behavior, fluid blocks/items, or client fluid presentation.
+
+## SOURCE OF TRUTH
+- Registry ownership: `TinkerFluids.java`.
+- Cross-domain consumers: smeltery recipes, world generation, and compatibility tags.
+- Resource paths: authored and generated resources, checked by namespace and id.
+
+## WORKFLOW
+1. Check all registry and tag consumers before changing an id.
+2. Run focused tests and `.\gradlew.bat runServer` for common behavior.
+3. Run `.\gradlew.bat runClient` when models, textures, or client fluid code changes.

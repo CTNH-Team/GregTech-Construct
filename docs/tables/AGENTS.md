@@ -35,3 +35,19 @@ Tinker Station, tool tables, menus, screens, block entities, slots, and their ne
 
 ## TESTING
 - Use the existing table packet and menu tests as the contract for client/server interaction.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/tables`, including common menus, client screens, slots, block entities, and packets.
+
+## READ WHEN
+- Changing table inventory rules, slot layouts, menu state, screen behavior, or packet payloads.
+
+## SOURCE OF TRUTH
+- Server authority: menus, block entities, recipes, and common packet handlers.
+- Client projection: `client/` screens and inventory views.
+- Compatibility layout rules: `library/tools/layout`.
+
+## WORKFLOW
+1. Update or inspect the authoritative common-side rule first.
+2. Lock packet and menu behavior with focused tests.
+3. Run `runClient` for screen changes; use a server-backed test for inventory mutations.

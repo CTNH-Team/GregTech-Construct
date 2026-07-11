@@ -35,3 +35,19 @@ World blocks, entities, structures, biome modifiers, features, and world-generat
 
 ## TESTING
 - Prefer deterministic registry and provider tests before manual world inspection.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/world`, including world blocks, entities, structures, features, and worldgen providers.
+
+## READ WHEN
+- Changing world registry keys, spawn rules, biome modifiers, structures, features, or generated worldgen.
+
+## SOURCE OF TRUTH
+- Module ownership: `TinkerWorld.java` and `TinkerStructures.java`.
+- Worldgen registration: `world/data/WorldgenProvider.java`.
+- Generated resource inputs: provider code and tags, not generated JSON alone.
+
+## WORKFLOW
+1. Trace registry-key consumers in loot, tags, advancements, and worldgen.
+2. Run focused provider tests, then use `runServer` with a clean test world.
+3. Inspect generated worldgen diffs for namespace and key stability.

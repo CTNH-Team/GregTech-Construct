@@ -33,3 +33,20 @@ Complete tools, tool parts, modifiers, modules, projectiles, tool logic, stats, 
 - `TinkerTools` initializes shared tool helpers such as slot types and random material support.
 - `TinkerModifiers` contains legacy compatibility surfaces; new behavior should use current modules.
 - Changes to tool definitions commonly require both Java tests and regenerated tinkering JSON.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/tools` and tool-specific consumers under `library/tools`.
+
+## READ WHEN
+- Changing tool items, parts, modifiers, modules, stats, projectiles, tool events, or tool datagen.
+- Cleaning up a tool or modifier file.
+
+## SOURCE OF TRUTH
+- Registration: `TinkerTools`, `TinkerModifiers`, and `TinkerToolParts`.
+- Behavior: tool modules/hooks and `IToolStackView` contracts.
+- Data: providers under `tools/data` plus generated tinkering resources.
+
+## WORKFLOW
+1. Check registry fan-out and library hook contracts before simplifying behavior.
+2. Run focused tool tests; run `runData` when definitions or providers changed.
+3. Use `runClient` for rendering/UI changes and inspect generated diffs for data changes.

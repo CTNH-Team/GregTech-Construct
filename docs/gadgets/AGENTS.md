@@ -33,3 +33,19 @@ Standalone gadget blocks, entities, items, capabilities, client behavior, and ga
 
 ## TESTING
 - Keep common behavior tests independent of client rendering classes.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/gadgets` and its gadget-specific registrations, entities, capabilities, items, and data.
+
+## READ WHEN
+- Changing gadget registration, entity behavior, capability state, or client gadget rendering.
+
+## SOURCE OF TRUTH
+- Module ownership: `TinkerGadgets.java`.
+- Shared APIs: `library` and `common` contracts, not duplicated gadget helpers.
+- Resource ids: provider inputs plus authored/generated resource files.
+
+## WORKFLOW
+1. Trace common registration and client-only consumers separately.
+2. Test the capability or entity behavior without requiring a client renderer.
+3. Use `.\gradlew.bat runClient` only for client-facing changes.

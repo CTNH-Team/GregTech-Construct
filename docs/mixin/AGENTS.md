@@ -32,3 +32,19 @@ Mixin classes and the conditional plugin that enables integration-specific trans
 
 ## TESTING
 - Compilation alone does not verify mixin application; use the relevant Forge run.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/mixin` and `src/main/resources/tconstruct.mixins.json`.
+
+## READ WHEN
+- Changing a mixin target, refmap/config entry, conditional integration, or client/server transformation.
+
+## SOURCE OF TRUTH
+- Config membership: `tconstruct.mixins.json`.
+- Conditional loading: `TConstructMixinPlugin.java`.
+- Packaging: the `mixin` and jar-manifest blocks in `build.gradle`.
+
+## WORKFLOW
+1. Verify the target class/method against the pinned Minecraft/Forge version.
+2. Check mod-present and mod-absent branches for optional integrations.
+3. Run the relevant `.\gradlew.bat runClient` or `runServer` scenario; compilation is insufficient.

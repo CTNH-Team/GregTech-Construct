@@ -33,3 +33,19 @@ Smeltery, foundry, casting, melting, tank, and smeltery-specific data behavior.
 
 ## TESTING
 - Keep recipe serialization tests separate from menu or screen tests.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/smeltery` and its casting, melting, tank, block, recipe, and data code.
+
+## READ WHEN
+- Changing recipe serializers, fluid/tank behavior, smeltery registration, or client smeltery screens.
+
+## SOURCE OF TRUTH
+- Module ownership: `TinkerSmeltery.java`.
+- Fluid ownership: `TinkerFluids.java` and the fluids guide.
+- Recipe behavior: serializer plus matching tests, not generated JSON alone.
+
+## WORKFLOW
+1. Trace registry and fluid dependencies before changing construction order.
+2. Run recipe serialization/matching tests for recipe changes.
+3. Use `runServer` for common/tank changes and `runClient` for screen/render changes.

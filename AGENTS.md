@@ -36,6 +36,40 @@ Single-module Gradle Java 17 Minecraft mod. This fork keeps the upstream `tconst
 | Tests and fixtures | `src/test/java` and `src/test/resources` | Mirrors production packages; most tests extend `BaseMcTest` |
 | Dependency versions | `gradle.properties` and `dependencies.gradle` | Local jars are resolved from `libs/` |
 
+## DOMAIN GUIDE ROUTING
+The domain guides live under `docs/` so they do not pollute source directories. Read the matching guide before editing the corresponding source area.
+
+| Source area | Guide | Read before |
+|-------------|-------|-------------|
+| `src/main/java/slimeknights/tconstruct` | `docs/tconstruct/AGENTS.md` | Cross-domain Java changes, lifecycle, registration order |
+| `common` and `common/data` | `docs/common/AGENTS.md`, `docs/common/data/AGENTS.md` | Registers, config, networking, static datagen |
+| `data` | `docs/data/AGENTS.md` | Runtime dynamic packs and addon-generated resources |
+| `fluids` | `docs/fluids/AGENTS.md` | Fluid ids, tags, blocks, items, transfer |
+| `gadgets` | `docs/gadgets/AGENTS.md` | Gadget blocks, entities, capabilities, items |
+| `library` | `docs/library/AGENTS.md` | Materials, modifiers, tools, recipes, addon APIs |
+| `mixin` | `docs/mixin/AGENTS.md` | Mixin config, targets, conditional integrations |
+| `plugin` | `docs/plugin/AGENTS.md` | Optional mod integrations and compatibility code |
+| `shared` | `docs/shared/AGENTS.md` | Cross-side modules and shared registries |
+| `smeltery` | `docs/smeltery/AGENTS.md` | Casting, melting, tanks, smeltery recipes |
+| `tables` | `docs/tables/AGENTS.md` | Menus, screens, slots, packets, table state |
+| `tools` | `docs/tools/AGENTS.md` | Tool items, parts, modifiers, modules, tool datagen |
+| `world` | `docs/world/AGENTS.md` | World blocks, entities, structures, worldgen |
+| `src/test/java` | `docs/test/tconstruct/AGENTS.md` | Test harnesses, fixtures, and validation changes |
+
+## OPERATING CONTRACT
+1. Read this file and the routed domain guide before editing source.
+2. Keep implementation changes in the source area; keep guidance changes in `docs/` or this file.
+3. Treat `src/main/resources` as authored input and `src/generated/resources` as generated output.
+4. Run the narrowest relevant test or Forge task, then inspect generated-resource diffs when applicable.
+5. Do not claim a behavior change is verified from compilation alone when the matching runtime surface is available.
+
+## CODE CLEANUP SCOPE
+- Default cleanup scope is source code in the branch diff, not `docs/`, `src/generated/resources/`, `build/`, `bin/`, `run/`, `workspace/`, or tool indexes.
+- Read the routed domain guide before evaluating cleanup candidates in a source file.
+- Lock behavior with existing or new focused tests before removing non-obvious code.
+- Preserve reflective entry points, Forge event subscribers, generated-data inputs, and compatibility shims unless their replacement is proven.
+- Report skipped cleanup candidates and pre-existing issues instead of broadening scope silently.
+
 ## CODE MAP
 | Symbol | Type | Location | Role |
 |--------|------|----------|------|

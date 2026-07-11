@@ -32,3 +32,19 @@ Cross-side modules and shared registries used by common, client, and domain-spec
 
 ## TESTING
 - Shared state tests should avoid depending on a previously generated runtime world.
+
+## SCOPE
+Applies to `src/main/java/slimeknights/tconstruct/shared` and cross-side modules consumed by multiple domains.
+
+## READ WHEN
+- Changing `TinkerCommons`, `TinkerMaterials`, `TinkerEffects`, `TinkerClient`, or shared state used by tools/world/tables.
+
+## SOURCE OF TRUTH
+- Module construction: `TConstruct.java`.
+- Client boundary: `TinkerClient.java` and client event subscribers.
+- Shared registry consumers: downstream domain modules and their tests.
+
+## WORKFLOW
+1. Confirm whether the changed class is safe on a dedicated server.
+2. Run shared-state tests and a client launch for client bootstrap changes.
+3. Check downstream registry consumers before changing shared ids or initialization.
