@@ -51,13 +51,11 @@ public class GTConstructFluid {
                 continue;
               }
               Fluid fluid = fluidObject.get();
-              if (fluid != null) {
-                ResourceLocation fluidId = ForgeRegistries.FLUIDS.getKey(fluid);
-                if (fluidId != null) {
-                  ALL_TCON_FLUIDS.put(fluidId, fluid);
-                  RECIPE_TAGS.put(fluid, getRecipeTag(fluidObjectInstance, fluidId));
-                  foundCount++;
-                }
+              ResourceLocation fluidId = ForgeRegistries.FLUIDS.getKey(fluid);
+              if (fluidId != null) {
+                ALL_TCON_FLUIDS.put(fluidId, fluid);
+                RECIPE_TAGS.put(fluid, getRecipeTag(fluidObjectInstance, fluidId));
+                foundCount++;
               }
             }
           }

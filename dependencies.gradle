@@ -6,6 +6,7 @@ dependencies {
     // The obfuscated artifact is embedded by the jarJar task for release builds.
     modImplementation("oftenoviour:Formula Loader:1.20.1-${formula_loader_version}-dev")
     jarJar(name: "Formula Loader", version: "1.20.1-${formula_loader_version}-obf", ext: "jar") { transitive = false }
+    modImplementation(name: "gtceu-1.20.1-7.5.0-ctnh-dev")
 
     // would ideally use API for this, but that does not work well with fg.deobf in my understanding
     modImplementation("slimeknights.mantle:Mantle:${minecraft_version}-${mantle_version}")
@@ -23,7 +24,6 @@ dependencies {
 
     modCompileOnly("curse.maven:diet-443570:4813904")
 
-    modImplementation("com.gregtechceu.gtceu:gtceu-${minecraft_version}:${gtceu_version}:slim") { transitive = false }
     modImplementation("com.lowdragmc.ldlib:ldlib-forge-${minecraft_version}:${ldlib_version}") { transitive = false }
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     modImplementation("dev.toma.configuration:configuration-forge-${minecraft_version}:${configuration_version}")
