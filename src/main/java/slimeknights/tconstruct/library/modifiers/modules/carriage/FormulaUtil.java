@@ -5,30 +5,81 @@ import oftenoviour.util.formula.FormulaManager;
 import oftenoviour.util.formula.IFormula;
 import slimeknights.mantle.data.loadable.Loadable;
 import slimeknights.mantle.data.loadable.primitive.StringLoadable;
+import slimeknights.tconstruct.library.exception.FormulaException;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-/**
- * Ported from TCAE's FormulaUtil.
- * Provides a Loadable for formula fields and a null-safe evaluation helper.
- */
-public final class FormulaUtil {
+public class FormulaUtil {
     private FormulaUtil() {}
 
-    /** Loadable that resolves a formula string ID to an {@link IFormula} via {@link FormulaManager}. */
     public static final Loadable<IFormula> FORMULA = StringLoadable.DEFAULT.flatComap(
-        s -> {
-            if (s == null || s.isEmpty()) return null;
-            ResourceLocation id = ResourceLocation.tryParse(s);
-            return id != null ? FormulaManager.getOrNull(id) : null;
-        },
-        f -> ""
-    );
+            FormulaUtil::resolve,
+            (f, err) -> ""
+        );
 
-    /** Null-safe formula evaluation. Returns {@code fallback} if the formula is null. */
-    public static float accept(@Nullable IFormula formula, float fallback, double... inputs) {
+    public static IFormula resolve(@Nullable String id){
+        if (id == null)
+            return null;
+        return resolve(ResourceLocation.tryParse(id));
+    }
+
+    public static IFormula resolve(@Nullable ResourceLocation id) {
+        if (id == null)
+            return null;
+        return FormulaManager.getOrNull(id);
+    }
+
+    /** @return defaultId if formula not found */
+    public static IFormula get(ResourceLocation id, ResourceLocation defaultId) {
+        if (id == null)
+            return null;
+        IFormula f = FormulaManager.getOrNull(id);
+        return f != null ? f : FormulaManager.getOrNull(defaultId);
+    }
+
+    public static float accept(IFormula formula, float fallback, double... inputs) {
         if (formula == null) return fallback;
         return (float) formula.accept(Arrays.copyOf(inputs, inputs.length));
+    }
+
+    public static float accept(ResourceLocation id, float fallback, double... inputs) {
+        if (id == null) return fallback;
+        try {
+            return accept(FormulaManager.getOrNull(id), fallback, inputs);
+        } catch (Exception e){
+            throw new FormulaException("Break while running formula " + id.toString());
+        }
+    }
+
+    public static int evalInt(IFormula formula, int fallback, double... inputs) {
+        if (formula == null) return fallback;
+        return (int) Math.round(formula.accept(Arrays.copyOf(inputs, inputs.length)));
+    }
+
+    public static int evalInt(ResourceLocation id, int fallback, double... inputs) {
+        if (id == null) return fallback;
+        try {
+            return evalInt(FormulaManager.getOrNull(id), fallback, inputs);
+        } catch (Exception e){
+            throw new FormulaException("Break while running formula " + id.toString());
+        }
+    }
+
+    /** RecordLoadable helper: load formula field, resolve lazily. */
+    @FunctionalInterface
+    public interface FormulaSupplier {
+        IFormula get();
+    }
+
+    public static FormulaSupplier lazy(ResourceLocation id) {
+        return new FormulaSupplier() {
+            private IFormula cache;
+            @Override
+            public IFormula get() {
+                if (cache == null) cache = FormulaManager.getOrNull(id);
+                return cache;
+            }
+        };
     }
 }

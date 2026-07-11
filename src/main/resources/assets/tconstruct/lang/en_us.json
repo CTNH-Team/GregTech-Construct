@@ -3890,6 +3890,7 @@
   "attribute.name.tconstruct.player.jump_count": "Jumps",
 
   "attribute.name.tconstruct.generic.protection_cap": "Max Protection",
+  "attribute.name.tconstruct.generic.armor_protection": "Armor Protection",
   "attribute.name.tconstruct.generic.jump_boost": "Jump Height",
   "attribute.name.tconstruct.generic.safe_fall_distance": "Safe Fall Distance",
   "attribute.name.tconstruct.generic.crouch_damage_multiplier": "Crouch Damage",

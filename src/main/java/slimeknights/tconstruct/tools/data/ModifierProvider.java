@@ -550,8 +550,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("cushion/formula")));
         buildModifier(ModifierIds.tanned)
-                .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
-                .addModule(FormulaToolDamageModule.formula(TConstruct.getResource("tanned/formula")));
+                .levelDisplay(ModifierLevelDisplay.NO_LEVELS);
         buildModifier(ModifierIds.plating)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(new StatCapacityBarModule(ModifierIds.plating, 0x8A9A8C))

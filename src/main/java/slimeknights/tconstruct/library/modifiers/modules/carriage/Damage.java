@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.exception.DamageException;
+import slimeknights.tconstruct.library.tools.helper.AttributeEntry;
 import slimeknights.tconstruct.shared.TinkerAttributes;
 
 import java.util.Arrays;

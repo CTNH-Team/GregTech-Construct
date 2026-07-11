@@ -55,7 +55,7 @@ public record FormulaAreaEffectModule(ResourceLocation effect, ResourceLocation 
     AreaEffectFormulaConfig.LOADER.requiredField("finalizer", FormulaAreaEffectModule::finalizer),
     LivingEntityPredicate.LOADER.nullableField("entity_filter", FormulaAreaEffectModule::entityFilter),
     BooleanLoadable.INSTANCE.defaultField("tamed_only", false, FormulaAreaEffectModule::tamedOnly),
-    IntLoadable.FROM_ONE.defaultField("interval_ticks", 10, FormulaAreaEffectModule::intervalTicks),
+	    IntLoadable.FROM_ONE.defaultField("interval_ticks", 1, FormulaAreaEffectModule::intervalTicks),
     ModifierCondition.TOOL_FIELD,
     FormulaAreaEffectModule::new);
 
