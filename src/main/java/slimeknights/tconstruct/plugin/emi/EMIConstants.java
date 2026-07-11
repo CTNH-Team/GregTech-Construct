@@ -2,12 +2,16 @@ package slimeknights.tconstruct.plugin.emi;
 
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
+import lombok.Getter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.Items;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.plugin.emi.material.MaterialStatsEmiConstants;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.tables.TinkerTables;
+import slimeknights.tconstruct.tools.TinkerTools;
 
 import java.util.List;
 
@@ -41,10 +45,21 @@ public final class EMIConstants {
       TINKER_STATION_TEXTURE, 0, 117, 121, 46);
   public static final TConstructEmiCategory MODIFIER_WORKTABLE = category("worktable", TinkerTables.modifierWorktable,
       TINKER_STATION_TEXTURE, 0, 166, 121, 35);
+  public static final TConstructEmiCategory HARVEST_STATS = category("harvest_stats", TinkerTables.tinkerStation,
+      TINKER_STATION_TEXTURE, 0, 0, 178, 200);
+  public static final TConstructEmiCategory RANGED_STATS = category("ranged_stats", TinkerTables.tinkerStation,
+      TINKER_STATION_TEXTURE, 0, 0, 178, 200);
+  public static final TConstructEmiCategory ARMOR_STATS = category("armor_stats", TinkerTables.tinkerStation,
+      TINKER_STATION_TEXTURE, 0, 0, 178, 200);
+  public static final TConstructEmiCategory AMMO_STATS = category("ammo_stats", TinkerTools.arrow,
+      TINKER_STATION_TEXTURE, 0, 0, 178, 200);
+  public static final TConstructEmiCategory SKULL_STATS = category("skull_stats", Items.SKELETON_SKULL,
+      TINKER_STATION_TEXTURE, 0, 0, 178, 200);
 
   public static final List<TConstructEmiCategory> ALL = List.of(
       CASTING_BASIN, CASTING_TABLE, MOLDING, MELTING, FOUNDRY, ALLOY,
-      ENTITY_MELTING, MODIFIERS, SEVERING, TOOL_BUILDING, PART_BUILDER, MODIFIER_WORKTABLE);
+      ENTITY_MELTING, MODIFIERS, SEVERING, TOOL_BUILDING, PART_BUILDER, MODIFIER_WORKTABLE,
+      HARVEST_STATS, RANGED_STATS, ARMOR_STATS, AMMO_STATS, SKULL_STATS);
 
   private EMIConstants() {}
 
@@ -55,6 +70,7 @@ public final class EMIConstants {
 
   public static final class TConstructEmiCategory extends EmiRecipeCategory {
     private final String path;
+    @Getter
     private final ResourceLocation texture;
     private final int u;
     private final int v;
@@ -70,10 +86,6 @@ public final class EMIConstants {
       this.v = v;
       this.width = width;
       this.height = height;
-    }
-
-    public ResourceLocation getTexture() {
-      return texture;
     }
 
     public int getTextureU() {

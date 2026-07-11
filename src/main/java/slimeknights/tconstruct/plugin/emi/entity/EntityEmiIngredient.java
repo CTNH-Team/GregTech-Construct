@@ -109,9 +109,7 @@ final class EntityEmiIngredient implements EmiIngredient {
           graphics.pose().popPose();
           return;
         } catch (Exception exception) {
-          if (graphics.pose() != null) {
-            graphics.pose().popPose();
-          }
+          graphics.pose().popPose();
           Mantle.logger.error("Error drawing EMI entity {}", BuiltInRegistries.ENTITY_TYPE.getKey(type), exception);
           IGNORED_ENTITIES.add(type);
           entities.remove(type);

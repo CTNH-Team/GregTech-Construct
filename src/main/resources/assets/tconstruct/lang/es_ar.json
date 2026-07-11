@@ -2867,6 +2867,11 @@
 "command.tconstruct.generate_part_textures.no_parts": "No hay sprites de partes en los paquetes de recursos",
 
 "_comment": "Cadenas de EMI",
+  "tconstruct.emi.harvest_stats": "Estadística de Recolección",
+  "tconstruct.emi.ranged_stats": "Estadística de Rango",
+  "tconstruct.emi.armor_stats": "Estadística de Armadura",
+  "tconstruct.emi.skull_stats": "Estadísticas de Calavera",
+  "emi.tconstruct.material.tier": "Material de Tier %s",
 "emi.tconstruct.time": "%s s",
 "emi.tconstruct.temperature": "%s°C",
 "emi.tconstruct.modifier_ingredient": "Modificador %s",

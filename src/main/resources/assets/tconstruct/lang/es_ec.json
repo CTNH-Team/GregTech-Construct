@@ -1,0 +1,8 @@
+{
+  "_comment": "EMI Strings",
+  "tconstruct.emi.harvest_stats": "Estadística de Recolección",
+  "tconstruct.emi.ranged_stats": "Estadística de Rango",
+  "tconstruct.emi.armor_stats": "Estadística de Armadura",
+  "tconstruct.emi.skull_stats": "Estadísticas de Calavera",
+  "emi.tconstruct.material.tier": "Material de Tier %s"
+}

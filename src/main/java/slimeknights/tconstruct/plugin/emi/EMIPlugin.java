@@ -30,6 +30,10 @@ import slimeknights.tconstruct.library.recipe.alloying.AlloyRecipe;
 import slimeknights.tconstruct.library.recipe.casting.IDisplayableCastingRecipe;
 import slimeknights.tconstruct.library.recipe.entitymelting.EntityMeltingRecipe;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
+import slimeknights.tconstruct.library.materials.IMaterialRegistry;
+import slimeknights.tconstruct.library.materials.MaterialRegistry;
+import slimeknights.tconstruct.library.materials.definition.IMaterial;
+import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.library.recipe.modifiers.ModifierRecipeLookup;
 import slimeknights.tconstruct.library.recipe.melting.MeltingRecipe;
 import slimeknights.tconstruct.library.recipe.modifiers.adding.IDisplayModifierRecipe;
@@ -52,6 +56,10 @@ import slimeknights.tconstruct.plugin.emi.melting.AlloyEmiRecipe;
 import slimeknights.tconstruct.plugin.emi.melting.EmiMeltingFuelHandler;
 import slimeknights.tconstruct.plugin.emi.melting.FoundryEmiRecipe;
 import slimeknights.tconstruct.plugin.emi.melting.MeltingEmiRecipe;
+import slimeknights.tconstruct.plugin.emi.material.MaterialStatsEmiConstants;
+import slimeknights.tconstruct.plugin.emi.material.MaterialStatsEmiRecipe;
+import slimeknights.tconstruct.plugin.emi.material.ArmorStatsEmiRecipe;
+import slimeknights.tconstruct.plugin.emi.material.SkullStatsEmiRecipe;
 import slimeknights.tconstruct.plugin.emi.modifiers.ModifierEmiRecipe;
 import slimeknights.tconstruct.plugin.emi.modifiers.ModifierEmiStack;
 import slimeknights.tconstruct.plugin.emi.modifiers.ModifierWorktableEmiRecipe;
@@ -94,6 +102,7 @@ public final class EMIPlugin implements EmiPlugin {
     registerToolRecipes(registry, access, manager);
     registerWorktable(registry, access, manager);
     registerModifiers(registry);
+    registerMaterialStats(registry, manager);
 
     addWorkstations(registry, manager);
   }
@@ -232,6 +241,41 @@ public final class EMIPlugin implements EmiPlugin {
         });
   }
 
+  private static void registerMaterialStats(EmiRegistry registry, RecipeManager manager) {
+    if (!MaterialRegistry.isFullyLoaded()) {
+      return;
+    }
+    IMaterialRegistry materials = MaterialRegistry.getInstance();
+    for (IMaterial material : materials.getVisibleMaterials()) {
+      addMaterialStats(registry, manager, material, MaterialStatsEmiConstants.HARVEST_STAT_IDS,
+          EMIConstants.HARVEST_STATS, TinkerTags.Items.HARVEST);
+      addMaterialStats(registry, manager, material, MaterialStatsEmiConstants.RANGED_STAT_IDS,
+          EMIConstants.RANGED_STATS, TinkerTags.Items.RANGED);
+      addMaterialStats(registry, manager, material, MaterialStatsEmiConstants.ARMOR_STAT_IDS,
+          EMIConstants.ARMOR_STATS, TinkerTags.Items.ARMOR);
+      addMaterialStats(registry, manager, material, MaterialStatsEmiConstants.AMMO_STAT_IDS,
+          EMIConstants.AMMO_STATS, TinkerTags.Items.AMMO);
+      addMaterialStats(registry, manager, material, MaterialStatsEmiConstants.SKULL_STAT_IDS,
+          EMIConstants.SKULL_STATS, null);
+    }
+  }
+
+  private static void addMaterialStats(EmiRegistry registry, RecipeManager manager, IMaterial material,
+                                       List<MaterialStatsId> statIds, EMIConstants.TConstructEmiCategory category,
+                                       net.minecraft.tags.TagKey<Item> partTag) {
+    IMaterialRegistry materials = MaterialRegistry.getInstance();
+    if (statIds.stream().noneMatch(id -> materials.getMaterialStats(material.getIdentifier(), id).isPresent())) {
+      return;
+    }
+    if (category == EMIConstants.ARMOR_STATS) {
+      registry.addRecipe(new ArmorStatsEmiRecipe(category, material, statIds, manager));
+    } else if (category == EMIConstants.SKULL_STATS) {
+      registry.addRecipe(new SkullStatsEmiRecipe(category, material, statIds, manager));
+    } else {
+      registry.addRecipe(new MaterialStatsEmiRecipe(category, material, statIds, partTag, manager));
+    }
+  }
+
   private static void addWorkstations(EmiRegistry registry, RecipeManager manager) {
     addWorkstation(registry, EMIConstants.CASTING_BASIN, TinkerSmeltery.searedBasin);
     addWorkstation(registry, EMIConstants.CASTING_BASIN, TinkerSmeltery.scorchedBasin);
@@ -259,6 +303,20 @@ public final class EMIPlugin implements EmiPlugin {
     addWorkstation(registry, EMIConstants.TOOL_BUILDING, TinkerTables.scorchedAnvil);
     addWorkstation(registry, EMIConstants.PART_BUILDER, TinkerTables.partBuilder);
     addWorkstation(registry, EMIConstants.MODIFIER_WORKTABLE, TinkerTables.modifierWorktable);
+    addWorkstation(registry, EMIConstants.HARVEST_STATS, TinkerTables.tinkerStation);
+    addWorkstation(registry, EMIConstants.HARVEST_STATS, TinkerTables.tinkersAnvil);
+    addWorkstation(registry, EMIConstants.HARVEST_STATS, TinkerTables.scorchedAnvil);
+    addWorkstation(registry, EMIConstants.RANGED_STATS, TinkerTables.tinkerStation);
+    addWorkstation(registry, EMIConstants.RANGED_STATS, TinkerTables.tinkersAnvil);
+    addWorkstation(registry, EMIConstants.RANGED_STATS, TinkerTables.scorchedAnvil);
+    addWorkstation(registry, EMIConstants.ARMOR_STATS, TinkerTables.tinkerStation);
+    addWorkstation(registry, EMIConstants.ARMOR_STATS, TinkerTables.tinkersAnvil);
+    addWorkstation(registry, EMIConstants.ARMOR_STATS, TinkerTables.scorchedAnvil);
+    addWorkstation(registry, EMIConstants.AMMO_STATS, TinkerTables.tinkerStation);
+    addWorkstation(registry, EMIConstants.AMMO_STATS, TinkerTables.tinkersAnvil);
+    addWorkstation(registry, EMIConstants.AMMO_STATS, TinkerTables.scorchedAnvil);
+    addWorkstation(registry, EMIConstants.SKULL_STATS, TinkerSmeltery.searedBasin);
+    addWorkstation(registry, EMIConstants.SKULL_STATS, TinkerSmeltery.scorchedBasin);
     registry.addWorkstation(EMIConstants.SEVERING,
         new ModifierEmiStack(new ModifierEntry(TinkerModifiers.severing, 1)));
     registry.addWorkstation(EMIConstants.MELTING,

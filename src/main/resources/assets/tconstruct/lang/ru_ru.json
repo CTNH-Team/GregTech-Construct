@@ -2481,6 +2481,10 @@
 
 
   "_comment": "EMI Strings",
+  "tconstruct.emi.harvest_stats": "Характ. добычи",
+  "tconstruct.emi.ranged_stats": "Характ. дальнего оружия",
+  "tconstruct.emi.armor_stats": "Характ. брони",
+  "emi.tconstruct.material.tier": "Уровень %s",
   "emi.tconstruct.time": "%s сек",
   "emi.tconstruct.temperature": "%s°C",
   "emi.tconstruct.modifier_ingredient": "%s модификатор",
@@ -2605,6 +2609,5 @@
   "advancements.tconstruct.world.slime_sling.description": "Используйте все 4 вида слизневых рогаток",
   "advancements.tconstruct.world.piggybackpack.title": "Свинья за спиной",
   "advancements.tconstruct.world.piggybackpack.description": "Поднимите свинью с помощью свино-рюкзака"
-
 }
 

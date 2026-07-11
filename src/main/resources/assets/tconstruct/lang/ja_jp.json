@@ -3240,6 +3240,10 @@
   "command.tconstruct.generate_part_textures.no_parts": "リソースパックに部品のスプライトが存在しません",
 
   "_comment": "EMI Strings",
+  "tconstruct.emi.harvest_stats": "近接/収穫ステータス",
+  "tconstruct.emi.ranged_stats": "遠距離ステータス",
+  "tconstruct.emi.armor_stats": "防具ステータス",
+  "emi.tconstruct.material.tier": "Tier %s",
   "emi.tconstruct.time": "%s秒",
   "emi.tconstruct.temperature": "%s°C",
   "emi.tconstruct.modifier_ingredient": "%sの改造",
