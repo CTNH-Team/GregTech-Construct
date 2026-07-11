@@ -226,13 +226,6 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
                 .addInputItem(TinkerToolParts.arrowHead, 33, 29)
                 .addInputPattern(Patterns.ARROW_PART, 33, 53, Ingredient.of(TinkerToolParts.arrowHead, TinkerToolParts.arrowShaft))
                 .build();
-        // use a single button for all plate armor, its all the same recipe and a single description is suitable
-        definePattern(Patterns.PLATE_ARMOR)
-                .sortIndex(SORT_ARMOR)
-                .translationKey(TConstruct.makeTranslationKey("gui", "plate_armor"))
-                .addInputPattern(Patterns.PLATING,   33, 29, Ingredient.of(TinkerToolParts.plating.values().toArray(new Item[0])))
-                .addInputItem(TinkerToolParts.maille, 33, 53)
-                .build();
         defineArmorExtensionLayouts();
     }
 

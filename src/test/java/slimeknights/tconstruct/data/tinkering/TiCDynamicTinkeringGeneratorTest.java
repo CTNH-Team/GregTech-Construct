@@ -168,16 +168,21 @@ class TiCDynamicTinkeringGeneratorTest extends BaseMcTest {
   }
 
   @Test
-  void productionToolDefinitionProviderUsesTwoPlateArmorPlatings() throws IOException {
+  void plateArmorDefinitionsMatchSmallAndLargeStationLayouts() throws IOException {
     String provider = java.nio.file.Files.readString(java.nio.file.Path.of(
       "src/main/java/slimeknights/tconstruct/tools/data/ToolDefinitionDataProvider.java"))
       .replace("\r\n", "\n");
 
     assertThat(provider)
-      .contains(".module(ToolDefinitionDataProvider::plateArmorParts)")
-      .contains(".part(plating, 0.5f)\n                .part(plating, 0.5f)\n                .part(TinkerToolParts.maille.get(), 1f)")
-      .doesNotContain(".part(TinkerToolParts.plating, 1)")
-      .doesNotContain(".part(TinkerToolParts.maille, 1)");
+      .contains("if (isSmallArmor(type)) {\n"
+        + "            return PartStatsModule.parts()\n"
+        + "                    .part(plating)\n"
+        + "                    .part(TinkerToolParts.maille.get())\n"
+        + "                    .build();\n"
+        + "        }")
+      .contains(".part(plating, 0.5f)\n"
+        + "                .part(plating, 0.5f)\n"
+        + "                .part(TinkerToolParts.maille.get(), 1f)");
   }
 
   @Test

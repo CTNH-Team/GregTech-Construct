@@ -1184,6 +1184,12 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
 
     private static PartStatsModule plateArmorParts(ArmorItem.Type type) {
         IToolPart plating = TinkerToolParts.plating.get(type);
+        if (isSmallArmor(type)) {
+            return PartStatsModule.parts()
+                    .part(plating)
+                    .part(TinkerToolParts.maille.get())
+                    .build();
+        }
         return PartStatsModule.parts()
                 .part(plating, 0.5f)
                 .part(plating, 0.5f)
