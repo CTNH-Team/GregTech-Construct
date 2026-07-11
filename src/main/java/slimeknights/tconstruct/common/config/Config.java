@@ -434,19 +434,11 @@ public class Config {
   }
 
   public static int guardingScanRange() {
-    try {
-      return COMMON.guardingScanRange.get();
-    } catch (IllegalStateException ignored) {
-      return 32;
-    }
+    return COMMON.guardingScanRange.get();
   }
 
   public static int guardingHostilityDurationSeconds() {
-    try {
-      return COMMON.guardingHostilityDurationSeconds.get();
-    } catch (IllegalStateException ignored) {
-      return 60;
-    }
+    return COMMON.guardingHostilityDurationSeconds.get();
   }
 
   /** Method of syncing the tool inventory on open to prevent desyncs down the line. */

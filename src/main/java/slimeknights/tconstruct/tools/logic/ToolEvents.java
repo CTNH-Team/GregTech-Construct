@@ -495,24 +495,7 @@ public class ToolEvents {
       // armor is damaged less as a result of our math, so damage the armor based on the difference if there is one
       if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
         int damageMissed = getArmorDamage(originalDamage) - getArmorDamage(finalDamage);
-        // TODO: is this check sufficient for whether the armor should be damaged? I partly wonder if I need to use reflection to call damageArmor
-        if (damageMissed > 0 && entity instanceof Player) {
-          ToolDamageUtil.runWithDeferredArmorDamage(() -> {
-            for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
-              IToolStackView tool = context.getToolInSlot(slotType);
-              if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !tool.getItem().isFireResistant())) {
-                if (tool.getModifierLevel(TinkerModifiers.tanned.getId()) == 0) {
-                  ToolDamageUtil.damageAnimated(tool, damageMissed, entity, slotType);
-                }
-              } else {
-                ItemStack armorStack = entity.getItemBySlot(slotType);
-                if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.getItem().isFireResistant()) && armorStack.getItem() instanceof ArmorItem) {
-                  armorStack.hurtAndBreak(damageMissed, entity, e -> e.broadcastBreakEvent(slotType));
-                }
-              }
-            }
-          });
-        }
+        damageArmorFromMissed(entity, source, context, damageMissed);
       }
     }
     if (!handledArmorDamage && context.hasModifiableArmor() && !source.is(DamageTypeTags.BYPASSES_ARMOR)) {
@@ -528,23 +511,7 @@ public class ToolEvents {
       }
 
       int damageMissed = getArmorDamage(originalDamage) - getArmorDamage(finalDamage);
-      if (damageMissed > 0 && entity instanceof Player) {
-        ToolDamageUtil.runWithDeferredArmorDamage(() -> {
-          for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
-            IToolStackView tool = context.getToolInSlot(slotType);
-            if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !tool.getItem().isFireResistant())) {
-              if (tool.getModifierLevel(TinkerModifiers.tanned.getId()) == 0) {
-                ToolDamageUtil.damageAnimated(tool, damageMissed, entity, slotType);
-              }
-            } else {
-              ItemStack armorStack = entity.getItemBySlot(slotType);
-              if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.getItem().isFireResistant()) && armorStack.getItem() instanceof ArmorItem) {
-                armorStack.hurtAndBreak(damageMissed, entity, e -> e.broadcastBreakEvent(slotType));
-              }
-            }
-          }
-        });
-      }
+      damageArmorFromMissed(entity, source, context, damageMissed);
     }
   }
 
@@ -557,6 +524,26 @@ public class ToolEvents {
     } else {
       entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), Sounds.FULLY_REDUCTED.getSound(), SoundSource.AMBIENT, 1.0F, 1.0F);
     }
+  }
+
+  /** Shared helper: damage all armor pieces for the missed amount, skipping tanned armor. */
+  private static void damageArmorFromMissed(LivingEntity entity, DamageSource source, EquipmentContext context, int damageMissed) {
+    if (damageMissed <= 0 || !(entity instanceof Player)) return;
+    ToolDamageUtil.runWithDeferredArmorDamage(() -> {
+      for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
+        IToolStackView tool = context.getToolInSlot(slotType);
+        if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !tool.getItem().isFireResistant())) {
+          if (tool.getModifierLevel(TinkerModifiers.tanned.getId()) == 0) {
+            ToolDamageUtil.damageAnimated(tool, damageMissed, entity, slotType);
+          }
+        } else {
+          ItemStack armorStack = entity.getItemBySlot(slotType);
+          if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.getItem().isFireResistant()) && armorStack.getItem() instanceof ArmorItem) {
+            armorStack.hurtAndBreak(damageMissed, entity, e -> e.broadcastBreakEvent(slotType));
+          }
+        }
+      }
+    });
   }
 
   private static float shareDamageWithNearbyGuardians(LivingEntity entity, DamageSource source, float rawDamage) {
