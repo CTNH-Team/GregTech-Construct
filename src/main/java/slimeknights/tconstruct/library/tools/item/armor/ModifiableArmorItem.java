@@ -307,7 +307,8 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
       }
       double armorProtection = statsNBT.get(ArmorStats.PROTECTION);
       if (armorProtection != 0) {
-        builder.put(TinkerAttributes.ARMOR_PROTECTION.get(), new AttributeModifier(uuid, "tconstruct.armor.armor_protection", armorProtection, AttributeModifier.Operation.ADDITION));
+        float capped = Math.min((float)armorProtection, 0.8f);
+        builder.put(TinkerAttributes.ARMOR_PROTECTION.get(), new AttributeModifier(uuid, "tconstruct.armor.armor_protection", -capped, AttributeModifier.Operation.MULTIPLY_TOTAL));
       }
       double postReduction = statsNBT.get(ArmorStats.POST_REDUCTION);
       if (postReduction != 0) {

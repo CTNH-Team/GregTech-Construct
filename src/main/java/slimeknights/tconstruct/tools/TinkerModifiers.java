@@ -559,6 +559,9 @@ public final class TinkerModifiers extends TinkerModule {
             ModifierModule.LOADER.register(getResource("protection"), ProtectionModule.LOADER);
             ModifierModule.LOADER.register(getResource("replace_fluid"), ReplaceBlockWalkerModule.LOADER);
             ModifierModule.LOADER.register(getResource("tool_action_walk_transform"), ToolActionWalkerTransformModule.LOADER);
+            // TCAE port: carriage/parameter module loaders
+            ModifierModule.LOADER.register(getResource("carrier"), CarrierModule.LOADER);
+            ModifierModule.LOADER.register(getResource("parameter_provider"), ParameterProviderModule.LOADER);
             // behavior
             ModifierModule.LOADER.register(getResource("attribute"), AttributeModule.LOADER);
             ModifierModule.LOADER.register(getResource("reduce_tool_damage"), ReduceToolDamageModule.LOADER);
