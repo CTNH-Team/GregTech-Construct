@@ -60,7 +60,9 @@ final class GTConstructRecipeWriter {
     if (baseMaterial == null) {
       cast = part.cast();
       if (cast == null) {
-        throw new IllegalStateException("Solidifier part " + part.path() + " requires a cast when no base material is set");
+        throw new IllegalStateException(
+          "Solidifier part " + part.path() + " requires a cast when no base material is set"
+        );
       }
       validateRegisteredCast(cast, part);
     }
@@ -84,7 +86,10 @@ final class GTConstructRecipeWriter {
     try {
       return Math.multiplyExact(left, right);
     } catch (ArithmeticException exception) {
-      throw new IllegalStateException("Solidifier part '" + part.path() + "' has an overflowing " + valueName, exception);
+      throw new IllegalStateException(
+        "Solidifier part '" + part.path() + "' has an overflowing " + valueName,
+        exception
+      );
     }
   }
 

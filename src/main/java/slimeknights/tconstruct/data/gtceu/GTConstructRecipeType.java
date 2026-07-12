@@ -43,14 +43,48 @@ public final class GTConstructRecipeType {
       return this;
     }
 
-    public DynamicRecipeBuilder baseMaterial(MaterialId material) { this.baseMaterial = material; return this; }
-    DynamicRecipeBuilder baseMaterialVariant(MaterialVariantId material) { this.baseMaterial = material; return this; }
-    DynamicRecipeBuilder sourceRecipeId(ResourceLocation recipeId) { this.sourceRecipeId = recipeId; return this; }
-    public DynamicRecipeBuilder outputMaterial(MaterialVariantId material) { this.outputMaterial = material; return this; }
-    public DynamicRecipeBuilder voltage(int voltageTier) { this.voltage = voltageTier; if (voltageTier > LV) { this.useVacuum = true; } return this; }
-    public DynamicRecipeBuilder duration(int secondsPerIngot) { this.durationMultiplier = secondsPerIngot; return this; }
-    public DynamicRecipeBuilder inVacuumFreezer() { this.useVacuum = true; return this; }
-    public DynamicRecipeBuilder inSolidifier() { this.useVacuum = false; return this; }
+    public DynamicRecipeBuilder baseMaterial(MaterialId material) {
+      this.baseMaterial = material;
+      return this;
+    }
+
+    DynamicRecipeBuilder baseMaterialVariant(MaterialVariantId material) {
+      this.baseMaterial = material;
+      return this;
+    }
+
+    DynamicRecipeBuilder sourceRecipeId(ResourceLocation recipeId) {
+      this.sourceRecipeId = recipeId;
+      return this;
+    }
+
+    public DynamicRecipeBuilder outputMaterial(MaterialVariantId material) {
+      this.outputMaterial = material;
+      return this;
+    }
+
+    public DynamicRecipeBuilder voltage(int voltageTier) {
+      this.voltage = voltageTier;
+      if (voltageTier > LV) {
+        this.useVacuum = true;
+      }
+      return this;
+    }
+
+    public DynamicRecipeBuilder duration(int secondsPerIngot) {
+      this.durationMultiplier = secondsPerIngot;
+      return this;
+    }
+
+    public DynamicRecipeBuilder inVacuumFreezer() {
+      this.useVacuum = true;
+      return this;
+    }
+
+    public DynamicRecipeBuilder inSolidifier() {
+      this.useVacuum = false;
+      return this;
+    }
 
     public void register(Consumer<FinishedRecipe> provider) {
       register(provider, outputMaterial == null

@@ -20,14 +20,18 @@ public class GTConstructFluid {
     return TinkersFluidCatalog.instance().recipeTag(fluid);
   }
 
-  static TagKey<Fluid> selectRecipeTag(@Nullable TagKey<Fluid> commonTag, @Nullable TagKey<Fluid> localTag, ResourceLocation fluidId) {
+  static TagKey<Fluid> selectRecipeTag(@Nullable TagKey<Fluid> commonTag, @Nullable TagKey<Fluid> localTag,
+                                       ResourceLocation fluidId) {
     if (commonTag != null) {
       return commonTag;
     }
     if (localTag != null) {
       return localTag;
     }
-    return TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), ResourceLocation.tryBuild("forge", fluidId.getPath()));
+    return TagKey.create(
+      ForgeRegistries.FLUIDS.getRegistryKey(),
+      ResourceLocation.tryBuild("forge", fluidId.getPath())
+    );
   }
 
   public static String extractMaterialName(String path) {

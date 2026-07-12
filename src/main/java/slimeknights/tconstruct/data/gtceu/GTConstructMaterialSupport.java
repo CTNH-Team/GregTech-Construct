@@ -33,7 +33,9 @@ import org.apache.logging.log4j.Logger;
 import slimeknights.tconstruct.library.utils.Util;
 
 final class GTConstructMaterialSupport extends MaterialStatsDataProvider {
-  private static final PackOutput OUTPUT = new PackOutput(Path.of("build", "tmp", "gtconstruct-material-support"));
+  private static final PackOutput OUTPUT = new PackOutput(
+    Path.of("build", "tmp", "gtconstruct-material-support")
+  );
   private static final Logger LOGGER = Util.getLogger("GTConstructMaterialSupport");
 
   static final GTConstructMaterialSupport INSTANCE = new GTConstructMaterialSupport();
@@ -152,7 +154,8 @@ final class GTConstructMaterialSupport extends MaterialStatsDataProvider {
     Set<MaterialStatsId> statIds = supportedStats.computeIfAbsent(location, ignored -> new HashSet<>());
     for (IMaterialStats stat : stats) {
       statIds.add(stat.getIdentifier());
-      if (stat.getType().canRepair() || stat.getIdentifier().equals(StatlessMaterialStats.REPAIR_KIT.getIdentifier())) {
+      if (stat.getType().canRepair()
+          || stat.getIdentifier().equals(StatlessMaterialStats.REPAIR_KIT.getIdentifier())) {
         repairKitMaterials.add(location);
       }
     }

@@ -2,20 +2,18 @@ package slimeknights.tconstruct.data.gtceu;
 
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.item.Item;
+import org.apache.logging.log4j.Logger;
 import slimeknights.tconstruct.common.registration.CastItemObject;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
+import slimeknights.tconstruct.library.utils.Util;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-import org.apache.logging.log4j.Logger;
-
-import slimeknights.tconstruct.library.utils.Util;
 
 import static com.gregtechceu.gtceu.api.GTValues.LV;
 

@@ -1,30 +1,30 @@
 package slimeknights.tconstruct.data.gtceu;
 
-import net.minecraft.world.item.Item;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import org.junit.jupiter.api.Test;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.junit.jupiter.api.Test;
 import slimeknights.mantle.recipe.condition.TagFilledCondition;
-import slimeknights.tconstruct.fluids.TinkerFluids;
+import slimeknights.mantle.recipe.ingredient.FluidIngredient;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.registration.CastItemObject;
 import slimeknights.tconstruct.data.DynamicConditionSerializerRegistrar;
 import slimeknights.tconstruct.data.pack.TiCDynamicDataPack;
+import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialManager;
 import slimeknights.tconstruct.library.materials.json.MaterialJson;
 import slimeknights.tconstruct.library.recipe.casting.material.MaterialCastingLookup;
 import slimeknights.tconstruct.library.recipe.casting.material.MaterialFluidRecipe;
+import slimeknights.tconstruct.library.tools.part.ToolPartItem;
 import slimeknights.tconstruct.test.BaseMcTest;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
-import slimeknights.tconstruct.library.tools.part.ToolPartItem;
-import slimeknights.mantle.recipe.ingredient.FluidIngredient;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 class GTConstructRecipesTest extends BaseMcTest {
   @Test
   void recipeTagFallsBackToLocalTagWhenCommonTagMissing() {
-    net.minecraft.resources.ResourceLocation steeleafId = net.minecraft.resources.ResourceLocation.tryBuild("tconstruct", "steeleaf");
+    ResourceLocation steeleafId = ResourceLocation.tryBuild("tconstruct", "steeleaf");
     TagKey<Fluid> localTag = TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), steeleafId);
 
     assertThat(GTConstructFluid.selectRecipeTag(null, localTag, steeleafId))

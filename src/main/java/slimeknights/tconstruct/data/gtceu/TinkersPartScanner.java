@@ -89,7 +89,11 @@ final class TinkersPartScanner {
           });
         }
       } catch (IllegalAccessException exception) {
-        LOGGER.error("Failed to read Tinkers' Construct cast field '{}'.", field.getName(), exception);
+        LOGGER.error(
+          "Failed to read Tinkers' Construct cast field '{}'.",
+          field.getName(),
+          exception
+        );
       }
     }
     return List.copyOf(parts.values());
@@ -120,7 +124,10 @@ final class TinkersPartScanner {
       }
       return field;
     } catch (NoSuchFieldException exception) {
-      throw new IllegalStateException("TConstruct MaterialTagToolPartItem no longer exposes its material tag", exception);
+      throw new IllegalStateException(
+        "TConstruct MaterialTagToolPartItem no longer exposes its material tag",
+        exception
+      );
     }
   }
 

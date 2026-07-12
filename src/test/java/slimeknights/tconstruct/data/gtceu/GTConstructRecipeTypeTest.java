@@ -11,24 +11,24 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import net.minecraftforge.fml.loading.FMLPaths;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import slimeknights.tconstruct.common.registration.CastItemObject;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.test.BaseMcTest;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.nio.file.Path;
 
 import static com.gregtechceu.gtceu.api.GTValues.LV;
 import static com.gregtechceu.gtceu.api.GTValues.MV;
@@ -84,7 +84,10 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
 
   @Test
   void tagInputPreservesGtmFluidTagAndMaterialNbt() {
-    TagKey<Fluid> fluidTag = TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), ResourceLocation.tryBuild("forge", "water"));
+    TagKey<Fluid> fluidTag = TagKey.create(
+      ForgeRegistries.FLUIDS.getRegistryKey(),
+      ResourceLocation.tryBuild("forge", "water")
+    );
     GTConstructRecipes.SolidifierPart part = part("pick_head", 2);
     List<FinishedRecipe> recipes = new ArrayList<>();
 
@@ -96,7 +99,9 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
       .register(recipes::add, List.of(part));
 
     assertThat(recipes).hasSize(1);
-    assertThat(recipes.get(0).getId()).isEqualTo(ResourceLocation.tryBuild("gtceu", "fluid_solidifier/solidify_water_to_pick_head"));
+    assertThat(recipes.get(0).getId()).isEqualTo(
+      ResourceLocation.tryBuild("gtceu", "fluid_solidifier/solidify_water_to_pick_head")
+    );
     JsonObject json = serialize(recipes.get(0));
     assertThat(json.toString()).contains("forge:water", "tconstruct:iron", "tconstruct:wood");
     assertThat(json.get("duration").getAsInt()).isEqualTo(120);
@@ -104,7 +109,10 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
 
   @Test
   void sourceRecipeIdDisambiguatesRecipesWithSharedInput() {
-    TagKey<Fluid> fluidTag = TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), ResourceLocation.tryBuild("forge", "water"));
+    TagKey<Fluid> fluidTag = TagKey.create(
+      ForgeRegistries.FLUIDS.getRegistryKey(),
+      ResourceLocation.tryBuild("forge", "water")
+    );
     GTConstructRecipes.SolidifierPart part = part("pick_head", 1);
     List<FinishedRecipe> recipes = new ArrayList<>();
 
@@ -139,7 +147,9 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
       .register(recipes::add, List.of(part));
 
     assertThat(recipes).hasSize(1);
-    assertThat(recipes.get(0).getId()).isEqualTo(ResourceLocation.tryBuild("gtceu", "vacuum_freezer/vacuum_freeze_water_to_pick_head"));
+    assertThat(recipes.get(0).getId()).isEqualTo(
+      ResourceLocation.tryBuild("gtceu", "vacuum_freezer/vacuum_freeze_water_to_pick_head")
+    );
     assertThat(serialize(recipes.get(0)).toString()).contains("minecraft:water");
   }
 
@@ -176,7 +186,10 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
 
   @Test
   void conflictingInputSourcesFailAtRegistration() {
-    TagKey<Fluid> fluidTag = TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), ResourceLocation.tryBuild("forge", "water"));
+    TagKey<Fluid> fluidTag = TagKey.create(
+      ForgeRegistries.FLUIDS.getRegistryKey(),
+      ResourceLocation.tryBuild("forge", "water")
+    );
 
     assertThatThrownBy(() -> GTConstructRecipeType.builder()
       .inputFluids(Fluids.WATER)
