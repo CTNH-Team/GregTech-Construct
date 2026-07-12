@@ -36,28 +36,12 @@ final class TinkersMaterialFluidCatalog {
 
   private TinkersMaterialFluidCatalog() {}
 
-  static List<MaterialFluidSpec> discover() {
-    return discover(GTConstructRecipes.getDefaultSolidifierParts());
-  }
-
   static List<MaterialFluidSpec> discover(List<GTConstructRecipes.SolidifierPart> parts) {
     return discover(
       TinkersFluidCatalog.instance(),
       MaterialCastingLookup.getAllCastingFluids(),
       MaterialCastingLookup.getAllCompositeFluids(),
       parts,
-      GTConstructMaterialSupport.INSTANCE::isMaterialAvailable
-    );
-  }
-
-  static List<MaterialFluidSpec> discover(TinkersFluidCatalog fluidCatalog,
-                                          Collection<MaterialFluidRecipe> castingRecipes,
-                                          Collection<MaterialFluidRecipe> compositeRecipes) {
-    return discover(
-      fluidCatalog,
-      castingRecipes,
-      compositeRecipes,
-      GTConstructRecipes.getDefaultSolidifierParts(),
       GTConstructMaterialSupport.INSTANCE::isMaterialAvailable
     );
   }

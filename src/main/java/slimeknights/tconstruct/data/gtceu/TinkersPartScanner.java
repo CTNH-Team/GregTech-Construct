@@ -216,11 +216,6 @@ final class TinkersPartScanner {
   record PartItem(String path, Item item, CastItemObject cast,
                   @Nullable MaterialStatsId stat, @Nullable TagKey<IMaterial> materialTag,
                   boolean useToSeparator) {
-    PartItem(String path, Item item, CastItemObject cast,
-             @Nullable MaterialStatsId stat, boolean useToSeparator) {
-      this(path, item, cast, stat, null, useToSeparator);
-    }
-
     PartItem(String path, Item item, CastItemObject cast, @Nullable MaterialStatsId stat) {
       this(path, item, cast, stat, null, true);
     }

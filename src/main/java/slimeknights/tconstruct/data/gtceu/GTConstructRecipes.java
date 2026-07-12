@@ -4,7 +4,6 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.item.Item;
 import org.apache.logging.log4j.Logger;
 import slimeknights.tconstruct.common.registration.CastItemObject;
-import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.utils.Util;
@@ -52,10 +51,6 @@ public class GTConstructRecipes {
 
   static List<SolidifierPart> getDefaultSolidifierParts() {
     return GTConstructSolidifierParts.create();
-  }
-
-  static List<SolidifierPart> getSupportedParts(IMaterial material, List<SolidifierPart> parts) {
-    return getSupportedParts(material.getIdentifier(), parts);
   }
 
   static List<SolidifierPart> getSupportedParts(MaterialId material, List<SolidifierPart> parts) {
