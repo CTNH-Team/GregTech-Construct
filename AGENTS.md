@@ -21,7 +21,7 @@ Single-module Gradle Java 17 Minecraft mod. This fork keeps the upstream `tconst
 `-- project_files/                         # material texture source files
 ```
 
-`build/`, `bin/`, `run/`, `workspace/`, `.gradle/`, `.codegraph/`, `.omo/`, and `.claude/` are local build, runtime, index, or agent state. They are not implementation sources.
+`build/`, `bin/`, `run/`, `workspace/`, `.gradle/`, `.omo/`, and `.claude/` are local build, runtime, index, or agent state. They are not implementation sources.
 
 ## WHERE TO LOOK
 | Task | Location | Notes |
@@ -94,7 +94,7 @@ The domain guides live under `docs/` so they do not pollute source directories. 
 - `src/generated/resources` is a tracked build product. Change its inputs and regenerate with `runData` rather than hand-editing generated JSON.
 
 ## ANTI-PATTERNS (THIS PROJECT)
-- Do not edit `build/`, `bin/`, `run/`, `workspace/`, `.gradle/`, `.codegraph/`, or agent state as implementation.
+- Do not edit `build/`, `bin/`, `run/`, `workspace/`, `.gradle/``, or agent state as implementation.
 - Do not call `MaterialRegistry` during mod construction or static initialization.
 - Do not cast `IToolStackView` to `ToolStack`; keep addon code on the interface.
 - Do not call `ModifierTraitHook` directly; use the supported builder path.

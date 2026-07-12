@@ -19,7 +19,6 @@ import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
 import slimeknights.tconstruct.library.modifiers.hook.armor.ShareDamageModifierHook.ShareDamageContext;
-import slimeknights.tconstruct.library.modifiers.hook.special.CapacityBarHook;
 import slimeknights.tconstruct.library.module.ModuleHookMap;
 import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.nbt.DummyToolStack;
@@ -29,7 +28,6 @@ import slimeknights.tconstruct.library.tools.nbt.StatsNBT;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.test.BaseMcTest;
-import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.logic.GuardingCache;
 import slimeknights.tconstruct.tools.logic.GuardingRuntimeHooks;
 
@@ -60,7 +58,7 @@ class FormulaGuardingModuleTest extends BaseMcTest {
   }
 
   @Test
-  void shareAndProtectionFormulasUseCapacityBarInputs() {
+  void shareAndProtectionFormulasUseDefaultInputsWithoutParameterProvider() {
     double[][] shareInputs = new double[1][];
     double[][] protectionInputs = new double[1][];
     FormulaManager.applySync(Map.of(
@@ -76,8 +74,6 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     ), Map.of(DISTANCE, "{}", SHARE, "{}", PROTECTION, "{}"));
 
     TestToolStack tool = new TestToolStack();
-    bindBar(new TestCapacityModifier(new TestCapacityBar(40, 20)), ModifierIds.plating);
-    tool.setModifierLevel(ModifierIds.plating, 1);
 
     LivingEntity guardian = mock(LivingEntity.class);
     LivingEntity protectedEntity = mock(LivingEntity.class);
@@ -86,21 +82,25 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     when(guardian.distanceTo(protectedEntity)).thenReturn(2.0f);
     RecordingShareContext context = new RecordingShareContext();
     boolean claimed = FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)
-      .collectShareDamage(tool, new ModifierEntry(TEST_MODIFIER_ID, 2), guardian, EquipmentSlot.CHEST, protectedEntity, source, context);
+      .collectShareDamage(tool, guardingEntry(2), guardian, EquipmentSlot.CHEST, protectedEntity, source, context);
 
     assertThat(claimed).isTrue();
     assertThat(context.shareRatio).isEqualTo(0.5f);
     assertThat(context.extraProtection).isEqualTo(0.25f);
     assertThat(context.distanceFactor).isEqualTo(1f);
-    assertThat(shareInputs[0]).containsExactly(0.0, 2.0, 40.0, 20.0);
-    assertThat(protectionInputs[0]).containsExactly(0.0, 2.0, 40.0, 20.0);
+    assertThat(shareInputs[0]).containsExactly(0.0, 2.0, 1.0, 0.0);
+    assertThat(protectionInputs[0]).containsExactly(0.0, 2.0, 1.0, 0.0);
   }
 
   @Test
   void guardingWithoutPlatingDoesNotFallbackToDurability() {
+    double[][] shareInputs = new double[1][];
     FormulaManager.applySync(Map.of(
       DISTANCE, formula(values -> 1.0),
-      SHARE, formula(values -> 0.5),
+      SHARE, formula(values -> {
+        shareInputs[0] = values;
+        return 0.5;
+      }),
       PROTECTION, formula(values -> 0.0)
     ), Map.of(DISTANCE, "{}", SHARE, "{}", PROTECTION, "{}"));
 
@@ -113,10 +113,11 @@ class FormulaGuardingModuleTest extends BaseMcTest {
 
     RecordingShareContext context = new RecordingShareContext();
     boolean claimed = FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)
-      .collectShareDamage(tool, new ModifierEntry(TEST_MODIFIER_ID, 2), guardian, EquipmentSlot.CHEST, protectedEntity, source, context);
+      .collectShareDamage(tool, guardingEntry(2), guardian, EquipmentSlot.CHEST, protectedEntity, source, context);
 
-    assertThat(claimed).isFalse();
-    assertThat(context.called).isFalse();
+    assertThat(claimed).isTrue();
+    assertThat(context.called).isTrue();
+    assertThat(shareInputs[0]).containsExactly(0.0, 2.0, 1.0, 0.0);
   }
 
   @Test
@@ -135,7 +136,6 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     ), Map.of(DISTANCE, "{}", SHARE, "{}", PROTECTION, "{}"));
 
     TestToolStack tool = new TestToolStack();
-    bindBar(new TestCapacityModifier(new TestCapacityBar(40, 20)), ModifierIds.plating);
 
     Player protectedPlayer = mock(Player.class);
     LivingEntity guardian = mock(LivingEntity.class);
@@ -236,8 +236,6 @@ class FormulaGuardingModuleTest extends BaseMcTest {
   }
 
   private static class TestToolStack extends DummyToolStack {
-    private final java.util.Map<ModifierId,Integer> levels = new java.util.HashMap<>();
-
     private TestToolStack() {
       super(Items.AIR, ModifierNBT.EMPTY, new ModDataNBT());
     }
@@ -252,37 +250,6 @@ class FormulaGuardingModuleTest extends BaseMcTest {
       return 75;
     }
 
-    @Override
-    public int getModifierLevel(ModifierId id) {
-      return levels.getOrDefault(id, 0);
-    }
-
-    private void setModifierLevel(ModifierId id, int level) {
-      levels.put(id, level);
-    }
-  }
-
-  private static class TestCapacityBar implements CapacityBarHook {
-    private final int capacity;
-    private final int amount;
-
-    private TestCapacityBar(int capacity, int amount) {
-      this.capacity = capacity;
-      this.amount = amount;
-    }
-
-    @Override
-    public int getAmount(slimeknights.tconstruct.library.tools.nbt.IToolStackView tool) {
-      return amount;
-    }
-
-    @Override
-    public int getCapacity(slimeknights.tconstruct.library.tools.nbt.IToolStackView tool, ModifierEntry entry) {
-      return capacity;
-    }
-
-    @Override
-    public void setAmount(slimeknights.tconstruct.library.tools.nbt.IToolStackView tool, ModifierEntry entry, int amount) {}
   }
 
   private static class RecordingShareContext implements ShareDamageContext {
@@ -307,18 +274,16 @@ class FormulaGuardingModuleTest extends BaseMcTest {
     }
   }
 
-  private static class TestCapacityModifier extends Modifier {
-    private TestCapacityModifier(CapacityBarHook capacityBar) {
-      super(ModuleHookMap.builder().addHook(capacityBar, ModifierHooks.CAPACITY_BAR).build());
-    }
-  }
-
   private static class TestGuardingModifier extends Modifier {
     private TestGuardingModifier() {
       super(ModuleHookMap.builder().addModule(FormulaGuardingModule.guarding(DISTANCE, SHARE, PROTECTION)).build());
     }
   }
 
+  private static ModifierEntry guardingEntry(int level) {
+    bindBar(new TestGuardingModifier(), TEST_MODIFIER_ID);
+    return new ModifierEntry(TEST_MODIFIER_ID, level);
+  }
 
   private static void bindBar(Modifier modifier, ModifierId id) {
     try {

@@ -14,9 +14,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.TickEvent;
 import oftenoviour.util.formula.FormulaManager;
 import oftenoviour.util.formula.IFormula;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.library.modifiers.Modifier;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
@@ -103,7 +106,9 @@ class AroundEntityTickHandlerTest extends BaseMcTest {
     when(target.getItemBySlot(EquipmentSlot.FEET)).thenReturn(ItemStack.EMPTY);
     when(player.distanceTo(target)).thenReturn(3.0f);
 
-    try (org.mockito.MockedStatic<ToolStack> toolStacks = org.mockito.Mockito.mockStatic(ToolStack.class)) {
+    try (MockedStatic<Config> config = Mockito.mockStatic(Config.class);
+         MockedStatic<ToolStack> toolStacks = Mockito.mockStatic(ToolStack.class)) {
+      config.when(Config::guardingScanRange).thenReturn(32);
       toolStacks.when(() -> ToolStack.from(chest)).thenReturn(tool);
       AroundEntityTickHandler.onPlayerTick(new TickEvent.PlayerTickEvent(TickEvent.Phase.START, player));
     }
@@ -163,7 +168,9 @@ class AroundEntityTickHandlerTest extends BaseMcTest {
     when(target.getItemBySlot(EquipmentSlot.FEET)).thenReturn(ItemStack.EMPTY);
     when(player.distanceTo(target)).thenReturn(3.0f);
 
-    try (org.mockito.MockedStatic<ToolStack> toolStacks = org.mockito.Mockito.mockStatic(ToolStack.class)) {
+    try (MockedStatic<Config> config = Mockito.mockStatic(Config.class);
+         MockedStatic<ToolStack> toolStacks = Mockito.mockStatic(ToolStack.class)) {
+      config.when(Config::guardingScanRange).thenReturn(32);
       toolStacks.when(() -> ToolStack.from(chest)).thenReturn(tool);
       AroundEntityTickHandler.onPlayerTick(new TickEvent.PlayerTickEvent(TickEvent.Phase.START, player));
     }
@@ -217,7 +224,9 @@ class AroundEntityTickHandlerTest extends BaseMcTest {
     when(player.getItemBySlot(EquipmentSlot.FEET)).thenReturn(ItemStack.EMPTY);
     when(level.getEntitiesOfClass(org.mockito.Mockito.eq(LivingEntity.class), any(AABB.class), any())).thenReturn(List.of());
 
-    try (org.mockito.MockedStatic<ToolStack> toolStacks = org.mockito.Mockito.mockStatic(ToolStack.class)) {
+    try (MockedStatic<Config> config = Mockito.mockStatic(Config.class);
+         MockedStatic<ToolStack> toolStacks = Mockito.mockStatic(ToolStack.class)) {
+      config.when(Config::guardingScanRange).thenReturn(32);
       toolStacks.when(() -> ToolStack.from(chest)).thenReturn(tool);
       AroundEntityTickHandler.onPlayerTick(new TickEvent.PlayerTickEvent(TickEvent.Phase.START, player));
     }
@@ -281,7 +290,9 @@ class AroundEntityTickHandlerTest extends BaseMcTest {
     when(target.getPersistentData()).thenReturn(persistent);
     when(player.distanceTo(target)).thenReturn(3.0f);
 
-    try (org.mockito.MockedStatic<ToolStack> toolStacks = org.mockito.Mockito.mockStatic(ToolStack.class)) {
+    try (MockedStatic<Config> config = Mockito.mockStatic(Config.class);
+         MockedStatic<ToolStack> toolStacks = Mockito.mockStatic(ToolStack.class)) {
+      config.when(Config::guardingScanRange).thenReturn(32);
       toolStacks.when(() -> ToolStack.from(chest)).thenReturn(tool);
       AroundEntityTickHandler.onPlayerTick(new TickEvent.PlayerTickEvent(TickEvent.Phase.START, player));
       AroundEntityTickHandler.onPlayerTick(new TickEvent.PlayerTickEvent(TickEvent.Phase.END, player));

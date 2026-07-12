@@ -38,9 +38,9 @@ dependencies {
     modCompileOnly("dev.shadowsoffire:ApothicAttributes:${minecraft_version}-${apothic_attributes_version}")
     modRuntimeOnly("dev.shadowsoffire:ApothicAttributes:${minecraft_version}-${apothic_attributes_version}")
 
-    modImplementation("dev.latvian.mods:kubejs-forge:${kubejs_version}")
-    modImplementation("dev.latvian.mods:rhino-forge:${rhino_version}")
-    modImplementation("dev.architectury:architectury-forge:${architectury_version}")
+    //modImplementation("dev.latvian.mods:kubejs-forge:${kubejs_version}")
+    //modImplementation("dev.latvian.mods:rhino-forge:${rhino_version}")
+    //modImplementation("dev.architectury:architectury-forge:${architectury_version}")
 
     modCompileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}:slim")
     modCompileOnly("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")

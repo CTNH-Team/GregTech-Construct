@@ -42,7 +42,7 @@ slimeknights/tconstruct/
 - Use the existing top-level domain for new behavior; avoid adding catch-all utility packages.
 - Keep `client`, `data`, `block`, `entity`, `item`, `menu`, `network`, and `recipe` subpackages aligned with their established domain.
 - Use the shared `TinkerModule` only for internal module registration; addons create their own registers.
-- Treat event subscribers and registry callbacks as lifecycle entry points even when codegraph shows no direct callers.
+- Treat event subscribers and registry callbacks as lifecycle entry points.
 
 ## ANTI-PATTERNS
 - Do not reorder `Tinker*` construction without checking registry dependencies and data-provider references.
