@@ -13,6 +13,7 @@ import slimeknights.tconstruct.plugin.emi.EMIConstants;
 import slimeknights.tconstruct.plugin.emi.TConstructEmiRecipe;
 import slimeknights.tconstruct.plugin.emi.util.EmiRenderHelper;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,11 @@ public final class CastingEmiRecipe extends TConstructEmiRecipe {
     this.basin = basin;
     this.fluids = fluids;
     this.casts = casts;
+  }
+
+  @Nullable
+  public ResourceLocation getSourceRecipeId() {
+    return recipe.getRecipeId();
   }
 
   private static List<EmiIngredient> inputs(IDisplayableCastingRecipe recipe, EmiIngredient fluids,
