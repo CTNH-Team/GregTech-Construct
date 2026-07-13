@@ -130,7 +130,12 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
       .register(recipes::add, List.of(part));
 
     assertThat(recipes).hasSize(2);
-    assertThat(recipes.get(0).getId()).isNotEqualTo(recipes.get(1).getId());
+    assertThat(recipes.get(0).getId()).isEqualTo(
+      ResourceLocation.tryBuild("gtceu", "fluid_solidifier/solidify_water_from/tconstruct/foo/bar_to_pick_head")
+    );
+    assertThat(recipes.get(1).getId()).isEqualTo(
+      ResourceLocation.tryBuild("gtceu", "fluid_solidifier/solidify_water_from/tconstruct/foo_bar_to_pick_head")
+    );
   }
 
   @Test

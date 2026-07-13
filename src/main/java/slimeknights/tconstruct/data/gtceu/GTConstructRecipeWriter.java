@@ -12,8 +12,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import slimeknights.tconstruct.common.registration.CastItemObject;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -67,7 +65,11 @@ final class GTConstructRecipeWriter {
       validateRegisteredCast(cast, part);
     }
 
-    GTRecipeBuilder builder = selectedRecipeType(plan).recipeBuilder(recipePath)
+    ResourceLocation recipeId = ResourceLocation.tryBuild("gtceu", recipePath);
+    if (recipeId == null) {
+      throw new IllegalStateException("Invalid GTM recipe path: " + recipePath);
+    }
+    GTRecipeBuilder builder = selectedRecipeType(plan).recipeBuilder(recipeId)
       .outputItems(getToolStack(toolPart, plan.outputMaterial()))
       .duration(duration)
       .EUt(VA[plan.voltage()])
@@ -141,9 +143,7 @@ final class GTConstructRecipeWriter {
       return inputName;
     }
     ResourceLocation sourceRecipeId = plan.sourceRecipeId();
-    String encodedSourceId = Base64.getUrlEncoder().withoutPadding()
-      .encodeToString(sourceRecipeId.toString().getBytes(StandardCharsets.UTF_8));
-    return inputName + "_" + encodedSourceId;
+    return inputName + "_from/" + sourceRecipeId.getNamespace() + "/" + sourceRecipeId.getPath();
   }
 
   private static com.gregtechceu.gtceu.api.recipe.GTRecipeType selectedRecipeType(GTConstructRecipePlan plan) {
