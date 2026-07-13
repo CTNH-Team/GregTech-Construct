@@ -173,7 +173,7 @@ public final class TinkerFluids extends TinkerModule {
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenTungsten = FLUIDS.registerCompatMetal("tungsten", hot("tungsten").temperature(1250).lightLevel(12));
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenOsmium   = FLUIDS.registerCompatMetal("osmium", hot("osmium").temperature(1275).lightLevel(4));
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenUranium  = FLUIDS.registerCompatMetal("uranium", hot("uranium").temperature(1130).lightLevel(15));
-    public static final FlowingFluidObject<ForgeFlowingFluid> moltenChromium = FLUIDS.registerMetal("chromium").type(hot("chromium").temperature(1200).lightLevel(13)).block(createBurning(MapColor.COLOR_CYAN, 13, 10, 5f)).bucket().commonTag().flowing();
+    public static final FlowingFluidObject<ForgeFlowingFluid> moltenChromium = FLUIDS.registerCompatMetal("chromium",hot("chromium").temperature(1200).lightLevel(13));
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenCadmium  = FLUIDS.registerMetal("cadmium").type(hot("cadmium").temperature(594).lightLevel(10)).block(createBurning(MapColor.COLOR_BROWN, 10, 10, 5f)).bucket().commonTag().flowing();
     // gt
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenPolyethylene = FLUIDS.registerCompatMetal("polyethylene", cool("polyethylene").temperature(445));

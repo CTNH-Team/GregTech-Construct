@@ -1,14 +1,32 @@
 {
   "values": [
-    "#forge:iron",
-    "#forge:gold",
-    "#forge:copper",
-    "#forge:cobalt",
-    "#forge:steel",
+    {
+      "id": "#forge:iron",
+      "required": false
+    },
+    {
+      "id": "#forge:gold",
+      "required": false
+    },
+    {
+      "id": "#forge:copper",
+      "required": false
+    },
+    {
+      "id": "#forge:cobalt",
+      "required": false
+    },
+    {
+      "id": "#forge:steel",
+      "required": false
+    },
     "#tconstruct:debris",
     "#tconstruct:slimesteel",
     "#forge:amethyst_bronze",
-    "#forge:rose_gold",
+    {
+      "id": "#forge:rose_gold",
+      "required": false
+    },
     "#tconstruct:pig_iron",
     "#forge:manyullyn",
     "#forge:hepatizon",
@@ -18,17 +36,50 @@
     "#tconstruct:soulsteel",
     "#tconstruct:knightmetal",
     "#tconstruct:knightslime",
-    "#forge:tin",
-    "#forge:aluminium",
-    "#forge:lead",
-    "#forge:silver",
-    "#forge:nickel",
-    "#forge:zinc",
-    "#forge:platinum",
-    "#forge:tungsten",
-    "#forge:osmium",
-    "#forge:uranium",
-    "#forge:chromium",
+    {
+      "id": "#forge:tin",
+      "required": false
+    },
+    {
+      "id": "#forge:aluminium",
+      "required": false
+    },
+    {
+      "id": "#forge:lead",
+      "required": false
+    },
+    {
+      "id": "#forge:silver",
+      "required": false
+    },
+    {
+      "id": "#forge:nickel",
+      "required": false
+    },
+    {
+      "id": "#forge:zinc",
+      "required": false
+    },
+    {
+      "id": "#forge:platinum",
+      "required": false
+    },
+    {
+      "id": "#forge:tungsten",
+      "required": false
+    },
+    {
+      "id": "#forge:osmium",
+      "required": false
+    },
+    {
+      "id": "#forge:uranium",
+      "required": false
+    },
+    {
+      "id": "#forge:chromium",
+      "required": false
+    },
     "#forge:cadmium",
     {
       "id": "#forge:polyethylene",
@@ -38,10 +89,22 @@
       "id": "#forge:polyvinyl_chloride",
       "required": false
     },
-    "#forge:bronze",
-    "#forge:brass",
-    "#forge:electrum",
-    "#forge:invar",
+    {
+      "id": "#forge:bronze",
+      "required": false
+    },
+    {
+      "id": "#forge:brass",
+      "required": false
+    },
+    {
+      "id": "#forge:electrum",
+      "required": false
+    },
+    {
+      "id": "#forge:invar",
+      "required": false
+    },
     "#forge:constantan",
     "#forge:pewter",
     "#forge:enderium",
