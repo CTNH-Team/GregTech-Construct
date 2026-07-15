@@ -44,6 +44,13 @@ ordering="NONE"
 side="CLIENT"
 
 [[dependencies.tconstruct]]
+modId="jei"
+mandatory=false
+versionRange="${jei_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.tconstruct]]
 modId="jsonthings"
 mandatory=false
 versionRange="${json_things_range}"

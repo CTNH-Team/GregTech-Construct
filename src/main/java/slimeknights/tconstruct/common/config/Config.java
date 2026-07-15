@@ -250,8 +250,10 @@ public class Config {
     public final ForgeConfigSpec.BooleanValue modifiersIDsInAdvancedTooltips;
     public final ForgeConfigSpec.IntValue maxSmelteryItemQuads;
 
-    // EMI
+    // Recipe viewers
     public final BooleanValue showModifiersInEMI;
+    /** Compatibility alias for the restored JEI integration. */
+    public final BooleanValue showModifiersInJEI;
     public final ConfigValue<String> showOnlyToolMaterial;
     public final ConfigValue<String> showOnlyPartMaterial;
     public final BooleanValue showAllTableVariants;
@@ -259,6 +261,8 @@ public class Config {
     public final BooleanValue showAllSmelteryVariants;
     public final BooleanValue showFilledFluidTanks;
     public final BooleanValue showPotionFluidInEMI;
+    /** Compatibility alias for the restored JEI integration. */
+    public final BooleanValue showPotionFluidInJEI;
 
     // framed modifier
     public final ForgeConfigSpec.BooleanValue renderItemFrame;
@@ -340,6 +344,9 @@ public class Config {
         this.showPotionFluidInEMI = builder
           .comment("If true, variants of our potion fluid for every potion will show in EMI. If false it will be hidden, but still usable.")
           .define("showPotionFluid", true);
+
+        this.showModifiersInJEI = this.showModifiersInEMI;
+        this.showPotionFluidInJEI = this.showPotionFluidInEMI;
       }
       builder.pop(); // EMI
 
