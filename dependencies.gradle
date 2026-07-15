@@ -15,6 +15,11 @@ dependencies {
     modCompileOnly("curse.maven:emi-580555:8081375")
     modRuntimeOnly("curse.maven:emi-580555:8081375")
 
+    // Keep the original JEI integration available alongside EMI.
+    modCompileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    modCompileOnly("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    //modRuntimeOnly("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+
     // modImplementation("mcjty.theoneprobe:TheOneProbe-${minecraft_base_version}:${minecraft_base_version}-${probe_version}")
 
     modCompileOnly("blusunrize.immersiveengineering:ImmersiveEngineering:${minecraft_version}-${ie_version}")
@@ -22,6 +27,7 @@ dependencies {
 
     modCompileOnly("curse.maven:diet-443570:4813904")
 
+    //modImplementation("com.gregtechceu.gtceu:gtceu-${minecraft_version}:${gtceu_version}:slim") { transitive = false }
     modImplementation("com.lowdragmc.ldlib:ldlib-forge-${minecraft_version}:${ldlib_version}") { transitive = false }
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     modImplementation("dev.toma.configuration:configuration-forge-${minecraft_version}:${configuration_version}")

@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.data.gtceu;
 
 import com.google.gson.JsonObject;
+import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.common.data.GTRecipeCapabilities;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -34,12 +36,15 @@ import static com.gregtechceu.gtceu.api.GTValues.LV;
 import static com.gregtechceu.gtceu.api.GTValues.MV;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class GTConstructRecipeTypeTest extends BaseMcTest {
   private static final MaterialId TEST_BASE_MATERIAL = new MaterialId("tconstruct", "wood");
   private static MockedStatic<ModLoadingContext> modLoadingContext;
+  private static MockedStatic<ModList> modList;
+  private static MockedStatic<GTCEu> gtceu;
 
   static {
     FMLPaths.loadAbsolutePaths(Path.of("build", "test-game"));
@@ -54,6 +59,12 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
     when(context.getActiveContainer()).thenReturn(container);
     modLoadingContext = org.mockito.Mockito.mockStatic(ModLoadingContext.class);
     modLoadingContext.when(ModLoadingContext::get).thenReturn(context);
+    ModList modListInstance = mock(ModList.class);
+    when(modListInstance.isLoaded(anyString())).thenReturn(false);
+    modList = org.mockito.Mockito.mockStatic(ModList.class);
+    modList.when(ModList::get).thenReturn(modListInstance);
+    gtceu = org.mockito.Mockito.mockStatic(GTCEu.class, org.mockito.Mockito.CALLS_REAL_METHODS);
+    gtceu.when(GTCEu::isClientThread).thenReturn(false);
     if (GTRegistries.RECIPE_CAPABILITIES.isFrozen()) {
       GTRegistries.RECIPE_CAPABILITIES.unfreeze();
     }
@@ -77,6 +88,12 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
 
   @AfterAll
   static void disableGtmRegistryBootstrap() {
+    if (gtceu != null) {
+      gtceu.close();
+    }
+    if (modList != null) {
+      modList.close();
+    }
     if (modLoadingContext != null) {
       modLoadingContext.close();
     }

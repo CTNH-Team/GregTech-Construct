@@ -95,8 +95,8 @@ public final class TiCAddonFinder {
 
   @SuppressWarnings("unchecked")
   private static boolean missingRequiredMod(ModFileScanData.AnnotationData annotation) {
-    Object requiredMods = annotation.annotationData().get("requiredMods");
-    if (!(requiredMods instanceof List<?> mods) || mods.isEmpty()) {
+    Object modIds = annotation.annotationData().get("modID");
+    if (!(modIds instanceof List<?> mods) || mods.isEmpty()) {
       return false;
     }
     for (Object mod : mods) {
@@ -106,7 +106,7 @@ public final class TiCAddonFinder {
       }
     }
     if (!mods.stream().allMatch(String.class::isInstance)) {
-      LOGGER.warn("Ignoring malformed requiredMods on TiC addon {}: {}", annotation.memberName(), Arrays.toString(mods.toArray()));
+      LOGGER.warn("Ignoring malformed modID on TiC addon {}: {}", annotation.memberName(), Arrays.toString(mods.toArray()));
     }
     return false;
   }

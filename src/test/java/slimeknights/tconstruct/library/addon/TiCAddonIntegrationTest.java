@@ -181,6 +181,16 @@ class TiCAddonIntegrationTest extends BaseMcTest {
       FirstDuplicateAddon.class, SecondDuplicateAddon.class);
   }
 
+  @Test
+  void addonFinderSkipsAddonWhenRequiredModIsMissing() {
+    withDiscoveredAddons(
+      () -> assertThat(TiCAddonFinder.getAddons())
+        .noneMatch(addon -> addon.addonModId().equals("missingmodaddon")),
+      Map.of("modID", List.of("missingmod")),
+      MissingModAddon.class
+    );
+  }
+
   private static List<String> entryNames(String className) throws ReflectiveOperationException {
     Class<?> generator = Class.forName(className);
     Method createProviderEntries = generator.getDeclaredMethod("createProviderEntries");
@@ -216,6 +226,12 @@ class TiCAddonIntegrationTest extends BaseMcTest {
 
   @SafeVarargs
   private static void withDiscoveredAddons(Runnable assertions, Class<? extends ITiCAddon>... addonClasses) {
+    withDiscoveredAddons(assertions, Map.of(), addonClasses);
+  }
+
+  @SafeVarargs
+  private static void withDiscoveredAddons(Runnable assertions, Map<String, Object> annotationData,
+                                           Class<? extends ITiCAddon>... addonClasses) {
     ModFileScanData scanData = new ModFileScanData();
     for (Class<? extends ITiCAddon> addonClass : addonClasses) {
       scanData.getAnnotations().add(new ModFileScanData.AnnotationData(
@@ -223,7 +239,7 @@ class TiCAddonIntegrationTest extends BaseMcTest {
         ElementType.TYPE,
         Type.getType(addonClass),
         addonClass.getName(),
-        Map.of()));
+        annotationData));
     }
 
     try (MockedStatic<ModList> modList = Mockito.mockStatic(ModList.class)) {
@@ -301,6 +317,14 @@ class TiCAddonIntegrationTest extends BaseMcTest {
     @Override
     public String addonModId() {
       return "duplicateaddon";
+    }
+  }
+
+  @TiCAddon(modID = "missingmod")
+  private static final class MissingModAddon implements ITiCAddon {
+    @Override
+    public String addonModId() {
+      return "missingmodaddon";
     }
   }
 
