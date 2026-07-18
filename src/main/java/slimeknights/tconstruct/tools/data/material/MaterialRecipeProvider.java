@@ -350,7 +350,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         // slimesuit
         materialMeltingCasting(consumer, MaterialIds.gold, TinkerFluids.moltenGold, folder);
         materialMeltingCasting(consumer, MaterialIds.enderPearl, TinkerFluids.moltenEnder, FluidValues.SLIMEBALL, folder);
-        materialMeltingCasting(consumer, MaterialIds.glass, TinkerFluids.moltenGlass, FluidValues.GLASS_PANE, folder);
+        materialCasting(consumer, MaterialIds.glass, TinkerFluids.moltenGlass, FluidValues.GLASS_PANE, folder);
         materialMeltingCasting(consumer, MaterialIds.enderslime, TinkerFluids.enderSlime, FluidValues.SLIMEBALL, folder);
     }
 
