@@ -289,7 +289,10 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
                 .meleeHarvest().ranged().armor().arrowHead()
                 .fallbacks("metal")
                 .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF1B202D).addARGB(102, 0xFF252C3D).addARGB(140, 0xFF323847).addARGB(178, 0xFF3E4453).addARGB(216, 0xFF495065).addARGB(255, 0xFF67718C).build());
-//      .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF222626).addARGB(102, 0xFF393D3D).addARGB(140, 0xFF515454).addARGB(178, 0xFF6A6D6D).addARGB(216, 0xFF898C8C).addARGB(255, 0xFFADAFAF).build());
+        buildMaterial(MaterialIds.wroughtIron)
+                .meleeHarvest().ranged().armor()
+                .fallbacks("metal")
+                .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF521C0B).addARGB(102, 0xFF673C2E).addARGB(140, 0xFF82645B).addARGB(178, 0xFF97847E).addARGB(216, 0xFFAAA19E).addARGB(255, 0xFFBCBCBC).build());
         buildMaterial(MaterialIds.bronze)
                 .meleeHarvest().ranged().armor().statType(INGOT, STORAGE_BLOCK)
                 .fallbacks("metal")

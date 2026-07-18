@@ -788,6 +788,8 @@
 
   "block.tconstruct.iron_fluid": "熔融铁",
   "fluid.tconstruct.iron": "熔融铁",
+  "fluid.tconstruct.wrought_iron": "熔融锻铁",
+  "fluid.tconstruct.andesite_alloy": "熔融安山合金",
   "fluid.tconstruct.flowing_iron": "流动的熔融铁",
   "item.tconstruct.iron_bucket": "熔融铁桶",
   "fluid.tconstruct.iron.fluid_effect": "熔融铁可以吸引附近的物品，或许在战斗的紧要关头能有些用处。",
@@ -2087,6 +2089,9 @@
 
   "__comment": "Tier 2 Materials",
   "material.tconstruct.iron": "铁",
+  "material.tconstruct.wrought_iron": "锻铁",
+  "material.tconstruct.andesite_alloy": "安山合金",
+  "material.tconstruct.andesite_alloy.flavor": "安如顽石",
   "material.tconstruct.iron.wrought": "熟铁",
   "material.tconstruct.iron.oxidized": "粗铁",
   "material.tconstruct.iron.flavor": "他铁了心要保护别人不死，却不能保护他自己，多么讽刺。",

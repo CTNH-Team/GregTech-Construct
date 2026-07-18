@@ -86,6 +86,7 @@ public class FluidTextureProvider extends AbstractFluidTextureProvider {
         compatOre(TinkerFluids.moltenPlatinum);
         compatOre(TinkerFluids.moltenSilver);
         compatOre(TinkerFluids.moltenTin);
+        compatOre(TinkerFluids.moltenWroughtIron);
         compatOre(TinkerFluids.moltenTungsten);
         compatOre(TinkerFluids.moltenUranium);
         compatOre(TinkerFluids.moltenZinc);

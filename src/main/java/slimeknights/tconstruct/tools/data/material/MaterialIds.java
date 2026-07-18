@@ -108,6 +108,7 @@ public final class MaterialIds {
     public static final MaterialId silver = id("silver");
     public static final MaterialId lead = id("lead");
     public static final MaterialId aluminum = id("aluminum");
+    public static final MaterialId andesiteAlloy = id("andesite_alloy");
     // tier 3 (mod integration)
     public static final MaterialId bronze = id("bronze");
     public static final MaterialId constantan = id("constantan");
@@ -116,6 +117,7 @@ public final class MaterialIds {
     public static final MaterialId electrum = id("electrum");
     public static final MaterialId pewter = id("pewter");
     public static final MaterialId platedSlimewood = id("plated_slimewood");
+    public static final MaterialId wroughtIron = id("wrought_iron");
     // twilight forest
     public static final MaterialId ironwood = id("ironwood");
     public static final MaterialId steeleaf = id("steeleaf");

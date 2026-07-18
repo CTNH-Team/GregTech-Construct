@@ -788,6 +788,8 @@
 
   "block.tconstruct.iron_fluid": "Molten Iron",
   "fluid.tconstruct.iron": "Molten Iron",
+  "fluid.tconstruct.wrought_iron": "Molten Wrought Iron",
+  "fluid.tconstruct.andesite_alloy": "Molten Andesite Alloy",
   "fluid.tconstruct.flowing_iron": "Flowing Molten Iron",
   "item.tconstruct.iron_bucket": "Molten Iron Bucket",
   "fluid.tconstruct.iron.fluid_effect": "Molten iron is used to draw nearby items towards you, though in a pinch it can be useful in combat.",
@@ -2088,6 +2090,9 @@
 
   "__comment": "Tier 2 Materials",
   "material.tconstruct.iron": "Iron",
+  "material.tconstruct.wrought_iron": "Wrought Iron",
+  "material.tconstruct.andesite_alloy": "Andesite Alloy",
+  "material.tconstruct.andesite_alloy.flavor": "Sturdier Rocks",
   "material.tconstruct.iron.wrought": "Wrought Iron",
   "material.tconstruct.iron.oxidized": "Raw Iron",
   "material.tconstruct.iron.flavor": "Ironic. He could save others from death, but not himself.",

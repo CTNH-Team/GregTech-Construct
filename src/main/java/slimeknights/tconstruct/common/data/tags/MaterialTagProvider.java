@@ -94,13 +94,13 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 MaterialIds.osmium, MaterialIds.ironwood,
                 MaterialIds.polyethylene, MaterialIds.polyvinylChloride,
                 // tier 3
-                MaterialIds.steeleaf,
+                MaterialIds.steeleaf, MaterialIds.wroughtIron,
                 // tier 4
                 MaterialIds.fiery
         ).addTag(TinkerTags.Materials.COMPATABILITY_BLOCKS);
         tag(TinkerTags.Materials.COMPATABILITY_BLOCKS).addTag(TinkerTags.Materials.COMPATABILITY_ALLOYS);
         tag(TinkerTags.Materials.COMPATABILITY_ALLOYS).addOptional(
-                MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter);
+                MaterialIds.andesiteAlloy, MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter);
 
         tag(TinkerTags.Materials.METALS).addTag(TinkerTags.Materials.HARD_METALS).addOptional(
                 MaterialIds.gold, MaterialIds.roseGold
@@ -111,13 +111,13 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 MaterialIds.copper,
                 // tier 2
                 MaterialIds.iron,
-                MaterialIds.osmium, MaterialIds.lead, MaterialIds.silver,
+                MaterialIds.andesiteAlloy, MaterialIds.osmium, MaterialIds.lead, MaterialIds.silver,
                 MaterialIds.aluminum,
                 // tier 3
                 MaterialIds.slimesteel, MaterialIds.amethystBronze, MaterialIds.pigIron,
                 MaterialIds.cobalt, MaterialIds.steel, MaterialIds.bronze,
                 MaterialIds.constantan, MaterialIds.invar,MaterialIds.electrum,
-                MaterialIds.pewter,
+                MaterialIds.pewter, MaterialIds.wroughtIron,
 
                 // tier 4
                 MaterialIds.manyullyn, MaterialIds.hepatizon,
@@ -156,10 +156,10 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 1
                 MaterialIds.treatedWood,
                 // tier 2
-                MaterialIds.osmium, MaterialIds.ironwood,
+                MaterialIds.andesiteAlloy, MaterialIds.osmium, MaterialIds.ironwood,
                 // tier 3
                 MaterialIds.platedSlimewood, MaterialIds.electrum, MaterialIds.steeleaf,
-                MaterialIds.polyethylene, MaterialIds.polyvinylChloride,
+                MaterialIds.polyethylene, MaterialIds.polyvinylChloride, MaterialIds.wroughtIron,
                 // tier 4
                 MaterialIds.fiery
         );
@@ -175,7 +175,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 MaterialIds.hepatizon, MaterialIds.ancientHide
         ).addOptional(
                 // tier 2
-                MaterialIds.lead,
+                MaterialIds.andesiteAlloy, MaterialIds.lead,
                 // tier 3
                 MaterialIds.bronze, MaterialIds.constantan
         );
@@ -246,7 +246,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 2
                 MaterialIds.lead,
                 // tier 3
-                MaterialIds.bronze, MaterialIds.electrum,
+                MaterialIds.bronze, MaterialIds.electrum, MaterialIds.wroughtIron,
                 // tier 4
                 MaterialIds.fiery
         );
@@ -265,7 +265,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 MaterialIds.gold, MaterialIds.roseGold, MaterialIds.pigIron,
                 // misc
                 MaterialIds.blazingBone, MaterialIds.enderPearl
-        );
+        ).addOptional(MaterialIds.wroughtIron);
 
         addonTags.accept(new MaterialTagRegistrar());
     }

@@ -85,6 +85,7 @@ public class FluidTagProvider extends FluidTagsProvider {
         fluidTag(TinkerFluids.moltenKnightslime);
         // compat ores
         fluidTag(TinkerFluids.moltenTin);
+        fluidTag(TinkerFluids.moltenWroughtIron);
         fluidTag(TinkerFluids.moltenAluminum);
         fluidTag(TinkerFluids.moltenLead);
         fluidTag(TinkerFluids.moltenSilver);

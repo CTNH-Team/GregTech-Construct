@@ -130,6 +130,11 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(510, 6.5f, IRON, 2f),
                 HandleMaterialStats.multipliers().durability(1.15f).attackSpeed(0.95f).build(),
                 StatlessMaterialStats.BINDING);
+        addMaterialStats(MaterialIds.andesiteAlloy,
+                new HeadMaterialStats(220, 5.5f, IRON, 1.5f),
+                new HandleMaterialStats(0.15f, 0f, 0f, -0.05f),
+                StatlessMaterialStats.BINDING,
+                StatlessMaterialStats.ARROW_HEAD);
 
         // tier 3
         // vanilla diamond: 1561, 8f, DIAMOND, 3f
@@ -162,6 +167,10 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.steel,
                 new HeadMaterialStats(775, 6f, DIAMOND, 2.75f),
                 HandleMaterialStats.multipliers().durability(1.05f).miningSpeed(1.05f).attackDamage(1.05f).build(),
+                StatlessMaterialStats.BINDING);
+        addMaterialStats(MaterialIds.wroughtIron,
+                new HeadMaterialStats(512, 6f, DIAMOND, 2.375f),
+                HandleMaterialStats.multipliers().durability(1.075f).miningSpeed(1.025f).attackDamage(1.025f).build(),
                 StatlessMaterialStats.BINDING);
         // tier 3 - binding
         addMaterialStats(MaterialIds.darkthread, StatlessMaterialStats.BINDING);
@@ -310,6 +319,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.ironwood,
                 new LimbMaterialStats(512, 0.05f, 0.05f, -0.15f),
                 new GripMaterialStats(0.15f, -0.15f, 2f));
+        addMaterialStats(MaterialIds.andesiteAlloy,
+                new LimbMaterialStats(220, -0.2f, 0.1f, 0f),
+                new GripMaterialStats(0.1f, 0f, 1.5f));
 
         // tier 3
         addMaterialStats(MaterialIds.slimesteel,
@@ -350,6 +362,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.steel,
                 new LimbMaterialStats(775, -0.3f, 0.2f, -0.1f),
                 new GripMaterialStats(0.05f, -0.05f, 2.75f));
+        addMaterialStats(MaterialIds.wroughtIron,
+                new LimbMaterialStats(512, -0.25f, 0.15f, -0.05f),
+                new GripMaterialStats(0.075f, -0.025f, 2.375f));
         addMaterialStats(MaterialIds.bronze,
                 new LimbMaterialStats(760, -0.2f, 0.15f, -0.2f),
                 new GripMaterialStats(0.1f, 0f, 2.25f));
@@ -484,6 +499,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addArmorShieldStats(MaterialIds.pigIron,        PlatingMaterialStats.builder().durabilityFactor(23).armor(1, 3, 4, 1).toughness(1).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.cobalt,         PlatingMaterialStats.builder().durabilityFactor(30).armor(2, 5, 7, 2).toughness(1).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
         addArmorShieldStats(MaterialIds.steel,          PlatingMaterialStats.builder().durabilityFactor(29).armor(2, 5, 7, 2).toughness(2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.wroughtIron,    PlatingMaterialStats.builder().durabilityFactor(22).armor(2, 4, 6, 2).toughness(1), StatlessMaterialStats.MAILLE);
         // tier 3 - compat
         addMaterialStats(MaterialIds.necronium, StatlessMaterialStats.SHIELD_CORE);
         addArmorShieldStats(MaterialIds.bronze,            PlatingMaterialStats.builder().durabilityFactor(28).armor(2, 5, 6, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
@@ -533,6 +549,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.darkthread,   new SkullStats(200, 1));
         addMaterialStats(MaterialIds.leather,      new SkullStats(150, 2));
         addMaterialStats(MaterialIds.iron,         new SkullStats(165, 2));
+        addMaterialStats(MaterialIds.wroughtIron,  new SkullStats(165, 2));
         addMaterialStats(MaterialIds.copper,       new SkullStats(145, 2));
         addMaterialStats(MaterialIds.blazingBone,  new SkullStats(205, 1));
         addMaterialStats(MaterialIds.gold,         new SkullStats(125, 0));
@@ -566,6 +583,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
             Map.entry(MaterialIds.hepatizon, armorDefaults(32f, 3.0f, 7.5f, 6.5f, 3.0f, 1.25f, 2.5f, 0.25f, 0.064f, 0.1f, 0.15f, 0.0f, 0.12f, 0.2f, null, 0.75f)),
             Map.entry(MaterialIds.invar, armorDefaults(27f, 2.5f, 6.0f, 5.0f, 2.5f, 0.75f, 1.5f, 0.12f, 0.048f, 0.1f, 0.0f, -0.06f, 0.1f, 0.18f)),
             Map.entry(MaterialIds.iron, armorDefaults(15f, 2.0f, 6.0f, 5.0f, 2.0f, 1.0f, 0.5f, 0.2f, 0.012f, null, 0.1f, 0.08f, 0.0f, -0.1f)),
+            Map.entry(MaterialIds.wroughtIron, armorDefaults(23.5f, 2.25f, 6.75f, 5.5f, 2.0f, 1.5f, 1.25f, 0.45f, 0.046f, null, 0.15f, 0.06f, 0.025f, -0.025f, 0.5f, 0.5f)),
             Map.entry(MaterialIds.knightmetal, armorDefaults(22.8f, 3.0f, 8.0f, 6.5f, 2.5f, 1.5f, 2.25f, 0.5f, 0.08f, 0.05f, 0.0f, 0.12f, 0.05f, 0.08f, 0.375f, 0.375f)),
             Map.entry(MaterialIds.lead, armorDefaults(10.8f, 1.5f, 4.0f, 3.5f, 1.5f, null, 0.75f, 0.6f, 0.01f, 0.1f, -0.1f, -0.04f, -0.05f, 0.08f)),
             Map.entry(MaterialIds.manyullyn, armorDefaults(51.25f, 2.5f, 7.0f, 6.5f, 2.0f, 3.0f, 1.25f, 0.75f, 0.05f, 0.05f, 0.2f, 0.05f, 0.2f, -0.1f, 0.8f, 0.8f)),

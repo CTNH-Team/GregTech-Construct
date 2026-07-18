@@ -53,7 +53,8 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
       MaterialIds.silver,
       MaterialIds.slimesteel,
       MaterialIds.steel,
-      MaterialIds.steeleaf
+      MaterialIds.steeleaf,
+      MaterialIds.wroughtIron
     };
 
     public MaterialTraitsDataProvider(PackOutput packOutput, AbstractMaterialDataProvider materials) {
@@ -97,6 +98,9 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         // tier 2
         addDefaultTraits(MaterialIds.iron, TinkerModifiers.magnetic);
         addTraits(MaterialIds.iron, ARMOR, ModifierIds.projectileProtection);
+        addDefaultTraits(MaterialIds.andesiteAlloy, TinkerModifiers.magnetic);
+        addDefaultTraits(MaterialIds.wroughtIron, TinkerModifiers.magnetic);
+        addTraits(MaterialIds.wroughtIron, ARMOR, ModifierIds.projectileProtection);
         addDefaultTraits(MaterialIds.copper, TinkerModifiers.dwarven);
         addTraits(MaterialIds.copper, ARMOR, ModifierIds.depthProtection);
         addDefaultTraits(MaterialIds.searedStone, ModifierIds.searing);
@@ -226,6 +230,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addTraits(MaterialIds.darkthread,   SkullStats.ID, ModifierIds.mithridatism, ModifierIds.caveSpiderDisguise);
         addTraits(MaterialIds.leather,      SkullStats.ID, TinkerModifiers.wildfire.getId(), ModifierIds.zombieDisguise);
         addTraits(MaterialIds.iron,         SkullStats.ID, TinkerModifiers.plague.getId(), ModifierIds.huskDisguise);
+        addTraits(MaterialIds.wroughtIron,  SkullStats.ID, TinkerModifiers.plague.getId(), ModifierIds.huskDisguise);
         addTraits(MaterialIds.copper,       SkullStats.ID, TinkerModifiers.breathtaking.getId(), ModifierIds.drownedDisguise);
         // TODO 1.21: use MaterialIds.blazeRod instead
         addTraits(MaterialIds.blazingBone,  SkullStats.ID, TinkerModifiers.firebreath.getId(), ModifierIds.blazeDisguise);

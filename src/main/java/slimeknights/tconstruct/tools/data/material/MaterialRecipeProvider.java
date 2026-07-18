@@ -210,6 +210,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         metalMaterialRecipe(consumer, MaterialIds.silver,   folder, "silver", true);
         metalMaterialRecipe(consumer, MaterialIds.lead,     folder, "lead", true);
         metalMaterialRecipe(consumer, MaterialIds.aluminum, folder, "aluminum", true);
+        metalMaterialRecipe(consumer, MaterialIds.andesiteAlloy, folder, "andesite_alloy", true);
         materialRecipe(withCondition(consumer, tagCondition("treated_wood")),  MaterialIds.treatedWood, Ingredient.of(getItemTag(COMMON, "treated_wood")), 1, 1, folder + "treated_wood");
         // no whitestone, use repair kits
         // tier 3 (mod integration)
@@ -224,6 +225,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         metalMaterialRecipe(consumer, MaterialIds.steeleaf,          folder, "steeleaf",           true);
         metalMaterialRecipe(consumer, MaterialIds.polyethylene,      folder, "polyethylene",       true);
         metalMaterialRecipe(consumer, MaterialIds.polyvinylChloride, folder, "polyvinyl_chloride", true);
+        metalMaterialRecipe(consumer, MaterialIds.wroughtIron,       folder, "wrought_iron",       true);
         // no plated slimewood, use repair kits
         // tier 4 (mod integration)
         metalMaterialRecipe(consumer, MaterialIds.fiery, folder, "fiery", true);
@@ -302,6 +304,8 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         compatMeltingCasting(consumer, MaterialIds.silver,   TinkerFluids.moltenSilver,   folder);
         compatMeltingCasting(consumer, MaterialIds.lead,     TinkerFluids.moltenLead,     folder);
         compatMeltingCasting(consumer, MaterialIds.aluminum, TinkerFluids.moltenAluminum, folder);
+        compatMeltingCasting(consumer, MaterialIds.andesiteAlloy, TinkerFluids.moltenAndesiteAlloy, folder);
+        materialComposite(consumer, MaterialIds.andesite, MaterialIds.andesiteAlloy, TinkerFluids.moltenIron, 20, folder);
         whitestoneCasting(consumer, TinkerFluids.moltenAluminum, folder);
         whitestoneCasting(consumer, TinkerFluids.moltenTin,      folder);
         whitestoneCasting(consumer, TinkerFluids.moltenZinc,     folder);
@@ -324,6 +328,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         compatMeltingCasting(consumer, MaterialIds.bronze,       TinkerFluids.moltenBronze,       "tin",    folder);
         compatMeltingCasting(consumer, MaterialIds.steeleaf,     TinkerFluids.moltenSteeleaf,     folder);
         compatMeltingCasting(consumer, MaterialIds.polyethylene, TinkerFluids.moltenPolyethylene, folder);
+        compatMeltingCasting(consumer, MaterialIds.wroughtIron,  TinkerFluids.moltenWroughtIron,  folder);
         // polyvinyl chloride will decompose during melting and casting, leaving only polyethylene
         compatMelting(consumer, MaterialIds.polyvinylChloride, TinkerFluids.moltenPolyethylene, folder);
         compatCasting(consumer, MaterialIds.polyethylene, TinkerFluids.moltenPolyvinylChloride, folder);

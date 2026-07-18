@@ -164,6 +164,7 @@ public final class TinkerFluids extends TinkerModule {
 
     // compat ores
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenTin      = FLUIDS.registerCompatMetal("tin", hot("tin").temperature(525).lightLevel(12));
+    public static final FlowingFluidObject<ForgeFlowingFluid> moltenWroughtIron = FLUIDS.registerCompatMetal("wrought_iron", hot("wrought_iron").temperature(1175).lightLevel(12));
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenAluminum = FLUIDS.registerCompatMetal("aluminium", hot("aluminium").temperature(725).lightLevel(12));
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenLead     = FLUIDS.registerCompatMetal("lead", hot("lead").temperature(630).lightLevel(12));
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenSilver   = FLUIDS.registerCompatMetal("silver", hot("silver").temperature(1090).lightLevel(12));
@@ -180,6 +181,7 @@ public final class TinkerFluids extends TinkerModule {
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenPolyvinylChloride = FLUIDS.registerCompatMetal("polyvinyl_chloride", cool("polyvinyl_chloride").temperature(470));
 
     // compat alloys
+    public static final FlowingFluidObject<ForgeFlowingFluid> moltenAndesiteAlloy = FLUIDS.registerCompatMetal("andesite_alloy", hot("andesite_alloy").temperature(1100).lightLevel(12));
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenBronze     = FLUIDS.registerCompatMetal("bronze", hot("bronze").temperature(1000).lightLevel(10));
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenBrass      = FLUIDS.registerCompatMetal("brass", hot("brass").temperature(905).lightLevel(10));
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenElectrum   = FLUIDS.registerCompatMetal("electrum", hot("electrum").temperature(1060).lightLevel(10));
@@ -341,6 +343,7 @@ public final class TinkerFluids extends TinkerModule {
             registerDispenserBehavior(moltenKnightslime, dispenseBucket);
             // compat ores
             registerDispenserBehavior(moltenTin, dispenseBucket);
+            registerDispenserBehavior(moltenWroughtIron, dispenseBucket);
             registerDispenserBehavior(moltenAluminum, dispenseBucket);
             registerDispenserBehavior(moltenLead, dispenseBucket);
             registerDispenserBehavior(moltenSilver, dispenseBucket);
@@ -353,6 +356,7 @@ public final class TinkerFluids extends TinkerModule {
             registerDispenserBehavior(moltenChromium, dispenseBucket);
             registerDispenserBehavior(moltenCadmium, dispenseBucket);
             // compat alloys
+            registerDispenserBehavior(moltenAndesiteAlloy, dispenseBucket);
             registerDispenserBehavior(moltenBronze, dispenseBucket);
             registerDispenserBehavior(moltenBrass, dispenseBucket);
             registerDispenserBehavior(moltenElectrum, dispenseBucket);
@@ -448,6 +452,7 @@ public final class TinkerFluids extends TinkerModule {
 
         // compat ores
         acceptMolten(output, moltenTin);
+        acceptCompat(output, moltenWroughtIron, MaterialIds.wroughtIron);
         acceptCompat(output, moltenAluminum, MaterialIds.aluminum);
         acceptCompat(output, moltenLead, MaterialIds.lead);
         acceptCompat(output, moltenSilver, MaterialIds.silver);
@@ -463,6 +468,7 @@ public final class TinkerFluids extends TinkerModule {
         acceptCompat(output, moltenPolyethylene, MaterialIds.polyethylene);
         acceptCompat(output, moltenPolyvinylChloride, MaterialIds.polyvinylChloride);
         // compat alloys
+        acceptCompat(output, moltenAndesiteAlloy, MaterialIds.andesiteAlloy);
         acceptCompat(output, moltenBronze, MaterialIds.bronze);
         acceptMolten(output, moltenBrass, MaterialIds.platedSlimewood);
         acceptCompat(output, moltenElectrum, MaterialIds.electrum);

@@ -84,10 +84,13 @@ class GTConstructRecipesTest extends BaseMcTest {
   void compatMaterialFluidsRemainTagOnlyInPublicMapButEnterCatalog() {
     assertThat(TinkerFluids.isCompatMaterialFluid(TinkerFluids.moltenIron)).isTrue();
     assertThat(TinkerFluids.moltenIron.getTag().location()).isEqualTo(ResourceLocation.tryBuild("forge", "iron"));
+    assertThat(TinkerFluids.isCompatMaterialFluid(TinkerFluids.moltenWroughtIron)).isTrue();
+    assertThat(TinkerFluids.moltenWroughtIron.getTag().location()).isEqualTo(ResourceLocation.tryBuild("forge", "wrought_iron"));
     assertThat(GTConstructFluid.getAllTinkersFluids())
       .doesNotContainKey(TinkerFluids.moltenIron.getId());
     assertThat(TinkersFluidCatalog.instance().containsTag(TinkerFluids.moltenCopper.getTag())).isTrue();
     assertThat(TinkersFluidCatalog.instance().containsTag(TinkerFluids.moltenSteel.getTag())).isTrue();
+    assertThat(TinkersFluidCatalog.instance().containsTag(TinkerFluids.moltenWroughtIron.getTag())).isTrue();
   }
 
   @Test
