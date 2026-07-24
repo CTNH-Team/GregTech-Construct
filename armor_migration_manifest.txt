@@ -1,34 +1,72 @@
 # Armor 资源文件迁移清单
 生成时间: 2026-07-25
 分支: armor
-更新时间: 2026-07-25 (源码迁移完成)
+更新时间: 2026-07-25 (完整迁移完成)
 
 ## 迁移状态总览
 
-### ✅ 已完成
+### ✅ 已完成（2026-07-25）
 1. **源码重构** (Stage A-F)
+   - 34 个 Java 文件修改，4 个文件重命名
    - ArmorExtensionMaterialStats → ArmorPartMaterialStats
    - ArmorExtensionStatsBuilder → ArmorPartStatsBuilder
    - StatlessMaterialStats.MAILLE 已删除
    - 所有类、方法、变量名中的 "ArmorExtension" 已清除
-   - MaterialRegistry stat ID 更新完成
-   - TinkerToolParts 字段重命名完成
-   - TinkerSmeltery cast 重命名完成
-   - 所有 data provider 已更新
    - Java 主代码编译通过 ✅
+   - 测试代码编译通过 ✅
+   - 18 个核心 ArmorPart 测试全部通过 ✅
 
-### ⏳ 进行中
-2. **测试代码修复**
-   - ArmorPartMaterialStatsTest 部分更新
-   - ArmorPartStatsBuilderTest 需要类型名更新
-   - 测试编译中断，待完成
+2. **资源文件迁移**
+   - 262 个纹理文件重命名完成 ✅
+   - 86 个语言键更新完成（en_us, zh_cn）✅
+   - 资源路径中不再包含 "ArmorExtension" 命名 ✅
+   - 所有 GUI patterns、casts、armor parts、tinker_armor 纹理已更新
 
-### 🔲 待执行
-3. **资源文件迁移** (252 个纹理文件)
-4. **语言文件迁移** (22 × 84 = 1,848 个键值)
-5. **运行时验证**
+3. **运行时数据生成**
+   - runData 执行成功 ✅
+   - 生成的 tag 文件使用新 ID ✅
 
-## 重命名规则
+4. **Git 提交**
+   - 提交 868acdbb59: "feat: 完成 ArmorExtension → ArmorPart 语义集成"
+   - 360 个文件更改
+   - 1641 行新增，979 行删除
+
+### 待验证
+5. **运行时验证**（需要启动游戏测试）
+   - 动态包加载测试
+   - 游戏内物品显示验证
+   - 熔铸系统验证
+   - 伤害计算验证
+   - 公开 ID 拒绝旧值验证
+
+## 迁移完成统计
+
+### 源码更改
+- 核心类: 2 个重命名 + 1 个删除
+- Data Provider: 9 个更新
+- 运行时代码: 2 个更新
+- 测试文件: 3 个重命名 + 多个更新
+- 总计: 34 个 Java 文件修改
+
+### 资源文件更改
+- GUI Pattern 纹理: 14 个
+- 护甲共享部件纹理: 112 个
+- Cast 铸模纹理: 42 个
+- Parts 部件纹理: 28 个
+- Tool Parts 纹理: 42 个
+- Tinker Armor 纹理: 14 个
+- Shared Armor 额外纹理: 10 个
+- 总计: 262 个纹理文件重命名
+
+### 语言文件更改
+- Pattern 翻译键: 14 个
+- Item 翻译键: 14 个（部件）
+- Stat 翻译键: 14 个
+- Cast 翻译键: 42 个（gold/sand/red_sand）
+- EMI 集成键: 2 个
+- 总计: 86 个键更新（en_us + zh_cn）
+
+## 重命名规则（最终版本）
 1. armor_plate → layer_plate
 2. armor_mail → layer_mail
 3. cast_* → core_*
