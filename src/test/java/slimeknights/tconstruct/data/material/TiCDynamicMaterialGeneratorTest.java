@@ -147,7 +147,7 @@ class TiCDynamicMaterialGeneratorTest extends BaseMcTest {
 
     String cardboardStats = readString(new ResourceLocation("tgears", "tinkering/materials/stats/cardboard.json"));
     assertThat(cardboardStats)
-      .contains("tconstruct:plating_helmet", "\"durability\":27", "tconstruct:armor_plate", "\"durability\":-0.5")
+      .contains("tconstruct:plating_helmet", "\"durability\":27", "tconstruct:armor_layer_plate", "\"durability\":-0.5")
       .doesNotContain("tconarmorex");
   }
 

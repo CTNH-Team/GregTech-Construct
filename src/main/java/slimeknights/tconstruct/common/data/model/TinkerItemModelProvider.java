@@ -73,6 +73,14 @@ public class TinkerItemModelProvider extends ItemModelProvider implements Runtim
         });
         part(TinkerToolParts.maille);
         part(TinkerToolParts.shieldCore, "armor/plate/shield/core");
+        part(TinkerToolParts.layerPlate);
+        part(TinkerToolParts.layerMail);
+        for (ArmorItem.Type slot : ArmorItem.Type.values()) {
+            String name = slot.getName();
+            part(getResource("core_" + name), "parts/core_" + name);
+            part(getResource("frame_" + name), "parts/frame_" + name);
+            part(getResource("heavy_core_" + name), "parts/heavy_core_" + name);
+        }
         part(TinkerToolParts.linear);
         //gt
         part(TinkerToolParts.wrenchHead, "wrench/head_part");
@@ -140,6 +148,20 @@ public class TinkerItemModelProvider extends ItemModelProvider implements Runtim
         cast(TinkerSmeltery.leggingsPlatingCast);
         cast(TinkerSmeltery.bootsPlatingCast);
         cast(TinkerSmeltery.mailleCast);
+        cast(TinkerSmeltery.layerPlateCast);
+        cast(TinkerSmeltery.layerMailCast);
+        cast(TinkerSmeltery.armorCoreHelmetCast);
+        cast(TinkerSmeltery.armorCoreChestplateCast);
+        cast(TinkerSmeltery.armorCoreLeggingsCast);
+        cast(TinkerSmeltery.armorCoreBootsCast);
+        cast(TinkerSmeltery.frameHelmetCast);
+        cast(TinkerSmeltery.frameChestplateCast);
+        cast(TinkerSmeltery.frameLeggingsCast);
+        cast(TinkerSmeltery.frameBootsCast);
+        cast(TinkerSmeltery.armorHeavyCoreHelmetCast);
+        cast(TinkerSmeltery.armorHeavyCoreChestplateCast);
+        cast(TinkerSmeltery.armorHeavyCoreLeggingsCast);
+        cast(TinkerSmeltery.armorHeavyCoreBootsCast);
         cast(TinkerSmeltery.linearCast);
         // dummy parts
         basicEnumItems(TinkerSmeltery.dummyPlating, "tool/parts/plating_");

@@ -18,35 +18,35 @@ final class ArmorItemModelBuilder {
   private static final Map<String,List<PartEntry>> ITEM_PARTS = Map.ofEntries(
     entry("standard", parts(
       part("linear", "family", "linear", 2, 2),
-      part("cast", "shared", "cast", 0, 0)
+      part("core", "shared", "core", 0, 0)
     )),
     entry("knights", parts(
       part("linear", "family", "linear", 2, 2),
-      part("massive_cast", "shared", "massive_cast", 0, 0)
+      part("heavy_core", "shared", "heavy_core", 0, 0)
     )),
     entry("explorers", parts(
       part("linear", "family", "linear", 2, 2),
-      part("armor_mail", "shared", "armor_mail", 1, 1),
-      part("frame", "shared", "frame_of", 0, 0)
+      part("layer_mail", "shared", "layer_mail", 1, 1),
+      part("frame", "shared", "frame", 0, 0)
     )),
     entry("light_composite", parts(
-      part("armor_mail", "shared", "armor_mail", 1, 1),
-      part("frame", "shared", "frame_of", 0, 0),
+      part("layer_mail", "shared", "layer_mail", 1, 1),
+      part("frame", "shared", "frame", 0, 0),
       part("maille", "composite", "maille", 2, 3)
     )),
     entry("heavy_composite", parts(
-      part("armor_plate", "shared", "armor_plate", 1, 1),
-      part("frame", "shared", "frame_of", 0, 0),
+      part("layer_plate", "shared", "layer_plate", 1, 1),
+      part("frame", "shared", "frame", 0, 0),
       part("maille", "composite", "maille", 2, 3)
     )),
     entry("light_forged", parts(
-      part("armor_mail", "shared", "armor_mail", 2, 2),
-      part("frame", "shared", "frame_of", 0, 0),
+      part("layer_mail", "shared", "layer_mail", 2, 2),
+      part("frame", "shared", "frame", 0, 0),
       part("plating", "forged", "plating", 1, 1)
     )),
     entry("heavy_forged", parts(
-      part("armor_plate", "shared", "armor_plate", 2, 2),
-      part("frame", "shared", "frame_of", 0, 0),
+      part("layer_plate", "shared", "layer_plate", 2, 2),
+      part("frame", "shared", "frame", 0, 0),
       part("plating", "forged", "plating", 1, 1)
     ))
   );

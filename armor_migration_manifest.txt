@@ -592,17 +592,112 @@ function Rename-ArmorFiles {
    - /frame_of_{slot} → /frame_{slot}
    - /massive_cast_{slot} → /heavy_core_{slot}
 
-**Commit**: `42ee7ed0f8 - fix: 修复 sprite provider 纹理路径引用`
-**Commit**: `8f4eaaccef - fix: 重命名遗漏的 massive_core_leggings 纹理文件`
+**Commit**: `562a02c83d - fix: 重命名 shared 目录中遗漏的 cast.png 文件`
 
-**遗漏纹理**（在第二轮运行时发现）:
-- massive_core_leggings.png → heavy_core_leggings.png
-- massive_core_leggings_metal_contrast.png → heavy_core_leggings_metal_contrast.png
+**遗漏纹理总结**（共 14 个文件补漏）:
+1. tinker_armor 目录: 2 个 (massive_core_leggings.png + _metal_contrast.png)
+2. item/parts 目录: 8 个 (massive_core_*.png, 4个槽位 × 2个变体)
+3. item/armor/shared 目录: 4 个 (各槽位的 cast.png)
 
-总共完成 264 个纹理文件重命名（原计划 262 + 补漏 2）。
+**总计完成 276 个纹理文件重命名**（原计划 262 + 补漏 14）。
 
-### F.3 运行时验证 (进行中 - 第 2 次尝试)
-客户端已启动（Task ID: bxoxeri9c），正在验证：
+### F.3 运行时验证 (第 5 次启动 - 成功)
+**启动状态**: ✅ **游戏成功启动，无崩溃！**
+
+**验证日志** (2026-07-25 05:22-05:23):
+- [x] 游戏启动成功 - 无 "Missing sprite" 错误
+- [x] 用户设置完成 (Setting user: Dev at 05:22:24)
+- [x] EMI 配方系统加载成功 (8632ms)
+- [x] 无材料纹理生成崩溃
+- [ ] 动态材料包加载新 stat ID - 需要游戏内检查
+- [ ] 材料书显示正确属性 - 需要游戏内检查
+- [ ] 熔铸系统使用新 ID - 需要游戏内检查
+- [ ] 护甲制作和装备正常 - 需要游戏内检查
+- [ ] 伤害计算正确 - 需要游戏内测试
+- [ ] 旧 ID 触发硬失败 - 需要游戏内验证
+
+**下一步**: 需要在运行的游戏中验证材料系统、熔铸系统、护甲功能和伤害计算。
+
+### F.4 语言文件翻译键修复 (2026-07-25 05:45)
+**问题发现**: 语言文件中的 stat 翻译键与代码定义的 stat ID 不匹配。
+
+**根本原因**:
+- MaterialStatType 使用完整 ResourceLocation 作为 ID (如 `tconstruct:armor_layer_plate`)
+- 翻译键通过 `Util.makeDescriptionId("stat", id)` 生成，格式为 `stat.{namespace}.{path}`
+- 原语言文件中使用短键名（如 `layer_plate`），缺少 `armor_` 前缀，与 stat ID 的 path 部分不匹配
+
+**修复内容** (14 个翻译键添加 armor_ 前缀):
+
+中文和英文语言文件同步修改：
+- `frame_helmet` → `armor_frame_helmet`
+- `frame_chestplate` → `armor_frame_chestplate`
+- `frame_leggings` → `armor_frame_leggings`
+- `frame_boots` → `armor_frame_boots`
+- `core_helmet` → `armor_core_helmet`
+- `core_chestplate` → `armor_core_chestplate`
+- `core_leggings` → `armor_core_leggings`
+- `core_boots` → `armor_core_boots`
+- `heavy_core_helmet` → `armor_heavy_core_helmet`
+- `heavy_core_chestplate` → `armor_heavy_core_chestplate`
+- `heavy_core_leggings` → `armor_heavy_core_leggings`
+- `heavy_core_boots` → `armor_heavy_core_boots`
+- `layer_plate` → `armor_layer_plate`
+- `layer_mail` → `armor_layer_mail`
+
+**影响文件**:
+- src/main/resources/assets/tconstruct/lang/en_us.json
+- src/main/resources/assets/tconstruct/lang/zh_cn.json
+
+**Commit**: `3802afc7f7 - fix: 修正护甲 stat 翻译键，添加 armor_ 前缀`
+
+**验证点**:
+- ✅ 代码中 ArmorPartMaterialStats 使用完整 ID 名称（armor_layer_plate 等）
+- ✅ MaterialRegistry 注册使用新常量（ARMOR_LAYER_PLATE, CORE_TYPES 等）
+- ✅ 语言文件翻译键现在与 stat ID 完全匹配
+- ✅ 代码重新编译成功
+- [ ] 需要游戏内验证材料书显示的 stat 名称是否正确显示翻译
+
+**下一步 - 游戏内验证清单**:
+需要用户在游戏中完成以下验证（当前客户端 Task ID: bxoxeri9c）：
+
+1. **材料书翻译验证** (最重要 - 验证语言文件修复)
+   - 打开 Tinkers' Construct 材料书
+   - 查看任意材料（如 Iron）的属性面板
+   - 检查护甲部件的 stat 显示名称：
+     * 应显示中文翻译（如"护甲板""头盔铸件"）
+     * 不应显示原始键名（stat.tconstruct.armor_layer_plate）
+     * 确认以下 stat 均有正确翻译：
+       - armor_layer_plate → "护甲板"
+       - armor_layer_mail → "锁链护甲"
+       - armor_core_helmet/chestplate/leggings/boots → "头盔/胸甲/胫甲/靴子 铸件"
+       - armor_frame_helmet/chestplate/leggings/boots → "头盔/胸甲/护腿/靴子 框架"
+       - armor_heavy_core_* → "重质...铸件"
+
+2. **动态材料包加载验证**
+   - 创建或加载世界
+   - 查看日志确认材料数据加载无错误
+   - 确认没有 "Missing stat" 或 "Unknown stat ID" 警告
+
+3. **熔铸系统验证**
+   - 使用熔炼炉熔化金属
+   - 使用新命名的铸模（core, frame, heavy_core, layer_plate, layer_mail）
+   - 确认铸造护甲部件成功
+
+4. **护甲制作和装备验证**
+   - 在工匠站使用护甲部件制作完整护甲
+   - 装备护甲
+   - 查看护甲属性面板，确认显示正确
+
+5. **伤害计算验证**
+   - 装备护甲后受到伤害
+   - 确认伤害计算正常，护甲值正确工作
+
+6. **向后兼容性验证**（应该失败）
+   - 尝试在命令或数据包中使用旧 stat ID
+   - 确认系统报错而非静默降级
+   - 旧 ID 如: armor_plate, armor_mail, cast_helmet, frame_of_helmet, massive_cast_helmet
+
+客户端已启动（Task ID: bxoxeri9c），等待用户验证结果。
 - [ ] 游戏启动成功
 - [ ] 动态材料包加载新 stat ID
 - [ ] 材料书显示正确属性
