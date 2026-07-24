@@ -48,27 +48,42 @@ final class ArmorItemModelBuilder {
       part("layer_plate", "shared", "layer_plate", 2, 2),
       part("frame", "shared", "frame", 0, 0),
       part("plating", "forged", "plating", 1, 1)
+    )),
+    entry("mix_composite", parts(
+      part("layer_mail", "shared", "layer_mail", 1, 1),
+      part("layer_plate", "shared", "layer_plate", 2, 2),
+      part("frame", "shared", "frame", 0, 0),
+      part("maille", "composite", "maille", 3, 4)
+    )),
+    entry("mix_composite_other", parts(
+      part("layer_plate", "shared", "layer_plate", 1, 1),
+      part("layer_mail", "shared", "layer_mail", 2, 2),
+      part("frame", "shared", "frame", 0, 0),
+      part("maille", "composite", "maille", 3, 4)
+    )),
+    entry("mix_forged", parts(
+      part("layer_mail", "shared", "layer_mail", 2, 2),
+      part("layer_plate", "shared", "layer_plate", 3, 3),
+      part("frame", "shared", "frame", 0, 0),
+      part("plating", "forged", "plating", 1, 1)
+    )),
+    entry("mix_forged_other", parts(
+      part("layer_plate", "shared", "layer_plate", 2, 2),
+      part("layer_mail", "shared", "layer_mail", 3, 3),
+      part("frame", "shared", "frame", 0, 0),
+      part("plating", "forged", "plating", 1, 1)
     ))
   );
-  private static final Map<String,String> MIXED_PARTS = Map.of(
-    "mix_composite", "light_composite",
-    "mix_composite_other", "heavy_composite",
-    "mix_forged", "light_forged",
-    "mix_forged_other", "heavy_forged"
-  );
+  private static final Map<String,String> MIXED_PARTS = Map.of();
 
   private ArmorItemModelBuilder() {}
 
   static void write(DynamicResourceRegistrar registrar) {
     ITEM_PARTS.forEach((family, parts) -> {
-      for (ArmorItem.Type slot : ArmorItem.Type.values()) {
+      // Mixed armor families only have chest and legs
+      ArmorItem.Type[] slots = family.startsWith("mix_") ? MIXED_SLOTS : ArmorItem.Type.values();
+      for (ArmorItem.Type slot : slots) {
         write(registrar, family, slot, parts, isSmall(slot));
-      }
-    });
-    MIXED_PARTS.forEach((family, source) -> {
-      List<PartEntry> parts = ITEM_PARTS.get(source);
-      for (ArmorItem.Type slot : MIXED_SLOTS) {
-        write(registrar, family, slot, parts, false);
       }
     });
   }
