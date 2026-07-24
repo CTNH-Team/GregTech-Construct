@@ -147,9 +147,9 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
       .contains("armor_plate")
       .contains("armor_mail")
       .contains("frame_of")
-      .doesNotContain("armor_plate")
-      .doesNotContain("armor_mail")
-      .doesNotContain("frame_of");
+      .doesNotContain("\"layer_plate\"")
+      .doesNotContain("\"layer_mail\"")
+      .doesNotContain("\"frame\"");
     for (String family : ALL_ARMOR_PART_FAMILIES) {
       for (String slot : ALL_ARMOR_PART_SLOTS) {
         assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "models/item/" + family + "_" + slot + ".json")))

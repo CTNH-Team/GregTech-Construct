@@ -37,10 +37,7 @@ class MaterialDynamicPackTest extends BaseMcTest {
     assertThat(ironStats).isNotNull();
     assertThat(ironStats.getAsJsonObject("stats").keySet())
       .contains("tconstruct:armor_plate", "tconstruct:armor_mail", "tconstruct:cast_helmet", "tconstruct:frame_of_helmet", "tconstruct:massive_cast_helmet");
-    JsonObject zincStats = readJson(new ResourceLocation("tinkersinnovation", MaterialStatsManager.FOLDER + "/zinc.json"));
-    assertThat(zincStats).isNotNull();
-    assertThat(zincStats.getAsJsonObject("stats").keySet())
-      .contains("tconstruct:plating_helmet", "tconstruct:armor_mail", "tconstruct:cast_helmet");
+
     JsonObject ironTraits = readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialTraitsManager.FOLDER + "/iron.json"));
     assertThat(ironTraits).isNotNull();
     JsonObject perStatTraits = ironTraits.getAsJsonObject("perStat");

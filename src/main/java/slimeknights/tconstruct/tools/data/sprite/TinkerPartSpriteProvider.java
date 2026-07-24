@@ -6,7 +6,6 @@ import slimeknights.tconstruct.library.client.data.material.AbstractPartSpritePr
 import slimeknights.tconstruct.library.materials.stats.MaterialStatType;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
-import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
 import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
 
@@ -90,7 +89,7 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
         addTexture("tinker_armor/plate/maille_wings", ARMOR_MAILLE).disallowAnimated();
         buildTool("armor/plate/shield")
                 .addBreakablePart("plating", PlatingMaterialStats.SHIELD.getId())
-                .addBreakablePart("cast", StatlessMaterialStats.SHIELD_CORE.getIdentifier())
+                .addBreakablePart("core", StatlessMaterialStats.SHIELD_CORE.getIdentifier())
                 // withLarge wants to use a subfolder, easier to just add another part than special casing
                 .addBreakablePart("plating_large", PlatingMaterialStats.SHIELD.getId())
                 .addBreakablePart("core_large", StatlessMaterialStats.SHIELD_CORE.getIdentifier());
