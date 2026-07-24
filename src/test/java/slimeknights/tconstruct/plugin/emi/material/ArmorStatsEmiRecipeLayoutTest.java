@@ -32,11 +32,11 @@ class ArmorStatsEmiRecipeLayoutTest extends BaseMcTest {
 
   @Test
   void armorStatsUseDistinctPagesForEachExtensionModule() {
-    assertThat(MaterialStatsEmiConstants.armorGroupKey(new MaterialStatsId("tconstruct", "armor_plate")))
+    assertThat(MaterialStatsEmiConstants.armorGroupKey(new MaterialStatsId("tconstruct", "armor_layer_plate")))
         .isEqualTo("plate");
-    assertThat(MaterialStatsEmiConstants.armorGroupKey(new MaterialStatsId("tconstruct", "cast_helmet")))
+    assertThat(MaterialStatsEmiConstants.armorGroupKey(new MaterialStatsId("tconstruct", "armor_core_helmet")))
         .isEqualTo("cast");
-    assertThat(MaterialStatsEmiConstants.armorGroupKey(new MaterialStatsId("tconstruct", "frame_of_boots")))
+    assertThat(MaterialStatsEmiConstants.armorGroupKey(new MaterialStatsId("tconstruct", "armor_frame_boots")))
         .isEqualTo("frame");
     assertThat(MaterialStatsEmiConstants.armorGroupKey(new MaterialStatsId("tconstruct", "linear")))
         .isEqualTo("linear");
