@@ -20,7 +20,7 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
     public static final MaterialStatsId WOOD = new MaterialStatsId(TConstruct.MOD_ID, "wood");
     public static final MaterialStatsId SLIMESUIT = new MaterialStatsId(TConstruct.MOD_ID, "slimesuit");
     public static final MaterialStatsId ARMOR_PLATING = new MaterialStatsId(TConstruct.MOD_ID, "armor_plating");
-    public static final MaterialStatsId ARMOR_LAYER_MAILLE = new MaterialStatsId(TConstruct.MOD_ID, "armor_maille");
+    public static final MaterialStatsId ARMOR_MAILLE = new MaterialStatsId(TConstruct.MOD_ID, "armor_maille");
     public static final MaterialStatsId ARMOR_CUIRASS = new MaterialStatsId(TConstruct.MOD_ID, "armor_cuirass");
     public static final MaterialStatsId INGOT = new MaterialStatsId(TConstruct.MOD_ID, "ingot");
     public static final MaterialStatsId STORAGE_BLOCK = new MaterialStatsId(TConstruct.MOD_ID, "storage_block");
@@ -85,12 +85,12 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
         }
         addTexture("tinker_armor/plate/plating_armor", ARMOR_PLATING).disallowAnimated();
         addTexture("tinker_armor/plate/plating_leggings", ARMOR_PLATING).disallowAnimated();
-        addTexture("tinker_armor/plate/maille_armor", ARMOR_LAYER_MAILLE).disallowAnimated();
-        addTexture("tinker_armor/plate/maille_leggings", ARMOR_LAYER_MAILLE).disallowAnimated();
-        addTexture("tinker_armor/plate/maille_wings", ARMOR_LAYER_MAILLE).disallowAnimated();
+        addTexture("tinker_armor/plate/maille_armor", ARMOR_MAILLE).disallowAnimated();
+        addTexture("tinker_armor/plate/maille_leggings", ARMOR_MAILLE).disallowAnimated();
+        addTexture("tinker_armor/plate/maille_wings", ARMOR_MAILLE).disallowAnimated();
         buildTool("armor/plate/shield")
                 .addBreakablePart("plating", PlatingMaterialStats.SHIELD.getId())
-                .addBreakablePart("core", StatlessMaterialStats.SHIELD_CORE.getIdentifier())
+                .addBreakablePart("cast", StatlessMaterialStats.SHIELD_CORE.getIdentifier())
                 // withLarge wants to use a subfolder, easier to just add another part than special casing
                 .addBreakablePart("plating_large", PlatingMaterialStats.SHIELD.getId())
                 .addBreakablePart("core_large", StatlessMaterialStats.SHIELD_CORE.getIdentifier());
@@ -176,12 +176,12 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
     }
 
     private void addArmorPartSprites() {
-        addTexture("tinker_armor/core_armor", statIds(ArmorPartMaterialStats.CORE_TYPES, ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.BOOTS));
-        addTexture("tinker_armor/core_leggings", statId(ArmorPartMaterialStats.CORE_TYPES, ArmorItem.Type.LEGGINGS));
-        addTexture("tinker_armor/heavy_core_armor", statIds(ArmorPartMaterialStats.HEAVY_CORE_TYPES, ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.BOOTS));
-        addTexture("tinker_armor/heavy_core_leggings", statId(ArmorPartMaterialStats.HEAVY_CORE_TYPES, ArmorItem.Type.LEGGINGS));
-        addTexture("tinker_armor/frame_armor", statIds(ArmorPartMaterialStats.FRAME_TYPES, ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.BOOTS));
-        addTexture("tinker_armor/frame_leggings", statId(ArmorPartMaterialStats.FRAME_TYPES, ArmorItem.Type.LEGGINGS));
+        addTexture("tinker_armor/cast_armor", statIds(ArmorPartMaterialStats.CAST_TYPES, ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.BOOTS));
+        addTexture("tinker_armor/cast_leggings", statId(ArmorPartMaterialStats.CAST_TYPES, ArmorItem.Type.LEGGINGS));
+        addTexture("tinker_armor/massive_cast_armor", statIds(ArmorPartMaterialStats.MASSIVE_CAST_TYPES, ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.BOOTS));
+        addTexture("tinker_armor/massive_cast_leggings", statId(ArmorPartMaterialStats.MASSIVE_CAST_TYPES, ArmorItem.Type.LEGGINGS));
+        addTexture("tinker_armor/frame_of_armor", statIds(ArmorPartMaterialStats.FRAME_TYPES, ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.BOOTS));
+        addTexture("tinker_armor/frame_of_leggings", statId(ArmorPartMaterialStats.FRAME_TYPES, ArmorItem.Type.LEGGINGS));
         addTexture("tinker_armor/plating_armor", statIds(PlatingMaterialStats.TYPES, ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.BOOTS));
         addTexture("tinker_armor/plating_leggings", statId(PlatingMaterialStats.TYPES, ArmorItem.Type.LEGGINGS));
         addTexture("tinker_armor/plating_1_armor", statIds(PlatingMaterialStats.TYPES, ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.BOOTS));
@@ -189,14 +189,14 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
         addTexture("tinker_armor/plating_2_armor", statIds(PlatingMaterialStats.TYPES, ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.BOOTS));
         addTexture("tinker_armor/plating_2_leggings", statId(PlatingMaterialStats.TYPES, ArmorItem.Type.LEGGINGS));
 
-        addTexture("tinker_armor/layer_plate_1_armor", ArmorPartMaterialStats.ARMOR_LAYER_PLATE.getId());
-        addTexture("tinker_armor/layer_plate_1_leggings", ArmorPartMaterialStats.ARMOR_LAYER_PLATE.getId());
-        addTexture("tinker_armor/layer_plate_2_armor", ArmorPartMaterialStats.ARMOR_LAYER_PLATE.getId());
-        addTexture("tinker_armor/layer_plate_2_leggings", ArmorPartMaterialStats.ARMOR_LAYER_PLATE.getId());
-        addTexture("tinker_armor/layer_mail_1_armor", ArmorPartMaterialStats.ARMOR_LAYER_MAIL.getId());
-        addTexture("tinker_armor/layer_mail_1_leggings", ArmorPartMaterialStats.ARMOR_LAYER_MAIL.getId());
-        addTexture("tinker_armor/layer_mail_2_armor", ArmorPartMaterialStats.ARMOR_LAYER_MAIL.getId());
-        addTexture("tinker_armor/layer_mail_2_leggings", ArmorPartMaterialStats.ARMOR_LAYER_MAIL.getId());
+        addTexture("tinker_armor/armor_plate_1_armor", ArmorPartMaterialStats.ARMOR_PLATE.getId());
+        addTexture("tinker_armor/armor_plate_1_leggings", ArmorPartMaterialStats.ARMOR_PLATE.getId());
+        addTexture("tinker_armor/armor_plate_2_armor", ArmorPartMaterialStats.ARMOR_PLATE.getId());
+        addTexture("tinker_armor/armor_plate_2_leggings", ArmorPartMaterialStats.ARMOR_PLATE.getId());
+        addTexture("tinker_armor/armor_mail_1_armor", ArmorPartMaterialStats.ARMOR_MAIL.getId());
+        addTexture("tinker_armor/armor_mail_1_leggings", ArmorPartMaterialStats.ARMOR_MAIL.getId());
+        addTexture("tinker_armor/armor_mail_2_armor", ArmorPartMaterialStats.ARMOR_MAIL.getId());
+        addTexture("tinker_armor/armor_mail_2_leggings", ArmorPartMaterialStats.ARMOR_MAIL.getId());
         addTexture("tinker_armor/maille_armor", ArmorPartMaterialStats.MAILLE.getId());
         addTexture("tinker_armor/maille_leggings", ArmorPartMaterialStats.MAILLE.getId());
         addTexture("tinker_armor/linear_armor", StatlessMaterialStats.LINEAR.getIdentifier());
@@ -210,16 +210,16 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
         String shared = root + "shared/";
         for (ArmorItem.Type slot : ArmorItem.Type.values()) {
             String slotName = slot.getName();
-            MaterialStatsId cast = statId(ArmorPartMaterialStats.CORE_TYPES, slot);
-            MaterialStatsId massiveCast = statId(ArmorPartMaterialStats.HEAVY_CORE_TYPES, slot);
+            MaterialStatsId cast = statId(ArmorPartMaterialStats.CAST_TYPES, slot);
+            MaterialStatsId massiveCast = statId(ArmorPartMaterialStats.MASSIVE_CAST_TYPES, slot);
             MaterialStatsId frame = statId(ArmorPartMaterialStats.FRAME_TYPES, slot);
             MaterialStatsId plating = statId(PlatingMaterialStats.TYPES, slot);
 
-            addBreakableTexture(shared + slotName + "/core", cast);
-            addBreakableTexture(shared + slotName + "/frame", frame);
-            addBreakableTexture(shared + slotName + "/heavy_core", massiveCast);
-            addBreakableTexture(shared + slotName + "/layer_plate", ArmorPartMaterialStats.ARMOR_LAYER_PLATE.getId());
-            addBreakableTexture(shared + slotName + "/layer_mail", ArmorPartMaterialStats.ARMOR_LAYER_MAIL.getId());
+            addBreakableTexture(shared + slotName + "/cast", cast);
+            addBreakableTexture(shared + slotName + "/frame_of", frame);
+            addBreakableTexture(shared + slotName + "/massive_cast", massiveCast);
+            addBreakableTexture(shared + slotName + "/armor_plate", ArmorPartMaterialStats.ARMOR_PLATE.getId());
+            addBreakableTexture(shared + slotName + "/armor_mail", ArmorPartMaterialStats.ARMOR_MAIL.getId());
             for (String family : List.of("standard", "knights", "explorers")) {
                 addBreakableTexture(root + family + "/" + slotName + "/linear", StatlessMaterialStats.LINEAR.getIdentifier());
             }
@@ -229,14 +229,14 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
     }
 
     private void addArmorPartPartSprites(String root) {
-        addTexture(root + "/layer_plate", ArmorPartMaterialStats.ARMOR_LAYER_PLATE.getId());
-        addTexture(root + "/layer_mail", ArmorPartMaterialStats.ARMOR_LAYER_MAIL.getId());
+        addTexture(root + "/armor_plate", ArmorPartMaterialStats.ARMOR_PLATE.getId());
+        addTexture(root + "/armor_mail", ArmorPartMaterialStats.ARMOR_MAIL.getId());
         addTexture(root + "/linear", StatlessMaterialStats.LINEAR.getIdentifier());
         for (ArmorItem.Type slot : ArmorItem.Type.values()) {
             String slotName = slot.getName();
-            addTexture(root + "/core_" + slotName, statId(ArmorPartMaterialStats.CORE_TYPES, slot));
-            addTexture(root + "/frame_" + slotName, statId(ArmorPartMaterialStats.FRAME_TYPES, slot));
-            addTexture(root + "/heavy_core_" + slotName, statId(ArmorPartMaterialStats.HEAVY_CORE_TYPES, slot));
+            addTexture(root + "/cast_" + slotName, statId(ArmorPartMaterialStats.CAST_TYPES, slot));
+            addTexture(root + "/frame_of_" + slotName, statId(ArmorPartMaterialStats.FRAME_TYPES, slot));
+            addTexture(root + "/massive_cast_" + slotName, statId(ArmorPartMaterialStats.MASSIVE_CAST_TYPES, slot));
         }
     }
 

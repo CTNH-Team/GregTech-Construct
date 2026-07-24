@@ -16,14 +16,14 @@ import static slimeknights.tconstruct.library.materials.MaterialRegistry.*;
 
 public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvider {
     private static final MaterialStatsId[] ARMOR_CASTS = {
-      ArmorPartMaterialStats.ARMOR_CORE_HELMET.getId(),
-      ArmorPartMaterialStats.ARMOR_CORE_CHESTPLATE.getId(),
-      ArmorPartMaterialStats.ARMOR_CORE_LEGGINGS.getId(),
-      ArmorPartMaterialStats.ARMOR_CORE_BOOTS.getId(),
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_HELMET.getId(),
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_CHESTPLATE.getId(),
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_LEGGINGS.getId(),
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_BOOTS.getId()
+      ArmorPartMaterialStats.CAST_HELMET.getId(),
+      ArmorPartMaterialStats.CAST_CHESTPLATE.getId(),
+      ArmorPartMaterialStats.CAST_LEGGINGS.getId(),
+      ArmorPartMaterialStats.CAST_BOOTS.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_HELMET.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_CHESTPLATE.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_LEGGINGS.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_BOOTS.getId()
     };
     private static final MaterialId[] ARMOR_CAST_TRAIT_MATERIALS = {
       MaterialIds.aluminum,

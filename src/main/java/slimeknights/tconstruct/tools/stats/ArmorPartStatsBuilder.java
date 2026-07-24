@@ -4,58 +4,83 @@ import net.minecraft.world.item.ArmorItem;
 import slimeknights.tconstruct.library.materials.stats.IMaterialStats;
 import slimeknights.tconstruct.tools.modules.ArmorModuleBuilder;
 
-/**
- * Armor part 材料统计数据的构建器
- *
- * 用于在 MaterialStatsDataProvider#addArmor() 中显式声明每个 armor 材料的完整 stat bundle。
- *
- * 职责：
- * - 将命名字段转换为 IMaterialStats[] 数组
- * - 提供清晰的具名 API 以避免槽位顺序混淆
- * - 定义可选字段的默认值
- *
- * 不负责：
- * - 保存 MaterialId 或材料注册表
- * - 注册 item/cast/sprite
- * - 任何运行时行为
- */
+/** Builds the complete material stat bundle for armor plating, maille, and armor parts. */
 public final class ArmorPartStatsBuilder {
-  private final float durabilityBase;
+  private final PlatingMaterialStats.Builder plating = PlatingMaterialStats.builder();
+  private float mailleDurability;
+  private float mailleArmor;
+  private float mailleArmorStrength;
+  private float mailleToughness;
+  private float partDurability;
   private float helmet;
   private float chestplate;
   private float leggings;
   private float boots;
-  private float armorStrength = 0f;
-  private float armorToughness = 0f;
+  private float armorStrength;
+  private float armorToughness;
   private float reduction;
   private float protection;
-  private float knockbackResistance = 0f;
+  private float knockbackResistance;
   private float durabilityMultiplier;
   private float armorMultiplier;
   private float armorStrengthMultiplier;
   private float armorToughnessMultiplier;
-  private float smallReductionFactor = 0.5f;  // core 的 reduction 缩放因子
-  private float smallProtectionFactor = 0.4f; // core 的 protection 缩放因子
+  private float smallReductionFactor = 0.5f;
+  private float smallProtectionFactor = 0.4f;
 
-  /**
-   * 创建新的 builder
-   *
-   * @param durabilityBase 基础耐久倍率
-   */
-  public ArmorPartStatsBuilder(float durabilityBase) {
-    this.durabilityBase = durabilityBase;
+  private ArmorPartStatsBuilder() {}
+
+  /** Creates a builder for a complete armor material stat bundle. */
+  public static ArmorPartStatsBuilder builder() {
+    return new ArmorPartStatsBuilder();
   }
 
-  /**
-   * 设置各槽位护甲值
-   *
-   * 使用显式参数名以避免与 PlatingMaterialStats.Builder#armor(boots, leggings, chestplate, helmet) 的顺序混淆
-   *
-   * @param helmet 头盔护甲值
-   * @param chestplate 胸甲护甲值
-   * @param leggings 护腿护甲值
-   * @param boots 靴子护甲值
-   */
+  /** Sets the plating durability factor used for armor pieces and shields. */
+  public ArmorPartStatsBuilder platingDurability(float durabilityFactor) {
+    plating.durabilityFactor(durabilityFactor);
+    return this;
+  }
+
+  /** Sets plating armor in helmet, chestplate, leggings, and boots order. */
+  public ArmorPartStatsBuilder platingArmor(float helmet, float chestplate, float leggings, float boots) {
+    plating.armor(boots, leggings, chestplate, helmet);
+    return this;
+  }
+
+  /** Sets the armor strength contribution from plating. */
+  public ArmorPartStatsBuilder platingArmorStrength(float armorStrength) {
+    plating.armorStrength(armorStrength);
+    return this;
+  }
+
+  /** Sets the toughness contribution from plating. */
+  public ArmorPartStatsBuilder platingToughness(float toughness) {
+    plating.toughness(toughness);
+    return this;
+  }
+
+  /** Sets the knockback resistance contribution from plating. */
+  public ArmorPartStatsBuilder platingKnockbackResistance(float knockbackResistance) {
+    plating.knockbackResistance(knockbackResistance);
+    return this;
+  }
+
+  /** Sets the maille stat values. */
+  public ArmorPartStatsBuilder maille(float durability, float armor, float armorStrength, float toughness) {
+    this.mailleDurability = durability;
+    this.mailleArmor = armor;
+    this.mailleArmorStrength = armorStrength;
+    this.mailleToughness = toughness;
+    return this;
+  }
+
+  /** Sets the durability factor used for armor part stats. */
+  public ArmorPartStatsBuilder partDurability(float durability) {
+    this.partDurability = durability;
+    return this;
+  }
+
+  /** Sets armor part values in helmet, chestplate, leggings, and boots order. */
   public ArmorPartStatsBuilder armor(float helmet, float chestplate, float leggings, float boots) {
     this.helmet = helmet;
     this.chestplate = chestplate;
@@ -74,17 +99,11 @@ public final class ArmorPartStatsBuilder {
     return this;
   }
 
-  /**
-   * 设置 reduction（layer plate 的伤害减免）
-   */
   public ArmorPartStatsBuilder reduction(float reduction) {
     this.reduction = reduction;
     return this;
   }
 
-  /**
-   * 设置 protection（额外伤害保护百分比）
-   */
   public ArmorPartStatsBuilder protection(float protection) {
     this.protection = protection;
     return this;
@@ -95,74 +114,47 @@ public final class ArmorPartStatsBuilder {
     return this;
   }
 
-  /**
-   * 设置 durabilityMultiplier（layer 部件的耐久倍率修正）
-   */
   public ArmorPartStatsBuilder durabilityMultiplier(float durabilityMultiplier) {
     this.durabilityMultiplier = durabilityMultiplier;
     return this;
   }
 
-  /**
-   * 设置 armorMultiplier（layer 部件的护甲值倍率修正）
-   */
   public ArmorPartStatsBuilder armorMultiplier(float armorMultiplier) {
     this.armorMultiplier = armorMultiplier;
     return this;
   }
 
-  /**
-   * 设置 armorStrengthMultiplier（frame 部件的护甲强度倍率修正）
-   */
   public ArmorPartStatsBuilder armorStrengthMultiplier(float armorStrengthMultiplier) {
     this.armorStrengthMultiplier = armorStrengthMultiplier;
     return this;
   }
 
-  /**
-   * 设置 armorToughnessMultiplier（frame 部件的韧性倍率修正）
-   */
   public ArmorPartStatsBuilder armorToughnessMultiplier(float armorToughnessMultiplier) {
     this.armorToughnessMultiplier = armorToughnessMultiplier;
     return this;
   }
 
-  /**
-   * 设置 smallReductionFactor（core 部件的 reduction 缩放因子）
-   *
-   * 默认：0.5f
-   */
   public ArmorPartStatsBuilder smallReductionFactor(float smallReductionFactor) {
     this.smallReductionFactor = smallReductionFactor;
     return this;
   }
 
-  /**
-   * 设置 smallProtectionFactor（core 部件的 protection 缩放因子）
-   *
-   * 默认：0.4f
-   */
   public ArmorPartStatsBuilder smallProtectionFactor(float smallProtectionFactor) {
     this.smallProtectionFactor = smallProtectionFactor;
     return this;
   }
 
-  /**
-   * 构建 armor part stat bundle
-   *
-   * 返回 14 个 IMaterialStats：
-   * - stats[0]: armor_layer_plate (ArmorLayerStats)
-   * - stats[1]: armor_layer_mail (ArmorLayerStats)
-   * - stats[2-5]: armor_core_helmet/chestplate/leggings/boots (ArmorCoreStats)
-   * - stats[6-9]: armor_frame_helmet/chestplate/leggings/boots (ArmorFrameStats)
-   * - stats[10-13]: armor_heavy_core_helmet/chestplate/leggings/boots (ArmorCoreStats)
-   */
+  /** Builds four plating stats, maille, shield plating, and fourteen armor part stats. */
   public IMaterialStats[] build() {
-    IMaterialStats[] stats = new IMaterialStats[14];
-
-    // Layer stats
-    stats[0] = new ArmorPartMaterialStats.ArmorLayerStats(
-      ArmorPartMaterialStats.ARMOR_LAYER_PLATE,
+    IMaterialStats[] stats = new IMaterialStats[20];
+    int index = 0;
+    for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+      stats[index++] = plating.build(slotType);
+    }
+    stats[index++] = ArmorPartMaterialStats.maille(mailleDurability, mailleArmor, mailleArmorStrength, mailleToughness);
+    stats[index++] = plating.buildShield();
+    stats[index++] = new ArmorPartMaterialStats.ArmorLayerStats(
+      ArmorPartMaterialStats.ARMOR_PLATE,
       durabilityMultiplier,
       armorMultiplier,
       armorStrength,
@@ -170,21 +162,18 @@ public final class ArmorPartStatsBuilder {
       reduction * smallReductionFactor,
       protection
     );
-    stats[1] = new ArmorPartMaterialStats.ArmorLayerStats(
-      ArmorPartMaterialStats.ARMOR_LAYER_MAIL,
+    stats[index++] = new ArmorPartMaterialStats.ArmorLayerStats(
+      ArmorPartMaterialStats.ARMOR_MAIL,
       durabilityMultiplier,
       armorMultiplier,
       armorStrength,
       armorToughness,
-      0f, // armor_mail 没有 reduction
+      0f,
       protection
     );
-
-    // Core stats (4 slots) - 小型 core，使用缩放的 reduction/protection
-    int index = 2;
     for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
       stats[index++] = new ArmorPartMaterialStats.ArmorCoreStats(
-        ArmorPartMaterialStats.CORE_TYPES.get(slotType.ordinal()),
+        ArmorPartMaterialStats.CAST_TYPES.get(slotType.ordinal()),
         durability(slotType),
         armor(slotType),
         armorStrength,
@@ -194,8 +183,6 @@ public final class ArmorPartStatsBuilder {
         knockbackResistance
       );
     }
-
-    // Frame stats (4 slots)
     for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
       stats[index++] = new ArmorPartMaterialStats.ArmorFrameStats(
         ArmorPartMaterialStats.FRAME_TYPES.get(slotType.ordinal()),
@@ -206,26 +193,23 @@ public final class ArmorPartStatsBuilder {
         knockbackResistance
       );
     }
-
-    // Heavy core stats (4 slots) - 重型 core，使用完整 reduction/protection
     for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
       stats[index++] = new ArmorPartMaterialStats.ArmorCoreStats(
-        ArmorPartMaterialStats.HEAVY_CORE_TYPES.get(slotType.ordinal()),
+        ArmorPartMaterialStats.MASSIVE_CAST_TYPES.get(slotType.ordinal()),
         durability(slotType),
         armor(slotType),
         armorStrength,
         armorToughness,
-        reduction,  // heavy core 使用完整 reduction，不缩放
-        protection, // heavy core 使用完整 protection，不缩放
+        reduction,
+        protection,
         knockbackResistance
       );
     }
-
     return stats;
   }
 
   private int durability(ArmorItem.Type slot) {
-    return (int)(ArmorModuleBuilder.MAX_DAMAGE_ARRAY[slot.ordinal()] * durabilityBase);
+    return (int)(ArmorModuleBuilder.MAX_DAMAGE_ARRAY[slot.ordinal()] * partDurability);
   }
 
   private float armor(ArmorItem.Type slot) {

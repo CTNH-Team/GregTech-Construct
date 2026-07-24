@@ -13,6 +13,7 @@ import slimeknights.tconstruct.data.pack.TiCDynamicDataRegistrar;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.test.BaseMcTest;
 import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
+import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
 import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ArmorPartBaselineTest extends BaseMcTest {
 
-  /** 期望拥有完整 14 个 armor part stat 的材料（本体材料） */
+  /** 期望拥有完整 armor stat bundle 的材料（本体材料） */
   private static final List<String> EXPECTED_FULL_SUPPORT_MATERIALS = List.of(
     "tconstruct:aluminum", "tconstruct:amethyst_bronze", "tconstruct:ancient", "tconstruct:bronze",
     "tconstruct:cinderslime", "tconstruct:cobalt", "tconstruct:constantan", "tconstruct:copper",
@@ -51,27 +52,33 @@ class ArmorPartBaselineTest extends BaseMcTest {
     "tconstruct:seared_stone", "tconstruct:silver", "tconstruct:slimesteel", "tconstruct:steel", "tconstruct:steeleaf"
   );
 
-  private Set<MaterialStatsId> allArmorPartStatIds;
+  private Set<MaterialStatsId> allFullArmorStatIds;
   private final TiCDynamicDataPack pack = new TiCDynamicDataPack("armorpart-test");
 
   @BeforeAll
   void generateStats() {
     // 在 Bootstrap 之后才能安全访问 ArmorPartMaterialStats 常量
-    this.allArmorPartStatIds = Set.of(
-      ArmorPartMaterialStats.ARMOR_LAYER_PLATE.getId(),
-      ArmorPartMaterialStats.ARMOR_LAYER_MAIL.getId(),
-      ArmorPartMaterialStats.ARMOR_CORE_HELMET.getId(),
-      ArmorPartMaterialStats.ARMOR_CORE_CHESTPLATE.getId(),
-      ArmorPartMaterialStats.ARMOR_CORE_LEGGINGS.getId(),
-      ArmorPartMaterialStats.ARMOR_CORE_BOOTS.getId(),
-      ArmorPartMaterialStats.ARMOR_FRAME_HELMET.getId(),
-      ArmorPartMaterialStats.ARMOR_FRAME_CHESTPLATE.getId(),
-      ArmorPartMaterialStats.ARMOR_FRAME_LEGGINGS.getId(),
-      ArmorPartMaterialStats.ARMOR_FRAME_BOOTS.getId(),
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_HELMET.getId(),
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_CHESTPLATE.getId(),
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_LEGGINGS.getId(),
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_BOOTS.getId()
+    this.allFullArmorStatIds = Set.of(
+      PlatingMaterialStats.HELMET.getId(),
+      PlatingMaterialStats.CHESTPLATE.getId(),
+      PlatingMaterialStats.LEGGINGS.getId(),
+      PlatingMaterialStats.BOOTS.getId(),
+      PlatingMaterialStats.SHIELD.getId(),
+      ArmorPartMaterialStats.MAILLE.getId(),
+      ArmorPartMaterialStats.ARMOR_PLATE.getId(),
+      ArmorPartMaterialStats.ARMOR_MAIL.getId(),
+      ArmorPartMaterialStats.CAST_HELMET.getId(),
+      ArmorPartMaterialStats.CAST_CHESTPLATE.getId(),
+      ArmorPartMaterialStats.CAST_LEGGINGS.getId(),
+      ArmorPartMaterialStats.CAST_BOOTS.getId(),
+      ArmorPartMaterialStats.FRAME_HELMET.getId(),
+      ArmorPartMaterialStats.FRAME_CHESTPLATE.getId(),
+      ArmorPartMaterialStats.FRAME_LEGGINGS.getId(),
+      ArmorPartMaterialStats.FRAME_BOOTS.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_HELMET.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_CHESTPLATE.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_LEGGINGS.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_BOOTS.getId()
     );
 
     // 生成stats到TiCDynamicDataRegistrar供测试读取
@@ -86,37 +93,37 @@ class ArmorPartBaselineTest extends BaseMcTest {
   @Test
   void armorPartHasCorrectStatStructure() {
     // 4 cast types (helmet, chestplate, leggings, boots)
-    assertThat(ArmorPartMaterialStats.CORE_TYPES).hasSize(4);
-    assertThat(ArmorPartMaterialStats.CORE_TYPES).containsExactly(
-      ArmorPartMaterialStats.ARMOR_CORE_HELMET,
-      ArmorPartMaterialStats.ARMOR_CORE_CHESTPLATE,
-      ArmorPartMaterialStats.ARMOR_CORE_LEGGINGS,
-      ArmorPartMaterialStats.ARMOR_CORE_BOOTS
+    assertThat(ArmorPartMaterialStats.CAST_TYPES).hasSize(4);
+    assertThat(ArmorPartMaterialStats.CAST_TYPES).containsExactly(
+      ArmorPartMaterialStats.CAST_HELMET,
+      ArmorPartMaterialStats.CAST_CHESTPLATE,
+      ArmorPartMaterialStats.CAST_LEGGINGS,
+      ArmorPartMaterialStats.CAST_BOOTS
     );
 
     // 4 frame types
     assertThat(ArmorPartMaterialStats.FRAME_TYPES).hasSize(4);
     assertThat(ArmorPartMaterialStats.FRAME_TYPES).containsExactly(
-      ArmorPartMaterialStats.ARMOR_FRAME_HELMET,
-      ArmorPartMaterialStats.ARMOR_FRAME_CHESTPLATE,
-      ArmorPartMaterialStats.ARMOR_FRAME_LEGGINGS,
-      ArmorPartMaterialStats.ARMOR_FRAME_BOOTS
+      ArmorPartMaterialStats.FRAME_HELMET,
+      ArmorPartMaterialStats.FRAME_CHESTPLATE,
+      ArmorPartMaterialStats.FRAME_LEGGINGS,
+      ArmorPartMaterialStats.FRAME_BOOTS
     );
 
     // 4 massive cast types
-    assertThat(ArmorPartMaterialStats.HEAVY_CORE_TYPES).hasSize(4);
-    assertThat(ArmorPartMaterialStats.HEAVY_CORE_TYPES).containsExactly(
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_HELMET,
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_CHESTPLATE,
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_LEGGINGS,
-      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_BOOTS
+    assertThat(ArmorPartMaterialStats.MASSIVE_CAST_TYPES).hasSize(4);
+    assertThat(ArmorPartMaterialStats.MASSIVE_CAST_TYPES).containsExactly(
+      ArmorPartMaterialStats.MASSIVE_CAST_HELMET,
+      ArmorPartMaterialStats.MASSIVE_CAST_CHESTPLATE,
+      ArmorPartMaterialStats.MASSIVE_CAST_LEGGINGS,
+      ArmorPartMaterialStats.MASSIVE_CAST_BOOTS
     );
 
     // Verify stat IDs are correctly named
-    assertThat(ArmorPartMaterialStats.ARMOR_LAYER_PLATE.getId().toString())
-      .isEqualTo("tconstruct:armor_layer_plate");
-    assertThat(ArmorPartMaterialStats.ARMOR_LAYER_MAIL.getId().toString())
-      .isEqualTo("tconstruct:armor_layer_mail");
+    assertThat(ArmorPartMaterialStats.ARMOR_PLATE.getId().toString())
+      .isEqualTo("tconstruct:armor_plate");
+    assertThat(ArmorPartMaterialStats.ARMOR_MAIL.getId().toString())
+      .isEqualTo("tconstruct:armor_mail");
     assertThat(ArmorPartMaterialStats.MAILLE.getId().toString())
       .isEqualTo("tconstruct:maille");
     assertThat(StatlessMaterialStats.LINEAR.getIdentifier().toString())
@@ -124,12 +131,12 @@ class ArmorPartBaselineTest extends BaseMcTest {
   }
 
   /**
-   * 验证所有 29 个本体全支持材料都有完整的 14 个 armor part stat
+   * 验证所有 29 个本体全支持材料都有完整的 20 个 armor stat
    *
    * 此测试防止迁移遗漏（如 P1 中兼容材料被遗漏）。
    */
   @Test
-  void allFullSupportMaterialsHaveCompleteArmorPartStats() throws IOException {
+  void allFullSupportMaterialsHaveCompleteArmorStats() throws IOException {
     for (String materialId : EXPECTED_FULL_SUPPORT_MATERIALS) {
       String[] parts = materialId.split(":");
       ResourceLocation location = ResourceLocation.fromNamespaceAndPath(
@@ -152,12 +159,12 @@ class ArmorPartBaselineTest extends BaseMcTest {
       Set<String> statIds = new HashSet<>(statsJson.keySet());
 
       Set<String> expectedStatIdStrings = new HashSet<>();
-      for (MaterialStatsId id : allArmorPartStatIds) {
+      for (MaterialStatsId id : allFullArmorStatIds) {
         expectedStatIdStrings.add(id.toString());
       }
 
       assertThat(statIds)
-        .withFailMessage("Material %s is missing some armor part stat IDs. Expected 14 armor part stats in: %s",
+        .withFailMessage("Material %s is missing some armor stat IDs. Expected 20 armor stats in: %s",
                          materialId, statIds)
         .containsAll(expectedStatIdStrings);
     }
@@ -185,27 +192,45 @@ class ArmorPartBaselineTest extends BaseMcTest {
     JsonObject root = JsonParser.parseString(jsonString).getAsJsonObject();
     JsonObject copperStats = root.getAsJsonObject("stats");
 
-    // 验证 armor_layer_plate stat
-    JsonObject armorPlate = copperStats.getAsJsonObject("tconstruct:armor_layer_plate");
+    // 验证 armor_plate stat
+    JsonObject armorPlate = copperStats.getAsJsonObject("tconstruct:armor_plate");
     assertThat(armorPlate)
-      .withFailMessage("copper should have armor_layer_plate stat")
+      .withFailMessage("copper should have armor_plate stat")
       .isNotNull();
 
-    // copper 的 ArmorPartStatsBuilder(13f).armor(1.0f, 3.0f, 2.0f, 1.0f).reduction(0.05f).protection(0.018f)...
-    // armor_layer_plate: reduction=0.05f*0.5=0.025f, protection=0.018f
+    // copper 的复合 ArmorPartStatsBuilder 配置保留原有 part stat 数值。
+    // armor_plate: reduction=0.05f*0.5=0.025f, protection=0.018f
     assertThat(armorPlate.get("reduction").getAsFloat()).isEqualTo(0.025f);
     assertThat(armorPlate.get("protection").getAsFloat()).isEqualTo(0.018f);
 
-    // 验证 armor_core_helmet stat
-    JsonObject castHelmet = copperStats.getAsJsonObject("tconstruct:armor_core_helmet");
+    // 验证 cast_helmet stat
+    JsonObject castHelmet = copperStats.getAsJsonObject("tconstruct:cast_helmet");
     assertThat(castHelmet)
-      .withFailMessage("copper should have armor_core_helmet stat")
+      .withFailMessage("copper should have cast_helmet stat")
       .isNotNull();
 
-    // armor_core_helmet: durability=11*13=143, armor=1.0f, reduction=0.05*0.5=0.025, protection=0.018*0.4=0.0072
+    // cast_helmet: durability=11*13=143, armor=1.0f, reduction=0.05*0.5=0.025, protection=0.018*0.4=0.0072
     assertThat(castHelmet.get("durability").getAsInt()).isEqualTo(143);
     assertThat(castHelmet.get("armor").getAsFloat()).isEqualTo(1.0f);
     assertThat(castHelmet.get("reduction").getAsFloat()).isEqualTo(0.025f);
     assertThat(castHelmet.get("protection").getAsFloat()).isEqualTo(0.0072f);
+
+    JsonObject platingHelmet = copperStats.getAsJsonObject(PlatingMaterialStats.HELMET.getId().toString());
+    JsonObject platingChestplate = copperStats.getAsJsonObject(PlatingMaterialStats.CHESTPLATE.getId().toString());
+    JsonObject platingLeggings = copperStats.getAsJsonObject(PlatingMaterialStats.LEGGINGS.getId().toString());
+    JsonObject platingBoots = copperStats.getAsJsonObject(PlatingMaterialStats.BOOTS.getId().toString());
+    JsonObject platingShield = copperStats.getAsJsonObject(PlatingMaterialStats.SHIELD.getId().toString());
+    JsonObject maille = copperStats.getAsJsonObject(ArmorPartMaterialStats.MAILLE.getId().toString());
+
+    assertThat(platingHelmet).isNotNull();
+    assertThat(platingChestplate).isNotNull();
+    assertThat(platingLeggings).isNotNull();
+    assertThat(platingBoots).isNotNull();
+    assertThat(platingShield).isNotNull();
+    assertThat(maille).isNotNull();
+    assertThat(platingHelmet.get("armor").getAsFloat()).isEqualTo(1f);
+    assertThat(platingChestplate.get("armor").getAsFloat()).isEqualTo(3f);
+    assertThat(platingLeggings.get("armor").getAsFloat()).isEqualTo(2f);
+    assertThat(platingBoots.get("armor").getAsFloat()).isEqualTo(1f);
   }
 }

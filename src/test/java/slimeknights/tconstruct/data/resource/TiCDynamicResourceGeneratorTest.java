@@ -117,7 +117,7 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
     registerArmorTextureSerializers();
     runProvider("ArmorModelProvider");
 
-    for (String part : List.of("layer_plate", "layer_mail")) {
+    for (String part : List.of("armor_plate", "armor_mail")) {
       assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "models/item/" + part + ".json")))
         .as(part + " part item model")
         .isNotNull();
@@ -125,7 +125,7 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
         .as(part + " cast item model")
         .isNotNull();
     }
-    for (String type : List.of("core", "frame", "heavy_core")) {
+    for (String type : List.of("cast", "frame_of", "massive_cast")) {
       for (String slot : ALL_ARMOR_PART_SLOTS) {
         String part = type + "_" + slot;
         assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "models/item/" + part + ".json")))
@@ -144,9 +144,9 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
       .contains("linear_broken")
       .doesNotContain("tconarmorex");
     assertThat(readClientResource(new ResourceLocation("tconstruct", "models/item/mix_forged_other_leggings.json")))
-      .contains("layer_plate")
-      .contains("layer_mail")
-      .contains("frame")
+      .contains("armor_plate")
+      .contains("armor_mail")
+      .contains("frame_of")
       .doesNotContain("armor_plate")
       .doesNotContain("armor_mail")
       .doesNotContain("frame_of");
@@ -174,8 +174,8 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
       .contains("linear_")
       .doesNotContain("tconarmorex");
     assertThat(readClientResource(new ResourceLocation("tconstruct", "tinkering/armor_models/mix_forged_other/leggings.json")))
-      .contains("layer_plate_1_")
-      .contains("layer_mail_2_")
+      .contains("armor_plate_1_")
+      .contains("armor_mail_2_")
       .doesNotContain("tconarmorex");
     assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/mantle/colors.json")))
       .contains("\"melee_defense\": \"#9261CC\"")
@@ -206,12 +206,12 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
       .contains("tconstruct:share_damage")
       .doesNotContain("tconarmorex");
     assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/lang/en_us.json")))
-      .contains("\"pattern.tconstruct.armor_frame_large\": \"Large Frame of Armor\"")
+      .contains("\"pattern.tconstruct.frame_of_large\": \"Large Frame of Armor\"")
       .contains("\"pattern.tconstruct.mail_plate\": \"Armor Mail or Plate\"")
       .contains("\"pattern.tconstruct.plating_large\": \"Large Armor Plating\"")
       .doesNotContain("tconarmorex");
     assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/lang/zh_cn.json")))
-      .contains("\"pattern.tconstruct.armor_frame_large\": \"大型盔甲框架\"")
+      .contains("\"pattern.tconstruct.frame_of_large\": \"大型盔甲框架\"")
       .contains("\"pattern.tconstruct.mail_plate\": \"通用护甲\"")
       .contains("\"pattern.tconstruct.plating_large\": \"大型盔甲镶板\"")
       .doesNotContain("tconarmorex");
@@ -228,19 +228,19 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
     runProvider("GeneratorPartTextureJsonGenerator");
 
     assertThat(readClientResource(new ResourceLocation("tconstruct", "tinkering/generator_part_textures.json")))
-      .contains("tconstruct:tinker_armor/core_armor")
-      .contains("tconstruct:tinker_armor/heavy_core_armor")
-      .contains("tconstruct:tinker_armor/frame_armor")
-      .contains("tconstruct:item/armor/shared/helmet/core")
-      .contains("tconstruct:item/parts/heavy_core_chestplate")
+      .contains("tconstruct:tinker_armor/cast_armor")
+      .contains("tconstruct:tinker_armor/massive_cast_armor")
+      .contains("tconstruct:tinker_armor/frame_of_armor")
+      .contains("tconstruct:item/armor/shared/helmet/cast")
+      .contains("tconstruct:item/parts/massive_cast_chestplate")
       .doesNotContain("tconarmorex");
 
     runProvider("MaterialPartTextureGenerator");
 
-    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/core_armor_tconstruct_manyullyn.png"))).isNotNull();
-    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/item/armor/shared/chestplate/heavy_core_tconstruct_manyullyn.png"))).isNotNull();
-    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/item/parts/frame_boots_tconstruct_manyullyn.png"))).isNotNull();
-    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/item/parts/layer_plate_tconstruct_manyullyn.png"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/cast_armor_tconstruct_manyullyn.png"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/item/armor/shared/chestplate/massive_cast_tconstruct_manyullyn.png"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/item/parts/frame_of_boots_tconstruct_manyullyn.png"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/item/parts/armor_plate_tconstruct_manyullyn.png"))).isNotNull();
     assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/linear_armor_tconstruct_leather.png"))).isNotNull();
     assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/maille_armor_tconstruct_leather.png"))).isNotNull();
     assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/maille_armor_tconstruct_shulker.png"))).isNotNull();
@@ -249,14 +249,14 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
   @Test
   void armorPartStaticTexturesUseRenamedIds() {
     for (String slot : ALL_ARMOR_PART_SLOTS) {
-      String name = "heavy_core_" + slot + ".png";
+      String name = "massive_cast_" + slot + ".png";
       for (String folder : List.of("gui/tinker_pattern", "item/cast", "item/sand_cast", "item/red_sand_cast")) {
         assertThat(Files.isRegularFile(Path.of("src/main/resources/assets/tconstruct/textures/" + folder + "/" + name)))
           .as(folder + "/" + name)
           .isTrue();
       }
       for (String suffix : List.of("", "_metal", "_tconstruct_unknown")) {
-        String partName = "heavy_core_" + slot + suffix + ".png";
+        String partName = "massive_cast_" + slot + suffix + ".png";
         assertThat(Files.isRegularFile(Path.of("src/main/resources/assets/tconstruct/textures/item/tool/parts/" + partName)))
           .as("item/tool/parts/" + partName)
           .isTrue();

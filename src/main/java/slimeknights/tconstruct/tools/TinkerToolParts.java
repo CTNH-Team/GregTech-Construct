@@ -90,25 +90,25 @@ public final class TinkerToolParts extends TinkerModule {
     public static final EnumObject<ArmorItem.Type,ToolPartItem> plating = ITEMS.registerEnum(ArmorItem.Type.values(), "plating", type -> new ToolPartItem(ITEM_PROPS, PlatingMaterialStats.TYPES.get(type.ordinal()).getId()));
     public static final ItemObject<ToolPartItem> maille = ITEMS.register("maille", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.MAILLE.getId()));
     public static final ItemObject<ToolPartItem> shieldCore = ITEMS.register("shield_core", () -> new ToolPartItem(ITEM_PROPS, StatlessMaterialStats.SHIELD_CORE.getIdentifier()));
-    public static final ItemObject<ToolPartItem> layerPlate = ITEMS.register("layer_plate", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.ARMOR_LAYER_PLATE.getId()));
-    public static final ItemObject<ToolPartItem> layerMail = ITEMS.register("layer_mail", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.ARMOR_LAYER_MAIL.getId()));
-    public static final EnumObject<ArmorItem.Type,ToolPartItem> armorCore = new EnumObject.Builder<ArmorItem.Type,ToolPartItem>(ArmorItem.Type.class)
-            .put(ArmorItem.Type.HELMET, ITEMS.register("core_helmet", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.CORE_TYPES.get(ArmorItem.Type.HELMET.ordinal()).getId())))
-            .put(ArmorItem.Type.CHESTPLATE, ITEMS.register("core_chestplate", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.CORE_TYPES.get(ArmorItem.Type.CHESTPLATE.ordinal()).getId())))
-            .put(ArmorItem.Type.LEGGINGS, ITEMS.register("core_leggings", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.CORE_TYPES.get(ArmorItem.Type.LEGGINGS.ordinal()).getId())))
-            .put(ArmorItem.Type.BOOTS, ITEMS.register("core_boots", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.CORE_TYPES.get(ArmorItem.Type.BOOTS.ordinal()).getId())))
+    public static final ItemObject<ToolPartItem> armorPlate = ITEMS.register("armor_plate", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.ARMOR_PLATE.getId()));
+    public static final ItemObject<ToolPartItem> armorMail = ITEMS.register("armor_mail", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.ARMOR_MAIL.getId()));
+    public static final EnumObject<ArmorItem.Type,ToolPartItem> armorCast = new EnumObject.Builder<ArmorItem.Type,ToolPartItem>(ArmorItem.Type.class)
+            .put(ArmorItem.Type.HELMET, ITEMS.register("cast_helmet", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.CAST_TYPES.get(ArmorItem.Type.HELMET.ordinal()).getId())))
+            .put(ArmorItem.Type.CHESTPLATE, ITEMS.register("cast_chestplate", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.CAST_TYPES.get(ArmorItem.Type.CHESTPLATE.ordinal()).getId())))
+            .put(ArmorItem.Type.LEGGINGS, ITEMS.register("cast_leggings", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.CAST_TYPES.get(ArmorItem.Type.LEGGINGS.ordinal()).getId())))
+            .put(ArmorItem.Type.BOOTS, ITEMS.register("cast_boots", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.CAST_TYPES.get(ArmorItem.Type.BOOTS.ordinal()).getId())))
             .build();
     public static final EnumObject<ArmorItem.Type,ToolPartItem> armorFrame = new EnumObject.Builder<ArmorItem.Type,ToolPartItem>(ArmorItem.Type.class)
-            .put(ArmorItem.Type.HELMET, ITEMS.register("frame_helmet", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.FRAME_TYPES.get(ArmorItem.Type.HELMET.ordinal()).getId())))
-            .put(ArmorItem.Type.CHESTPLATE, ITEMS.register("frame_chestplate", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.FRAME_TYPES.get(ArmorItem.Type.CHESTPLATE.ordinal()).getId())))
-            .put(ArmorItem.Type.LEGGINGS, ITEMS.register("frame_leggings", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.FRAME_TYPES.get(ArmorItem.Type.LEGGINGS.ordinal()).getId())))
-            .put(ArmorItem.Type.BOOTS, ITEMS.register("frame_boots", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.FRAME_TYPES.get(ArmorItem.Type.BOOTS.ordinal()).getId())))
+            .put(ArmorItem.Type.HELMET, ITEMS.register("frame_of_helmet", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.FRAME_TYPES.get(ArmorItem.Type.HELMET.ordinal()).getId())))
+            .put(ArmorItem.Type.CHESTPLATE, ITEMS.register("frame_of_chestplate", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.FRAME_TYPES.get(ArmorItem.Type.CHESTPLATE.ordinal()).getId())))
+            .put(ArmorItem.Type.LEGGINGS, ITEMS.register("frame_of_leggings", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.FRAME_TYPES.get(ArmorItem.Type.LEGGINGS.ordinal()).getId())))
+            .put(ArmorItem.Type.BOOTS, ITEMS.register("frame_of_boots", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.FRAME_TYPES.get(ArmorItem.Type.BOOTS.ordinal()).getId())))
             .build();
-    public static final EnumObject<ArmorItem.Type,ToolPartItem> armorHeavyCore = new EnumObject.Builder<ArmorItem.Type,ToolPartItem>(ArmorItem.Type.class)
-            .put(ArmorItem.Type.HELMET, ITEMS.register("heavy_core_helmet", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.HEAVY_CORE_TYPES.get(ArmorItem.Type.HELMET.ordinal()).getId())))
-            .put(ArmorItem.Type.CHESTPLATE, ITEMS.register("heavy_core_chestplate", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.HEAVY_CORE_TYPES.get(ArmorItem.Type.CHESTPLATE.ordinal()).getId())))
-            .put(ArmorItem.Type.LEGGINGS, ITEMS.register("heavy_core_leggings", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.HEAVY_CORE_TYPES.get(ArmorItem.Type.LEGGINGS.ordinal()).getId())))
-            .put(ArmorItem.Type.BOOTS, ITEMS.register("heavy_core_boots", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.HEAVY_CORE_TYPES.get(ArmorItem.Type.BOOTS.ordinal()).getId())))
+    public static final EnumObject<ArmorItem.Type,ToolPartItem> massiveArmorCast = new EnumObject.Builder<ArmorItem.Type,ToolPartItem>(ArmorItem.Type.class)
+            .put(ArmorItem.Type.HELMET, ITEMS.register("massive_cast_helmet", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.MASSIVE_CAST_TYPES.get(ArmorItem.Type.HELMET.ordinal()).getId())))
+            .put(ArmorItem.Type.CHESTPLATE, ITEMS.register("massive_cast_chestplate", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.MASSIVE_CAST_TYPES.get(ArmorItem.Type.CHESTPLATE.ordinal()).getId())))
+            .put(ArmorItem.Type.LEGGINGS, ITEMS.register("massive_cast_leggings", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.MASSIVE_CAST_TYPES.get(ArmorItem.Type.LEGGINGS.ordinal()).getId())))
+            .put(ArmorItem.Type.BOOTS, ITEMS.register("massive_cast_boots", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.MASSIVE_CAST_TYPES.get(ArmorItem.Type.BOOTS.ordinal()).getId())))
             .build();
     public static final ItemObject<ToolPartItem> linear = ITEMS.register("linear", () -> new ToolPartItem(ITEM_PROPS, StatlessMaterialStats.LINEAR.getIdentifier()));
     //gtceu
@@ -169,12 +169,12 @@ public final class TinkerToolParts extends TinkerModule {
         }
         accept(output, maille);
         accept(output, shieldCore);
-        accept(output, layerPlate);
-        accept(output, layerMail);
+        accept(output, armorPlate);
+        accept(output, armorMail);
         for (ArmorItem.Type type : ArmorItem.Type.values()) {
-            armorCore.get(type).addVariants(output, "");
+            armorCast.get(type).addVariants(output, "");
             armorFrame.get(type).addVariants(output, "");
-            armorHeavyCore.get(type).addVariants(output, "");
+            massiveArmorCast.get(type).addVariants(output, "");
         }
         accept(output, linear);
 

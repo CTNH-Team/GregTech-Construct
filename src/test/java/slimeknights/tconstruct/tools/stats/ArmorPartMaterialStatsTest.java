@@ -10,13 +10,13 @@ class ArmorPartMaterialStatsTest extends BaseMcTest {
   void armorPartStatsExposeLocalizedTooltipValues() {
     var maille = ArmorPartMaterialStats.maille(0.2f, 0.05f, 0.1f, 0.25f);
     var armorMail = new ArmorPartMaterialStats.ArmorLayerStats(
-      ArmorPartMaterialStats.ARMOR_LAYER_MAIL, 0.2f, 0.05f, 3f, 1.25f, 0f, 0.05f);
+      ArmorPartMaterialStats.ARMOR_MAIL, 0.2f, 0.05f, 3f, 1.25f, 0f, 0.05f);
     var armorPlate = new ArmorPartMaterialStats.ArmorLayerStats(
-      ArmorPartMaterialStats.ARMOR_LAYER_PLATE, 0.2f, 0.05f, 3f, 1.25f, 0.6f, 0.05f);
+      ArmorPartMaterialStats.ARMOR_PLATE, 0.2f, 0.05f, 3f, 1.25f, 0.6f, 0.05f);
     var cast = new ArmorPartMaterialStats.ArmorCoreStats(
-      ArmorPartMaterialStats.ARMOR_CORE_CHESTPLATE, 820, 7f, 3f, 1.25f, 0.6f, 0.04f, 0.05f);
+      ArmorPartMaterialStats.CAST_CHESTPLATE, 820, 7f, 3f, 1.25f, 0.6f, 0.04f, 0.05f);
     var frame = new ArmorPartMaterialStats.ArmorFrameStats(
-      ArmorPartMaterialStats.ARMOR_FRAME_CHESTPLATE, 820, 7f, 0.2f, -0.1f, 0.05f);
+      ArmorPartMaterialStats.FRAME_CHESTPLATE, 820, 7f, 0.2f, -0.1f, 0.05f);
 
     assertThat(maille.getLocalizedInfo()).hasSize(4);
     assertThat(armorMail.getLocalizedInfo()).hasSize(5);

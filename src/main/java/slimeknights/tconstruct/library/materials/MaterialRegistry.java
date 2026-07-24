@@ -124,15 +124,15 @@ public final class MaterialRegistry {
     for (MaterialStatType<?> type : PlatingMaterialStats.TYPES) {
       registry.registerStatType(type, ARMOR);
     }
-    registry.registerStatType(ArmorPartMaterialStats.ARMOR_LAYER_PLATE, ARMOR);
-    registry.registerStatType(ArmorPartMaterialStats.ARMOR_LAYER_MAIL, ARMOR);
-    for (MaterialStatType<?> type : ArmorPartMaterialStats.CORE_TYPES) {
+    registry.registerStatType(ArmorPartMaterialStats.ARMOR_PLATE, ARMOR);
+    registry.registerStatType(ArmorPartMaterialStats.ARMOR_MAIL, ARMOR);
+    for (MaterialStatType<?> type : ArmorPartMaterialStats.CAST_TYPES) {
       registry.registerStatType(type);
     }
     for (MaterialStatType<?> type : ArmorPartMaterialStats.FRAME_TYPES) {
       registry.registerStatType(type);
     }
-    for (MaterialStatType<?> type : ArmorPartMaterialStats.HEAVY_CORE_TYPES) {
+    for (MaterialStatType<?> type : ArmorPartMaterialStats.MASSIVE_CAST_TYPES) {
       registry.registerStatType(type);
     }
     registry.registerStatType(StatlessMaterialStats.CUIRASS.getType(), ARMOR);

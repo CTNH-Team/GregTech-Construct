@@ -457,13 +457,13 @@ public class ItemTagProvider extends ItemTagsProvider {
                         TinkerToolParts.fileHead.get(), TinkerToolParts.screwdriverHead.get(),
                         TinkerToolParts.sawBlade.get(), TinkerToolParts.crowbarHead.get(),
                         TinkerToolParts.mortarHead.get(), TinkerToolParts.mortarBowl.get(),
-                        TinkerToolParts.layerPlate.get(), TinkerToolParts.layerMail.get(),
+                        TinkerToolParts.armorPlate.get(), TinkerToolParts.armorMail.get(),
                         TinkerToolParts.linear.get())
 
                 .add(TinkerToolParts.plating.values().toArray(new Item[0]))
-                .add(TinkerToolParts.armorCore.values().toArray(new Item[0]))
+                .add(TinkerToolParts.armorCast.values().toArray(new Item[0]))
                 .add(TinkerToolParts.armorFrame.values().toArray(new Item[0]))
-                .add(TinkerToolParts.armorHeavyCore.values().toArray(new Item[0]));
+                .add(TinkerToolParts.massiveArmorCast.values().toArray(new Item[0]));
         // tag for the part chest items
         this.tag(TinkerTags.Items.CHEST_PARTS).addTag(TinkerTags.Items.TOOL_PARTS).add(TinkerSmeltery.dummyPlating.values().toArray(new Item[0]));
 
@@ -634,20 +634,20 @@ public class ItemTagProvider extends ItemTagsProvider {
         addCast.accept(TinkerSmeltery.leggingsPlatingCast);
         addCast.accept(TinkerSmeltery.bootsPlatingCast);
         addCast.accept(TinkerSmeltery.mailleCast);
-        addCast.accept(TinkerSmeltery.layerPlateCast);
-        addCast.accept(TinkerSmeltery.layerMailCast);
-        addCast.accept(TinkerSmeltery.armorCoreHelmetCast);
-        addCast.accept(TinkerSmeltery.armorCoreChestplateCast);
-        addCast.accept(TinkerSmeltery.armorCoreLeggingsCast);
-        addCast.accept(TinkerSmeltery.armorCoreBootsCast);
+        addCast.accept(TinkerSmeltery.armorPlateCast);
+        addCast.accept(TinkerSmeltery.armorMailCast);
+        addCast.accept(TinkerSmeltery.armorCastHelmetCast);
+        addCast.accept(TinkerSmeltery.armorCastChestplateCast);
+        addCast.accept(TinkerSmeltery.armorCastLeggingsCast);
+        addCast.accept(TinkerSmeltery.armorCastBootsCast);
         addCast.accept(TinkerSmeltery.frameHelmetCast);
         addCast.accept(TinkerSmeltery.frameChestplateCast);
         addCast.accept(TinkerSmeltery.frameLeggingsCast);
         addCast.accept(TinkerSmeltery.frameBootsCast);
-        addCast.accept(TinkerSmeltery.armorHeavyCoreHelmetCast);
-        addCast.accept(TinkerSmeltery.armorHeavyCoreChestplateCast);
-        addCast.accept(TinkerSmeltery.armorHeavyCoreLeggingsCast);
-        addCast.accept(TinkerSmeltery.armorHeavyCoreBootsCast);
+        addCast.accept(TinkerSmeltery.massiveArmorCastHelmetCast);
+        addCast.accept(TinkerSmeltery.massiveArmorCastChestplateCast);
+        addCast.accept(TinkerSmeltery.massiveArmorCastLeggingsCast);
+        addCast.accept(TinkerSmeltery.massiveArmorCastBootsCast);
         addCast.accept(TinkerSmeltery.linearCast);
 
         // arrow patterns are basically a gold cast

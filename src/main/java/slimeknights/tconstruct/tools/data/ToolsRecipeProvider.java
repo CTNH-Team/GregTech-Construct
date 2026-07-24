@@ -470,20 +470,20 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
         partWithDummy(consumer, TinkerToolParts.plating.get(ArmorItem.Type.LEGGINGS),   TinkerSmeltery.dummyPlating.get(ArmorItem.Type.LEGGINGS),   TinkerSmeltery.leggingsPlatingCast,   3, partFolder, castFolder);
         partWithDummy(consumer, TinkerToolParts.plating.get(ArmorItem.Type.BOOTS),      TinkerSmeltery.dummyPlating.get(ArmorItem.Type.BOOTS),      TinkerSmeltery.bootsPlatingCast,      2, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.maille, TinkerSmeltery.mailleCast, 2, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.layerPlate, TinkerSmeltery.layerPlateCast, 2, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.layerMail, TinkerSmeltery.layerMailCast, 1, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.armorCore.get(ArmorItem.Type.HELMET), TinkerSmeltery.armorCoreHelmetCast, 4, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.armorCore.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.armorCoreChestplateCast, 8, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.armorCore.get(ArmorItem.Type.LEGGINGS), TinkerSmeltery.armorCoreLeggingsCast, 7, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.armorCore.get(ArmorItem.Type.BOOTS), TinkerSmeltery.armorCoreBootsCast, 3, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorPlate, TinkerSmeltery.armorPlateCast, 2, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorMail, TinkerSmeltery.armorMailCast, 1, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorCast.get(ArmorItem.Type.HELMET), TinkerSmeltery.armorCastHelmetCast, 4, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorCast.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.armorCastChestplateCast, 8, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorCast.get(ArmorItem.Type.LEGGINGS), TinkerSmeltery.armorCastLeggingsCast, 7, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.armorCast.get(ArmorItem.Type.BOOTS), TinkerSmeltery.armorCastBootsCast, 3, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.armorFrame.get(ArmorItem.Type.HELMET), TinkerSmeltery.frameHelmetCast, 3, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.armorFrame.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.frameChestplateCast, 6, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.armorFrame.get(ArmorItem.Type.LEGGINGS), TinkerSmeltery.frameLeggingsCast, 5, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.armorFrame.get(ArmorItem.Type.BOOTS), TinkerSmeltery.frameBootsCast, 2, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.armorHeavyCore.get(ArmorItem.Type.HELMET), TinkerSmeltery.armorHeavyCoreHelmetCast, 8, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.armorHeavyCore.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.armorHeavyCoreChestplateCast, 14, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.armorHeavyCore.get(ArmorItem.Type.LEGGINGS), TinkerSmeltery.armorHeavyCoreLeggingsCast, 12, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.armorHeavyCore.get(ArmorItem.Type.BOOTS), TinkerSmeltery.armorHeavyCoreBootsCast, 6, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.HELMET), TinkerSmeltery.massiveArmorCastHelmetCast, 8, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.massiveArmorCastChestplateCast, 14, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.LEGGINGS), TinkerSmeltery.massiveArmorCastLeggingsCast, 12, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.BOOTS), TinkerSmeltery.massiveArmorCastBootsCast, 6, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.linear, TinkerSmeltery.linearCast, 2, partFolder, castFolder);
 
         // bowstrings and shield cores are part builder exclusive. Shield core additionally disallows anything that conflicts with casting shield plating (obsidian/nahuatl conflict)

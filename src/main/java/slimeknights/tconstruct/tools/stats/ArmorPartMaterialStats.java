@@ -23,30 +23,30 @@ import java.util.List;
  * - layer (plate/mail): 护甲层，带 durability/armor multiplier、reduction、protection
  * - core (per-slot): 小型熔铸核心，带完整数值和缩放的 reduction/protection
  * - frame (per-slot): 框架，带 multiplier 和 knockback
- * - heavy_core (per-slot): 重型核心，带完整 reduction/protection
+ * - massive_cast (per-slot): 重型核心，带完整 reduction/protection
  *
  * 所有 stat type 都是普通 armor stat，通过 MaterialStatsDataProvider#addArmor() 直接写入。
  */
 public final class ArmorPartMaterialStats {
   public static final MaterialStatType<MailleStats> MAILLE = mailleType("maille");
   public static final MailleStats MAILLE_DEFAULT = new MailleStats(MAILLE, 0f, 0f, 0f, 0f);
-  public static final MaterialStatType<ArmorLayerStats> ARMOR_LAYER_PLATE = layerType("armor_layer_plate");
-  public static final MaterialStatType<ArmorLayerStats> ARMOR_LAYER_MAIL = layerType("armor_layer_mail");
-  public static final MaterialStatType<ArmorCoreStats> ARMOR_CORE_HELMET = coreType("armor_core_helmet");
-  public static final MaterialStatType<ArmorCoreStats> ARMOR_CORE_CHESTPLATE = coreType("armor_core_chestplate");
-  public static final MaterialStatType<ArmorCoreStats> ARMOR_CORE_LEGGINGS = coreType("armor_core_leggings");
-  public static final MaterialStatType<ArmorCoreStats> ARMOR_CORE_BOOTS = coreType("armor_core_boots");
-  public static final MaterialStatType<ArmorFrameStats> ARMOR_FRAME_HELMET = frameType("armor_frame_helmet");
-  public static final MaterialStatType<ArmorFrameStats> ARMOR_FRAME_CHESTPLATE = frameType("armor_frame_chestplate");
-  public static final MaterialStatType<ArmorFrameStats> ARMOR_FRAME_LEGGINGS = frameType("armor_frame_leggings");
-  public static final MaterialStatType<ArmorFrameStats> ARMOR_FRAME_BOOTS = frameType("armor_frame_boots");
-  public static final MaterialStatType<ArmorCoreStats> ARMOR_HEAVY_CORE_HELMET = coreType("armor_heavy_core_helmet");
-  public static final MaterialStatType<ArmorCoreStats> ARMOR_HEAVY_CORE_CHESTPLATE = coreType("armor_heavy_core_chestplate");
-  public static final MaterialStatType<ArmorCoreStats> ARMOR_HEAVY_CORE_LEGGINGS = coreType("armor_heavy_core_leggings");
-  public static final MaterialStatType<ArmorCoreStats> ARMOR_HEAVY_CORE_BOOTS = coreType("armor_heavy_core_boots");
-  public static final List<MaterialStatType<ArmorCoreStats>> CORE_TYPES = List.of(ARMOR_CORE_HELMET, ARMOR_CORE_CHESTPLATE, ARMOR_CORE_LEGGINGS, ARMOR_CORE_BOOTS);
-  public static final List<MaterialStatType<ArmorFrameStats>> FRAME_TYPES = List.of(ARMOR_FRAME_HELMET, ARMOR_FRAME_CHESTPLATE, ARMOR_FRAME_LEGGINGS, ARMOR_FRAME_BOOTS);
-  public static final List<MaterialStatType<ArmorCoreStats>> HEAVY_CORE_TYPES = List.of(ARMOR_HEAVY_CORE_HELMET, ARMOR_HEAVY_CORE_CHESTPLATE, ARMOR_HEAVY_CORE_LEGGINGS, ARMOR_HEAVY_CORE_BOOTS);
+  public static final MaterialStatType<ArmorLayerStats> ARMOR_PLATE = layerType("armor_plate");
+  public static final MaterialStatType<ArmorLayerStats> ARMOR_MAIL = layerType("armor_mail");
+  public static final MaterialStatType<ArmorCoreStats> CAST_HELMET = coreType("cast_helmet");
+  public static final MaterialStatType<ArmorCoreStats> CAST_CHESTPLATE = coreType("cast_chestplate");
+  public static final MaterialStatType<ArmorCoreStats> CAST_LEGGINGS = coreType("cast_leggings");
+  public static final MaterialStatType<ArmorCoreStats> CAST_BOOTS = coreType("cast_boots");
+  public static final MaterialStatType<ArmorFrameStats> FRAME_HELMET = frameType("frame_of_helmet");
+  public static final MaterialStatType<ArmorFrameStats> FRAME_CHESTPLATE = frameType("frame_of_chestplate");
+  public static final MaterialStatType<ArmorFrameStats> FRAME_LEGGINGS = frameType("frame_of_leggings");
+  public static final MaterialStatType<ArmorFrameStats> FRAME_BOOTS = frameType("frame_of_boots");
+  public static final MaterialStatType<ArmorCoreStats> MASSIVE_CAST_HELMET = coreType("massive_cast_helmet");
+  public static final MaterialStatType<ArmorCoreStats> MASSIVE_CAST_CHESTPLATE = coreType("massive_cast_chestplate");
+  public static final MaterialStatType<ArmorCoreStats> MASSIVE_CAST_LEGGINGS = coreType("massive_cast_leggings");
+  public static final MaterialStatType<ArmorCoreStats> MASSIVE_CAST_BOOTS = coreType("massive_cast_boots");
+  public static final List<MaterialStatType<ArmorCoreStats>> CAST_TYPES = List.of(CAST_HELMET, CAST_CHESTPLATE, CAST_LEGGINGS, CAST_BOOTS);
+  public static final List<MaterialStatType<ArmorFrameStats>> FRAME_TYPES = List.of(FRAME_HELMET, FRAME_CHESTPLATE, FRAME_LEGGINGS, FRAME_BOOTS);
+  public static final List<MaterialStatType<ArmorCoreStats>> MASSIVE_CAST_TYPES = List.of(MASSIVE_CAST_HELMET, MASSIVE_CAST_CHESTPLATE, MASSIVE_CAST_LEGGINGS, MASSIVE_CAST_BOOTS);
 
   private ArmorPartMaterialStats() {}
 
@@ -147,14 +147,14 @@ public final class ArmorPartMaterialStats {
         IToolStat.formatColoredPercentBoost(ARMOR_PREFIX, armor),
         ArmorStats.ARMOR_STRENGTH.formatValue(armorStrength),
         ToolStats.ARMOR_TOUGHNESS.formatValue(toughness)));
-      if (getType == ARMOR_LAYER_PLATE) {
+      if (getType == ARMOR_PLATE) {
         info.add(ArmorStats.PRE_REDUCTION.formatValue(reduction));
       }
       info.add(formatProtection(protection));
       return info;
     }
     @Override public List<Component> getLocalizedDescriptions() {
-      return getType == ARMOR_LAYER_PLATE ? ARMOR_PLATE_DESCRIPTION : ARMOR_MAIL_DESCRIPTION;
+      return getType == ARMOR_PLATE ? ARMOR_PLATE_DESCRIPTION : ARMOR_MAIL_DESCRIPTION;
     }
     @Override public void apply(ModifierStatsBuilder builder, float scale) {
       ToolStats.DURABILITY.percent(builder, durability * scale);
@@ -167,11 +167,11 @@ public final class ArmorPartMaterialStats {
   }
 
   /**
-   * Armor core 统计数据（小型 core 和重型 heavy_core 共用）
+   * Armor core 统计数据（小型 core 和重型 massive_cast 共用）
    *
    * Core 描述构筑职责，区别在于 reduction/protection 的缩放：
    * - 小型 core: reduction * 0.5, protection * 0.4
-   * - 重型 heavy_core: 完整 reduction 和 protection
+   * - 重型 massive_cast: 完整 reduction 和 protection
    */
   public record ArmorCoreStats(MaterialStatType<?> getType, int durability, float armor, float armorStrength, float toughness, float reduction, float protection, float knockbackResistance) implements IRepairableMaterialStats {
     private static final LoadableField<Float, ArmorCoreStats> ARMOR = FloatLoadable.FROM_ZERO.defaultField("armor", 0f, ArmorCoreStats::armor);

@@ -47,19 +47,19 @@ public final class MaterialStatsEmiConstants {
     if (path.startsWith("plating_")) {
       return "pieces";
     }
-    if (path.equals("armor_layer_plate")) {
+    if (path.equals("armor_plate")) {
       return "plate";
     }
-    if (path.equals("armor_layer_mail")) {
+    if (path.equals("armor_mail")) {
       return "mail";
     }
-    if (path.startsWith("armor_core_")) {
+    if (path.startsWith("cast_")) {
       return "cast";
     }
-    if (path.startsWith("armor_frame_")) {
+    if (path.startsWith("frame_of_")) {
       return "frame";
     }
-    if (path.startsWith("armor_heavy_core_")) {
+    if (path.startsWith("massive_cast_")) {
       return "massive_cast";
     }
     if (path.equals("cuirass")) {
@@ -80,11 +80,11 @@ public final class MaterialStatsEmiConstants {
   private static List<MaterialStatsId> armorStatIds() {
     LinkedHashSet<MaterialStatsId> ids = new LinkedHashSet<>();
     PlatingMaterialStats.TYPES.forEach(type -> ids.add(type.getId()));
-    ids.add(ArmorPartMaterialStats.ARMOR_LAYER_PLATE.getId());
-    ids.add(ArmorPartMaterialStats.ARMOR_LAYER_MAIL.getId());
-    ArmorPartMaterialStats.CORE_TYPES.forEach(type -> ids.add(type.getId()));
+    ids.add(ArmorPartMaterialStats.ARMOR_PLATE.getId());
+    ids.add(ArmorPartMaterialStats.ARMOR_MAIL.getId());
+    ArmorPartMaterialStats.CAST_TYPES.forEach(type -> ids.add(type.getId()));
     ArmorPartMaterialStats.FRAME_TYPES.forEach(type -> ids.add(type.getId()));
-    ArmorPartMaterialStats.HEAVY_CORE_TYPES.forEach(type -> ids.add(type.getId()));
+    ArmorPartMaterialStats.MASSIVE_CAST_TYPES.forEach(type -> ids.add(type.getId()));
     ids.add(StatlessMaterialStats.CUIRASS.getType().getId());
     ids.add(ArmorPartMaterialStats.MAILLE.getId());
     ids.add(StatlessMaterialStats.SHIELD_CORE.getType().getId());
