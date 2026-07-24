@@ -593,8 +593,15 @@ function Rename-ArmorFiles {
    - /massive_cast_{slot} → /heavy_core_{slot}
 
 **Commit**: `42ee7ed0f8 - fix: 修复 sprite provider 纹理路径引用`
+**Commit**: `8f4eaaccef - fix: 重命名遗漏的 massive_core_leggings 纹理文件`
 
-### F.3 运行时验证 (进行中)
+**遗漏纹理**（在第二轮运行时发现）:
+- massive_core_leggings.png → heavy_core_leggings.png
+- massive_core_leggings_metal_contrast.png → heavy_core_leggings_metal_contrast.png
+
+总共完成 264 个纹理文件重命名（原计划 262 + 补漏 2）。
+
+### F.3 运行时验证 (进行中 - 第 2 次尝试)
 客户端已启动（Task ID: bxoxeri9c），正在验证：
 - [ ] 游戏启动成功
 - [ ] 动态材料包加载新 stat ID
