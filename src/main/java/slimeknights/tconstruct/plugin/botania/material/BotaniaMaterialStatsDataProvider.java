@@ -4,6 +4,7 @@ import net.minecraft.data.PackOutput;
 
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialStatsDataProvider;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.GripMaterialStats;
 import slimeknights.tconstruct.tools.stats.HandleMaterialStats;
 import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
@@ -45,7 +46,7 @@ public class BotaniaMaterialStatsDataProvider extends AbstractMaterialStatsDataP
         addArmorShieldStats(BotaniaMaterialIds.manaSteel,
                 PlatingMaterialStats.builder().durabilityFactor(20).armor(3, 5, 6, 3).toughness(2)
                         .knockbackResistance(0.05f),
-                StatlessMaterialStats.MAILLE);
+                ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
 
         addMaterialStats(BotaniaMaterialIds.terraSteel,
                 new HeadMaterialStats(750, 7.5f, DIAMOND, 3.5f),
@@ -58,6 +59,6 @@ public class BotaniaMaterialStatsDataProvider extends AbstractMaterialStatsDataP
         addArmorShieldStats(BotaniaMaterialIds.terraSteel,
                 PlatingMaterialStats.builder().durabilityFactor(50).armor(3, 6, 8, 4).toughness(3)
                         .knockbackResistance(0.15f),
-                StatlessMaterialStats.MAILLE);
+                ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
     }
 }

@@ -36,31 +36,31 @@ class MaterialDynamicPackTest extends BaseMcTest {
     JsonObject ironStats = readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialStatsManager.FOLDER + "/iron.json"));
     assertThat(ironStats).isNotNull();
     assertThat(ironStats.getAsJsonObject("stats").keySet())
-      .contains("tconstruct:armor_plate", "tconstruct:armor_mail", "tconstruct:cast_helmet", "tconstruct:frame_of_helmet", "tconstruct:massive_cast_helmet");
+      .contains("tconstruct:armor_layer_plate", "tconstruct:armor_layer_mail", "tconstruct:armor_core_helmet", "tconstruct:armor_frame_helmet", "tconstruct:armor_heavy_core_helmet");
     JsonObject zincStats = readJson(new ResourceLocation("tinkersinnovation", MaterialStatsManager.FOLDER + "/zinc.json"));
     assertThat(zincStats).isNotNull();
     assertThat(zincStats.getAsJsonObject("stats").keySet())
-      .contains("tconstruct:plating_helmet", "tconstruct:armor_mail", "tconstruct:cast_helmet");
+      .contains("tconstruct:plating_helmet", "tconstruct:armor_layer_mail", "tconstruct:armor_core_helmet");
     JsonObject ironTraits = readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialTraitsManager.FOLDER + "/iron.json"));
     assertThat(ironTraits).isNotNull();
     JsonObject perStatTraits = ironTraits.getAsJsonObject("perStat");
     JsonObject armorTrait = perStatTraits.getAsJsonArray("tconstruct:armor").get(0).getAsJsonObject();
     assertThat(armorTrait.get("name").getAsString()).isEqualTo("tconstruct:projectile_protection");
     assertThat(armorTrait.get("level").getAsInt()).isEqualTo(1);
-    JsonObject castHelmetTrait = perStatTraits.getAsJsonArray("tconstruct:cast_helmet").get(0).getAsJsonObject();
+    JsonObject castHelmetTrait = perStatTraits.getAsJsonArray("tconstruct:armor_core_helmet").get(0).getAsJsonObject();
     assertThat(castHelmetTrait.get("name").getAsString()).isEqualTo("tconstruct:projectile_protection");
     assertThat(castHelmetTrait.get("level").getAsInt()).isEqualTo(2);
-    JsonObject massiveCastHelmetTrait = perStatTraits.getAsJsonArray("tconstruct:massive_cast_helmet").get(0).getAsJsonObject();
+    JsonObject massiveCastHelmetTrait = perStatTraits.getAsJsonArray("tconstruct:armor_heavy_core_helmet").get(0).getAsJsonObject();
     assertThat(massiveCastHelmetTrait.get("name").getAsString()).isEqualTo("tconstruct:projectile_protection");
     assertThat(massiveCastHelmetTrait.get("level").getAsInt()).isEqualTo(2);
     JsonObject amethystTraits = readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialTraitsManager.FOLDER + "/amethyst_bronze.json"));
     assertThat(amethystTraits).isNotNull();
     JsonObject amethystPerStatTraits = amethystTraits.getAsJsonObject("perStat");
-    assertThat(amethystPerStatTraits.keySet()).contains("tconstruct:cast_helmet");
+    assertThat(amethystPerStatTraits.keySet()).contains("tconstruct:armor_core_helmet");
     JsonObject woolTraits = readJson(new ResourceLocation(TConstruct.MOD_ID, MaterialTraitsManager.FOLDER + "/wool.json"));
     assertThat(woolTraits).isNotNull();
     JsonObject woolPerStatTraits = woolTraits.getAsJsonObject("perStat");
-    assertThat(woolPerStatTraits.keySet()).doesNotContain("tconstruct:cast_helmet");
+    assertThat(woolPerStatTraits.keySet()).doesNotContain("tconstruct:armor_core_helmet");
   }
 
   private JsonObject readJson(ResourceLocation location) throws Exception {

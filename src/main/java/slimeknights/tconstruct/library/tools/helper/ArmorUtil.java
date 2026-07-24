@@ -88,15 +88,15 @@ public class ArmorUtil {
     return getDamageForEvent(originalDamage, armor, toughness, vanillaModifiers, finalModifiers, modifierCap, 0, 0, 0);
   }
 
-  public static float getDamageAfterArmorExtensionAbsorb(float damage, float armor, float toughness, float armorStrength, float preReduction, float armorProtection) {
-    return getDamageAfterArmorExtensionAbsorb(damage, armor, toughness, armorStrength, preReduction, 0, armorProtection);
+  public static float getDamageAfterArmorAbsorb(float damage, float armor, float toughness, float armorStrength, float preReduction, float armorProtection) {
+    return getDamageAfterArmorAbsorb(damage, armor, toughness, armorStrength, preReduction, 0, armorProtection);
   }
 
-  public static float getDamageAfterArmorExtensionAbsorb(float damage, float armor, float toughness, float armorStrength, float preReduction, float postReduction, float armorProtection) {
-    return getDamageAfterArmorExtensionAbsorb(damage, armor, toughness, armorStrength, preReduction, postReduction, armorProtection, 0.8f);
+  public static float getDamageAfterArmorAbsorb(float damage, float armor, float toughness, float armorStrength, float preReduction, float postReduction, float armorProtection) {
+    return getDamageAfterArmorAbsorb(damage, armor, toughness, armorStrength, preReduction, postReduction, armorProtection, 0.8f);
   }
 
-  public static float getDamageAfterArmorExtensionAbsorb(float damage, float armor, float toughness, float armorStrength, float preReduction, float postReduction, float armorProtection, float armorAbsorptionCap) {
+  public static float getDamageAfterArmorAbsorb(float damage, float armor, float toughness, float armorStrength, float preReduction, float postReduction, float armorProtection, float armorAbsorptionCap) {
     if (damage <= 0) {
       return 0;
     }
@@ -131,8 +131,8 @@ public class ArmorUtil {
                                         DoubleUnaryOperator postModifierTransform) {
     // if we are changing no values, nothing to do
     float armorAbsorptionCap = Mth.clamp(0.8f + armorAbsorptionCapModifier, 0.2f, 0.95f);
-    boolean hasArmorExtensionStats = armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0 || postModifierTransform != null;
-    if (!hasArmorExtensionStats && vanillaModifiers == finalModifiers && modifierCap == 20) {
+    boolean hasArmorPartStats = armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0 || postModifierTransform != null;
+    if (!hasArmorPartStats && vanillaModifiers == finalModifiers && modifierCap == 20) {
       return originalDamage;
     }
 
@@ -141,8 +141,8 @@ public class ArmorUtil {
     // the solution is instead of returning M(x), we return A-1(M(A(x))), giving us A(A-1(M(A(x)))) == M(A(x))
     float damage = originalDamage;
     // if there is no armor value though, no work is needed
-    if (hasArmorExtensionStats) {
-      damage = getDamageAfterArmorExtensionAbsorb(damage, armor, toughness, armorStrength, preReduction, postReduction, armorProtection, armorAbsorptionCap);
+    if (hasArmorPartStats) {
+      damage = getDamageAfterArmorAbsorb(damage, armor, toughness, armorStrength, preReduction, postReduction, armorProtection, armorAbsorptionCap);
     } else if (armor > 0) {
       damage = getDamageAfterAbsorb(damage, armor, toughness);
     }

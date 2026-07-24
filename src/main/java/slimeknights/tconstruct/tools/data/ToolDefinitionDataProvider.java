@@ -870,7 +870,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // display name - helmet displays a name for each material
                 .module(ArmorItem.Type.HELMET, UniqueMaterialToolName.FIRST);
 
-        defineArmorExtensionFamilies(tier1Material);
+        defineArmorPartFamilies(tier1Material);
 
         // ancient
         // melting pan
@@ -992,7 +992,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(new ParticleWeaponAttack(TinkerTools.axeAttackParticle.get()));
     }
 
-    private void defineArmorExtensionFamilies(RandomMaterial tier1Material) {
+    private void defineArmorPartFamilies(RandomMaterial tier1Material) {
         RandomMaterial tier1To2Material = RandomMaterial.random().tier(1, 2).build();
         DefaultMaterialsModule defaultThree = defaultMaterials(tier1To2Material, tier1To2Material, tier1Material);
         DefaultMaterialsModule defaultFour = defaultMaterials(tier1To2Material, tier1To2Material, tier1To2Material, tier1Material);
@@ -1001,7 +1001,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
 
         defineArmor(ArmorDefinitions.STANDARD)
                 .modules(slots -> PartStatsModule.armor(slots)
-                        .part(TinkerToolParts.armorCast, 1)
+                        .part(TinkerToolParts.armorCore, 1)
                         .part(maille, 1)
                         .part(linear, 1))
                 .module(defaultThree)
@@ -1011,7 +1011,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
 
         defineArmor(ArmorDefinitions.KNIGHTS)
                 .modules(slots -> PartStatsModule.armor(slots)
-                        .part(TinkerToolParts.massiveArmorCast, 1)
+                        .part(TinkerToolParts.armorHeavyCore, 1)
                         .part(maille, 1)
                         .part(linear, 1))
                 .module(defaultThree)
@@ -1043,7 +1043,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
         defineArmor(ArmorDefinitions.EXPLORERS)
                 .modules(slots -> PartStatsModule.armor(slots)
                         .part(TinkerToolParts.armorFrame, 1)
-                        .part(armorMail, 1)
+                        .part(layerMail, 1)
                         .part(linear, 1))
                 .module(defaultThree)
                 .module(multiply(null, 0.9f, 0.8f, 0.8f))
@@ -1051,13 +1051,13 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(slots(1, 1, 2))
                 .module(FixedMaterialToolName.FIRST);
 
-        defineLayeredCompositeArmor(ArmorDefinitions.LIGHT_COMPOSITE, armorMail, defaultThree, defaultFour, null, multiply(null, 0.9f, 0.8f, 1.25f), 0.4f, slots(3, 1, 1), null);
-        defineLayeredCompositeArmor(ArmorDefinitions.HEAVY_COMPOSITE, armorPlate, defaultThree, defaultFour,
+        defineLayeredCompositeArmor(ArmorDefinitions.LIGHT_COMPOSITE, layerMail, defaultThree, defaultFour, null, multiply(null, 0.9f, 0.8f, 1.25f), 0.4f, slots(3, 1, 1), null);
+        defineLayeredCompositeArmor(ArmorDefinitions.HEAVY_COMPOSITE, layerPlate, defaultThree, defaultFour,
                 baseStats(stats().set(ArmorStats.ARMOR_STRENGTH, 1f).set(ToolStats.KNOCKBACK_RESISTANCE, 0.1f)),
                 multiply(1.25f, null, 0.8f, 1.25f), 0.5f, slots(4, 2, 1),
                 java.util.Map.of(ArmorItem.Type.HELMET, 0.03f, ArmorItem.Type.CHESTPLATE, 0.06f, ArmorItem.Type.LEGGINGS, 0.05f, ArmorItem.Type.BOOTS, 0.02f));
-        defineLayeredForgedArmor(ArmorDefinitions.LIGHT_FORGED, armorMail, defaultForgedSmall, defaultForgedLarge, null, multiply(1.4f, 0.9f, 1.25f, 0.8f), 0.4f, slots(1, 3, 1), null);
-        defineLayeredForgedArmor(ArmorDefinitions.HEAVY_FORGED, armorPlate, defaultForgedSmall, defaultForgedLarge,
+        defineLayeredForgedArmor(ArmorDefinitions.LIGHT_FORGED, layerMail, defaultForgedSmall, defaultForgedLarge, null, multiply(1.4f, 0.9f, 1.25f, 0.8f), 0.4f, slots(1, 3, 1), null);
+        defineLayeredForgedArmor(ArmorDefinitions.HEAVY_FORGED, layerPlate, defaultForgedSmall, defaultForgedLarge,
                 baseStats(stats().set(ToolStats.ARMOR_TOUGHNESS, 1f).set(ToolStats.KNOCKBACK_RESISTANCE, 0.1f)),
                 multiply(1.4f, 0.9f, 1.25f, 0.8f), 0.4f, slots(2, 4, 1),
                 java.util.Map.of(ArmorItem.Type.HELMET, 0.03f, ArmorItem.Type.CHESTPLATE, 0.06f, ArmorItem.Type.LEGGINGS, 0.05f, ArmorItem.Type.BOOTS, 0.02f));
@@ -1161,8 +1161,8 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
     }
 
     private static PartStatsModule mixedCompositeParts(ArmorItem.Type type, boolean plateFirst) {
-        Supplier<? extends IToolPart> first = plateFirst ? armorPlate : armorMail;
-        Supplier<? extends IToolPart> second = plateFirst ? armorMail : armorPlate;
+        Supplier<? extends IToolPart> first = plateFirst ? layerPlate : layerMail;
+        Supplier<? extends IToolPart> second = plateFirst ? layerMail : layerPlate;
         return PartStatsModule.parts()
                 .part(TinkerToolParts.armorFrame.get(type), 0.5f)
                 .part(first, 0.25f)
@@ -1172,8 +1172,8 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
     }
 
     private static PartStatsModule mixedForgedParts(ArmorItem.Type type, boolean plateFirst) {
-        Supplier<? extends IToolPart> first = plateFirst ? armorPlate : armorMail;
-        Supplier<? extends IToolPart> second = plateFirst ? armorMail : armorPlate;
+        Supplier<? extends IToolPart> first = plateFirst ? layerPlate : layerMail;
+        Supplier<? extends IToolPart> second = plateFirst ? layerMail : layerPlate;
         return PartStatsModule.parts()
                 .part(TinkerToolParts.armorFrame.get(type), 1f)
                 .part(plating.get(type), 1f)

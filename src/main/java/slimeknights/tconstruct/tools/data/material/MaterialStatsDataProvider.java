@@ -465,9 +465,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.ice, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.cactus, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.bone, StatlessMaterialStats.SHIELD_CORE);
-        addArmorShieldStats(MaterialIds.copper, PlatingMaterialStats.builder().durabilityFactor(13).armor(1, 2, 3, 1), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.copper, PlatingMaterialStats.builder().durabilityFactor(13).armor(1, 2, 3, 1), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.copper,
-                new ArmorExtensionStatsBuilder(13f)
+                new ArmorPartStatsBuilder(13f)
                         .armor(1.0f, 3.0f, 2.0f, 1.0f)
                         .reduction(0.05f)
                         .protection(0.018f)
@@ -476,20 +476,20 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.0f)
                         .armorToughnessMultiplier(0.0f)
                         .build());
-        addMaterialStats(MaterialIds.leather, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
-        addMaterialStats(MaterialIds.vine, StatlessMaterialStats.MAILLE);
+        addMaterialStats(MaterialIds.leather, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f), StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.vine, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.wool, StatlessMaterialStats.LINEAR);
         // tier 2
         addMaterialStats(MaterialIds.slimewood, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.venombone, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.necroticBone, StatlessMaterialStats.SHIELD_CORE);
-        addMaterialStats(MaterialIds.slimeskin, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
-        addMaterialStats(MaterialIds.skyslimeVine, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
-        addMaterialStats(MaterialIds.weepingVine, StatlessMaterialStats.MAILLE);
-        addMaterialStats(MaterialIds.twistingVine, StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.iron,          PlatingMaterialStats.builder().durabilityFactor(15).armor(2, 4, 5, 2), StatlessMaterialStats.MAILLE);
+        addMaterialStats(MaterialIds.slimeskin, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f), StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.skyslimeVine, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f), StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.weepingVine, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
+        addMaterialStats(MaterialIds.twistingVine, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
+        addArmorShieldStats(MaterialIds.iron,          PlatingMaterialStats.builder().durabilityFactor(15).armor(2, 4, 5, 2), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.iron,
-                new ArmorExtensionStatsBuilder(15f)
+                new ArmorPartStatsBuilder(15f)
                         .armor(2.0f, 6.0f, 5.0f, 2.0f)
                         .armorStrength(1.0f)
                         .armorToughness(0.5f)
@@ -500,9 +500,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.0f)
                         .armorToughnessMultiplier(-0.1f)
                         .build());
-        addArmorShieldStats(MaterialIds.gold,          PlatingMaterialStats.builder().durabilityFactor( 7).armor(1, 3, 4, 1), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.gold,          PlatingMaterialStats.builder().durabilityFactor( 7).armor(1, 3, 4, 1), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.gold,
-                new ArmorExtensionStatsBuilder(7f)
+                new ArmorPartStatsBuilder(7f)
                         .armor(1.0f, 4.0f, 3.0f, 1.0f)
                         .reduction(0.05f)
                         .protection(0.01f)
@@ -511,9 +511,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.0f)
                         .armorToughnessMultiplier(0.0f)
                         .build());
-        addArmorShieldStats(MaterialIds.searedStone,   PlatingMaterialStats.builder().durabilityFactor(14).armor(1, 3, 4, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.searedStone,   PlatingMaterialStats.builder().durabilityFactor(14).armor(1, 3, 4, 2).knockbackResistance(0.1f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.searedStone,
-                new ArmorExtensionStatsBuilder(13.75f)
+                new ArmorPartStatsBuilder(13.75f)
                         .armor(1.5f, 4.0f, 3.0f, 1.5f)
                         .armorStrength(1.0f)
                         .reduction(0.1f)
@@ -524,9 +524,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.1f)
                         .armorToughnessMultiplier(-0.1f)
                         .build());
-        addArmorShieldStats(MaterialIds.scorchedStone, PlatingMaterialStats.builder().durabilityFactor(10).armor(1, 4, 5, 2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.scorchedStone, PlatingMaterialStats.builder().durabilityFactor(10).armor(1, 4, 5, 2).knockbackResistance(0.05f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.scorchedStone,
-                new ArmorExtensionStatsBuilder(10.5f)
+                new ArmorPartStatsBuilder(10.5f)
                         .armor(2.0f, 4.5f, 4.0f, 1.5f)
                         .armorStrength(1.5f)
                         .reduction(0.16f)
@@ -539,10 +539,10 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .build());
         // tier 2 - compat
         addMaterialStats(MaterialIds.treatedWood, StatlessMaterialStats.SHIELD_CORE);
-        addMaterialStats(MaterialIds.ironwood,    StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.osmium,    PlatingMaterialStats.builder().durabilityFactor(25).armor(1, 3, 5, 2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addMaterialStats(MaterialIds.ironwood,    StatlessMaterialStats.SHIELD_CORE, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
+        addArmorShieldStats(MaterialIds.osmium,    PlatingMaterialStats.builder().durabilityFactor(25).armor(1, 3, 5, 2).knockbackResistance(0.05f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.osmium,
-                new ArmorExtensionStatsBuilder(25.5f)
+                new ArmorPartStatsBuilder(25.5f)
                         .armor(1.5f, 5.0f, 4.5f, 1.0f)
                         .armorToughness(0.5f)
                         .reduction(0.05f)
@@ -553,9 +553,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(-0.2f)
                         .armorToughnessMultiplier(0.05f)
                         .build());
-        addArmorShieldStats(MaterialIds.aluminum,  PlatingMaterialStats.builder().durabilityFactor(13).armor(2, 4, 6, 2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.aluminum,  PlatingMaterialStats.builder().durabilityFactor(13).armor(2, 4, 6, 2), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.aluminum,
-                new ArmorExtensionStatsBuilder(39f)
+                new ArmorPartStatsBuilder(39f)
                         .armor(2.0f, 6.5f, 5.0f, 1.5f)
                         .reduction(0.18f)
                         .protection(0.01f)
@@ -564,9 +564,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.0f)
                         .armorToughnessMultiplier(0.12f)
                         .build());
-        addArmorShieldStats(MaterialIds.silver,    PlatingMaterialStats.builder().durabilityFactor(18).armor(1, 4, 5, 2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.silver,    PlatingMaterialStats.builder().durabilityFactor(18).armor(1, 4, 5, 2).knockbackResistance(0.05f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.silver,
-                new ArmorExtensionStatsBuilder(16.5f)
+                new ArmorPartStatsBuilder(16.5f)
                         .armor(1.0f, 3.5f, 2.5f, 1.0f)
                         .reduction(0.05f)
                         .protection(0.01f)
@@ -575,9 +575,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(-0.25f)
                         .armorToughnessMultiplier(0.08f)
                         .build());
-        addArmorShieldStats(MaterialIds.lead,      PlatingMaterialStats.builder().durabilityFactor(12).armor(1, 3, 4, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.lead,      PlatingMaterialStats.builder().durabilityFactor(12).armor(1, 3, 4, 2).knockbackResistance(0.1f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.lead,
-                new ArmorExtensionStatsBuilder(10.8f)
+                new ArmorPartStatsBuilder(10.8f)
                         .armor(1.5f, 4.0f, 3.5f, 1.5f)
                         .armorToughness(0.75f)
                         .reduction(0.6f)
@@ -590,10 +590,10 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .build());
         // tier 3
         addMaterialStats(MaterialIds.nahuatl, StatlessMaterialStats.SHIELD_CORE);
-        addMaterialStats(MaterialIds.ichorskin, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
-        addArmorShieldStats(MaterialIds.slimesteel,     PlatingMaterialStats.builder().durabilityFactor(40).armor(2, 5, 6, 2), StatlessMaterialStats.MAILLE);
+        addMaterialStats(MaterialIds.ichorskin, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f), StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
+        addArmorShieldStats(MaterialIds.slimesteel,     PlatingMaterialStats.builder().durabilityFactor(40).armor(2, 5, 6, 2), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.slimesteel,
-                new ArmorExtensionStatsBuilder(43.2f)
+                new ArmorPartStatsBuilder(43.2f)
                         .armor(2.0f, 6.0f, 5.0f, 2.0f)
                         .armorStrength(0.25f)
                         .armorToughness(0.75f)
@@ -605,9 +605,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(-0.08f)
                         .armorToughnessMultiplier(0.1f)
                         .build());
-        addArmorShieldStats(MaterialIds.amethystBronze, PlatingMaterialStats.builder().durabilityFactor(28).armor(2, 5, 6, 2).toughness(2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.amethystBronze, PlatingMaterialStats.builder().durabilityFactor(28).armor(2, 5, 6, 2).toughness(2), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.amethystBronze,
-                new ArmorExtensionStatsBuilder(39f)
+                new ArmorPartStatsBuilder(39f)
                         .armor(2.5f, 7.0f, 5.5f, 2.0f)
                         .armorStrength(1.25f)
                         .armorToughness(2.25f)
@@ -620,9 +620,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .smallReductionFactor(0.6f)
                         .smallProtectionFactor(0.25f)
                         .build());
-        addArmorShieldStats(MaterialIds.obsidian,       PlatingMaterialStats.builder().durabilityFactor(11).armor(2, 4, 5, 2).knockbackResistance(0.15f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.obsidian,       PlatingMaterialStats.builder().durabilityFactor(11).armor(2, 4, 5, 2).knockbackResistance(0.15f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.obsidian,
-                new ArmorExtensionStatsBuilder(21f)
+                new ArmorPartStatsBuilder(21f)
                         .armor(2.0f, 7.0f, 5.5f, 1.5f)
                         .armorStrength(1.75f)
                         .reduction(0.45f)
@@ -635,9 +635,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .smallReductionFactor(0.2f)
                         .smallProtectionFactor(0.5f)
                         .build());
-        addArmorShieldStats(MaterialIds.roseGold,       PlatingMaterialStats.builder().durabilityFactor( 9).armor(1, 3, 5, 2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.roseGold,       PlatingMaterialStats.builder().durabilityFactor( 9).armor(1, 3, 5, 2), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.roseGold,
-                new ArmorExtensionStatsBuilder(9f)
+                new ArmorPartStatsBuilder(9f)
                         .armor(1.5f, 5.0f, 4.0f, 1.5f)
                         .armorStrength(0.25f)
                         .armorToughness(1.0f)
@@ -648,9 +648,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.1f)
                         .armorToughnessMultiplier(0.08f)
                         .build());
-        addArmorShieldStats(MaterialIds.pigIron,        PlatingMaterialStats.builder().durabilityFactor(23).armor(1, 3, 4, 1).toughness(1).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.pigIron,        PlatingMaterialStats.builder().durabilityFactor(23).armor(1, 3, 4, 1).toughness(1).knockbackResistance(0.1f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.pigIron,
-                new ArmorExtensionStatsBuilder(35f)
+                new ArmorPartStatsBuilder(35f)
                         .armor(2.0f, 6.0f, 5.0f, 2.0f)
                         .armorStrength(1.5f)
                         .armorToughness(0.25f)
@@ -662,9 +662,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.12f)
                         .armorToughnessMultiplier(0.0f)
                         .build());
-        addArmorShieldStats(MaterialIds.cobalt,         PlatingMaterialStats.builder().durabilityFactor(30).armor(2, 5, 7, 2).toughness(1).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.cobalt,         PlatingMaterialStats.builder().durabilityFactor(30).armor(2, 5, 7, 2).toughness(1).knockbackResistance(0.05f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.cobalt,
-                new ArmorExtensionStatsBuilder(30f)
+                new ArmorPartStatsBuilder(30f)
                         .armor(2.5f, 6.5f, 5.0f, 2.0f)
                         .armorStrength(2.0f)
                         .armorToughness(1.0f)
@@ -678,9 +678,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .smallReductionFactor(0.6f)
                         .smallProtectionFactor(0.5f)
                         .build());
-        addArmorShieldStats(MaterialIds.steel,          PlatingMaterialStats.builder().durabilityFactor(29).armor(2, 5, 7, 2).toughness(2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.steel,          PlatingMaterialStats.builder().durabilityFactor(29).armor(2, 5, 7, 2).toughness(2), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.steel,
-                new ArmorExtensionStatsBuilder(32f)
+                new ArmorPartStatsBuilder(32f)
                         .armor(2.5f, 7.5f, 6.0f, 2.0f)
                         .armorStrength(2.0f)
                         .armorToughness(2.0f)
@@ -693,9 +693,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .smallReductionFactor(0.5f)
                         .smallProtectionFactor(0.6f)
                         .build());
-        addArmorShieldStats(MaterialIds.wroughtIron,    PlatingMaterialStats.builder().durabilityFactor(22).armor(2, 4, 6, 2).toughness(1), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.wroughtIron,    PlatingMaterialStats.builder().durabilityFactor(22).armor(2, 4, 6, 2).toughness(1), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.wroughtIron,
-                new ArmorExtensionStatsBuilder(23.5f)
+                new ArmorPartStatsBuilder(23.5f)
                         .armor(2.25f, 6.75f, 5.5f, 2.0f)
                         .armorStrength(1.5f)
                         .armorToughness(1.25f)
@@ -710,9 +710,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .build());
         // tier 3 - compat
         addMaterialStats(MaterialIds.necronium, StatlessMaterialStats.SHIELD_CORE);
-        addArmorShieldStats(MaterialIds.bronze,            PlatingMaterialStats.builder().durabilityFactor(28).armor(2, 5, 6, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.bronze,            PlatingMaterialStats.builder().durabilityFactor(28).armor(2, 5, 6, 2).knockbackResistance(0.1f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.bronze,
-                new ArmorExtensionStatsBuilder(34.3f)
+                new ArmorPartStatsBuilder(34.3f)
                         .armor(2.0f, 6.0f, 5.0f, 2.0f)
                         .armorStrength(0.5f)
                         .armorToughness(0.25f)
@@ -724,9 +724,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(-0.05f)
                         .armorToughnessMultiplier(-0.05f)
                         .build());
-        addArmorShieldStats(MaterialIds.constantan,        PlatingMaterialStats.builder().durabilityFactor(25).armor(1, 4, 5, 2).toughness(2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.constantan,        PlatingMaterialStats.builder().durabilityFactor(25).armor(1, 4, 5, 2).toughness(2).knockbackResistance(0.05f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.constantan,
-                new ArmorExtensionStatsBuilder(26.25f)
+                new ArmorPartStatsBuilder(26.25f)
                         .armor(2.0f, 5.0f, 4.0f, 2.0f)
                         .armorStrength(0.75f)
                         .armorToughness(2.0f)
@@ -738,9 +738,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.18f)
                         .armorToughnessMultiplier(0.1f)
                         .build());
-        addArmorShieldStats(MaterialIds.invar,             PlatingMaterialStats.builder().durabilityFactor(24).armor(1, 3, 5, 2).knockbackResistance(0.1f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.invar,             PlatingMaterialStats.builder().durabilityFactor(24).armor(1, 3, 5, 2).knockbackResistance(0.1f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.invar,
-                new ArmorExtensionStatsBuilder(27f)
+                new ArmorPartStatsBuilder(27f)
                         .armor(2.5f, 6.0f, 5.0f, 2.5f)
                         .armorStrength(0.75f)
                         .armorToughness(1.5f)
@@ -752,9 +752,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.1f)
                         .armorToughnessMultiplier(0.18f)
                         .build());
-        addArmorShieldStats(MaterialIds.pewter,            PlatingMaterialStats.builder().durabilityFactor(16).armor(2, 5, 7, 2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.pewter,            PlatingMaterialStats.builder().durabilityFactor(16).armor(2, 5, 7, 2), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.pewter,
-                new ArmorExtensionStatsBuilder(16f)
+                new ArmorPartStatsBuilder(16f)
                         .armor(2.5f, 6.5f, 5.0f, 2.0f)
                         .armorStrength(0.5f)
                         .reduction(0.15f)
@@ -764,10 +764,10 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.05f)
                         .armorToughnessMultiplier(-0.05f)
                         .build());
-        addArmorShieldStats(MaterialIds.electrum,          PlatingMaterialStats.builder().durabilityFactor(14).armor(1, 3, 4, 2), StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.steeleaf,          PlatingMaterialStats.builder().durabilityFactor(10).armor(2, 5, 7, 2), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.electrum,          PlatingMaterialStats.builder().durabilityFactor(14).armor(1, 3, 4, 2), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
+        addArmorShieldStats(MaterialIds.steeleaf,          PlatingMaterialStats.builder().durabilityFactor(10).armor(2, 5, 7, 2), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.steeleaf,
-                new ArmorExtensionStatsBuilder(10f)
+                new ArmorPartStatsBuilder(10f)
                         .armor(2.0f, 6.5f, 5.5f, 2.0f)
                         .armorStrength(1.0f)
                         .armorToughness(1.0f)
@@ -779,14 +779,14 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.12f)
                         .armorToughnessMultiplier(0.08f)
                         .build());
-        addArmorShieldStats(MaterialIds.polyethylene,      PlatingMaterialStats.builder().durabilityFactor(50).armor(3, 5, 8, 4).toughness(4).knockbackResistance(0.25f), StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
-        addArmorShieldStats(MaterialIds.polyvinylChloride, PlatingMaterialStats.builder().durabilityFactor(60).armor(3, 5, 8, 4).toughness(4).knockbackResistance(0.35f), StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.polyethylene,      PlatingMaterialStats.builder().durabilityFactor(50).armor(3, 5, 8, 4).toughness(4).knockbackResistance(0.25f), StatlessMaterialStats.SHIELD_CORE, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
+        addArmorShieldStats(MaterialIds.polyvinylChloride, PlatingMaterialStats.builder().durabilityFactor(60).armor(3, 5, 8, 4).toughness(4).knockbackResistance(0.35f), StatlessMaterialStats.SHIELD_CORE, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         // tier 4
         addMaterialStats(MaterialIds.blazewood, StatlessMaterialStats.SHIELD_CORE);
         addMaterialStats(MaterialIds.blazingBone, StatlessMaterialStats.SHIELD_CORE);
-        addArmorShieldStats(MaterialIds.cinderslime, PlatingMaterialStats.builder().durabilityFactor(42).armor(2, 5, 7, 2).knockbackResistance(0.10f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.cinderslime, PlatingMaterialStats.builder().durabilityFactor(42).armor(2, 5, 7, 2).knockbackResistance(0.10f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.cinderslime,
-                new ArmorExtensionStatsBuilder(45.6f)
+                new ArmorPartStatsBuilder(45.6f)
                         .armor(2.5f, 7.0f, 6.0f, 2.5f)
                         .armorStrength(2.25f)
                         .armorToughness(1.75f)
@@ -800,9 +800,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .smallReductionFactor(0.4f)
                         .smallProtectionFactor(0.75f)
                         .build());
-        addArmorShieldStats(MaterialIds.queensSlime, PlatingMaterialStats.builder().durabilityFactor(50).armor(2, 5, 7, 2).toughness(1), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.queensSlime, PlatingMaterialStats.builder().durabilityFactor(50).armor(2, 5, 7, 2).toughness(1), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.queensSlime,
-                new ArmorExtensionStatsBuilder(64f)
+                new ArmorPartStatsBuilder(64f)
                         .armor(2.0f, 6.0f, 5.0f, 2.0f)
                         .armorStrength(0.75f)
                         .armorToughness(3.0f)
@@ -815,9 +815,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .smallReductionFactor(0.75f)
                         .smallProtectionFactor(0.6f)
                         .build());
-        addArmorShieldStats(MaterialIds.hepatizon,   PlatingMaterialStats.builder().durabilityFactor(32).armor(2, 5, 7, 2).toughness(2).knockbackResistance(0.10f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.hepatizon,   PlatingMaterialStats.builder().durabilityFactor(32).armor(2, 5, 7, 2).toughness(2).knockbackResistance(0.10f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.hepatizon,
-                new ArmorExtensionStatsBuilder(32f)
+                new ArmorPartStatsBuilder(32f)
                         .armor(3.0f, 7.5f, 6.5f, 3.0f)
                         .armorStrength(1.25f)
                         .armorToughness(2.5f)
@@ -830,9 +830,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorToughnessMultiplier(0.2f)
                         .smallProtectionFactor(0.75f)
                         .build());
-        addArmorShieldStats(MaterialIds.manyullyn,   PlatingMaterialStats.builder().durabilityFactor(35).armor(2, 5, 7, 2).toughness(3).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.manyullyn,   PlatingMaterialStats.builder().durabilityFactor(35).armor(2, 5, 7, 2).toughness(3).knockbackResistance(0.05f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.manyullyn,
-                new ArmorExtensionStatsBuilder(51.25f)
+                new ArmorPartStatsBuilder(51.25f)
                         .armor(2.5f, 7.0f, 6.5f, 2.0f)
                         .armorStrength(3.0f)
                         .armorToughness(1.25f)
@@ -848,7 +848,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .build());
         addArmorShieldStats(MaterialIds.ancient,     PlatingMaterialStats.builder().durabilityFactor(25).armor(2, 4, 6, 2).knockbackResistance(0.15f));
         addMaterialStats(MaterialIds.ancient,
-                new ArmorExtensionStatsBuilder(28.8f)
+                new ArmorPartStatsBuilder(28.8f)
                         .armor(2.0f, 6.0f, 4.5f, 1.5f)
                         .reduction(0.1f)
                         .protection(0.08f)
@@ -859,11 +859,11 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorToughnessMultiplier(0.0f)
                         .build());
         addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
-        addMaterialStats(MaterialIds.ancientHide, ArmorExtensionMaterialStats.maille(0.25f, 0.1f, 0.0f, 0.0f));
+        addMaterialStats(MaterialIds.ancientHide, ArmorPartMaterialStats.maille(0.25f, 0.1f, 0.0f, 0.0f));
         // tier 4 (end)
-        addArmorShieldStats(MaterialIds.knightmetal, PlatingMaterialStats.builder().durabilityFactor(20).armor(2, 5, 7, 2).toughness(2).knockbackResistance(0.05f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.knightmetal, PlatingMaterialStats.builder().durabilityFactor(20).armor(2, 5, 7, 2).toughness(2).knockbackResistance(0.05f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.knightmetal,
-                new ArmorExtensionStatsBuilder(22.8f)
+                new ArmorPartStatsBuilder(22.8f)
                         .armor(3.0f, 8.0f, 6.5f, 2.5f)
                         .armorStrength(1.5f)
                         .armorToughness(2.25f)
@@ -877,13 +877,13 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .smallReductionFactor(0.375f)
                         .smallProtectionFactor(0.375f)
                         .build());
-        addMaterialStats(MaterialIds.enderslimeVine, StatlessMaterialStats.MAILLE, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
-        addMaterialStats(MaterialIds.dragonScale, ArmorExtensionMaterialStats.maille(-0.1f, 0.05f, 0.1f, 0.0f));
-        addMaterialStats(MaterialIds.shulker, ArmorExtensionMaterialStats.maille(0.0f, 0.0f, 0.1f, 0.0f));
+        addMaterialStats(MaterialIds.enderslimeVine, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f), StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.dragonScale, ArmorPartMaterialStats.maille(-0.1f, 0.05f, 0.1f, 0.0f));
+        addMaterialStats(MaterialIds.shulker, ArmorPartMaterialStats.maille(0.0f, 0.0f, 0.1f, 0.0f));
         // tier 4 (compat)
-        addArmorShieldStats(MaterialIds.fiery, PlatingMaterialStats.builder().durabilityFactor(25).armor(3, 6, 8, 3).toughness(1.5f), StatlessMaterialStats.MAILLE);
+        addArmorShieldStats(MaterialIds.fiery, PlatingMaterialStats.builder().durabilityFactor(25).armor(3, 6, 8, 3).toughness(1.5f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.fiery,
-                new ArmorExtensionStatsBuilder(25f)
+                new ArmorPartStatsBuilder(25f)
                         .armor(3.0f, 8.0f, 6.0f, 3.0f)
                         .armorStrength(2.5f)
                         .armorToughness(1.5f)
@@ -932,7 +932,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.honey);
     }
 
-    
+
   private void addArmorShieldStats(MaterialId location, PlatingMaterialStats.Builder statBuilder, IMaterialStats... otherStats) {
         PlatingMaterialStats[] plating = new PlatingMaterialStats[4];
         for (ArmorItem.Type slotType : ArmorItem.Type.values()) {

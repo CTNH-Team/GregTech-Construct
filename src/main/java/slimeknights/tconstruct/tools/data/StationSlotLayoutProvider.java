@@ -226,10 +226,10 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
                 .addInputItem(TinkerToolParts.arrowHead, 33, 29)
                 .addInputPattern(Patterns.ARROW_PART, 33, 53, Ingredient.of(TinkerToolParts.arrowHead, TinkerToolParts.arrowShaft))
                 .build();
-        defineArmorExtensionLayouts();
+        defineArmorPartLayouts();
     }
 
-    private void defineArmorExtensionLayouts() {
+    private void defineArmorPartLayouts() {
         definePattern(Patterns.PLATE_ARMOR_SMALL)
                 .sortIndex(32)
                 .translationKey(TConstruct.makeTranslationKey("gui", "plate_small"))
@@ -247,7 +247,7 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
                 .sortIndex(34)
                 .translationKey(TConstruct.makeTranslationKey("gui", "explorers"))
                 .addInputPattern(Patterns.ARMOR_FRAME, 33, 20, allFrames())
-                .addInputItem(TinkerToolParts.armorMail, 33, 46)
+                .addInputItem(TinkerToolParts.layerMail, 33, 46)
                 .addInputItem(TinkerToolParts.linear, 33, 72)
                 .build();
         definePattern(Patterns.STANDARD_ARMOR)
@@ -297,11 +297,11 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
     }
 
     private static Ingredient allArmorCasts() {
-        return Ingredient.of(TinkerToolParts.armorCast.values().toArray(new Item[0]));
+        return Ingredient.of(TinkerToolParts.armorCore.values().toArray(new Item[0]));
     }
 
     private static Ingredient allMassiveArmorCasts() {
-        return Ingredient.of(TinkerToolParts.massiveArmorCast.values().toArray(new Item[0]));
+        return Ingredient.of(TinkerToolParts.armorHeavyCore.values().toArray(new Item[0]));
     }
 
     private static Ingredient allFrames() {
@@ -325,7 +325,7 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
     }
 
     private static Ingredient mailOrPlate() {
-        return Ingredient.of(TinkerToolParts.armorMail, TinkerToolParts.armorPlate);
+        return Ingredient.of(TinkerToolParts.layerMail, TinkerToolParts.layerPlate);
     }
 
     @Override

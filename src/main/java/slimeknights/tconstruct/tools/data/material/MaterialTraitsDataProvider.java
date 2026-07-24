@@ -8,7 +8,7 @@ import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.data.ModifierIds;
-import slimeknights.tconstruct.tools.stats.ArmorExtensionMaterialStats;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
 import slimeknights.tconstruct.tools.stats.SkullStats;
 
@@ -16,14 +16,14 @@ import static slimeknights.tconstruct.library.materials.MaterialRegistry.*;
 
 public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvider {
     private static final MaterialStatsId[] ARMOR_CASTS = {
-      ArmorExtensionMaterialStats.CAST_HELMET.getId(),
-      ArmorExtensionMaterialStats.CAST_CHESTPLATE.getId(),
-      ArmorExtensionMaterialStats.CAST_LEGGINGS.getId(),
-      ArmorExtensionMaterialStats.CAST_BOOTS.getId(),
-      ArmorExtensionMaterialStats.MASSIVE_CAST_HELMET.getId(),
-      ArmorExtensionMaterialStats.MASSIVE_CAST_CHESTPLATE.getId(),
-      ArmorExtensionMaterialStats.MASSIVE_CAST_LEGGINGS.getId(),
-      ArmorExtensionMaterialStats.MASSIVE_CAST_BOOTS.getId()
+      ArmorPartMaterialStats.ARMOR_CORE_HELMET.getId(),
+      ArmorPartMaterialStats.ARMOR_CORE_CHESTPLATE.getId(),
+      ArmorPartMaterialStats.ARMOR_CORE_LEGGINGS.getId(),
+      ArmorPartMaterialStats.ARMOR_CORE_BOOTS.getId(),
+      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_HELMET.getId(),
+      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_CHESTPLATE.getId(),
+      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_LEGGINGS.getId(),
+      ArmorPartMaterialStats.ARMOR_HEAVY_CORE_BOOTS.getId()
     };
     private static final MaterialId[] ARMOR_CAST_TRAIT_MATERIALS = {
       MaterialIds.aluminum,

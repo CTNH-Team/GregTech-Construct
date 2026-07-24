@@ -111,7 +111,7 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
   }
 
   @Test
-  void nativeArmorExtensionResourcesAreWrittenToTconstructNamespace() throws IOException {
+  void nativeArmorPartResourcesAreWrittenToTconstructNamespace() throws IOException {
     runProvider("TinkerItemModelProvider");
     registerArmorTextureSerializers();
     runProvider("ArmorModelProvider");

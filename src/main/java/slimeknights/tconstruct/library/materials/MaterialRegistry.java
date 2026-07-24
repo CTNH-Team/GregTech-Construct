@@ -24,7 +24,7 @@ import slimeknights.tconstruct.library.materials.stats.UpdateMaterialStatsPacket
 import slimeknights.tconstruct.library.materials.traits.MaterialTraitsManager;
 import slimeknights.tconstruct.library.materials.traits.UpdateMaterialTraitsPacket;
 import slimeknights.tconstruct.shared.command.argument.MaterialTagSource;
-import slimeknights.tconstruct.tools.stats.ArmorExtensionMaterialStats;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.GripMaterialStats;
 import slimeknights.tconstruct.tools.stats.HandleMaterialStats;
 import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
@@ -124,19 +124,19 @@ public final class MaterialRegistry {
     for (MaterialStatType<?> type : PlatingMaterialStats.TYPES) {
       registry.registerStatType(type, ARMOR);
     }
-    registry.registerStatType(ArmorExtensionMaterialStats.ARMOR_PLATE, ARMOR);
-    registry.registerStatType(ArmorExtensionMaterialStats.ARMOR_MAIL, ARMOR);
-    for (MaterialStatType<?> type : ArmorExtensionMaterialStats.CAST_TYPES) {
+    registry.registerStatType(ArmorPartMaterialStats.ARMOR_LAYER_PLATE, ARMOR);
+    registry.registerStatType(ArmorPartMaterialStats.ARMOR_LAYER_MAIL, ARMOR);
+    for (MaterialStatType<?> type : ArmorPartMaterialStats.CORE_TYPES) {
       registry.registerStatType(type);
     }
-    for (MaterialStatType<?> type : ArmorExtensionMaterialStats.FRAME_TYPES) {
+    for (MaterialStatType<?> type : ArmorPartMaterialStats.FRAME_TYPES) {
       registry.registerStatType(type);
     }
-    for (MaterialStatType<?> type : ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES) {
+    for (MaterialStatType<?> type : ArmorPartMaterialStats.HEAVY_CORE_TYPES) {
       registry.registerStatType(type);
     }
     registry.registerStatType(StatlessMaterialStats.CUIRASS.getType(), ARMOR);
-    registry.registerStatType(ArmorExtensionMaterialStats.MAILLE, ARMOR);
+    registry.registerStatType(ArmorPartMaterialStats.MAILLE, ARMOR);
     registry.registerStatType(StatlessMaterialStats.SHIELD_CORE.getType(), ARMOR);
     registry.registerStatType(StatlessMaterialStats.LINEAR.getType(), ARMOR);
     // ammo

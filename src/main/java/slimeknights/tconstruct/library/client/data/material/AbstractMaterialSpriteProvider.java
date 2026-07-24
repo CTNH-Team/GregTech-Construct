@@ -18,7 +18,8 @@ import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.materials.stats.IMaterialStats;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatType;
-import slimeknights.tconstruct.tools.stats.ArmorExtensionMaterialStats;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.tools.data.sprite.TinkerPartSpriteProvider;
@@ -213,8 +214,7 @@ public abstract class AbstractMaterialSpriteProvider {
 
     /** Adds stat types for maille */
     public MaterialSpriteInfoBuilder maille() {
-      statType(StatlessMaterialStats.MAILLE.getIdentifier());
-      statType(TinkerPartSpriteProvider.ARMOR_MAILLE);
+      statType(ArmorPartMaterialStats.MAILLE);
       return this;
     }
 
@@ -243,20 +243,10 @@ public abstract class AbstractMaterialSpriteProvider {
       return this;
     }
 
-    /** Adds all ArmorExtension stat types (14 stats: armor_plate, armor_mail, 4 casts, 4 frames, 4 massive_casts) */
-    public MaterialSpriteInfoBuilder armorExtension() {
-      statType(ArmorExtensionMaterialStats.ARMOR_PLATE);
-      statType(ArmorExtensionMaterialStats.ARMOR_MAIL);
-      statType(ArmorExtensionMaterialStats.CAST_TYPES);
-      statType(ArmorExtensionMaterialStats.FRAME_TYPES);
-      statType(ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES);
-      return this;
-    }
-
-    /** Adds ArmorExtension stat types for linear + maille only (2 stats) */
+    /** Adds armor part stat types for linear + maille only (2 stats) */
     public MaterialSpriteInfoBuilder armorLinear() {
       statType(StatlessMaterialStats.LINEAR);
-      statType(ArmorExtensionMaterialStats.MAILLE);
+      statType(ArmorPartMaterialStats.MAILLE);
       return this;
     }
 
