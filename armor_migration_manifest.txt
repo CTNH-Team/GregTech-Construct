@@ -543,3 +543,64 @@ function Rename-ArmorFiles {
 ```
 
 **注意**: 上述脚本使用了 `-WhatIf` 参数，仅显示将要执行的操作而不实际执行。验证无误后，移除 `-WhatIf` 参数以实际执行重命名。
+
+---
+
+## Stage F: 运行时验证
+
+### F.1 编译验证 ✅
+- [x] compileJava: 成功
+- [x] compileTestJava: 成功
+- [x] 测试套件通过: 18/18 tests passed
+
+### F.2 Sprite 路径修复 (2026-07-25 Session 2) ✅
+**问题**: 游戏崩溃，报错 `Missing sprite at tconstruct:tinker_armor/cast_armor.png`
+
+**根本原因**: TinkerPartSpriteProvider 中纹理路径引用未更新
+
+**修复位置**: `TinkerPartSpriteProvider.java`
+
+**修复内容**（共 16 处路径更新）:
+
+1. **addArmorPartSprites() 内 tinker_armor/ 层级**（14处）:
+   - cast_armor → core_armor
+   - cast_leggings → core_leggings
+   - massive_cast_armor → heavy_core_armor
+   - massive_cast_leggings → heavy_core_leggings
+   - frame_of_armor → frame_armor
+   - frame_of_leggings → frame_leggings
+   - armor_plate_1_armor → layer_plate_1_armor
+   - armor_plate_1_leggings → layer_plate_1_leggings
+   - armor_plate_2_armor → layer_plate_2_armor
+   - armor_plate_2_leggings → layer_plate_2_leggings
+   - armor_mail_1_armor → layer_mail_1_armor
+   - armor_mail_1_leggings → layer_mail_1_leggings
+   - armor_mail_2_armor → layer_mail_2_armor
+   - armor_mail_2_leggings → layer_mail_2_leggings
+
+2. **addArmorPartItemSprites() 内 shared/{slot}/ 路径**（5处）:
+   - /cast → /core
+   - /frame_of → /frame
+   - /massive_cast → /heavy_core
+   - /armor_plate → /layer_plate
+   - /armor_mail → /layer_mail
+
+3. **addArmorPartPartSprites() 内 item/parts/ 路径**（5处）:
+   - /armor_plate → /layer_plate
+   - /armor_mail → /layer_mail
+   - /cast_{slot} → /core_{slot}
+   - /frame_of_{slot} → /frame_{slot}
+   - /massive_cast_{slot} → /heavy_core_{slot}
+
+**Commit**: `42ee7ed0f8 - fix: 修复 sprite provider 纹理路径引用`
+
+### F.3 运行时验证 (进行中)
+客户端已启动（Task ID: bxoxeri9c），正在验证：
+- [ ] 游戏启动成功
+- [ ] 动态材料包加载新 stat ID
+- [ ] 材料书显示正确属性
+- [ ] 熔铸系统使用新 ID
+- [ ] 护甲制作和装备正常
+- [ ] 伤害计算正确
+- [ ] 旧 ID 触发硬失败（无向后兼容）
+
