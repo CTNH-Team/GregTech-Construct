@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.plugin.emi.material.MaterialStatsEmiConstants;
 import slimeknights.tconstruct.test.BaseMcTest;
-import slimeknights.tconstruct.tools.stats.ArmorExtensionMaterialStats;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
 import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
 
@@ -35,22 +35,22 @@ class EMIMaterialStatsIntegrationTest extends BaseMcTest {
         PlatingMaterialStats.LEGGINGS.getId(),
         PlatingMaterialStats.BOOTS.getId(),
         PlatingMaterialStats.SHIELD.getId(),
-        ArmorExtensionMaterialStats.ARMOR_PLATE.getId(),
-        ArmorExtensionMaterialStats.ARMOR_MAIL.getId(),
-        ArmorExtensionMaterialStats.CAST_HELMET.getId(),
-        ArmorExtensionMaterialStats.CAST_CHESTPLATE.getId(),
-        ArmorExtensionMaterialStats.CAST_LEGGINGS.getId(),
-        ArmorExtensionMaterialStats.CAST_BOOTS.getId(),
-        ArmorExtensionMaterialStats.FRAME_HELMET.getId(),
-        ArmorExtensionMaterialStats.FRAME_CHESTPLATE.getId(),
-        ArmorExtensionMaterialStats.FRAME_LEGGINGS.getId(),
-        ArmorExtensionMaterialStats.FRAME_BOOTS.getId(),
-        ArmorExtensionMaterialStats.MASSIVE_CAST_HELMET.getId(),
-        ArmorExtensionMaterialStats.MASSIVE_CAST_CHESTPLATE.getId(),
-        ArmorExtensionMaterialStats.MASSIVE_CAST_LEGGINGS.getId(),
-        ArmorExtensionMaterialStats.MASSIVE_CAST_BOOTS.getId(),
+        ArmorPartMaterialStats.ARMOR_PLATE.getId(),
+        ArmorPartMaterialStats.ARMOR_MAIL.getId(),
+        ArmorPartMaterialStats.CAST_HELMET.getId(),
+        ArmorPartMaterialStats.CAST_CHESTPLATE.getId(),
+        ArmorPartMaterialStats.CAST_LEGGINGS.getId(),
+        ArmorPartMaterialStats.CAST_BOOTS.getId(),
+        ArmorPartMaterialStats.FRAME_HELMET.getId(),
+        ArmorPartMaterialStats.FRAME_CHESTPLATE.getId(),
+        ArmorPartMaterialStats.FRAME_LEGGINGS.getId(),
+        ArmorPartMaterialStats.FRAME_BOOTS.getId(),
+        ArmorPartMaterialStats.MASSIVE_CAST_HELMET.getId(),
+        ArmorPartMaterialStats.MASSIVE_CAST_CHESTPLATE.getId(),
+        ArmorPartMaterialStats.MASSIVE_CAST_LEGGINGS.getId(),
+        ArmorPartMaterialStats.MASSIVE_CAST_BOOTS.getId(),
         StatlessMaterialStats.CUIRASS.getType().getId(),
-        ArmorExtensionMaterialStats.MAILLE.getId(),
+        ArmorPartMaterialStats.MAILLE.getId(),
         StatlessMaterialStats.SHIELD_CORE.getType().getId(),
         StatlessMaterialStats.LINEAR.getType().getId());
 

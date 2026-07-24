@@ -16,8 +16,6 @@ public enum StatlessMaterialStats implements IMaterialStats {
   BINDING("binding"),
   /** Strings for ranged weapons. Generally supports strings and vines. */
   BOWSTRING("bowstring"),
-  /** Inner layer for armor. Generally supports all plating materials plus leather and vines. */
-  MAILLE("maille"),
   /** Base for shields, generally supports all woods. */
   SHIELD_CORE("shield_core"),
   /** Internal stat type that forces a repair kit to appear. Repair kits will also show if any repairable stat type is present. */

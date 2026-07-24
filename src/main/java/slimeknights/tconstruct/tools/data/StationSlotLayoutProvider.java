@@ -226,10 +226,10 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
                 .addInputItem(TinkerToolParts.arrowHead, 33, 29)
                 .addInputPattern(Patterns.ARROW_PART, 33, 53, Ingredient.of(TinkerToolParts.arrowHead, TinkerToolParts.arrowShaft))
                 .build();
-        defineArmorExtensionLayouts();
+        defineArmorPartLayouts();
     }
 
-    private void defineArmorExtensionLayouts() {
+    private void defineArmorPartLayouts() {
         definePattern(Patterns.PLATE_ARMOR_SMALL)
                 .sortIndex(32)
                 .translationKey(TConstruct.makeTranslationKey("gui", "plate_small"))
@@ -260,14 +260,14 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
         definePattern(Patterns.COMPOSITE_ARMOR_SMALL)
                 .sortIndex(36)
                 .translationKey(TConstruct.makeTranslationKey("gui", "composite_small"))
-                .addInputPattern(Patterns.ARMOR_FRAME_SMALL, 33, 20, smallFrames())
+                .addInputPattern(Patterns.FRAME_SMALL, 33, 20, smallFrames())
                 .addInputPattern(Patterns.MAIL_PLATE, 33, 46, mailOrPlate())
                 .addInputItem(TinkerToolParts.maille, 33, 72)
                 .build();
         definePattern(Patterns.COMPOSITE_ARMOR_LARGE)
                 .sortIndex(37)
                 .translationKey(TConstruct.makeTranslationKey("gui", "composite_large"))
-                .addInputPattern(Patterns.ARMOR_FRAME_LARGE, 33, 23, largeFrames())
+                .addInputPattern(Patterns.FRAME_LARGE, 33, 23, largeFrames())
                 .addInputPattern(Patterns.MAIL_PLATE, 46, 46, mailOrPlate())
                 .addInputPattern(Patterns.MAIL_PLATE, 20, 46, mailOrPlate())
                 .addInputItem(TinkerToolParts.maille, 33, 69)
@@ -275,14 +275,14 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
         definePattern(Patterns.FORGED_ARMOR_SMALL)
                 .sortIndex(38)
                 .translationKey(TConstruct.makeTranslationKey("gui", "forged_small"))
-                .addInputPattern(Patterns.ARMOR_FRAME_SMALL, 33, 46, smallFrames())
+                .addInputPattern(Patterns.FRAME_SMALL, 33, 46, smallFrames())
                 .addInputPattern(Patterns.PLATING_SMALL, 33, 20, smallPlating())
                 .addInputPattern(Patterns.MAIL_PLATE, 33, 72, mailOrPlate())
                 .build();
         definePattern(Patterns.FORGED_ARMOR_LARGE)
                 .sortIndex(39)
                 .translationKey(TConstruct.makeTranslationKey("gui", "forged_large"))
-                .addInputPattern(Patterns.ARMOR_FRAME_LARGE, 33, 46, largeFrames())
+                .addInputPattern(Patterns.FRAME_LARGE, 33, 46, largeFrames())
                 .addInputPattern(Patterns.PLATING_LARGE, 33, 20, largePlating())
                 .addInputPattern(Patterns.MAIL_PLATE, 10, 59, mailOrPlate())
                 .addInputPattern(Patterns.MAIL_PLATE, 56, 59, mailOrPlate())

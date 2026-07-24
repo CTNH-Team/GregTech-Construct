@@ -13,7 +13,7 @@ import java.util.Map;
 import static java.util.Map.entry;
 import static slimeknights.tconstruct.TConstruct.getResource;
 
-final class ArmorExtensionItemModelBuilder {
+final class ArmorItemModelBuilder {
   private static final ArmorItem.Type[] MIXED_SLOTS = {ArmorItem.Type.CHESTPLATE, ArmorItem.Type.LEGGINGS};
   private static final Map<String,List<PartEntry>> ITEM_PARTS = Map.ofEntries(
     entry("standard", parts(
@@ -27,48 +27,63 @@ final class ArmorExtensionItemModelBuilder {
     entry("explorers", parts(
       part("linear", "family", "linear", 2, 2),
       part("armor_mail", "shared", "armor_mail", 1, 1),
-      part("frame", "shared", "frame_of", 0, 0)
+      part("frame_of", "shared", "frame_of", 0, 0)
     )),
     entry("light_composite", parts(
       part("armor_mail", "shared", "armor_mail", 1, 1),
-      part("frame", "shared", "frame_of", 0, 0),
+      part("frame_of", "shared", "frame_of", 0, 0),
       part("maille", "composite", "maille", 2, 3)
     )),
     entry("heavy_composite", parts(
       part("armor_plate", "shared", "armor_plate", 1, 1),
-      part("frame", "shared", "frame_of", 0, 0),
+      part("frame_of", "shared", "frame_of", 0, 0),
       part("maille", "composite", "maille", 2, 3)
     )),
     entry("light_forged", parts(
       part("armor_mail", "shared", "armor_mail", 2, 2),
-      part("frame", "shared", "frame_of", 0, 0),
+      part("frame_of", "shared", "frame_of", 0, 0),
       part("plating", "forged", "plating", 1, 1)
     )),
     entry("heavy_forged", parts(
       part("armor_plate", "shared", "armor_plate", 2, 2),
-      part("frame", "shared", "frame_of", 0, 0),
+      part("frame_of", "shared", "frame_of", 0, 0),
+      part("plating", "forged", "plating", 1, 1)
+    )),
+    entry("mix_composite", parts(
+      part("armor_mail", "shared", "armor_mail", 1, 1),
+      part("armor_plate", "shared", "armor_plate", 2, 2),
+      part("frame_of", "shared", "frame_of", 0, 0),
+      part("maille", "composite", "maille", 3, 4)
+    )),
+    entry("mix_composite_other", parts(
+      part("armor_plate", "shared", "armor_plate", 1, 1),
+      part("armor_mail", "shared", "armor_mail", 2, 2),
+      part("frame_of", "shared", "frame_of", 0, 0),
+      part("maille", "composite", "maille", 3, 4)
+    )),
+    entry("mix_forged", parts(
+      part("armor_mail", "shared", "armor_mail", 2, 2),
+      part("armor_plate", "shared", "armor_plate", 3, 3),
+      part("frame_of", "shared", "frame_of", 0, 0),
+      part("plating", "forged", "plating", 1, 1)
+    )),
+    entry("mix_forged_other", parts(
+      part("armor_plate", "shared", "armor_plate", 2, 2),
+      part("armor_mail", "shared", "armor_mail", 3, 3),
+      part("frame_of", "shared", "frame_of", 0, 0),
       part("plating", "forged", "plating", 1, 1)
     ))
   );
-  private static final Map<String,String> MIXED_PARTS = Map.of(
-    "mix_composite", "light_composite",
-    "mix_composite_other", "heavy_composite",
-    "mix_forged", "light_forged",
-    "mix_forged_other", "heavy_forged"
-  );
+  private static final Map<String,String> MIXED_PARTS = Map.of();
 
-  private ArmorExtensionItemModelBuilder() {}
+  private ArmorItemModelBuilder() {}
 
   static void write(DynamicResourceRegistrar registrar) {
     ITEM_PARTS.forEach((family, parts) -> {
-      for (ArmorItem.Type slot : ArmorItem.Type.values()) {
+      // Mixed armor families only have chest and legs
+      ArmorItem.Type[] slots = family.startsWith("mix_") ? MIXED_SLOTS : ArmorItem.Type.values();
+      for (ArmorItem.Type slot : slots) {
         write(registrar, family, slot, parts, isSmall(slot));
-      }
-    });
-    MIXED_PARTS.forEach((family, source) -> {
-      List<PartEntry> parts = ITEM_PARTS.get(source);
-      for (ArmorItem.Type slot : MIXED_SLOTS) {
-        write(registrar, family, slot, parts, false);
       }
     });
   }

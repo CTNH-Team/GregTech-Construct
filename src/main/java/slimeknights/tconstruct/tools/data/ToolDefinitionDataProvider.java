@@ -870,7 +870,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // display name - helmet displays a name for each material
                 .module(ArmorItem.Type.HELMET, UniqueMaterialToolName.FIRST);
 
-        defineArmorExtensionFamilies(tier1Material);
+        defineArmorPartFamilies(tier1Material);
 
         // ancient
         // melting pan
@@ -992,7 +992,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(new ParticleWeaponAttack(TinkerTools.axeAttackParticle.get()));
     }
 
-    private void defineArmorExtensionFamilies(RandomMaterial tier1Material) {
+    private void defineArmorPartFamilies(RandomMaterial tier1Material) {
         RandomMaterial tier1To2Material = RandomMaterial.random().tier(1, 2).build();
         DefaultMaterialsModule defaultThree = defaultMaterials(tier1To2Material, tier1To2Material, tier1Material);
         DefaultMaterialsModule defaultFour = defaultMaterials(tier1To2Material, tier1To2Material, tier1To2Material, tier1Material);

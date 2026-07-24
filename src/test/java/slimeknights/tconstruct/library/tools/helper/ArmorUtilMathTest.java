@@ -170,13 +170,13 @@ public class ArmorUtilMathTest {
   }
 
   @Test
-  void armorAttributeOrder_withArmorExtensionStats() {
+  void armorAttributeOrder_withArmorPartStats() {
     Offset<Float> tolerance = within(0.001f);
     for (float damage = 2; damage < 40; damage += 3) {
       for (float armor = 0; armor < 30; armor += 5) {
         for (float toughness = 0; toughness < 20; toughness += 5) {
           for (float strength = 0; strength < 12; strength += 3) {
-            float targetBase = ArmorUtil.getDamageAfterArmorExtensionAbsorb(damage, armor, toughness, strength, 1.25f, 0.15f);
+            float targetBase = ArmorUtil.getDamageAfterArmorAbsorb(damage, armor, toughness, strength, 1.25f, 0.15f);
             for (float finalModifier = 0; finalModifier <= 10; finalModifier += 5) {
               float target = ArmorUtil.getDamageAfterMagicAbsorb(targetBase, finalModifier);
               for (float vanillaModifier = 0; vanillaModifier <= 10; vanillaModifier += 5) {
@@ -199,7 +199,7 @@ public class ArmorUtilMathTest {
     for (float damage = 2; damage < 40; damage += 3) {
       for (float armor = 0; armor < 30; armor += 5) {
         for (float toughness = 0; toughness < 20; toughness += 5) {
-          float targetBase = ArmorUtil.getDamageAfterArmorExtensionAbsorb(damage, armor, toughness, 3, 1.25f, 0.75f, 0.15f);
+          float targetBase = ArmorUtil.getDamageAfterArmorAbsorb(damage, armor, toughness, 3, 1.25f, 0.75f, 0.15f);
           for (float finalModifier = 0; finalModifier <= 10; finalModifier += 5) {
             float target = ArmorUtil.getDamageAfterMagicAbsorb(targetBase, finalModifier);
             for (float vanillaModifier = 0; vanillaModifier <= 10; vanillaModifier += 5) {
@@ -217,8 +217,8 @@ public class ArmorUtilMathTest {
 
   @Test
   void armorExtensionAbsorptionCapModifierLowersCap() {
-    float normal = ArmorUtil.getDamageAfterArmorExtensionAbsorb(20, 30, 0, 0, 0, 0, 0, 0.8f);
-    float reducedCap = ArmorUtil.getDamageAfterArmorExtensionAbsorb(20, 30, 0, 0, 0, 0, 0, 0.7f);
+    float normal = ArmorUtil.getDamageAfterArmorAbsorb(20, 30, 0, 0, 0, 0, 0, 0.8f);
+    float reducedCap = ArmorUtil.getDamageAfterArmorAbsorb(20, 30, 0, 0, 0, 0, 0, 0.7f);
     assertThat(reducedCap).isGreaterThan(normal);
   }
 

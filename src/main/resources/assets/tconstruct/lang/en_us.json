@@ -320,8 +320,8 @@
   "pattern.tconstruct.boots_plating": "Boot Plating",
 
   "pattern.tconstruct.armor_frame": "Frame of Armor",
-  "pattern.tconstruct.armor_frame_small": "Small Frame of Armor",
-  "pattern.tconstruct.armor_frame_large": "Large Frame of Armor",
+  "pattern.tconstruct.frame_of_small": "Small Frame of Armor",
+  "pattern.tconstruct.frame_of_large": "Large Frame of Armor",
   "pattern.tconstruct.armor_cast": "Cast Armor Plating",
   "pattern.tconstruct.massive_armor_cast": "Massive Cast Armor Plating",
   "pattern.tconstruct.mail-plate": "Armor Mail or Plate",

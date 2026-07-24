@@ -18,6 +18,9 @@ import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.materials.stats.IMaterialStats;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatType;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
+import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.tools.data.sprite.TinkerPartSpriteProvider;
 import slimeknights.tconstruct.tools.stats.GripMaterialStats;
@@ -211,8 +214,7 @@ public abstract class AbstractMaterialSpriteProvider {
 
     /** Adds stat types for maille */
     public MaterialSpriteInfoBuilder maille() {
-      statType(StatlessMaterialStats.MAILLE.getIdentifier());
-      statType(TinkerPartSpriteProvider.ARMOR_MAILLE);
+      statType(ArmorPartMaterialStats.MAILLE);
       return this;
     }
 
@@ -238,6 +240,13 @@ public abstract class AbstractMaterialSpriteProvider {
     public MaterialSpriteInfoBuilder armor() {
       plating();
       maille();
+      return this;
+    }
+
+    /** Adds armor part stat types for linear + maille only (2 stats) */
+    public MaterialSpriteInfoBuilder armorLinear() {
+      statType(StatlessMaterialStats.LINEAR);
+      statType(ArmorPartMaterialStats.MAILLE);
       return this;
     }
 

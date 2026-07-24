@@ -26,20 +26,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TiCDynamicResourceGeneratorTest extends BaseMcTest {
   private final TiCDynamicResourcePack pack = new TiCDynamicResourcePack("test");
   private static boolean armorTextureLoadersRegistered;
-  private static final String[] ALL_ARMOR_EXTENSION_FAMILIES = {
+  private static final String[] ALL_ARMOR_PART_FAMILIES = {
     "standard", "knights", "explorers", "light_composite", "heavy_composite", "light_forged", "heavy_forged"
   };
-  private static final String[] LARGE_ARMOR_EXTENSION_FAMILIES = {
+  private static final String[] LARGE_ARMOR_PART_FAMILIES = {
     "mix_composite", "mix_composite_other", "mix_forged", "mix_forged_other"
   };
-  private static final String[] ALL_ARMOR_EXTENSION_SLOTS = { "helmet", "chestplate", "leggings", "boots" };
-  private static final String[] LARGE_ARMOR_EXTENSION_SLOTS = { "chestplate", "leggings" };
+  private static final String[] ALL_ARMOR_PART_SLOTS = { "helmet", "chestplate", "leggings", "boots" };
+  private static final String[] LARGE_ARMOR_PART_SLOTS = { "chestplate", "leggings" };
 
   @AfterEach
   void clearExternalProviders() throws ReflectiveOperationException {
@@ -111,11 +112,30 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
   }
 
   @Test
-  void nativeArmorExtensionResourcesAreWrittenToTconstructNamespace() throws IOException {
+  void nativeArmorPartResourcesAreWrittenToTconstructNamespace() throws IOException {
     runProvider("TinkerItemModelProvider");
     registerArmorTextureSerializers();
     runProvider("ArmorModelProvider");
 
+    for (String part : List.of("armor_plate", "armor_mail")) {
+      assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "models/item/" + part + ".json")))
+        .as(part + " part item model")
+        .isNotNull();
+      assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "models/item/" + part + "_cast.json")))
+        .as(part + " cast item model")
+        .isNotNull();
+    }
+    for (String type : List.of("cast", "frame_of", "massive_cast")) {
+      for (String slot : ALL_ARMOR_PART_SLOTS) {
+        String part = type + "_" + slot;
+        assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "models/item/" + part + ".json")))
+          .as(part + " part item model")
+          .isNotNull();
+        assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "models/item/" + part + "_cast.json")))
+          .as(part + " cast item model")
+          .isNotNull();
+      }
+    }
     assertThat(readClientResource(new ResourceLocation("tconstruct", "models/item/standard_helmet.json")))
       .contains("\"loader\":\"tconstruct:tool\"")
       .contains("tconstruct:item/armor/standard/helmet/linear")
@@ -123,8 +143,15 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
     assertThat(readClientResource(new ResourceLocation("tconstruct", "models/item/armor/standard/helmet_broken.json")))
       .contains("linear_broken")
       .doesNotContain("tconarmorex");
-    for (String family : ALL_ARMOR_EXTENSION_FAMILIES) {
-      for (String slot : ALL_ARMOR_EXTENSION_SLOTS) {
+    assertThat(readClientResource(new ResourceLocation("tconstruct", "models/item/mix_forged_other_leggings.json")))
+      .contains("armor_plate")
+      .contains("armor_mail")
+      .contains("frame_of")
+      .doesNotContain("\"layer_plate\"")
+      .doesNotContain("\"layer_mail\"")
+      .doesNotContain("\"frame\"");
+    for (String family : ALL_ARMOR_PART_FAMILIES) {
+      for (String slot : ALL_ARMOR_PART_SLOTS) {
         assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "models/item/" + family + "_" + slot + ".json")))
           .as(family + " " + slot + " item model")
           .isNotNull();
@@ -133,8 +160,8 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
           .isNotNull();
       }
     }
-    for (String family : LARGE_ARMOR_EXTENSION_FAMILIES) {
-      for (String slot : LARGE_ARMOR_EXTENSION_SLOTS) {
+    for (String family : LARGE_ARMOR_PART_FAMILIES) {
+      for (String slot : LARGE_ARMOR_PART_SLOTS) {
         assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "models/item/" + family + "_" + slot + ".json")))
           .as(family + " " + slot + " item model")
           .isNotNull();
@@ -179,12 +206,12 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
       .contains("tconstruct:share_damage")
       .doesNotContain("tconarmorex");
     assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/lang/en_us.json")))
-      .contains("\"pattern.tconstruct.armor_frame_large\": \"Large Frame of Armor\"")
+      .contains("\"pattern.tconstruct.frame_of_large\": \"Large Frame of Armor\"")
       .contains("\"pattern.tconstruct.mail_plate\": \"Armor Mail or Plate\"")
       .contains("\"pattern.tconstruct.plating_large\": \"Large Armor Plating\"")
       .doesNotContain("tconarmorex");
     assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/lang/zh_cn.json")))
-      .contains("\"pattern.tconstruct.armor_frame_large\": \"大型盔甲框架\"")
+      .contains("\"pattern.tconstruct.frame_of_large\": \"大型盔甲框架\"")
       .contains("\"pattern.tconstruct.mail_plate\": \"通用护甲\"")
       .contains("\"pattern.tconstruct.plating_large\": \"大型盔甲镶板\"")
       .doesNotContain("tconarmorex");
@@ -196,7 +223,7 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
   }
 
   @Test
-  void armorExtensionSpritesAreRegisteredAndGeneratedDynamically() throws IOException {
+  void armorPartSpritesAreRegisteredAndGeneratedDynamically() throws IOException {
     GreyToSpriteTransformer.init();
     runProvider("GeneratorPartTextureJsonGenerator");
 
@@ -212,9 +239,29 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
 
     assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/cast_armor_tconstruct_manyullyn.png"))).isNotNull();
     assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/item/armor/shared/chestplate/massive_cast_tconstruct_manyullyn.png"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/item/parts/frame_of_boots_tconstruct_manyullyn.png"))).isNotNull();
+    assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/item/parts/armor_plate_tconstruct_manyullyn.png"))).isNotNull();
     assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/linear_armor_tconstruct_leather.png"))).isNotNull();
     assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/maille_armor_tconstruct_leather.png"))).isNotNull();
     assertThat(pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation("tconstruct", "textures/tinker_armor/maille_armor_tconstruct_shulker.png"))).isNotNull();
+  }
+
+  @Test
+  void armorPartStaticTexturesUseRenamedIds() {
+    for (String slot : ALL_ARMOR_PART_SLOTS) {
+      String name = "massive_cast_" + slot + ".png";
+      for (String folder : List.of("gui/tinker_pattern", "item/cast", "item/sand_cast", "item/red_sand_cast")) {
+        assertThat(Files.isRegularFile(Path.of("src/main/resources/assets/tconstruct/textures/" + folder + "/" + name)))
+          .as(folder + "/" + name)
+          .isTrue();
+      }
+      for (String suffix : List.of("", "_metal", "_tconstruct_unknown")) {
+        String partName = "massive_cast_" + slot + suffix + ".png";
+        assertThat(Files.isRegularFile(Path.of("src/main/resources/assets/tconstruct/textures/item/tool/parts/" + partName)))
+          .as("item/tool/parts/" + partName)
+          .isTrue();
+      }
+    }
   }
 
   private static void runProvider(String name) {

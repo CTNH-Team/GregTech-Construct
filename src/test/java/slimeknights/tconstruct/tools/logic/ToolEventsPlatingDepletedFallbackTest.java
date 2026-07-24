@@ -601,7 +601,7 @@ class ToolEventsPlatingDepletedFallbackTest extends BaseMcTest {
   }
 
   @Test
-  void livingHurtAppliesDamageLimitWithoutOtherArmorExtensionStats() throws Exception {
+  void livingHurtAppliesDamageLimitWithoutOtherArmorPartStats() throws Exception {
     PlayerPersistentDataCache.setDataGetter(ignored -> new ModDataNBT());
     bindAttribute(TinkerAttributes.ARMOR_STRENGTH, Attributes.ATTACK_DAMAGE);
     bindAttribute(TinkerAttributes.PRE_REDUCTION, Attributes.LUCK);

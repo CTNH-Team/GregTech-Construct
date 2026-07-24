@@ -471,7 +471,7 @@ public class ToolEvents {
     postReduction = armorDamageStats.postReduction();
     armorProtection = armorDamageStats.armorProtection();
     armorAbsorptionCapModifier = armorDamageStats.armorAbsorptionCap();
-    boolean hasArmorExtensionStats = armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0;
+    boolean hasArmorPartStats = armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0;
     float sharedRawDamage = 0;
     if (!SHARING_DAMAGE.get()) {
       sharedRawDamage = shareDamageWithNearbyGuardians(entity, source, originalDamage);
@@ -479,7 +479,7 @@ public class ToolEvents {
     }
     boolean handledArmorDamage = false;
     if (vanillaModifier != modifierValue || (cap > 20 && vanillaModifier > 20) || (cap < 20 && vanillaModifier > cap)
-      || hasArmorExtensionStats || armorDamageStats.hasDamageLimit()) {
+      || hasArmorPartStats || armorDamageStats.hasDamageLimit()) {
 
       // set the final dealt damage
       float finalDamage = armorDamageStats.hasDamageLimit()
@@ -501,7 +501,7 @@ public class ToolEvents {
     if (!handledArmorDamage && context.hasModifiableArmor() && !source.is(DamageTypeTags.BYPASSES_ARMOR)) {
       float finalDamage = originalDamage;
       if (armorStrength > 0 || preReduction > 0 || postReduction > 0 || armorProtection > 0 || armorAbsorptionCapModifier != 0) {
-        finalDamage = ArmorUtil.getDamageAfterArmorExtensionAbsorb(finalDamage, armor, toughness, armorStrength, preReduction, postReduction, armorProtection, Mth.clamp(0.8f + armorAbsorptionCapModifier, 0.2f, 0.95f));
+        finalDamage = ArmorUtil.getDamageAfterArmorAbsorb(finalDamage, armor, toughness, armorStrength, preReduction, postReduction, armorProtection, Mth.clamp(0.8f + armorAbsorptionCapModifier, 0.2f, 0.95f));
       } else if (armor > 0) {
         finalDamage = getDamageAfterAbsorb(finalDamage, armor, toughness);
       }

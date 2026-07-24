@@ -31,8 +31,8 @@ public class Patterns {
   public static final Pattern ARMOR_CAST = pattern("armor_cast");
   public static final Pattern MASSIVE_ARMOR_CAST = pattern("massive_armor_cast");
   public static final Pattern ARMOR_FRAME = pattern("armor_frame");
-  public static final Pattern ARMOR_FRAME_SMALL = pattern("armor_frame_small");
-  public static final Pattern ARMOR_FRAME_LARGE = pattern("armor_frame_large");
+  public static final Pattern FRAME_SMALL = pattern("frame_of_small");
+  public static final Pattern FRAME_LARGE = pattern("frame_of_large");
   public static final Pattern MAIL_PLATE = pattern("mail_plate");
   public static final Pattern PLATING_SMALL = pattern("plating_small");
   public static final Pattern PLATING_LARGE = pattern("plating_large");

@@ -644,10 +644,10 @@ public class ItemTagProvider extends ItemTagsProvider {
         addCast.accept(TinkerSmeltery.frameChestplateCast);
         addCast.accept(TinkerSmeltery.frameLeggingsCast);
         addCast.accept(TinkerSmeltery.frameBootsCast);
-        addCast.accept(TinkerSmeltery.massiveCastHelmetCast);
-        addCast.accept(TinkerSmeltery.massiveCastChestplateCast);
-        addCast.accept(TinkerSmeltery.massiveCastLeggingsCast);
-        addCast.accept(TinkerSmeltery.massiveCastBootsCast);
+        addCast.accept(TinkerSmeltery.massiveArmorCastHelmetCast);
+        addCast.accept(TinkerSmeltery.massiveArmorCastChestplateCast);
+        addCast.accept(TinkerSmeltery.massiveArmorCastLeggingsCast);
+        addCast.accept(TinkerSmeltery.massiveArmorCastBootsCast);
         addCast.accept(TinkerSmeltery.linearCast);
 
         // arrow patterns are basically a gold cast

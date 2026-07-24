@@ -31,6 +31,7 @@ import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.library.utils.Util;
 import slimeknights.tconstruct.tools.TinkerToolParts;
 import slimeknights.tconstruct.tools.TinkerTools;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
 import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
 
@@ -56,8 +57,11 @@ public class ArmorMaterialContent extends AbstractMaterialContent {
   /** Supported stat type set */
   private static final Set<MaterialStatsId> SUPPORTED = Stream.concat(
     PlatingMaterialStats.TYPES.stream().map(MaterialStatType::getId),
-    Stream.of(StatlessMaterialStats.MAILLE, StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.CUIRASS).map(IMaterialStats::getIdentifier)
+    Stream.of(StatlessMaterialStats.SHIELD_CORE, StatlessMaterialStats.CUIRASS).map(IMaterialStats::getIdentifier)
   ).collect(Collectors.toSet());
+  static {
+    SUPPORTED.add(ArmorPartMaterialStats.MAILLE.getId());
+  }
   /** Plating stat types in top down order */
   private static final List<MaterialStatsId> TOP_DOWN_STATS = List.of(HELMET.getId(), CHESTPLATE.getId(), LEGGINGS.getId(), BOOTS.getId(), SHIELD.getId());
 
@@ -79,7 +83,7 @@ public class ArmorMaterialContent extends AbstractMaterialContent {
   @Override
   protected MaterialStatsId getStatType(int index) {
     return switch (index) {
-      case 0 -> StatlessMaterialStats.MAILLE.getIdentifier();
+      case 0 -> ArmorPartMaterialStats.MAILLE.getId();
       case 1 -> StatlessMaterialStats.CUIRASS.getIdentifier();
       case 2 -> StatlessMaterialStats.SHIELD_CORE.getIdentifier();
       default -> null;

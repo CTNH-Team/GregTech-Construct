@@ -364,10 +364,10 @@ public final class TinkerSmeltery extends TinkerModule {
     public static final CastItemObject frameChestplateCast = ITEMS.registerCast("frame_of_chestplate", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.armorFrame.get(ArmorItem.Type.CHESTPLATE)));
     public static final CastItemObject frameLeggingsCast = ITEMS.registerCast("frame_of_leggings", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.armorFrame.get(ArmorItem.Type.LEGGINGS)));
     public static final CastItemObject frameBootsCast = ITEMS.registerCast("frame_of_boots", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.armorFrame.get(ArmorItem.Type.BOOTS)));
-    public static final CastItemObject massiveCastHelmetCast = ITEMS.registerCast("massive_cast_helmet", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.HELMET)));
-    public static final CastItemObject massiveCastChestplateCast = ITEMS.registerCast("massive_cast_chestplate", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.CHESTPLATE)));
-    public static final CastItemObject massiveCastLeggingsCast = ITEMS.registerCast("massive_cast_leggings", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.LEGGINGS)));
-    public static final CastItemObject massiveCastBootsCast = ITEMS.registerCast("massive_cast_boots", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.BOOTS)));
+    public static final CastItemObject massiveArmorCastHelmetCast = ITEMS.registerCast("massive_cast_helmet", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.HELMET)));
+    public static final CastItemObject massiveArmorCastChestplateCast = ITEMS.registerCast("massive_cast_chestplate", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.CHESTPLATE)));
+    public static final CastItemObject massiveArmorCastLeggingsCast = ITEMS.registerCast("massive_cast_leggings", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.LEGGINGS)));
+    public static final CastItemObject massiveArmorCastBootsCast = ITEMS.registerCast("massive_cast_boots", () -> new PartCastItem(ITEM_PROPS, () -> TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.BOOTS)));
     public static final CastItemObject linearCast = ITEMS.registerCast(TinkerToolParts.linear, ITEM_PROPS);
     // dummy cast creation items
     public static final EnumObject<ArmorItem.Type,DummyMaterialItem> dummyPlating = ITEMS.registerEnum(ArmorItem.Type.values(), "plating_dummy", type -> new DummyMaterialItem(ITEM_PROPS));
@@ -613,10 +613,10 @@ public final class TinkerSmeltery extends TinkerModule {
         accept(output, getter, frameChestplateCast);
         accept(output, getter, frameLeggingsCast);
         accept(output, getter, frameBootsCast);
-        accept(output, getter, massiveCastHelmetCast);
-        accept(output, getter, massiveCastChestplateCast);
-        accept(output, getter, massiveCastLeggingsCast);
-        accept(output, getter, massiveCastBootsCast);
+        accept(output, getter, massiveArmorCastHelmetCast);
+        accept(output, getter, massiveArmorCastChestplateCast);
+        accept(output, getter, massiveArmorCastLeggingsCast);
+        accept(output, getter, massiveArmorCastBootsCast);
         accept(output, getter, linearCast);
     }
 

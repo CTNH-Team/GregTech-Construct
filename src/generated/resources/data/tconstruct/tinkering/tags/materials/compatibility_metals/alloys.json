@@ -1,6 +1,10 @@
 {
   "values": [
     {
+      "id": "tconstruct:andesite_alloy",
+      "required": false
+    },
+    {
       "id": "tconstruct:bronze",
       "required": false
     },

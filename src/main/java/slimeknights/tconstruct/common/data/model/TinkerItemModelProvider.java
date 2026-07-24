@@ -75,9 +75,12 @@ public class TinkerItemModelProvider extends ItemModelProvider implements Runtim
         part(TinkerToolParts.shieldCore, "armor/plate/shield/core");
         part(TinkerToolParts.armorPlate);
         part(TinkerToolParts.armorMail);
-        TinkerToolParts.armorCast.forEach((slot, item) -> part(item, "parts/" + id(item).getPath()));
-        TinkerToolParts.armorFrame.forEach((slot, item) -> part(item, "parts/" + id(item).getPath()));
-        TinkerToolParts.massiveArmorCast.forEach((slot, item) -> part(item, "parts/" + id(item).getPath()));
+        for (ArmorItem.Type slot : ArmorItem.Type.values()) {
+            String name = slot.getName();
+            part(getResource("cast_" + name), "parts/cast_" + name);
+            part(getResource("frame_of_" + name), "parts/frame_of_" + name);
+            part(getResource("massive_cast_" + name), "parts/massive_cast_" + name);
+        }
         part(TinkerToolParts.linear);
         //gt
         part(TinkerToolParts.wrenchHead, "wrench/head_part");
@@ -155,10 +158,10 @@ public class TinkerItemModelProvider extends ItemModelProvider implements Runtim
         cast(TinkerSmeltery.frameChestplateCast);
         cast(TinkerSmeltery.frameLeggingsCast);
         cast(TinkerSmeltery.frameBootsCast);
-        cast(TinkerSmeltery.massiveCastHelmetCast);
-        cast(TinkerSmeltery.massiveCastChestplateCast);
-        cast(TinkerSmeltery.massiveCastLeggingsCast);
-        cast(TinkerSmeltery.massiveCastBootsCast);
+        cast(TinkerSmeltery.massiveArmorCastHelmetCast);
+        cast(TinkerSmeltery.massiveArmorCastChestplateCast);
+        cast(TinkerSmeltery.massiveArmorCastLeggingsCast);
+        cast(TinkerSmeltery.massiveArmorCastBootsCast);
         cast(TinkerSmeltery.linearCast);
         // dummy parts
         basicEnumItems(TinkerSmeltery.dummyPlating, "tool/parts/plating_");
@@ -178,7 +181,7 @@ public class TinkerItemModelProvider extends ItemModelProvider implements Runtim
         generatedModels.clear();
         registerModels();
         RuntimeResourceWriter.writeModels(this, registrar);
-        ArmorExtensionItemModelBuilder.write(registrar);
+        ArmorItemModelBuilder.write(registrar);
         generatedModels.clear();
     }
 

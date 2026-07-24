@@ -320,8 +320,8 @@
   "pattern.tconstruct.boots_plating": "靴子镶板",
 
   "pattern.tconstruct.armor_frame": "盔甲框架",
-  "pattern.tconstruct.armor_frame_small": "小型盔甲框架",
-  "pattern.tconstruct.armor_frame_large": "大型盔甲框架",
+  "pattern.tconstruct.frame_of_small": "小型盔甲框架",
+  "pattern.tconstruct.frame_of_large": "大型盔甲框架",
   "pattern.tconstruct.armor_cast": "盔甲铸件",
   "pattern.tconstruct.massive_armor_cast": "重质盔甲铸件",
   "pattern.tconstruct.mail-plate": "通用护甲",

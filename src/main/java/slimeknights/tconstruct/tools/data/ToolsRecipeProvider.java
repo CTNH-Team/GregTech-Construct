@@ -480,10 +480,10 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
         partRecipes(consumer, TinkerToolParts.armorFrame.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.frameChestplateCast, 6, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.armorFrame.get(ArmorItem.Type.LEGGINGS), TinkerSmeltery.frameLeggingsCast, 5, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.armorFrame.get(ArmorItem.Type.BOOTS), TinkerSmeltery.frameBootsCast, 2, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.HELMET), TinkerSmeltery.massiveCastHelmetCast, 8, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.massiveCastChestplateCast, 14, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.LEGGINGS), TinkerSmeltery.massiveCastLeggingsCast, 12, partFolder, castFolder);
-        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.BOOTS), TinkerSmeltery.massiveCastBootsCast, 6, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.HELMET), TinkerSmeltery.massiveArmorCastHelmetCast, 8, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.CHESTPLATE), TinkerSmeltery.massiveArmorCastChestplateCast, 14, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.LEGGINGS), TinkerSmeltery.massiveArmorCastLeggingsCast, 12, partFolder, castFolder);
+        partRecipes(consumer, TinkerToolParts.massiveArmorCast.get(ArmorItem.Type.BOOTS), TinkerSmeltery.massiveArmorCastBootsCast, 6, partFolder, castFolder);
         partRecipes(consumer, TinkerToolParts.linear, TinkerSmeltery.linearCast, 2, partFolder, castFolder);
 
         // bowstrings and shield cores are part builder exclusive. Shield core additionally disallows anything that conflicts with casting shield plating (obsidian/nahuatl conflict)

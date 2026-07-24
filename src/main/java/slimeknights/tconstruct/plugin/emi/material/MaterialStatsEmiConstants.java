@@ -3,7 +3,7 @@ package slimeknights.tconstruct.plugin.emi.material;
 import net.minecraft.resources.ResourceLocation;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
-import slimeknights.tconstruct.tools.stats.ArmorExtensionMaterialStats;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.GripMaterialStats;
 import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
 import slimeknights.tconstruct.tools.stats.LimbMaterialStats;
@@ -80,13 +80,13 @@ public final class MaterialStatsEmiConstants {
   private static List<MaterialStatsId> armorStatIds() {
     LinkedHashSet<MaterialStatsId> ids = new LinkedHashSet<>();
     PlatingMaterialStats.TYPES.forEach(type -> ids.add(type.getId()));
-    ids.add(ArmorExtensionMaterialStats.ARMOR_PLATE.getId());
-    ids.add(ArmorExtensionMaterialStats.ARMOR_MAIL.getId());
-    ArmorExtensionMaterialStats.CAST_TYPES.forEach(type -> ids.add(type.getId()));
-    ArmorExtensionMaterialStats.FRAME_TYPES.forEach(type -> ids.add(type.getId()));
-    ArmorExtensionMaterialStats.MASSIVE_CAST_TYPES.forEach(type -> ids.add(type.getId()));
+    ids.add(ArmorPartMaterialStats.ARMOR_PLATE.getId());
+    ids.add(ArmorPartMaterialStats.ARMOR_MAIL.getId());
+    ArmorPartMaterialStats.CAST_TYPES.forEach(type -> ids.add(type.getId()));
+    ArmorPartMaterialStats.FRAME_TYPES.forEach(type -> ids.add(type.getId()));
+    ArmorPartMaterialStats.MASSIVE_CAST_TYPES.forEach(type -> ids.add(type.getId()));
     ids.add(StatlessMaterialStats.CUIRASS.getType().getId());
-    ids.add(ArmorExtensionMaterialStats.MAILLE.getId());
+    ids.add(ArmorPartMaterialStats.MAILLE.getId());
     ids.add(StatlessMaterialStats.SHIELD_CORE.getType().getId());
     ids.add(StatlessMaterialStats.LINEAR.getType().getId());
     return List.copyOf(ids);

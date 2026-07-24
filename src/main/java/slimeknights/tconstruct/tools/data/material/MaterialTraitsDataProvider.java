@@ -8,7 +8,7 @@ import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.data.ModifierIds;
-import slimeknights.tconstruct.tools.stats.ArmorExtensionMaterialStats;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
 import slimeknights.tconstruct.tools.stats.SkullStats;
 
@@ -16,14 +16,14 @@ import static slimeknights.tconstruct.library.materials.MaterialRegistry.*;
 
 public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvider {
     private static final MaterialStatsId[] ARMOR_CASTS = {
-      ArmorExtensionMaterialStats.CAST_HELMET.getId(),
-      ArmorExtensionMaterialStats.CAST_CHESTPLATE.getId(),
-      ArmorExtensionMaterialStats.CAST_LEGGINGS.getId(),
-      ArmorExtensionMaterialStats.CAST_BOOTS.getId(),
-      ArmorExtensionMaterialStats.MASSIVE_CAST_HELMET.getId(),
-      ArmorExtensionMaterialStats.MASSIVE_CAST_CHESTPLATE.getId(),
-      ArmorExtensionMaterialStats.MASSIVE_CAST_LEGGINGS.getId(),
-      ArmorExtensionMaterialStats.MASSIVE_CAST_BOOTS.getId()
+      ArmorPartMaterialStats.CAST_HELMET.getId(),
+      ArmorPartMaterialStats.CAST_CHESTPLATE.getId(),
+      ArmorPartMaterialStats.CAST_LEGGINGS.getId(),
+      ArmorPartMaterialStats.CAST_BOOTS.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_HELMET.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_CHESTPLATE.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_LEGGINGS.getId(),
+      ArmorPartMaterialStats.MASSIVE_CAST_BOOTS.getId()
     };
     private static final MaterialId[] ARMOR_CAST_TRAIT_MATERIALS = {
       MaterialIds.aluminum,
@@ -218,7 +218,6 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         // tier 4 - mod compat
         addDefaultTraits(MaterialIds.fiery, TinkerModifiers.autosmelt);
         addTraits(MaterialIds.fiery, ARMOR, ModifierIds.temperedProtection);
-        addTraits(new MaterialId("tinkersinnovation", "zinc"), ARMOR, ModifierIds.malleability);
 
         // slimeskull
         addTraits(MaterialIds.glass,        SkullStats.ID, TinkerModifiers.selfDestructive.getId(), ModifierIds.creeperDisguise);

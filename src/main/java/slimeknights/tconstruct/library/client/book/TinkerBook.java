@@ -26,6 +26,7 @@ import slimeknights.tconstruct.library.materials.IMaterialRegistry;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.shared.item.TinkerBookItem.BookType;
+import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.GripMaterialStats;
 import slimeknights.tconstruct.tools.stats.HandleMaterialStats;
 import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
@@ -104,17 +105,17 @@ public class TinkerBook extends BookData {
         // anything with a cuirass goes first
         if (registry.getMaterialStats(id, StatlessMaterialStats.CUIRASS.getIdentifier()).isPresent()) {
           // among cuirass, sort maille last so they are next to maille exclusive
-          return registry.getMaterialStats(id, StatlessMaterialStats.MAILLE.getIdentifier()).isPresent() ? 2 : 1;
+          return registry.getMaterialStats(id, ArmorPartMaterialStats.MAILLE.getId()).isPresent() ? 2 : 1;
         }
         // anything with plating goes 4th
         if (registry.getMaterialStats(id, CHESTPLATE.getId()).isPresent()) {
           return 4;
         }
         // if it has maille, it goes before plating. Otherwise (shield cores), it goes after
-        return registry.getMaterialStats(id, StatlessMaterialStats.MAILLE.getIdentifier()).isPresent() ? 3 : 5;
+        return registry.getMaterialStats(id, ArmorPartMaterialStats.MAILLE.getId()).isPresent() ? 3 : 5;
       }),
       HELMET.getId(), CHESTPLATE.getId(), LEGGINGS.getId(), BOOTS.getId(), SHIELD.getId(),
-      StatlessMaterialStats.MAILLE.getIdentifier(), StatlessMaterialStats.CUIRASS.getIdentifier(),
+      ArmorPartMaterialStats.MAILLE.getId(), StatlessMaterialStats.CUIRASS.getIdentifier(),
       StatlessMaterialStats.SHIELD_CORE.getIdentifier());
     TierRangeMaterialSectionTransformer.registerMaterialType(getResource("skull"), ContentMaterialSkull::new,
       Comparator.comparing(TierRangeMaterialSectionTransformer.tagOrder(TinkerTags.Materials.SLIMESKULL)), SkullStats.ID);

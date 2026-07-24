@@ -21,6 +21,10 @@
       "required": false
     },
     {
+      "id": "tconstruct:wrought_iron",
+      "required": false
+    },
+    {
       "id": "tconstruct:fiery",
       "required": false
     }
