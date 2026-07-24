@@ -13,6 +13,10 @@
     "tconstruct:rose_gold",
     "tconstruct:pig_iron",
     "tconstruct:blazing_bone",
-    "tconstruct:ender_pearl"
+    "tconstruct:ender_pearl",
+    {
+      "id": "tconstruct:wrought_iron",
+      "required": false
+    }
   ]
 }
