@@ -774,7 +774,6 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                         .stat(StatlessMaterialStats.CUIRASS, 1))
                 .module(DefaultMaterialsModule.builder().material(MaterialIds.roseGold).material(MaterialIds.leather).build())
                 .modules(slots -> MultiplyStatsModule.armor(slots)
-                        .set(ArmorItem.Type.CHESTPLATE, ToolStats.ATTACK_DAMAGE, 0.55f)
                         .setAll(ToolStats.DURABILITY, 0.75f))
                 .module(ToolSlotsModule.builder()
                         .slots(SlotType.UPGRADE, 2)
@@ -817,7 +816,6 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
         defineArmor(ArmorDefinitions.PLATE)
                 .module(ToolDefinitionDataProvider::plateArmorParts)
                 .module(plateMaterials)
-                .module(ArmorItem.Type.CHESTPLATE, new MultiplyStatsModule(MultiplierNBT.builder().set(ToolStats.ATTACK_DAMAGE, 0.4f).build()))
                 .module(plateSlots)
                 // faster tool name logic
                 .module(FixedMaterialToolName.FIRST);
@@ -844,7 +842,6 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // not using durabilityFactor as helmet stats give a bonus too, factor is 42
                 .modules(slots -> SetStatsModule.armor(slots)
                         .setInOrder(ToolStats.DURABILITY, 362, 672, 630, 546))
-                .module(ArmorItem.Type.CHESTPLATE, new MultiplyStatsModule(MultiplierNBT.builder().set(ToolStats.ATTACK_DAMAGE, 0.4f).build()))
                 .module(ToolSlotsModule.builder()
                         .slots(SlotType.UPGRADE, 5)
                         .slots(SlotType.ABILITY, 1).build())
@@ -1005,7 +1002,6 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                         .part(maille, 1)
                         .part(linear, 1))
                 .module(defaultThree)
-                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.4f))
                 .module(slots(4, 0, 1))
                 .module(FixedMaterialToolName.FIRST);
 
@@ -1036,7 +1032,6 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                         .set(ArmorStats.PROTECTION, 0.025f)
                         .set(ArmorStats.SPEED_PENALTY, 0.06f)))
                 .module(multiply(1.75f, 1.1f, 1.25f, 1.25f))
-                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.8f))
                 .module(slots(5, 1, 1))
                 .module(FixedMaterialToolName.FIRST);
 
@@ -1047,19 +1042,18 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                         .part(linear, 1))
                 .module(defaultThree)
                 .module(multiply(null, 0.9f, 0.8f, 0.8f))
-                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.6f))
                 .module(slots(1, 1, 2))
                 .module(FixedMaterialToolName.FIRST);
 
-        defineLayeredCompositeArmor(ArmorDefinitions.LIGHT_COMPOSITE, armorMail, defaultThree, defaultFour, null, multiply(null, 0.9f, 0.8f, 1.25f), 0.4f, slots(3, 1, 1), null);
+        defineLayeredCompositeArmor(ArmorDefinitions.LIGHT_COMPOSITE, armorMail, defaultThree, defaultFour, null, multiply(null, 0.9f, 0.8f, 1.25f), slots(3, 1, 1), null);
         defineLayeredCompositeArmor(ArmorDefinitions.HEAVY_COMPOSITE, armorPlate, defaultThree, defaultFour,
                 baseStats(stats().set(ArmorStats.ARMOR_STRENGTH, 1f).set(ToolStats.KNOCKBACK_RESISTANCE, 0.1f)),
-                multiply(1.25f, null, 0.8f, 1.25f), 0.5f, slots(4, 2, 1),
+                multiply(1.25f, null, 0.8f, 1.25f), slots(4, 2, 1),
                 java.util.Map.of(ArmorItem.Type.HELMET, 0.03f, ArmorItem.Type.CHESTPLATE, 0.06f, ArmorItem.Type.LEGGINGS, 0.05f, ArmorItem.Type.BOOTS, 0.02f));
-        defineLayeredForgedArmor(ArmorDefinitions.LIGHT_FORGED, armorMail, defaultForgedSmall, defaultForgedLarge, null, multiply(1.4f, 0.9f, 1.25f, 0.8f), 0.4f, slots(1, 3, 1), null);
+        defineLayeredForgedArmor(ArmorDefinitions.LIGHT_FORGED, armorMail, defaultForgedSmall, defaultForgedLarge, null, multiply(1.4f, 0.9f, 1.25f, 0.8f), slots(1, 3, 1), null);
         defineLayeredForgedArmor(ArmorDefinitions.HEAVY_FORGED, armorPlate, defaultForgedSmall, defaultForgedLarge,
                 baseStats(stats().set(ToolStats.ARMOR_TOUGHNESS, 1f).set(ToolStats.KNOCKBACK_RESISTANCE, 0.1f)),
-                multiply(1.4f, 0.9f, 1.25f, 0.8f), 0.4f, slots(2, 4, 1),
+                multiply(1.4f, 0.9f, 1.25f, 0.8f), slots(2, 4, 1),
                 java.util.Map.of(ArmorItem.Type.HELMET, 0.03f, ArmorItem.Type.CHESTPLATE, 0.06f, ArmorItem.Type.LEGGINGS, 0.05f, ArmorItem.Type.BOOTS, 0.02f));
 
         defineMixedCompositeArmor(ArmorDefinitions.MIX_COMPOSITE, false, defaultFour, java.util.Map.of(ArmorItem.Type.CHESTPLATE, 0.03f, ArmorItem.Type.LEGGINGS, 0.025f));
@@ -1069,7 +1063,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
     }
 
     private void defineLayeredCompositeArmor(ModifiableArmorMaterial material, Supplier<? extends IToolPart> layer, DefaultMaterialsModule smallMaterials,
-                                             DefaultMaterialsModule largeMaterials, ToolModule baseStats, ToolModule multipliers, float chestAttack, ToolModule slots, java.util.Map<ArmorItem.Type, Float> speedPenalty) {
+                                             DefaultMaterialsModule largeMaterials, ToolModule baseStats, ToolModule multipliers, ToolModule slots, java.util.Map<ArmorItem.Type, Float> speedPenalty) {
         ArmorDataBuilder builder = defineArmor(material);
         for (ArmorItem.Type type : ArmorItem.Type.values()) {
             boolean small = isSmallArmor(type);
@@ -1083,13 +1077,12 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
             builder.module(baseStats);
         }
         builder.module(multipliers)
-                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, chestAttack))
                 .module(slots)
                 .module(FixedMaterialToolName.FIRST);
     }
 
     private void defineLayeredForgedArmor(ModifiableArmorMaterial material, Supplier<? extends IToolPart> layer, DefaultMaterialsModule smallMaterials,
-                                          DefaultMaterialsModule largeMaterials, ToolModule baseStats, ToolModule multipliers, float chestAttack, ToolModule slots, java.util.Map<ArmorItem.Type, Float> speedPenalty) {
+                                          DefaultMaterialsModule largeMaterials, ToolModule baseStats, ToolModule multipliers, ToolModule slots, java.util.Map<ArmorItem.Type, Float> speedPenalty) {
         ArmorDataBuilder builder = defineArmor(material);
         for (ArmorItem.Type type : ArmorItem.Type.values()) {
             boolean small = isSmallArmor(type);
@@ -1103,7 +1096,6 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
             builder.module(baseStats);
         }
         builder.module(multipliers)
-                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, chestAttack))
                 .module(slots)
                 .module(FixedMaterialToolName.FIRST);
     }
@@ -1118,7 +1110,6 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
             }
         }
         builder.module(multiply(1.25f, 0.95f, 0.8f, 1.25f))
-                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.45f))
                 .module(slots(4, 1, 1))
                 .module(FixedMaterialToolName.FIRST);
     }
@@ -1134,7 +1125,6 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
         }
         builder.module(baseStats(stats().set(ToolStats.ARMOR_TOUGHNESS, 1f).set(ToolStats.KNOCKBACK_RESISTANCE, 0.1f)))
                 .module(multiply(1.4f, 0.95f, 1.25f, 0.8f))
-                .module(ArmorItem.Type.CHESTPLATE, multiply(ToolStats.ATTACK_DAMAGE, 0.45f))
                 .module(slots(1, 4, 1))
                 .module(FixedMaterialToolName.FIRST);
     }
