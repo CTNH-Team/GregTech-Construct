@@ -206,12 +206,12 @@ class TiCDynamicResourceGeneratorTest extends BaseMcTest {
       .contains("tconstruct:share_damage")
       .doesNotContain("tconarmorex");
     assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/lang/en_us.json")))
-      .contains("\"pattern.tconstruct.frame_of_large\": \"Large Frame of Armor\"")
+      .contains("\"pattern.tconstruct.armor_frame_large\": \"Large Frame of Armor\"")
       .contains("\"pattern.tconstruct.mail_plate\": \"Armor Mail or Plate\"")
       .contains("\"pattern.tconstruct.plating_large\": \"Large Armor Plating\"")
       .doesNotContain("tconarmorex");
     assertThat(Files.readString(Path.of("src/main/resources/assets/tconstruct/lang/zh_cn.json")))
-      .contains("\"pattern.tconstruct.frame_of_large\": \"大型盔甲框架\"")
+      .contains("\"pattern.tconstruct.armor_frame_large\": \"大型盔甲框架\"")
       .contains("\"pattern.tconstruct.mail_plate\": \"通用护甲\"")
       .contains("\"pattern.tconstruct.plating_large\": \"大型盔甲镶板\"")
       .doesNotContain("tconarmorex");
