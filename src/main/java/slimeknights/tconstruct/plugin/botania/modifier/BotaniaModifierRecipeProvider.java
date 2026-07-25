@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.plugin.botania.modifier;
 
 import slimeknights.tconstruct.plugin.botania.BotaniaTiCAddon;
-import slimeknights.tconstruct.plugin.botania.recipe.TerrasteelHelmetPlatingIngredient;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -39,7 +38,7 @@ public class BotaniaModifierRecipeProvider extends BaseRecipeProvider {
                         location(upgradeFolder + "manafix"));
 
         String slotlessFolder = "tools/modifiers/botania/slotless/";
-        Ingredient terrasteelHelmet = TerrasteelHelmetPlatingIngredient.of();
+        Ingredient terrasteelHelmet = AncientWillModifier.terrasteelHelmetIngredient();
         for (AncientWillModifier.Will will : AncientWillModifier.Will.values()) {
             ModifierRecipeBuilder.modifier(will.modifierId())
                     .addInput(will.item())

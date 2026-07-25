@@ -6,8 +6,6 @@
   "refmap": "mixins.tconstruct.refmap.json",
   "plugin": "slimeknights.tconstruct.mixin.TConstructMixinPlugin",
   "mixins": [
-    "CraftingTableRepairKitRecipeMixin",
-    "OverslimeCraftingTableRecipeMixin",
     "PlayerHurtSoundMixin",
     "ShapedRecipeMixin",
     "ShapelessRecipeMixin",

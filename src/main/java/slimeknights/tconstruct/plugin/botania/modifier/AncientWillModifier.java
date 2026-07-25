@@ -6,14 +6,16 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.eventbus.api.Event;
-import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.impl.NoLevelsModifier;
+import slimeknights.tconstruct.library.recipe.ingredient.MaterialToolIngredient;
+import slimeknights.tconstruct.library.tools.item.IModifiable;
 import slimeknights.tconstruct.library.tools.nbt.IToolContext;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
@@ -31,6 +33,11 @@ import java.util.WeakHashMap;
 import java.util.function.Supplier;
 
 public class AncientWillModifier extends NoLevelsModifier {
+    private static final MaterialToolIngredient TERRASTEEL_HELMET =
+        MaterialToolIngredient.builder(BotaniaMaterialIds.terraSteel)
+            .armorTypes(ArmorItem.Type.HELMET)
+            .build();
+
     private static final Map<Player, CriticalTarget> CRITICAL_TARGETS = new WeakHashMap<>();
     private static final Set<Player> ARMOR_PIERCING_REENTRY = Collections.newSetFromMap(new WeakHashMap<>());
 
@@ -112,8 +119,12 @@ public class AncientWillModifier extends NoLevelsModifier {
         return wills.contains(Will.VERAC) ? armorPiercingSource(player) : source;
     }
 
+    public static MaterialToolIngredient terrasteelHelmetIngredient() {
+        return TERRASTEEL_HELMET;
+    }
+
     public static boolean hasTerrasteelHelmetPlating(IToolContext tool) {
-        return BotaniaModifierIds.PLATE_HELMET.equals(tool.getDefinition().getId()) && tool.getMaterial(0).matchesVariant(BotaniaMaterialIds.terraSteel);
+        return TERRASTEEL_HELMET.test(tool);
     }
 
     public static float getDharokCritDamageMult(float health, float maxHealth) {
@@ -158,7 +169,7 @@ public class AncientWillModifier extends NoLevelsModifier {
 
     private static IToolStackView getTerrasteelHelmet(Player player) {
         ItemStack stack = player.getItemBySlot(EquipmentSlot.HEAD);
-        if (stack.isEmpty() || !stack.is(TinkerTags.Items.MODIFIABLE)) {
+        if (stack.isEmpty() || !(stack.getItem() instanceof IModifiable)) {
             return null;
         }
         ToolStack tool = ToolStack.from(stack);

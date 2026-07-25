@@ -23,6 +23,7 @@ import slimeknights.tconstruct.library.json.predicate.material.MaterialStatTypeP
 import slimeknights.tconstruct.library.json.predicate.material.MaterialTierPredicate;
 import slimeknights.tconstruct.library.json.predicate.material.MaterialVariantPredicate;
 import slimeknights.tconstruct.library.recipe.ingredient.MaterialIngredient;
+import slimeknights.tconstruct.library.recipe.ingredient.MaterialToolIngredient;
 import slimeknights.tconstruct.library.recipe.ingredient.MaterialValueIngredient;
 import slimeknights.tconstruct.shared.block.KnightMetalBlock;
 import slimeknights.tconstruct.shared.block.OrientableBlock;
@@ -75,6 +76,7 @@ public final class TinkerMaterials extends TinkerModule {
   void registerSerializers(RegisterEvent event) {
     if (event.getRegistryKey() == Registries.RECIPE_SERIALIZER) {
       CraftingHelper.register(MaterialIngredient.Serializer.ID, MaterialIngredient.Serializer.INSTANCE);
+      CraftingHelper.register(MaterialToolIngredient.Serializer.ID, MaterialToolIngredient.Serializer.INSTANCE);
       CraftingHelper.register(MaterialValueIngredient.Serializer.ID, MaterialValueIngredient.Serializer.INSTANCE);
 
       MaterialPredicate.LOADER.register(getResource("variant"), MaterialVariantPredicate.LOADER);

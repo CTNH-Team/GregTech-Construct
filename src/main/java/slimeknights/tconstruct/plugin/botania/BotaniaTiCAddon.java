@@ -18,7 +18,6 @@ import slimeknights.tconstruct.plugin.botania.modifier.BotaniaModifierRecipeProv
 import slimeknights.tconstruct.plugin.botania.modifier.ManaFixModifier;
 import slimeknights.tconstruct.plugin.botania.modifier.TerraRecoverModifier;
 import slimeknights.tconstruct.plugin.botania.modifier.TerraSetBonusModifier;
-import slimeknights.tconstruct.plugin.botania.recipe.TerrasteelHelmetPlatingIngredient;
 import slimeknights.tconstruct.plugin.botania.smeltery.BotaniaSmelteryCompat;
 import slimeknights.tconstruct.plugin.botania.tag.BotaniaFluidTagProvider;
 import slimeknights.tconstruct.plugin.botania.tag.BotaniaMaterialTagProvider;
@@ -46,7 +45,6 @@ public class BotaniaTiCAddon implements ITiCAddon, ITiCFluidAddon, ITiCStaticMod
     public static final String MOD_ID = "botania";
 
     public BotaniaTiCAddon() {
-        TerrasteelHelmetPlatingIngredient.register();
         MinecraftForge.EVENT_BUS.addListener(TerraSetBonusModifier::onManaDiscount);
         MinecraftForge.EVENT_BUS.addListener(TerraSetBonusModifier::onPlayerTick);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, AncientWillModifier::onCriticalHit);

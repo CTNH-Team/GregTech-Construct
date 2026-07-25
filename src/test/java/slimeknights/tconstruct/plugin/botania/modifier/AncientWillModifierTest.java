@@ -9,6 +9,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.assertj.core.data.Offset;
@@ -19,7 +20,7 @@ import org.mockito.Mockito;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariant;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
-import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
+import slimeknights.tconstruct.library.tools.item.IModifiable;
 import slimeknights.tconstruct.library.tools.nbt.IToolContext;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialIds;
@@ -82,19 +83,26 @@ class AncientWillModifierTest extends BaseMcTest {
   }
 
   @Test
-  void terrasteelHelmetPlatingRequiresPlateHelmetDefinitionAndFirstMaterial() {
+  void terrasteelHelmetPlatingRequiresHelmetWithTerrasteelPrimaryMaterial() {
     IToolContext tool = Mockito.mock(IToolContext.class);
-    Mockito.when(tool.getDefinition()).thenReturn(new ToolDefinition(BotaniaModifierIds.PLATE_HELMET));
+    ArmorItem helmet = Mockito.mock(ArmorItem.class, Mockito.withSettings().extraInterfaces(IModifiable.class));
+    Mockito.when(tool.getItem()).thenReturn(helmet);
+    Mockito.when(helmet.getType()).thenReturn(ArmorItem.Type.HELMET);
     Mockito.when(tool.getMaterial(0)).thenReturn(MaterialVariant.of(BotaniaMaterialIds.terraSteel, ""));
 
     assertThat(AncientWillModifier.hasTerrasteelHelmetPlating(tool)).isTrue();
 
-    Mockito.when(tool.getDefinition()).thenReturn(new ToolDefinition(new slimeknights.tconstruct.library.modifiers.ModifierId("tconstruct", "travelers_helmet")));
-    assertThat(AncientWillModifier.hasTerrasteelHelmetPlating(tool)).isFalse();
-
-    Mockito.when(tool.getDefinition()).thenReturn(new ToolDefinition(BotaniaModifierIds.PLATE_HELMET));
     Mockito.when(tool.getMaterial(0)).thenReturn(MaterialVariant.UNKNOWN);
     assertThat(AncientWillModifier.hasTerrasteelHelmetPlating(tool)).isFalse();
+
+    Mockito.when(tool.getMaterial(0)).thenReturn(MaterialVariant.of(BotaniaMaterialIds.terraSteel, ""));
+    Mockito.when(helmet.getType()).thenReturn(ArmorItem.Type.CHESTPLATE);
+    assertThat(AncientWillModifier.hasTerrasteelHelmetPlating(tool)).isFalse();
+  }
+
+  @Test
+  void terrasteelHelmetIngredientProvidesNonEmptyDisplay() {
+    assertThat(AncientWillModifier.terrasteelHelmetIngredient().getItems()).isNotEmpty();
   }
 
   @Test

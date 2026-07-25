@@ -4,6 +4,7 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.emi.emi.api.stack.ListEmiIngredient;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -37,10 +38,14 @@ public abstract class TConstructEmiRecipe implements EmiRecipe {
   }
 
   public static EmiIngredient itemIngredient(List<ItemStack> stacks) {
-    return EmiIngredient.of(stacks.stream()
+    List<EmiStack> ingredients = stacks.stream()
         .filter(stack -> !stack.isEmpty())
         .map(EmiStack::of)
-        .toList());
+        .toList();
+    if (stacks.stream().anyMatch(ItemStack::hasTag)) {
+      return new ListEmiIngredient(ingredients, 1);
+    }
+    return EmiIngredient.of(ingredients);
   }
 
   public static EmiIngredient fluidIngredient(FluidStack stack) {
