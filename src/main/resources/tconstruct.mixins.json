@@ -7,9 +7,8 @@
   "plugin": "slimeknights.tconstruct.mixin.TConstructMixinPlugin",
   "mixins": [
     "PlayerHurtSoundMixin",
-    "ShapedRecipeMixin",
-    "ShapelessRecipeMixin",
     "ToolHelperMixin",
+    "gtceu.ToolIngredientMixin",
     "botania.PlayerAncientWillMixin",
     "create.AirCurrentFanProcessingMixin",
     "create.BlazeBurnerBlockEntityTargetMixin",

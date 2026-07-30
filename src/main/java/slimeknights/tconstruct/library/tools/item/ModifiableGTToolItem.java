@@ -192,19 +192,11 @@ public class ModifiableGTToolItem extends ModifiableItem implements IGTTool {
 
     @Override
     public boolean hasCraftingRemainingItem(ItemStack stack) {
-        // 如果工具损坏了，不能作为合成材料
-        if (ToolDamageUtil.isBroken(stack)) {
-            return false;
-        }
         return definition$hasCraftingRemainingItem(stack);
     }
 
     @Override
     public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
-        // 如果工具损坏了，返回空物品堆
-        if (ToolDamageUtil.isBroken(itemStack)) {
-            return ItemStack.EMPTY;
-        }
         ItemStack stack = itemStack.copy();
         ToolStack tool = ToolStack.from(stack);
         Player player = ForgeHooks.getCraftingPlayer();
