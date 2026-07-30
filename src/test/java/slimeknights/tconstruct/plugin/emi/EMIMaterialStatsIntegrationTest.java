@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class EMIMaterialStatsIntegrationTest extends BaseMcTest {
   @Test
-  void materialStatsCategoriesCoverTconJeiViews() {
+  void materialStatsCategoriesCoverAllViews() {
     assertThat(MaterialStatsEmiConstants.CATEGORY_IDS).containsExactly(
         MaterialStatsEmiConstants.HARVEST_STATS,
         MaterialStatsEmiConstants.RANGED_STATS,

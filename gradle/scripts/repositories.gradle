@@ -20,7 +20,7 @@ repositories {
         }
     }
     //maven {
-    //    // Patchouli, JEI
+    //    // Patchouli
     //    name = "BlameJared"
     //    url = "https://maven.blamejared.com/"
     //}
@@ -105,7 +105,7 @@ repositories {
         name 'tterrag maven'
         url "https://maven.tterrag.com/"
     }
-    //maven { // CraftTweaker, Immersive Engineering, JEI
+    //maven { // CraftTweaker, Immersive Engineering
     //    name 'BlameJared Maven'
     //    url 'https://maven.blamejared.com'
     //}

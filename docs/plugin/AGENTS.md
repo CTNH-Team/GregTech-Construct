@@ -8,7 +8,6 @@ Optional compatibility integrations discovered and initialized only when their t
 |-------------|----------|
 | Botania | `plugin/botania` |
 | Create | `plugin/create` |
-| JEI | `plugin/jei` |
 | Json Things | `plugin/jsonthings` |
 | Apotheosis | `plugin/apotheosis` |
 | Crafting Tweaks | `plugin/craftingtweaks` |
@@ -27,7 +26,6 @@ Optional compatibility integrations discovered and initialized only when their t
 - Do not duplicate conditional checks when the existing plugin/addon registry already owns them.
 
 ## NOTES
-- JEI is the largest integration package and has both client and recipe-viewer responsibilities.
 - Botania and Create can also have mixin implications; coordinate plugin and mixin changes.
 - Local GTCEU compatibility code is part of this fork's supported surface and uses the `gtceu` dependency in `libs`.
 - Compatibility tests should be runnable without enabling every optional integration at once.
@@ -39,7 +37,7 @@ Optional compatibility integrations discovered and initialized only when their t
 Applies to `src/main/java/slimeknights/tconstruct/plugin` and integration-specific mixins, data, and tests.
 
 ## READ WHEN
-- Adding or changing support for JEI, Botania, Create, GTCEU, Apotheosis, Json Things, or another optional mod.
+- Adding or changing support for Botania, Create, GTCEU, Apotheosis, Json Things, or another optional mod.
 
 ## SOURCE OF TRUTH
 - Integration guard and registration path in the integration package.

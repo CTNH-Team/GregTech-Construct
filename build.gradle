@@ -128,7 +128,6 @@ tasks.named('processResources', ProcessResources).configure {
         'minecraft_range': minecraft_range,
         'mantle_range': mantle_range,
         'emi_range': emi_range,
-        'jei_range': jei_range,
         'json_things_range': json_things_range
 
 

@@ -252,8 +252,6 @@ public class Config {
 
     // Recipe viewers
     public final BooleanValue showModifiersInEMI;
-    /** Compatibility alias for the restored JEI integration. */
-    public final BooleanValue showModifiersInJEI;
     public final ConfigValue<String> showOnlyToolMaterial;
     public final ConfigValue<String> showOnlyPartMaterial;
     public final BooleanValue showAllTableVariants;
@@ -261,8 +259,6 @@ public class Config {
     public final BooleanValue showAllSmelteryVariants;
     public final BooleanValue showFilledFluidTanks;
     public final BooleanValue showPotionFluidInEMI;
-    /** Compatibility alias for the restored JEI integration. */
-    public final BooleanValue showPotionFluidInJEI;
 
     // framed modifier
     public final ForgeConfigSpec.BooleanValue renderItemFrame;
@@ -303,7 +299,7 @@ public class Config {
         .translation("tconstruct.configgui.logMissingMaterialTextures")
         .define("logMissingModifierTextures", false);
 
-      builder.comment("EMI configuration").push("jei");
+      builder.comment("EMI configuration").push("emi");
       {
         this.showModifiersInEMI = builder
           .comment("If true, modifiers will be added to the EMI ingredient list. If false, they will only be visible in the modifiers recipe tab.")
@@ -344,9 +340,6 @@ public class Config {
         this.showPotionFluidInEMI = builder
           .comment("If true, variants of our potion fluid for every potion will show in EMI. If false it will be hidden, but still usable.")
           .define("showPotionFluid", true);
-
-        this.showModifiersInJEI = this.showModifiersInEMI;
-        this.showPotionFluidInJEI = this.showPotionFluidInEMI;
       }
       builder.pop(); // EMI
 
