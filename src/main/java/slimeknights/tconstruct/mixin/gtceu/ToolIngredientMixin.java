@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.item.ModifiableItem;
 
-@Mixin(value = ToolIngredient.class, remap = false)
+@Mixin(value = ToolIngredient.class)
 public abstract class ToolIngredientMixin {
   @Inject(method = "test", at = @At("HEAD"), cancellable = true)
   private void tconstruct$rejectBrokenTool(ItemStack input, CallbackInfoReturnable<Boolean> cir) {
