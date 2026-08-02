@@ -115,7 +115,7 @@ public final class TinkerWorld extends TinkerModule {
   /** Creative tab for anything that is naturally found in the world */
   public static final RegistryObject<CreativeModeTab> tabWorld = CREATIVE_TABS.register(
     "world", () -> CreativeModeTab.builder().title(TConstruct.makeTranslation("itemGroup", "world"))
-                                  .icon(() -> new ItemStack(TinkerWorld.cobaltOre))
+                                  .icon(() -> new ItemStack(TinkerWorld.cobaltCluster))
                                   .displayItems(TinkerWorld::addTabItems)
                                   .withTabsBefore(TinkerFluids.tabFluids.getId())
                                   .build());
@@ -127,11 +127,6 @@ public final class TinkerWorld extends TinkerModule {
   /*
    * Metals
    */
-  // ores
-  public static final ItemObject<Block> cobaltOre = BLOCKS.register("cobalt_ore", () -> new Block(builder(MapColor.NETHER, SoundType.NETHER_ORE).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(10.0F)), BLOCK_ITEM);
-  public static final ItemObject<Block> rawCobaltBlock = BLOCKS.register("raw_cobalt_block", () -> new Block(builder(MapColor.COLOR_BLUE, SoundType.NETHER_ORE).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(6.0f, 7.0f)), BLOCK_ITEM);
-  public static final ItemObject<Item> rawCobalt = ITEMS.register("raw_cobalt", ITEM_PROPS);
-
   // shards
   public static final ItemObject<Item> steelShard = ITEMS.register("steel_shard", TOOLTIP_ITEM);
   public static final ItemObject<Item> cobaltShard = ITEMS.register("cobalt_shard", TOOLTIP_ITEM);
@@ -308,15 +303,6 @@ public final class TinkerWorld extends TinkerModule {
   /*
    * Features
    */
-  public static ResourceKey<BiomeModifier> spawnCobaltOre = key(ForgeRegistries.Keys.BIOME_MODIFIERS, "cobalt_ore");
-  // small veins, standard distribution
-  public static ResourceKey<ConfiguredFeature<?,?>> configuredSmallCobaltOre = key(Registries.CONFIGURED_FEATURE, "cobalt_ore_small");
-  public static ResourceKey<PlacedFeature> placedSmallCobaltOre = key(Registries.PLACED_FEATURE, "cobalt_ore_small");
-  // large veins, around y=16, up to 48
-  public static ResourceKey<ConfiguredFeature<?,?>> configuredLargeCobaltOre = key(Registries.CONFIGURED_FEATURE, "cobalt_ore_large");
-  public static ResourceKey<PlacedFeature> placedLargeCobaltOre = key(Registries.PLACED_FEATURE, "cobalt_ore_large");
-
-
   /*
    * Events
    */
@@ -406,11 +392,6 @@ public final class TinkerWorld extends TinkerModule {
 
   /** Adds all relevant items to the creative tab */
   private static void addTabItems(ItemDisplayParameters itemDisplayParameters, Output output) {
-    // ores
-    output.accept(cobaltOre);
-    output.accept(rawCobalt);
-    output.accept(rawCobaltBlock);
-
     // monsters
     output.accept(terracubeEntity);
     output.accept(skySlimeEntity);

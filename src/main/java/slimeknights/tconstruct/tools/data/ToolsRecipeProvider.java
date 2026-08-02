@@ -166,7 +166,7 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
                 .pattern(" W ")
                 .define('C', TinkerWorld.earthGeode)
                 .define('W', TinkerWorld.greenheart.getLogItemTag())
-                .define('I', TinkerMaterials.cobalt.getIngotTag())
+                .define('I', TinkerTags.Items.INGOTS_COBALT)
                 .unlockedBy("has_wood", has(TinkerWorld.greenheart.getLogItemTag()))
                 .save(consumer, prefix(TinkerTools.earthStaff, folder));
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, TinkerTools.ichorStaff)
@@ -368,7 +368,7 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
         PartBuilderRecycleBuilder.tool(TinkerTools.skyStaff)
                 .result(crystal, TinkerWorld.skyGeode, 2)
                 .result(log, TinkerWorld.greenheart.getLog(), 2)
-                .result(ingot, TinkerMaterials.cobalt.getIngotTag(), 1)
+                .result(ingot, TinkerTags.Items.INGOTS_COBALT, 1)
                 .save(consumer, location(folder + "sky_staff"));
         PartBuilderRecycleBuilder.tool(TinkerTools.ichorStaff)
                 .result(crystal, TinkerWorld.ichorGeode, 2)

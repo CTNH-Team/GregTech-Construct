@@ -129,7 +129,6 @@ public class ItemTagProvider extends ItemTagsProvider {
 
         // ores
         addMetalTags(TinkerMaterials.steel);
-        addMetalTags(TinkerMaterials.cobalt);
         // tier 3
         addMetalTags(TinkerMaterials.slimesteel);
         addMetalTags(TinkerMaterials.amethystBronze);
@@ -175,15 +174,18 @@ public class ItemTagProvider extends ItemTagsProvider {
 
         // beacons are happy to accept any expensive ingots
         // mirrors the block list
-        this.tag(ItemTags.BEACON_PAYMENT_ITEMS).addTags(
-                // ores
-                TinkerMaterials.steel.getIngotTag(), TinkerMaterials.cobalt.getIngotTag(),
-                // tier 3
-                TinkerMaterials.slimesteel.getIngotTag(),
-                // tier 4
-                TinkerMaterials.cinderslime.getIngotTag(), TinkerMaterials.queensSlime.getIngotTag(),
-                TinkerMaterials.manyullyn.getIngotTag(), TinkerMaterials.hepatizon.getIngotTag(),
-                TinkerMaterials.knightmetal.getIngotTag());
+        this.tag(ItemTags.BEACON_PAYMENT_ITEMS)
+                .addTags(
+                        // ores
+                        TinkerMaterials.steel.getIngotTag(),
+                        // tier 3
+                        TinkerMaterials.slimesteel.getIngotTag(),
+                        // tier 4
+                        TinkerMaterials.cinderslime.getIngotTag(), TinkerMaterials.queensSlime.getIngotTag(),
+                        TinkerMaterials.manyullyn.getIngotTag(), TinkerMaterials.hepatizon.getIngotTag(),
+                        TinkerMaterials.knightmetal.getIngotTag())
+                // cobalt ingots come from GTCEU, so keep the tag reference optional
+                .addOptionalTag(TinkerTags.Items.INGOTS_COBALT.location());
 
         this.copy(TinkerTags.Blocks.COPPER_PLATFORMS, TinkerTags.Items.COPPER_PLATFORMS);
 
@@ -193,7 +195,7 @@ public class ItemTagProvider extends ItemTagsProvider {
         // trim materials
         this.tag(ItemTags.TRIM_MATERIALS).add(
                 TinkerMaterials.slimesteel.getIngot(), TinkerMaterials.amethystBronze.getIngot(), TinkerMaterials.pigIron.getIngot(), TinkerMaterials.roseGold.getIngot(),
-                TinkerMaterials.steel.getIngot(), TinkerMaterials.cobalt.getIngot(), TinkerMaterials.manyullyn.getIngot(), TinkerMaterials.hepatizon.getIngot(), TinkerMaterials.cinderslime.getIngot(), TinkerMaterials.queensSlime.getIngot(),
+                TinkerMaterials.steel.getIngot(), TinkerMaterials.manyullyn.getIngot(), TinkerMaterials.hepatizon.getIngot(), TinkerMaterials.cinderslime.getIngot(), TinkerMaterials.queensSlime.getIngot(),
                 TinkerMaterials.knightmetal.getIngot(),
                 TinkerWorld.earthGeode.asItem(), TinkerWorld.skyGeode.asItem(), TinkerWorld.ichorGeode.asItem(), TinkerWorld.enderGeode.asItem()
         );
@@ -237,14 +239,6 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.copy(TinkerTags.Blocks.ENDERBARK_ROOTS, TinkerTags.Items.ENDERBARK_ROOTS);
         this.copy(BlockTags.LEAVES, ItemTags.LEAVES);
         this.copy(BlockTags.SAPLINGS, ItemTags.SAPLINGS);
-
-        this.copy(Tags.Blocks.ORES, Tags.Items.ORES);
-        this.copy(Tags.Blocks.ORE_RATES_SINGULAR, Tags.Items.ORE_RATES_SINGULAR);
-        this.copy(Tags.Blocks.ORES_IN_GROUND_NETHERRACK, Tags.Items.ORES_IN_GROUND_NETHERRACK);
-        this.copy(TinkerTags.Blocks.ORES_COBALT, TinkerTags.Items.ORES_COBALT);
-        this.copy(TinkerTags.Blocks.RAW_BLOCK_COBALT, TinkerTags.Items.RAW_BLOCK_COBALT);
-        this.tag(TinkerTags.Items.RAW_COBALT).add(TinkerWorld.rawCobalt.get());
-        this.tag(Tags.Items.RAW_MATERIALS).addTag(TinkerTags.Items.RAW_COBALT);
 
         // wood
         this.addNonFlammableTag(TinkerWorld.greenheart);

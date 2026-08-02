@@ -106,16 +106,6 @@
 
   "item.tconstruct.copper_nugget": "구리 조각",
 
-  "block.tconstruct.cobalt_ore": "네더 코발트 광석",
-  "item.tconstruct.raw_cobalt": "코발트 원석",
-  "block.tconstruct.raw_cobalt_block": "코발트 원석 블록",
-
-  "block.tconstruct.cobalt_block": "코발트 블록",
-  "block.tconstruct.cobalt_block.tooltip": "신호기의 받침 블록으로 사용할 수 있습니다.",
-  "item.tconstruct.cobalt_ingot": "코발트 주괴",
-  "item.tconstruct.cobalt_nugget": "코발트 조각",
-
-
 
   "block.tconstruct.slimesteel_block": "슬라임강철 블록",
   "item.tconstruct.slimesteel_ingot": "슬라임강철 주괴",

@@ -1,6 +1,5 @@
 {
   "values": [
-    "#forge:storage_blocks/cobalt",
     "#forge:storage_blocks/steel",
     "#forge:storage_blocks/slimesteel",
     "#forge:storage_blocks/amethyst_bronze",
@@ -13,7 +12,6 @@
     "#forge:storage_blocks/soulsteel",
     "#forge:storage_blocks/knightmetal",
     "#forge:storage_blocks/knightslime",
-    "#forge:storage_blocks/raw_cobalt",
     "tconstruct:fake_storage_block"
   ]
 }

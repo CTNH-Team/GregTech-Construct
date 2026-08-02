@@ -102,7 +102,6 @@ public class BlockTagProvider extends BlockTagsProvider {
 
   private void addCommon() {
     // ores
-    addMetalTags(TinkerMaterials.cobalt, true);
     addMetalTags(TinkerMaterials.steel, true);
     // tier 3
     addMetalTags(TinkerMaterials.slimesteel, true); // beacon: skyslime and seared stone are expensive enough
@@ -233,13 +232,8 @@ public class BlockTagProvider extends BlockTagsProvider {
 
 
   private void addWorld() {
-    // ores
-    this.tag(TinkerTags.Blocks.ORES_COBALT).add(TinkerWorld.cobaltOre.get());
-    this.tag(Tags.Blocks.ORES).addTag(TinkerTags.Blocks.ORES_COBALT);
-    this.tag(Tags.Blocks.ORES_IN_GROUND_NETHERRACK).add(TinkerWorld.cobaltOre.get());
-    this.tag(Tags.Blocks.ORE_RATES_SINGULAR).add(TinkerWorld.cobaltOre.get());
-    this.tag(TinkerTags.Blocks.RAW_BLOCK_COBALT).add(TinkerWorld.rawCobaltBlock.get());
-    this.tag(Tags.Blocks.STORAGE_BLOCKS).addTag(TinkerTags.Blocks.RAW_BLOCK_COBALT).add(TinkerToolParts.fakeStorageBlock.get());
+    // fake storage block is used as a holder for material variants
+    this.tag(Tags.Blocks.STORAGE_BLOCKS).add(TinkerToolParts.fakeStorageBlock.get());
 
     // allow the enderman to hold more blocks
     IntrinsicTagAppender<Block> endermanHoldable = this.tag(BlockTags.ENDERMAN_HOLDABLE);
@@ -462,7 +456,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     tagBlocks(MINEABLE_WITH_AXE, NEEDS_IRON_TOOL, TinkerMaterials.blazewood);
     tagBlocks(MINEABLE_WITH_AXE, NEEDS_DIAMOND_TOOL, TinkerMaterials.nahuatl);
     tagBlocks(MINEABLE_WITH_PICKAXE, NEEDS_IRON_TOOL,
-      TinkerWorld.cobaltOre, TinkerWorld.rawCobaltBlock, TinkerMaterials.steel, TinkerMaterials.cobalt,
+      TinkerMaterials.steel,
       TinkerMaterials.slimesteel, TinkerMaterials.cinderslime, TinkerMaterials.amethystBronze,
       TinkerMaterials.roseGold, TinkerMaterials.pigIron, TinkerToolParts.fakeStorageBlock);
     tagBlocks(MINEABLE_WITH_PICKAXE, NEEDS_DIAMOND_TOOL, TinkerMaterials.queensSlime, TinkerMaterials.manyullyn, TinkerMaterials.hepatizon, TinkerMaterials.soulsteel);

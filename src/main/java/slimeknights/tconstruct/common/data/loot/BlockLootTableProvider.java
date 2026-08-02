@@ -96,7 +96,6 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
     TinkerCommons.waxedCopperPlatform.forEach(this::dropSelf);
 
     // ores
-    this.dropSelf(TinkerMaterials.cobalt.get());
     this.dropSelf(TinkerMaterials.steel.get());
     // tier 3
     this.dropSelf(TinkerMaterials.slimesteel.get());
@@ -152,8 +151,6 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
   }
 
   private void addWorld() {
-    this.add(TinkerWorld.cobaltOre.get(), block -> createOreDrop(block, TinkerWorld.rawCobalt.asItem()));
-    this.dropSelf(TinkerWorld.rawCobaltBlock.get());
     TinkerWorld.heads.forEach(this::dropSelf);
 
     // slime blocks

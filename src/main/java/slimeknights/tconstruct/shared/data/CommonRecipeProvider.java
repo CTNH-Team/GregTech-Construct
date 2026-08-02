@@ -99,12 +99,12 @@ public class CommonRecipeProvider extends BaseRecipeProvider implements ICommonR
                        .unlockedBy("has_bars", has(Tags.Items.INGOTS_COPPER))
                        .save(consumer, location("common/copper_platform"));
     ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerCommons.cobaltPlatform, 4)
-                       .define('#', TinkerMaterials.cobalt.getIngotTag())
-                       .define('.', TinkerMaterials.cobalt.getNuggetTag())
+                       .define('#', TinkerTags.Items.INGOTS_COBALT)
+                       .define('.', TinkerTags.Items.NUGGETS_COBALT)
                        .pattern("#.#")
                        .pattern(". .")
                        .pattern("#.#")
-                       .unlockedBy("has_bars", has(TinkerMaterials.cobalt.getIngotTag()))
+                       .unlockedBy("has_bars", has(TinkerTags.Items.INGOTS_COBALT))
                        .save(consumer, location("common/cobalt_platform"));
     TinkerCommons.waxedCopperPlatform.forEach((age, block) -> {
       Block unwaxed = TinkerCommons.copperPlatform.get(age);
@@ -262,8 +262,6 @@ public class CommonRecipeProvider extends BaseRecipeProvider implements ICommonR
   private void addMaterialRecipes(Consumer<FinishedRecipe> consumer) {
     String folder = "common/materials/";
 
-    // ores
-    metalCrafting(consumer, TinkerMaterials.cobalt, folder);
     metalCrafting(consumer, TinkerMaterials.steel, folder);
     // tier 3
     metalCrafting(consumer, TinkerMaterials.slimesteel, folder);
@@ -281,13 +279,6 @@ public class CommonRecipeProvider extends BaseRecipeProvider implements ICommonR
     packingRecipe(consumer, RecipeCategory.MISC, "ingot", Items.NETHERITE_SCRAP, "nugget", TinkerMaterials.debrisNugget,    TinkerTags.Items.NUGGETS_NETHERITE_SCRAP, folder);
     packingRecipe(consumer, RecipeCategory.MISC, "ingot", Items.NETHERITE_INGOT, "nugget", TinkerMaterials.netheriteNugget, TinkerTags.Items.NUGGETS_NETHERITE, folder);
 
-    // smelt ore into ingots, must use a blast furnace for nether ores
-    SimpleCookingRecipeBuilder.blasting(Ingredient.of(TinkerWorld.rawCobalt, TinkerWorld.cobaltOre), RecipeCategory.MISC, TinkerMaterials.cobalt.getIngot(), 1.5f, 200)
-      .unlockedBy("has_item", has(TinkerWorld.rawCobalt))
-      .save(consumer, location(folder + "cobalt_ingot_blasting"));
-    SimpleCookingRecipeBuilder.blasting(Ingredient.of(TinkerWorld.cobaltShard), RecipeCategory.MISC, TinkerMaterials.cobalt.getNugget(), 0.2f, 50)
-      .unlockedBy("has_item", has(TinkerWorld.cobaltShard))
-      .save(consumer, location(folder + "cobalt_nugget_blasting"));
     // steel can use either furnace
     SimpleCookingRecipeBuilder.smelting(Ingredient.of(TinkerWorld.steelShard), RecipeCategory.MISC, TinkerMaterials.steel.getNugget(), 0.2f, 50)
       .unlockedBy("has_item", has(TinkerWorld.steelShard))
@@ -299,8 +290,5 @@ public class CommonRecipeProvider extends BaseRecipeProvider implements ICommonR
     SimpleCookingRecipeBuilder.blasting(Ingredient.of(TinkerTags.Items.KNIGHTMETAL_SHARD), RecipeCategory.MISC, TinkerMaterials.knightmetal.getNugget(), 0.2f, 50)
       .unlockedBy("has_item", has(TinkerWorld.knightmetalShard))
       .save(consumer, location(folder + "knightmetal_nugget_smelting"));
-
-    // pack raw cobalt
-    packingRecipe(consumer, RecipeCategory.MISC, "raw_block", TinkerWorld.rawCobaltBlock, "raw", TinkerWorld.rawCobalt, TinkerTags.Items.RAW_COBALT, folder);
   }
 }

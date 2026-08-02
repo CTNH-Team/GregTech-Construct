@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import slimeknights.mantle.recipe.helper.TagPreference;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.Modifier;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
@@ -42,7 +43,8 @@ public class OlympicModifier extends Modifier implements ProjectileLaunchModifie
   private static Item getNugget(double distanceSq) {
     // 50 meters - platinum
     if (distanceSq > 2500) {
-      return TagPreference.getPreference(PLATINUM_NUGGET).orElse(TinkerMaterials.cobalt.getNugget());
+      return TagPreference.getPreference(PLATINUM_NUGGET)
+        .orElseGet(() -> TagPreference.getPreference(TinkerTags.Items.NUGGETS_COBALT).orElse(Items.GOLD_NUGGET));
     }
     // 40 meters - gold
     if (distanceSq > 1600) {

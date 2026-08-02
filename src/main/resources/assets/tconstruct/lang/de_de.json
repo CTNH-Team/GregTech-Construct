@@ -104,16 +104,6 @@
 
 "item.tconstruct.copper_nugget": "Kupfernugget",
 
-"block.tconstruct.cobalt_ore": "Nether-Kobalt-Erz",
-"item.tconstruct.raw_cobalt": "Rohes Kobalt",
-"block.tconstruct.raw_cobalt_block": "Rohkobaltblock",
-
-"block.tconstruct.cobalt_block": "Kobaltblock",
-"block.tconstruct.cobalt_block.tooltip": "Kann als Beacon-Basis verwendet werden",
-"item.tconstruct.cobalt_ingot": "Kobaltbarren",
-"item.tconstruct.cobalt_nugget": "Kobalt-Nugget",
-
-
 "__comment": "Tier-3-Metalle",
 
 "block.tconstruct.slimesteel_block": "Slimesteel-Block",

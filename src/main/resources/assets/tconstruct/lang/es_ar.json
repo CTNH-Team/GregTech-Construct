@@ -3,15 +3,6 @@
         
         "item.tconstruct.copper_nugget": "Fragmento de Cobre",
         
-        "block.tconstruct.cobalt_ore": "Mineral de Cobalto del Nether",
-        "item.tconstruct.raw_cobalt": "Cobalto Crudo",
-        "block.tconstruct.raw_cobalt_block": "Bloque de Cobalto Crudo",
-        
-        "block.tconstruct.cobalt_block": "Bloque de Cobalto",
-        "block.tconstruct.cobalt_block.tooltip": "Puede usarse como base para un faro",
-        "item.tconstruct.cobalt_ingot": "Lingote de Cobalto",
-        "item.tconstruct.cobalt_nugget": "Fragmento de Cobalto",
-        
         "__comment": "Metales de Nivel 3",
         
         "block.tconstruct.slimesteel_block": "Bloque de Slimesteel",

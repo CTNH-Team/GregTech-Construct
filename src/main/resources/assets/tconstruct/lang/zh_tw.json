@@ -108,16 +108,6 @@
 
   "item.tconstruct.copper_nugget": "銅粒",
 
-  "block.tconstruct.cobalt_ore": "地獄鈷礦",
-  "item.tconstruct.raw_cobalt": "鈷原礦",
-  "block.tconstruct.raw_cobalt_block": "鈷原礦方塊",
-
-  "block.tconstruct.cobalt_block": "鈷方塊",
-  "block.tconstruct.cobalt_block.tooltip": "可用於建造烽火台基座",
-  "item.tconstruct.cobalt_ingot": "鈷錠",
-  "item.tconstruct.cobalt_nugget": "鈷粒",
-
-
   "__comment": "Tier 3 Metals",
 
   "block.tconstruct.slimesteel_block": "史萊姆鋼方塊",

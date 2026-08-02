@@ -106,16 +106,6 @@
 
   "item.tconstruct.copper_nugget": "Kopparklimp",
 
-  "block.tconstruct.cobalt_ore": "Netherkobaltmalm",
-  "item.tconstruct.raw_cobalt": "Råkobolt",
-  "block.tconstruct.raw_cobalt_block": "Råkoboltsblock",
-
-  "block.tconstruct.cobalt_block": "Koboltblock",
-  "block.tconstruct.cobalt_block.tooltip": "Kan användas som grund till en fyr",
-  "item.tconstruct.cobalt_ingot": "Kobolttacka",
-  "item.tconstruct.cobalt_nugget": "Koboltklimp",
-
-
   "__comment": "Tier 3 Metals",
   
   "block.tconstruct.slimesteel_block": "Slemstålsblock",

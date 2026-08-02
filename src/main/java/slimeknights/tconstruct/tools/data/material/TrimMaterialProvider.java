@@ -33,7 +33,6 @@ public class TrimMaterialProvider {
     material(context, MaterialIds.pigIron,        TinkerMaterials.pigIron,        0xF0A8A4, 0.5f); // copper
     material(context, MaterialIds.roseGold,       TinkerMaterials.roseGold,       0xF7CDBB, 0.1f); // quartz
     
-    material(context, MaterialIds.cobalt,      TinkerMaterials.cobalt,      0x2376dd, 0.9f); // lapis
     material(context, MaterialIds.steel,       TinkerMaterials.steel,       0x959595, 0.2F); // iron
     material(context, MaterialIds.manyullyn,   TinkerMaterials.manyullyn,   0x9261cc, 1.0f); // amethyst
     material(context, MaterialIds.hepatizon,   TinkerMaterials.hepatizon,   0x60496b, 0.3f); // netherite

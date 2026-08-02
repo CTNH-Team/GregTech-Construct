@@ -10,7 +10,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.features.TreeFeatures;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
@@ -39,7 +38,6 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.GeodeConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration.TreeConfigurationBuilder;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.RandomSpreadFoliagePlacer;
@@ -48,7 +46,6 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.RandomizedIntSt
 import net.minecraft.world.level.levelgen.feature.treedecorators.AttachedToLeavesDecorator;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.UpwardsBranchingTrunkPlacer;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
-import net.minecraft.world.level.levelgen.placement.CountPlacement;
 import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
 import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -64,8 +61,6 @@ import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement.FrequencyReductionMethod;
-import net.minecraft.world.level.levelgen.structure.templatesystem.BlockMatchTest;
-import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers.AddFeaturesBiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers.AddSpawnsBiomeModifier;
@@ -121,20 +116,15 @@ import static slimeknights.tconstruct.world.TinkerStructures.slimeTree;
 import static slimeknights.tconstruct.world.TinkerWorld.configuredEarthGeode;
 import static slimeknights.tconstruct.world.TinkerWorld.configuredEnderGeode;
 import static slimeknights.tconstruct.world.TinkerWorld.configuredIchorGeode;
-import static slimeknights.tconstruct.world.TinkerWorld.configuredLargeCobaltOre;
 import static slimeknights.tconstruct.world.TinkerWorld.configuredSkyGeode;
-import static slimeknights.tconstruct.world.TinkerWorld.configuredSmallCobaltOre;
 import static slimeknights.tconstruct.world.TinkerWorld.earthGeode;
 import static slimeknights.tconstruct.world.TinkerWorld.enderGeode;
 import static slimeknights.tconstruct.world.TinkerWorld.ichorGeode;
 import static slimeknights.tconstruct.world.TinkerWorld.placedEarthGeode;
 import static slimeknights.tconstruct.world.TinkerWorld.placedEnderGeode;
 import static slimeknights.tconstruct.world.TinkerWorld.placedIchorGeode;
-import static slimeknights.tconstruct.world.TinkerWorld.placedLargeCobaltOre;
 import static slimeknights.tconstruct.world.TinkerWorld.placedSkyGeode;
-import static slimeknights.tconstruct.world.TinkerWorld.placedSmallCobaltOre;
 import static slimeknights.tconstruct.world.TinkerWorld.skyGeode;
-import static slimeknights.tconstruct.world.TinkerWorld.spawnCobaltOre;
 import static slimeknights.tconstruct.world.TinkerWorld.spawnEarthGeode;
 import static slimeknights.tconstruct.world.TinkerWorld.spawnEndSlime;
 import static slimeknights.tconstruct.world.TinkerWorld.spawnEnderGeode;
@@ -247,12 +237,6 @@ public class WorldgenProvider {
                slimyFungusGrowThrough,
                false));
 
-    // ores
-    RuleTest netherrack = new BlockMatchTest(Blocks.NETHERRACK);
-    BlockState cobaltOre = TinkerWorld.cobaltOre.get().defaultBlockState();
-    register(context, configuredSmallCobaltOre, Feature.ORE, new OreConfiguration(netherrack, cobaltOre, 4));
-    register(context, configuredLargeCobaltOre, Feature.ORE, new OreConfiguration(netherrack, cobaltOre, 6));
-
     // geodes
     configureGeode(context, configuredEarthGeode, earthGeode, BlockStateProvider.simple(Blocks.CALCITE), BlockStateProvider.simple(Blocks.CLAY), TinkerWorld.steelCluster,
                    new GeodeLayerSettings(1.7D, 2.2D, 3.2D, 5.2D), new GeodeCrackSettings(0.95D, 2.0D, 2), UniformInt.of(6, 9), UniformInt.of(3, 4), UniformInt.of(1, 2), 16, 1);
@@ -266,10 +250,6 @@ public class WorldgenProvider {
 
   /** Registers all structures */
   private static void registerPlacedFeatures(BootstapContext<PlacedFeature> context) {
-    // ores
-    register(context, placedSmallCobaltOre, configuredSmallCobaltOre, CountPlacement.of(5), InSquarePlacement.spread(), PlacementUtils.RANGE_8_8, BiomeFilter.biome());
-    register(context, placedLargeCobaltOre, configuredLargeCobaltOre, CountPlacement.of(3), InSquarePlacement.spread(), HeightRangePlacement.triangle(VerticalAnchor.absolute(8), VerticalAnchor.absolute(32)), BiomeFilter.biome());
-
     // geodes
     placeGeode(context, placedEarthGeode, configuredEarthGeode, RarityFilter.onAverageOnceEvery(256), HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(6),  VerticalAnchor.aboveBottom(54)));
     placeGeode(context, placedSkyGeode,   configuredSkyGeode,   RarityFilter.onAverageOnceEvery(128), HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(24), VerticalAnchor.absolute(30)));
@@ -344,7 +324,6 @@ public class WorldgenProvider {
     HolderSet<Biome> nether = biomes.getOrThrow(BiomeTags.IS_NETHER);
     HolderSet<Biome> end = biomes.getOrThrow(BiomeTags.IS_END);
 
-    context.register(spawnCobaltOre, new AddFeaturesBiomeModifier(nether, direct(placed.getOrThrow(TinkerWorld.placedSmallCobaltOre), placed.getOrThrow(placedLargeCobaltOre)), Decoration.UNDERGROUND_DECORATION));
     // geodes
     context.register(spawnEarthGeode, new AddFeaturesBiomeModifier(overworld, direct(placed.getOrThrow(placedEarthGeode)), Decoration.LOCAL_MODIFICATIONS));
     context.register(spawnSkyGeode,   new AddFeaturesBiomeModifier(and(overworld, not(or(biomes.getOrThrow(BiomeTags.IS_OCEAN), biomes.getOrThrow(BiomeTags.IS_DEEP_OCEAN), biomes.getOrThrow(BiomeTags.IS_BEACH), biomes.getOrThrow(BiomeTags.IS_RIVER)))), direct(placed.getOrThrow(TinkerWorld.placedSkyGeode)), Decoration.LOCAL_MODIFICATIONS));

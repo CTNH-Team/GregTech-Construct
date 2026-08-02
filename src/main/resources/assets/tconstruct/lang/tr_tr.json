@@ -108,16 +108,6 @@
 
   "item.tconstruct.copper_nugget": "Bakır Parçası",
 
-  "block.tconstruct.cobalt_ore": "Nether Kobalt Cevheri",
-  "item.tconstruct.raw_cobalt": "Ham Kobalt",
-  "block.tconstruct.raw_cobalt_block": "Ham Kobalt Bloğu",
-
-  "block.tconstruct.cobalt_block": "Kobalt Bloğu",
-  "block.tconstruct.cobalt_block.tooltip": "Fener tabanı olarak kullanılabilir",
-  "item.tconstruct.cobalt_ingot": "Kobalt Külçesi",
-  "item.tconstruct.cobalt_nugget": "Kobalt Parçası",
-
-
   "__comment": "3. Aşama Metalleri",
 
   "block.tconstruct.slimesteel_block": "Balçıkçeliği Bloğu",

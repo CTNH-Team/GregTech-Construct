@@ -1156,7 +1156,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
         toolBeltRecipe.accept(1, Tags.Items.INGOTS_IRON);
         toolBeltRecipe.accept(2, Tags.Items.INGOTS_GOLD);
         toolBeltRecipe.accept(3, TinkerMaterials.roseGold.getIngotTag());
-        toolBeltRecipe.accept(4, TinkerMaterials.cobalt.getIngotTag());
+        toolBeltRecipe.accept(4, TinkerTags.Items.INGOTS_COBALT);
         toolBeltRecipe.accept(5, TinkerMaterials.hepatizon.getIngotTag());
         toolBeltRecipe.accept(6, TinkerMaterials.manyullyn.getIngotTag());
         ModifierRecipeBuilder.modifier(ModifierIds.soulBelt)
@@ -1695,9 +1695,9 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .save(consumer, wrap(ModifierIds.rebalanced, slotlessFolder, "_" + SlotType.UPGRADE.getName()));
         SwappableModifierRecipeBuilder.modifier(ModifierIds.rebalanced, SlotType.DEFENSE.getName())
                 .setTools(IntersectionIngredient.of(ingredientFromTags(TinkerTags.Items.ARMOR, TinkerTags.Items.HELD), Ingredient.of(TinkerTags.Items.BONUS_SLOTS)))
-                .addInput(TinkerMaterials.cobalt.getNuggetTag())
+                .addInput(TinkerTags.Items.NUGGETS_COBALT)
                 .addInput(Items.END_CRYSTAL)
-                .addInput(TinkerMaterials.cobalt.getNuggetTag())
+                .addInput(TinkerTags.Items.NUGGETS_COBALT)
                 .addInput(TinkerWorld.earthGeode.getBlock())
                 .addInput(TinkerWorld.earthGeode.getBlock())
                 .disallowCrystal()

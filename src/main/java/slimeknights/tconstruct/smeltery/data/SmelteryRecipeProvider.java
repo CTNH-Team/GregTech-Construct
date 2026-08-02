@@ -874,10 +874,10 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
         // fluid cannon
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.scorchedFluidCannon)
                 .define('T', similarTanks)
-                .define('C', TinkerMaterials.cobalt.getIngotTag())
+                .define('C', TinkerTags.Items.INGOTS_COBALT)
                 .pattern("CTC")
                 .pattern("CCC")
-                .unlockedBy("has_item", has(TinkerMaterials.cobalt.getIngotTag()))
+                .unlockedBy("has_item", has(TinkerTags.Items.INGOTS_COBALT))
                 .save(consumer, location(folder + "fluid_cannon"));
 
         // casting

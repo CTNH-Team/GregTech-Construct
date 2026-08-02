@@ -106,16 +106,6 @@
 
   "item.tconstruct.copper_nugget": "Nugget Tembaga",
 
-  "block.tconstruct.cobalt_ore": "Bijih Kobalt Neraka",
-  "item.tconstruct.raw_cobalt": "Kobalt Mentah",
-  "block.tconstruct.raw_cobalt_block": "Blok Kobalt Mentah",
-
-  "block.tconstruct.cobalt_block": "Block Kobalt",
-  "block.tconstruct.cobalt_block.tooltip": "Bisa digunakan sebagai dasar suar",
-  "item.tconstruct.cobalt_ingot": "Batangan Kobalt",
-  "item.tconstruct.cobalt_nugget": "Nugget Kobalt",
-
-
   "__comment": "Tier 3 Metals",
 
   "block.tconstruct.slimesteel_block": "Blok Slimesteel",

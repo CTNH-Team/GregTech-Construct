@@ -6,6 +6,10 @@
       "tag": "forge:ores/cobalt"
     },
     {
+      "condition": "mantle:tag_filled",
+      "tag": "forge:nuggets/cobalt"
+    },
+    {
       "condition": "tconstruct:has_modifier",
       "modifier": "tconstruct:lustrous"
     }

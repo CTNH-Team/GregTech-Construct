@@ -112,16 +112,6 @@
   "item.tconstruct.copper_ingot": "Медный слиток",
   "item.tconstruct.copper_nugget": "Кусочек меди",
 
-  "block.tconstruct.cobalt_ore": "Незерская кобальтовая руда",
-  "item.tconstruct.raw_cobalt": "Рудный кобальт",
-  "block.tconstruct.raw_cobalt_block": "Блок рудного кобальта",
-  
-  "block.tconstruct.cobalt_block": "Кобальтовый блок",
-  "block.tconstruct.cobalt_block.tooltip": "Может использоваться в основании для маяка",
-  "item.tconstruct.cobalt_ingot": "Кобальтовый слиток",
-  "item.tconstruct.cobalt_nugget": "Кусочек кобальта",
-
-
   "__comment": "Tier 3 Metals",
 
   "block.tconstruct.slimesteel_block": "Блок слизестали",

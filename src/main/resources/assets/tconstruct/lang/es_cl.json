@@ -101,15 +101,6 @@
 
   "item.tconstruct.copper_nugget": "Pepita de Cobre",
 
-  "block.tconstruct.cobalt_ore": "Mineral de Cobalto del Nether",
-  "item.tconstruct.raw_cobalt": "Cobalto crudo",
-  "block.tconstruct.raw_cobalt_block": "Bloque de Cobalto crudo",
-
-  "block.tconstruct.cobalt_block": "Bloque de Cobalto",
-  "block.tconstruct.cobalt_block.tooltip": "Puede usarse como base para el faro",
-  "item.tconstruct.cobalt_ingot": "Lingote de Cobalto",
-  "item.tconstruct.cobalt_nugget": "Pepita de Cobalto",
-
   "block.tconstruct.steel_block": "Bloque de Acero",
   "block.tconstruct.steel_block.tooltip": "Puede usarse como base para el faro",
   "item.tconstruct.steel_ingot": "Lingote de Acero",

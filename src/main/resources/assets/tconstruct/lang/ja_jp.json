@@ -100,15 +100,6 @@
 
   "item.tconstruct.copper_nugget": "銅塊",
 
-  "block.tconstruct.cobalt_ore": "ネザーコバルト鉱石",
-  "item.tconstruct.raw_cobalt": "コバルトの原石",
-  "block.tconstruct.raw_cobalt_block": "コバルトの原石ブロック",
-
-  "block.tconstruct.cobalt_block": "コバルトブロック",
-  "block.tconstruct.cobalt_block.tooltip": "ビーコンの土台に使用可能",
-  "item.tconstruct.cobalt_ingot": "コバルトインゴット",
-  "item.tconstruct.cobalt_nugget": "コバルト塊",
-
   "block.tconstruct.steel_block": "鋼鉄ブロック",
   "item.tconstruct.steel_ingot": "鋼鉄インゴット",
   "item.tconstruct.steel_nugget": "鋼鉄塊",

@@ -93,13 +93,6 @@
     "item.tconstruct.copper_ingot": "Sztabka miedzi",
     "item.tconstruct.copper_nugget": "Bryłka miedzi",
 
-    "block.tconstruct.cobalt_ore": "Netherowa ruda kobaltu",
-    "block.tconstruct.cobalt_block": "Blok kobaltu",
-    "block.tconstruct.cobalt_block.tooltip": "Może być użyty jako podstawa do magicznej latarni",
-    "item.tconstruct.cobalt_ingot": "Sztabka kobaltu",
-    "item.tconstruct.cobalt_nugget": "Bryłka kobaltu",
-
-
     "__comment": "Tier 3 Metals",
 
     "block.tconstruct.slimesteel_block": "Blok Szlamostali",

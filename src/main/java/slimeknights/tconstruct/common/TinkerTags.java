@@ -134,9 +134,6 @@ public class TinkerTags {
         /** Blocks slimy fungus (any of the three types) can replace */
         public static final TagKey<Block> SLIMY_FUNGUS_CAN_GROW_THROUGH = local("slimy_fungus_can_grow_through");
 
-        public static final TagKey<Block> ORES_COBALT = common("ores/cobalt");
-        public static final TagKey<Block> RAW_BLOCK_COBALT = common("storage_blocks/raw_cobalt");
-
         public static final TagKey<Block> SEARED_BLOCKS = local("seared_blocks");
         public static final TagKey<Block> SEARED_BRICKS = local("seared_bricks");
         public static final TagKey<Block> SEARED_TANKS = local("seared_tanks");
@@ -278,9 +275,10 @@ public class TinkerTags {
         public static final TagKey<Item> SMELTERY = local("smeltery");
         public static final TagKey<Item> FOUNDRY = local("foundry");
 
+        /** Common cobalt tags, provided by GTCEU in this pack */
         public static final TagKey<Item> ORES_COBALT = common("ores/cobalt");
-        public static final TagKey<Item> RAW_BLOCK_COBALT = common("storage_blocks/raw_cobalt");
-        public static final TagKey<Item> RAW_COBALT = common("raw_materials/cobalt");
+        public static final TagKey<Item> INGOTS_COBALT = common("ingots/cobalt");
+        public static final TagKey<Item> NUGGETS_COBALT = common("nuggets/cobalt");
 
         // non-standard prefix for items that smelt into 1 nugget but are not in fact nuggets
         public static final TagKey<Item> STEEL_SHARD = common("raw_nuggets/steel");

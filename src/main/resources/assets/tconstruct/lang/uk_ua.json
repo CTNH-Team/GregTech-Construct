@@ -105,16 +105,6 @@
 
   "item.tconstruct.copper_nugget": "Мідний самородок",
 
-  "block.tconstruct.cobalt_ore": "Кобальтова руда Незеру",
-  "item.tconstruct.raw_cobalt": "Необроблений кобальт",
-  "block.tconstruct.raw_cobalt_block": "Блок необробленого кобальту",
-  
-  "block.tconstruct.cobalt_block": "Кобальтовий блок",
-  "block.tconstruct.cobalt_block.tooltip": "Можна використати як основу для маяка",
-  "item.tconstruct.cobalt_ingot": "Кобальтовий злиток",
-  "item.tconstruct.cobalt_nugget": "Кобальтовий самородок",
-
-
   "__comment": "Tier 3 Metals",
 
   "block.tconstruct.slimesteel_block": "Слизосталевий блок",

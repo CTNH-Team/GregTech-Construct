@@ -106,15 +106,6 @@
 
   "item.tconstruct.copper_nugget": "铜粒",
 
-  "block.tconstruct.cobalt_ore": "下界钴矿石",
-  "item.tconstruct.raw_cobalt": "粗钴",
-  "block.tconstruct.raw_cobalt_block": "粗钴块",
-
-  "block.tconstruct.cobalt_block": "钴块",
-  "block.tconstruct.cobalt_block.tooltip": "可用于建造信标基座",
-  "item.tconstruct.cobalt_ingot": "钴锭",
-  "item.tconstruct.cobalt_nugget": "钴粒",
-
   "block.tconstruct.steel_block": "钢块",
   "item.tconstruct.steel_ingot": "钢锭",
   "item.tconstruct.steel_nugget": "钢粒",

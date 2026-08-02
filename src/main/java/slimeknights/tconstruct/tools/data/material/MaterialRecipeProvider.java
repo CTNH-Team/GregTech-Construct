@@ -182,7 +182,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         materialRecipe(consumer, MaterialIds.gunpowder, Ingredient.of(Tags.Items.GUNPOWDER), 1, 4, folder + "gunpowder");
 
         // tier 3 (nether)
-        metalMaterialRecipe(consumer, MaterialIds.cobalt, folder, "cobalt", false);
+        metalMaterialRecipe(consumer, MaterialIds.cobalt, folder, "cobalt", true);
         metalMaterialRecipe(consumer, MaterialIds.steel,  folder, "steel",  false);
         // tier 4
         metalMaterialRecipe(consumer, MaterialIds.cinderslime, folder, "cinderslime", false);
@@ -276,7 +276,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         materialMeltingCasting(consumer, MaterialIds.amethystBronze, TinkerFluids.moltenAmethystBronze, folder);
         materialMeltingCasting(consumer, MaterialIds.roseGold,       TinkerFluids.moltenRoseGold, folder);
         materialMeltingCasting(consumer, MaterialIds.pigIron,        TinkerFluids.moltenPigIron, folder);
-        materialMeltingCasting(consumer, MaterialIds.cobalt,         TinkerFluids.moltenCobalt, folder);
+        compatMeltingCasting(consumer, MaterialIds.cobalt,           TinkerFluids.moltenCobalt, folder);
         materialMeltingCasting(consumer, MaterialIds.steel,          TinkerFluids.moltenSteel, folder);
         materialMeltingCasting(consumer, MaterialIds.obsidian,       TinkerFluids.moltenObsidian, FluidValues.GLASS_PANE, folder);
         // allow rose gold as a bowstring by string composite, means we also get a redundant binding recipe, but thats fine

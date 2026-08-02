@@ -68,7 +68,7 @@ public class GlobalLootModifiersProvider extends GlobalLootModifierProvider {
     addLustrous("iron", false);
     addLustrous("gold", false);
     addLustrous("copper", false);
-    addLustrous("cobalt", false);
+    addLustrous("cobalt", true);
     addLustrous("netherite_scrap", false);
     for (SmelteryCompat compat : SmelteryCompat.values()) {
       if (compat.getType() == CompatType.ORE) {

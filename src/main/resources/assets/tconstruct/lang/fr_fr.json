@@ -93,13 +93,6 @@
   "_comment": "Ore Metals",
 
   "item.tconstruct.copper_nugget": "Pépite de cuivre",
-  "block.tconstruct.cobalt_ore": "Minerai de cobalt du Nether",
-  "item.tconstruct.raw_cobalt": "Cobalt brut",
-  "block.tconstruct.raw_cobalt_block": "Bloc de cobalt brut",
-  "block.tconstruct.cobalt_block": "Bloc de cobalt",
-  "block.tconstruct.cobalt_block.tooltip": "Peut servir de base pour une balise",
-  "item.tconstruct.cobalt_ingot": "Lingot de cobalt",
-  "item.tconstruct.cobalt_nugget": "Pépite de cobalt",
   "block.tconstruct.steel_block": "Bloc d'acier",
   "item.tconstruct.steel_ingot": "Lingot d'acier",
   "item.tconstruct.steel_nugget": "Pépite d'acier",
