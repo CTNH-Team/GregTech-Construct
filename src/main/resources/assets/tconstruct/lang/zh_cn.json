@@ -1577,7 +1577,7 @@
   "multiblock.tconstruct.generic.invalid_floor_frame": "结构底边存在无效方块",
   "multiblock.tconstruct.generic.invalid_ceiling_frame": "结构顶边存在无效方块",
 
-  "multiblock.tconstruct.tiny.no_fuel_tank": "必须放置于燃料储罐或加热器之上才可以正常运作",
+  "multiblock.tconstruct.tiny.no_fuel_tank": "必须放置于燃料储罐、加热器或烈焰人燃烧室之上才可以正常运作",
 
 
   "_comment": "Tinkers Smeltery",
@@ -1653,7 +1653,7 @@
   "block.tconstruct.seared_table.tooltip": "利用冶炼炉中的熔融材料铸造物品",
 
   "block.tconstruct.seared_melter": "焦黑熔化炉",
-  "block.tconstruct.seared_melter.tooltip": "你的第一座冶炼炉\n将其安放在焦黑储罐或焦黑加热器的上方来接受热源",
+  "block.tconstruct.seared_melter.tooltip": "你的第一座冶炼炉\n将其安放在焦黑储罐、焦黑加热器或烈焰人燃烧室的上方来接受热源",
   "gui.tconstruct.melter": "熔化炉",
   "gui.tconstruct.melting.capacity": "容量：",
   "gui.tconstruct.melting.available": "空余：",
@@ -1748,7 +1748,7 @@
   "block.tconstruct.scorched_channel.tooltip": "将上方浇注口中流下的流体进行分流",
 
   "block.tconstruct.scorched_alloyer": "焦褐合金炉",
-  "block.tconstruct.scorched_alloyer.tooltip": "简单的合金制造机器\n将其安放在储罐或焦黑加热器的上方来接受热源",
+  "block.tconstruct.scorched_alloyer.tooltip": "简单的合金制造机器\n将其安放在储罐、焦黑加热器或烈焰人燃烧室的上方来接受热源",
   "gui.tconstruct.alloyer": "合金炉",
 
   "block.tconstruct.foundry_controller": "熔铸炉控制器",
