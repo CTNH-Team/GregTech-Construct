@@ -87,10 +87,12 @@ public class AlloyerScreen extends AbstractContainerScreen<AlloyerContainerMenu>
     // fuel
     if (fuel != null) {
       // draw the correct background for the fuel type
-      if (menu.isHasFuelSlot()) {
-        FUEL_SLOT.draw(graphics, leftPos + 150, topPos + 31);
-      } else {
-        FUEL_TANK.draw(graphics, leftPos + 152, topPos + 31);
+      if (!fuel.isBlazeHeated()) {
+        if (menu.isHasFuelSlot()) {
+          FUEL_SLOT.draw(graphics, leftPos + 150, topPos + 31);
+        } else {
+          FUEL_TANK.draw(graphics, leftPos + 152, topPos + 31);
+        }
       }
       fuel.draw(graphics);
     }

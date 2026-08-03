@@ -29,4 +29,13 @@ public final class BlazeBurnerHeat {
   public static boolean isHeating(BlazeBurnerBlock.HeatLevel level) {
     return level.isAtLeast(BlazeBurnerBlock.HeatLevel.SMOULDERING);
   }
+
+  /** Maps a heat level to the GUI flame display, 0 = standard, 1 = dim, 2 = blue (seething) */
+  public static int getGuiHeatLevel(BlazeBurnerBlock.HeatLevel level) {
+    return switch (level) {
+      case SMOULDERING, FADING -> 1;
+      case SEETHING -> 2;
+      default -> 0;
+    };
+  }
 }

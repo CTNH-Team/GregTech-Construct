@@ -115,7 +115,8 @@ public class AlloyerBlockEntity extends NameableBlockEntity implements ITankBloc
         // tick 0: find fuel
         case 0 -> {
           alloyTank.setTemperature(fuelModule.findFuel(false));
-          if (!fuelModule.hasFuel() && alloyingModule.canAlloy()) {
+          // free heat sources such as the blaze burner stay lit even without valid alloys
+          if (!fuelModule.hasFuel() && (alloyingModule.canAlloy() || fuelModule.isFreeHeat())) {
             fuelModule.findFuel(true);
           }
         }

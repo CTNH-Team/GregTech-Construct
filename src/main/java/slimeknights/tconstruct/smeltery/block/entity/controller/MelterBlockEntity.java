@@ -144,8 +144,12 @@ public class MelterBlockEntity extends NameableBlockEntity implements ITankInven
       switch (tick) {
         // tick 0: find fuel
         case 0 -> {
-          if (!fuelModule.hasFuel() && meltingInventory.canHeat(fuelModule.findFuel(false))) {
-            fuelModule.findFuel(true);
+          if (!fuelModule.hasFuel()) {
+            int temperature = fuelModule.findFuel(false);
+            // free heat sources such as the blaze burner stay lit even without meltable contents
+            if (meltingInventory.canHeat(temperature) || fuelModule.isFreeHeat()) {
+              fuelModule.findFuel(true);
+            }
           }
         }
         // tick 2: heat items and consume fuel
