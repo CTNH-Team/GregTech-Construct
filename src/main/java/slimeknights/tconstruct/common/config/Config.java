@@ -60,7 +60,6 @@ public class Config {
     public final BooleanValue forceIntegrationMaterials;
     public final BooleanValue disableSideInventoryWhitelist;
     public final BooleanValue quickApplyToolModifiersSurvival;
-    public final BooleanValue isEnhanceAble;
     public final BooleanValue dumpRecipes;
     public final BooleanValue dumpAssets;
     public final EnumValue<LogInvalidToolStack> logInvalidToolStack;
@@ -93,10 +92,6 @@ public class Config {
         .comment("Amount of durability restored by a repair kit in terms of ingots. Does not affect the cost to create the kit, that is controlled by JSON.")
         .defineInRange("repairKitAmount", 2f, 0f, Short.MAX_VALUE);
 
-      this.isEnhanceAble = builder
-        .comment("Allow Tinker's tools can be enhanced")
-        .define("AllowTinkersToolsCanBeEnhanced", false);
-        
       this.toolInventorySync = builder
         .comment("Method of syncing on opening a tool inventory. Options:",
           "FULL_STACK: syncs the entire tool item stack to client. May cause issues with packet size if too many tools are inside the tool, but best for laggy servers.",
