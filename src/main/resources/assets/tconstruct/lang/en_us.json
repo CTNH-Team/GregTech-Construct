@@ -1568,7 +1568,7 @@
   "multiblock.tconstruct.generic.invalid_floor_frame": "Invalid block on the edges of the floor",
   "multiblock.tconstruct.generic.invalid_ceiling_frame": "Invalid block on the edges of the ceiling",
 
-  "multiblock.tconstruct.tiny.no_fuel_tank": "Must be placed above a fuel tank or a heater to function",
+  "multiblock.tconstruct.tiny.no_fuel_tank": "Must be placed above a fuel tank, a heater, or a Blaze Burner to function",
 
 
   "_comment": "Tinkers Smeltery",
@@ -1645,7 +1645,7 @@
   "block.tconstruct.seared_table.tooltip": "Cast items using molten metals from a Smeltery",
 
   "block.tconstruct.seared_melter": "Seared Melter",
-  "block.tconstruct.seared_melter.tooltip": "First Smeltery.\nPlace above a tank or heater to fuel.",
+  "block.tconstruct.seared_melter.tooltip": "First Smeltery.\nPlace above a tank, heater, or Blaze Burner to fuel.",
   "gui.tconstruct.melter": "Melter",
   "gui.tconstruct.melting.capacity": "Capacity:",
   "gui.tconstruct.melting.available": "Free:",
@@ -1740,7 +1740,7 @@
   "block.tconstruct.scorched_channel.tooltip": "Distributes fluids poured from a faucet above.",
 
   "block.tconstruct.scorched_alloyer": "Scorched Alloyer",
-  "block.tconstruct.scorched_alloyer.tooltip": "Simple alloying machine.\nPlace above a tank or heater to fuel.",
+  "block.tconstruct.scorched_alloyer.tooltip": "Simple alloying machine.\nPlace above a tank, heater, or Blaze Burner to fuel.",
   "gui.tconstruct.alloyer": "Alloyer",
 
   "block.tconstruct.foundry_controller": "Foundry Controller",

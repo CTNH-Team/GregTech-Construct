@@ -19,7 +19,8 @@
     "tconstruct.create.AlloyerBlockEntityFuelMixin",
     "tconstruct.create.CastingBlockEntityGoggleTooltipMixin",
     "tconstruct.create.CastingBlockEntityFanProcessingMixin",
-    "tconstruct.create.MelterBlockEntityFuelMixin"
+    "tconstruct.create.MelterBlockEntityFuelMixin",
+    "tconstruct.create.TinyMultiblockControllerBlockMixin"
   ],
   "client": [
     "client.ModelManagerMixin"
