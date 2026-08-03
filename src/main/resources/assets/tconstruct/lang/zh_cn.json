@@ -3990,6 +3990,7 @@
   "create.tooltip.tconstruct.tinker_stats.fluid": "流体：",
   "create.tooltip.tconstruct.progress": "进度：",
   "create.tooltip.tconstruct.output": "结果：",
+  "tooltip.tconstruct.create.blaze_burner": "可由烈焰人燃烧室加热",
 
   "tooltip.tconstruct.part.added_by": "材料由%s添加",
   "tooltip.tconstruct.part.missing_material": "缺失材料：%s",
