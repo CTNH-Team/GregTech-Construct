@@ -3,6 +3,7 @@ package slimeknights.tconstruct.smeltery.block.entity.module;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -54,6 +55,11 @@ public abstract class FuelModule implements ContainerData {
   /** Amount to progress recipes by per time step */
   @Getter
   protected int rate = 0;
+
+  /** Heat source display level: 0 = standard fuel, 1 = dim flame, 2 = blue flame (seething blaze burner) */
+  @Getter
+  @Setter
+  protected int heatLevel = 0;
 
 
   /*
@@ -154,10 +160,20 @@ public abstract class FuelModule implements ContainerData {
    */
   public abstract int findFuel(boolean consume);
 
+  /**
+   * If true, this heat source provides heat without consuming conventional fuel,
+   * so the controller stays lit even when no recipe can currently run
+   * @return  True if the heat source is free
+   */
+  public boolean isFreeHeat() {
+    return false;
+  }
+
   /* NBT */
   private static final String TAG_FUEL = "fuel";
   private static final String TAG_TEMPERATURE = "temperature";
   private static final String TAG_RATE = "rate";
+  private static final String TAG_HEAT_LEVEL = "heat_level";
 
   /**
    * Reads the fuel from NBT
@@ -170,6 +186,7 @@ public abstract class FuelModule implements ContainerData {
     if (nbt.contains(TAG_TEMPERATURE, Tag.TAG_ANY_NUMERIC)) {
       temperature = nbt.getInt(TAG_TEMPERATURE);
       rate = nbt.getInt(TAG_RATE);
+      heatLevel = nbt.getInt(TAG_HEAT_LEVEL);
     }
   }
 
@@ -182,6 +199,7 @@ public abstract class FuelModule implements ContainerData {
     nbt.putInt(TAG_FUEL, fuel);
     nbt.putInt(TAG_TEMPERATURE, temperature);
     nbt.putInt(TAG_RATE, rate);
+    nbt.putInt(TAG_HEAT_LEVEL, heatLevel);
     return nbt;
   }
 
@@ -191,10 +209,11 @@ public abstract class FuelModule implements ContainerData {
   private static final int FUEL_QUALITY = 1;
   private static final int TEMPERATURE = 2;
   private static final int RATE = 3;
+  private static final int HEAT_LEVEL = 4;
 
   @Override
   public int getCount() {
-    return 4;
+    return 5;
   }
 
   @Override
@@ -204,6 +223,7 @@ public abstract class FuelModule implements ContainerData {
       case FUEL_QUALITY -> fuelQuality;
       case TEMPERATURE  -> temperature;
       case RATE         -> rate;
+      case HEAT_LEVEL   -> heatLevel;
       default -> 0;
     };
   }
@@ -215,6 +235,7 @@ public abstract class FuelModule implements ContainerData {
       case FUEL_QUALITY -> fuelQuality = value;
       case TEMPERATURE  -> temperature = value;
       case RATE         -> rate = value;
+      case HEAT_LEVEL   -> heatLevel = value;
     }
   }
 

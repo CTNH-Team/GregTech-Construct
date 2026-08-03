@@ -45,6 +45,11 @@ public class GuiFuelModule implements IScreenWithFluidTank, ClickableTankModule 
   /** Scalable fire instance */
   private final ScalableElementScreen fire;
 
+  /** Fire textures for blaze burner heating */
+  private static final ResourceLocation BLAZE_FIRE = TConstruct.getResource("textures/gui/blaze_fire.png");
+  private static final ScalableElementScreen FIRE_DIM = new ScalableElementScreen(BLAZE_FIRE, 0, 0, 14, 14, 14, 28);
+  private static final ScalableElementScreen FIRE_BLUE = new ScalableElementScreen(BLAZE_FIRE, 0, 14, 14, 14, 14, 28);
+
   private FuelInfo fuelInfo = FuelInfo.EMPTY;
 
   public GuiFuelModule(AbstractContainerScreen<?> screen, FuelModule fuelModule, int x, int y, int width, int height, int fireX, int fireY, boolean hasFuelSlot, ResourceLocation background) {
@@ -68,7 +73,7 @@ public class GuiFuelModule implements IScreenWithFluidTank, ClickableTankModule 
 
   @Override
   public boolean isHovered(int checkX, int checkY) {
-    return GuiUtil.isHovered(checkX, checkY, x - 1, y - 1, width + 2, height + 2);
+    return !isBlazeHeated() && GuiUtil.isHovered(checkX, checkY, x - 1, y - 1, width + 2, height + 2);
   }
 
   /** Gets the current height of the fluid */
@@ -95,12 +100,17 @@ public class GuiFuelModule implements IScreenWithFluidTank, ClickableTankModule 
     int fuel = fuelModule.getFuel();
     int fuelQuality = fuelModule.getFuelQuality();
     if (fuel > 0 && fuelQuality > 0) {
+      ScalableElementScreen fire = switch (fuelModule.getHeatLevel()) {
+        case 1 -> FIRE_DIM;
+        case 2 -> FIRE_BLUE;
+        default -> this.fire;
+      };
       fire.drawScaledYUp(graphics, fireX + screen.leftPos, fireY + screen.topPos, 14 * fuel / fuelQuality);
     }
 
     // draw tank second, it changes the image
     // store fuel info into a field for other methods, this one updates most often
-    if (!hasFuelSlot) {
+    if (!hasFuelSlot && !isBlazeHeated()) {
       fuelInfo = fuelModule.getFuelInfo();
       if (!fuelInfo.isEmpty()) {
         GuiUtil.renderFluidTank(graphics.pose(), screen, fuelInfo.getFluid(), fuelInfo.getTotalAmount(), fuelInfo.getCapacity(), x, y, width, height, 100);
@@ -187,5 +197,10 @@ public class GuiFuelModule implements IScreenWithFluidTank, ClickableTankModule 
   /** Creates the fire element from the standard location */
   public static ScalableElementScreen makeFire(ResourceLocation background) {
     return new ScalableElementScreen(background, 176, 136, 14, 14, 256, 256);
+  }
+
+  /** If true, the current heat source is a Create blaze burner, hiding the fuel tank area */
+  public boolean isBlazeHeated() {
+    return fuelModule.getHeatLevel() > 0;
   }
 }
