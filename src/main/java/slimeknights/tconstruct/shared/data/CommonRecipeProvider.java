@@ -130,9 +130,15 @@ public class CommonRecipeProvider extends BaseRecipeProvider implements ICommonR
                           .unlockedBy("has_item", has(SlimeType.SKY.getSlimeballTag()))
                           .save(consumer, prefix(TinkerCommons.tinkersGadgetry, "common/"));
     ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, TinkerCommons.punySmelting)
+        // [CTNH] 原配方使用 tconstruct:grout（砖泥）；grout 已迁移至 CTNHCore 的 brick_mud 并停用，故改用 searedBrick：
+        // ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, TinkerCommons.punySmelting)
+        //                       .requires(Items.BOOK)
+        //                       .requires(TinkerSmeltery.grout)
+        //                       .unlockedBy("has_item", has(TinkerSmeltery.grout))
+        //                       .save(consumer, prefix(TinkerCommons.punySmelting, "common/"));
                           .requires(Items.BOOK)
-                          .requires(TinkerSmeltery.grout)
-                          .unlockedBy("has_item", has(TinkerSmeltery.grout))
+                          .requires(TinkerSmeltery.searedBrick)
+                          .unlockedBy("has_item", has(TinkerSmeltery.searedBrick))
                           .save(consumer, prefix(TinkerCommons.punySmelting, "common/"));
     ItemCastingRecipeBuilder.tableRecipe(TinkerCommons.mightySmelting)
                             .setFluidAndTime(TinkerFluids.searedStone, FluidValues.BRICK)

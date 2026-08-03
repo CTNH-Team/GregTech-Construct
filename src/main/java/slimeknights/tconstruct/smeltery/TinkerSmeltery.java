@@ -110,7 +110,8 @@ public final class TinkerSmeltery extends TinkerModule {
 
     /* Bricks */
     /* Crafting related items */
-    public static final ItemObject<Block> grout = BLOCKS.register("grout", builder(MapColor.COLOR_LIGHT_GRAY, SoundType.SAND).instrument(NoteBlockInstrument.SNARE).strength(3.0f).friction(0.8F), TOOLTIP_BLOCK_ITEM);
+        // [CTNH] 砖泥(grout)迁移至 CTNHCore（ctnhcore:brick_mud），不再注册；相关配方与引用同步停用
+        //     public static final ItemObject<Block> grout = BLOCKS.register("grout", builder(MapColor.COLOR_LIGHT_GRAY, SoundType.SAND).instrument(NoteBlockInstrument.SNARE).strength(3.0f).friction(0.8F), TOOLTIP_BLOCK_ITEM);
     public static final ItemObject<Block> netherGrout = BLOCKS.register("nether_grout", builder(MapColor.COLOR_BROWN, SoundType.SOUL_SOIL).instrument(NoteBlockInstrument.SNARE).strength(3.0f).friction(0.8F), TOOLTIP_BLOCK_ITEM);
 
     // seared blocks
@@ -450,7 +451,8 @@ public final class TinkerSmeltery extends TinkerModule {
     /** Adds all relevant items to the creative tab */
     private static void addTabItems(ItemDisplayParameters itemDisplayParameters, Output output) {
         // crafting materials
-        output.accept(grout);
+        // [CTNH] grout 不再加入创造模式（砖泥由 CTNHCore 的 ctnhcore:brick_mud 取代）
+        // output.accept(grout);
         output.accept(searedBrick);
         output.accept(netherGrout);
         output.accept(scorchedBrick);

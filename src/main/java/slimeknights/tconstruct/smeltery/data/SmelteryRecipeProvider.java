@@ -136,34 +136,37 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
 
     private void addSmelteryRecipes(Consumer<FinishedRecipe> consumer) {
         String folder = "smeltery/seared/";
+        // [CTNH] 以下 grout（匠魂砖泥）相关配方已注释停用，并迁移至 CTNHCore：
+        // 由 ctnhcore:brick_mud（砖泥）承接原 grout 的合成/烧制路线；
+        // 新流程：砖泥 → 砖胚(brick_preform) → 烧制 → 焦黑砖(seared_brick)。
+        // 实现见 CTNH-Core PrimitiveKineticAgeRecipes#addSmeltingBrickRecipes。
         // grout crafting
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, TinkerSmeltery.grout, 2)
-                .requires(Items.CLAY_BALL)
-                .requires(ItemTags.SAND)
-                .requires(Blocks.GRAVEL)
-                .unlockedBy("has_item", has(Items.CLAY_BALL))
-                .save(consumer, prefix(id(TinkerSmeltery.grout), folder));
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, TinkerSmeltery.grout, 8)
-                .requires(Blocks.CLAY)
-                .requires(ItemTags.SAND).requires(ItemTags.SAND).requires(ItemTags.SAND).requires(ItemTags.SAND)
-                .requires(Blocks.GRAVEL).requires(Blocks.GRAVEL).requires(Blocks.GRAVEL).requires(Blocks.GRAVEL)
-                .unlockedBy("has_item", has(Blocks.CLAY))
-                .save(consumer, wrap(TinkerSmeltery.grout, folder, "_multiple"));
-
+        // ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, TinkerSmeltery.grout, 2)
+        //         .requires(Items.CLAY_BALL)
+        //         .requires(ItemTags.SAND)
+        //         .requires(Blocks.GRAVEL)
+        //         .unlockedBy("has_item", has(Items.CLAY_BALL))
+        //         .save(consumer, prefix(id(TinkerSmeltery.grout), folder));
+        // ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, TinkerSmeltery.grout, 8)
+        //         .requires(Blocks.CLAY)
+        //         .requires(ItemTags.SAND).requires(ItemTags.SAND).requires(ItemTags.SAND).requires(ItemTags.SAND)
+        //         .requires(Blocks.GRAVEL).requires(Blocks.GRAVEL).requires(Blocks.GRAVEL).requires(Blocks.GRAVEL)
+        //         .unlockedBy("has_item", has(Blocks.CLAY))
+        //         .save(consumer, wrap(TinkerSmeltery.grout, folder, "_multiple"));
         // seared bricks from grout
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(TinkerSmeltery.grout), RecipeCategory.BUILDING_BLOCKS, TinkerSmeltery.searedBrick, 0.3f, 200)
-                .unlockedBy("has_item", has(TinkerSmeltery.grout))
-                .save(consumer, prefix(TinkerSmeltery.searedBrick, folder));
-        Consumer<Consumer<FinishedRecipe>> fastGrout = c ->
-                SimpleCookingRecipeBuilder.blasting(Ingredient.of(TinkerSmeltery.grout), RecipeCategory.BUILDING_BLOCKS, TinkerSmeltery.searedBrick, 0.3f, 100)
-                        .unlockedBy("has_item", has(TinkerSmeltery.grout)).save(c);
-        ConditionalRecipe.builder()
-                .addCondition(new ModLoadedCondition("ceramics"))
-                .addRecipe(c -> fastGrout.accept(ConsumerWrapperBuilder.wrap(ResourceLocation.tryBuild("ceramics", "kiln")).build(c)))
-                .addCondition(TrueCondition.INSTANCE)
-                .addRecipe(fastGrout)
-                .generateAdvancement()
-                .build(consumer, wrap(TinkerSmeltery.searedBrick, folder, "_kiln"));
+        // SimpleCookingRecipeBuilder.smelting(Ingredient.of(TinkerSmeltery.grout), RecipeCategory.BUILDING_BLOCKS, TinkerSmeltery.searedBrick, 0.3f, 200)
+        //         .unlockedBy("has_item", has(TinkerSmeltery.grout))
+        //         .save(consumer, prefix(TinkerSmeltery.searedBrick, folder));
+        // Consumer<Consumer<FinishedRecipe>> fastGrout = c ->
+        //         SimpleCookingRecipeBuilder.blasting(Ingredient.of(TinkerSmeltery.grout), RecipeCategory.BUILDING_BLOCKS, TinkerSmeltery.searedBrick, 0.3f, 100)
+        //                 .unlockedBy("has_item", has(TinkerSmeltery.grout)).save(c);
+        // ConditionalRecipe.builder()
+        //         .addCondition(new ModLoadedCondition("ceramics"))
+        //         .addRecipe(c -> fastGrout.accept(ConsumerWrapperBuilder.wrap(ResourceLocation.tryBuild("ceramics", "kiln")).build(c)))
+        //         .addCondition(TrueCondition.INSTANCE)
+        //         .addRecipe(fastGrout)
+        //         .generateAdvancement()
+        //         .build(consumer, wrap(TinkerSmeltery.searedBrick, folder, "_kiln"));
 
 
         // block from bricks
@@ -499,10 +502,10 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
 
         // seared blocks
         String meltingFolder = "smeltery/melting/seared/";
+        // [CTNH] 原 grout → searedStone 熔炼配方已注释停用（grout 迁移至 CTNHCore 的 brick_mud）：
+        // MeltingRecipeBuilder.melting(Ingredient.of(TinkerSmeltery.grout), TinkerFluids.searedStone, FluidValues.BRICK * 2, 1.5f)
+        //         .save(consumer, location(meltingFolder + "grout"));
 
-        // double efficiency when using smeltery for grout
-        MeltingRecipeBuilder.melting(Ingredient.of(TinkerSmeltery.grout), TinkerFluids.searedStone, FluidValues.BRICK * 2, 1.5f)
-                .save(consumer, location(meltingFolder + "grout"));
         // seared stone
         // stairs are here since the cheapest stair recipe is stone cutter, 1 to 1
         MeltingRecipeBuilder.melting(CompoundIngredient.of(Ingredient.of(TinkerTags.Items.SEARED_BLOCKS),

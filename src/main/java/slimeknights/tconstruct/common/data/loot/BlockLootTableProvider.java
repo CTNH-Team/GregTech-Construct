@@ -232,7 +232,8 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
   }
 
   private void addSmeltery() {
-    this.dropSelf(TinkerSmeltery.grout.get());
+        // [CTNH] grout 已停用（砖泥迁移至 CTNHCore 的 brick_mud），不再生成战利品
+        // this.dropSelf(TinkerSmeltery.grout.get());
     // controller
     this.dropSelf(TinkerSmeltery.searedMelter.get());
     this.dropSelf(TinkerSmeltery.searedHeater.get());

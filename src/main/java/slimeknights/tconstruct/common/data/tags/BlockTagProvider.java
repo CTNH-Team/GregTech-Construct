@@ -237,7 +237,8 @@ public class BlockTagProvider extends BlockTagsProvider {
 
     // allow the enderman to hold more blocks
     IntrinsicTagAppender<Block> endermanHoldable = this.tag(BlockTags.ENDERMAN_HOLDABLE);
-    endermanHoldable.addTag(TinkerTags.Blocks.CONGEALED_SLIME).add(TinkerSmeltery.grout.get(), TinkerSmeltery.netherGrout.get());
+        // [CTNH] grout 已停用（砖泥迁移至 CTNHCore 的 brick_mud），仅保留 netherGrout
+        endermanHoldable.addTag(TinkerTags.Blocks.CONGEALED_SLIME).add(/* TinkerSmeltery.grout.get(), */ TinkerSmeltery.netherGrout.get());
 
     // wood
     this.tag(TinkerTags.Blocks.SLIMY_LOGS)
@@ -498,7 +499,8 @@ public class BlockTagProvider extends BlockTagsProvider {
 
 
     // smeltery
-    tagBlocks(MINEABLE_WITH_SHOVEL, TinkerSmeltery.grout, TinkerSmeltery.netherGrout);
+        // [CTNH] grout 已停用，仅保留 netherGrout
+        tagBlocks(MINEABLE_WITH_SHOVEL, /* TinkerSmeltery.grout, */ TinkerSmeltery.netherGrout);
     // seared
     tagBlocks(MINEABLE_WITH_PICKAXE, NEEDS_GOLD_TOOL, TinkerSmeltery.searedStone, TinkerSmeltery.searedPaver, TinkerSmeltery.searedCobble, TinkerSmeltery.searedBricks);
     tagBlocks(MINEABLE_WITH_PICKAXE, NEEDS_GOLD_TOOL, TinkerSmeltery.searedCrackedBricks, TinkerSmeltery.searedFancyBricks, TinkerSmeltery.searedTriangleBricks, TinkerSmeltery.searedLadder, TinkerSmeltery.searedLamp, TinkerSmeltery.searedGlass, TinkerSmeltery.searedSoulGlass, TinkerSmeltery.searedTintedGlass, TinkerSmeltery.searedGlassPane, TinkerSmeltery.searedSoulGlassPane);
