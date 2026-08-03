@@ -3999,6 +3999,7 @@
   "create.tooltip.tconstruct.tinker_stats.fluid": "Fluid:",
   "create.tooltip.tconstruct.progress": "Progress:",
   "create.tooltip.tconstruct.output": "Output:",
+  "tooltip.tconstruct.create.blaze_burner": "Can be heated by a Blaze Burner",
 
   "tooltip.tconstruct.part.added_by": "Material added by %s",
   "tooltip.tconstruct.part.missing_material": "Missing material: %s",
