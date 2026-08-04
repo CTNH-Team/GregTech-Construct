@@ -52,7 +52,7 @@ import slimeknights.tconstruct.library.recipe.FluidValues;
 import slimeknights.tconstruct.library.recipe.alloying.AlloyRecipeBuilder;
 import slimeknights.tconstruct.library.recipe.casting.ItemCastingRecipeBuilder;
 import slimeknights.tconstruct.library.recipe.casting.PotionCastingRecipeBuilder;
-import slimeknights.tconstruct.library.recipe.casting.container.ContainerFillingRecipeBuilder;
+//import slimeknights.tconstruct.library.recipe.casting.container.ContainerFillingRecipeBuilder; // [CTNH] 容器填充配方已注释停用
 import slimeknights.tconstruct.library.recipe.entitymelting.EntityMeltingRecipeBuilder;
 import slimeknights.tconstruct.library.recipe.fuel.MeltingFuelBuilder;
 import slimeknights.tconstruct.library.recipe.ingredient.BlockTagIngredient;
@@ -168,6 +168,10 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
         //         .generateAdvancement()
         //         .build(consumer, wrap(TinkerSmeltery.searedBrick, folder, "_kiln"));
 
+
+        // [CTNH] 焦黑砖(seared_brick)不再通过铸造台铸造（熔融焦黑石 → 焦黑砖），
+        // 新流程由 CTNHCore 提供：砖泥 → 砖胚(brick_preform) → 烧制 → 焦黑砖；
+        // 本 fork 不生成 tconstruct:smeltery/casting/seared_brick 配方。
 
         // block from bricks
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, TinkerSmeltery.searedBricks)
@@ -360,22 +364,24 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
                 .pattern(" C ")
                 .unlockedBy("has_item", has(Tags.Items.INGOTS_COPPER))
                 .save(consumer, location(folder + "gauge"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.searedDrain)
-                .define('#', TinkerSmeltery.searedBrick)
-                .define('C', Tags.Items.INGOTS_COPPER)
-                .pattern("# #")
-                .pattern("C C")
-                .pattern("# #")
-                .unlockedBy("has_item", has(TinkerSmeltery.searedBrick))
-                .save(consumer, location(folder + "drain"));
-        ShapedRetexturedRecipeBuilder.fromShaped(
-                        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.searedDrain)
-                                .define('#', TinkerTags.Items.SMELTERY_BRICKS)
-                                .define('C', Tags.Items.INGOTS_COPPER)
-                                .pattern("C#C")
-                                .unlockedBy("has_item", has(TinkerTags.Items.SMELTERY_BRICKS)))
-                .setSource('#')
-                .build(consumer, location(folder + "drain_retextured"));
+        // [CTNH] 焦黑排液孔(seared_drain)原配方停用：铜锭改为 Create 流体管道(mechanical fluid pipe)，
+        // 新配方由 CTNHCore 提供（crafttable/seared_drain）；retextured 变体一并停用。
+        //ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.searedDrain)
+        //        .define('#', TinkerSmeltery.searedBrick)
+        //        .define('C', Tags.Items.INGOTS_COPPER)
+        //        .pattern("# #")
+        //        .pattern("C C")
+        //        .pattern("# #")
+        //        .unlockedBy("has_item", has(TinkerSmeltery.searedBrick))
+        //        .save(consumer, location(folder + "drain"));
+        //ShapedRetexturedRecipeBuilder.fromShaped(
+        //                ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.searedDrain)
+        //                        .define('#', TinkerTags.Items.SMELTERY_BRICKS)
+        //                        .define('C', Tags.Items.INGOTS_COPPER)
+        //                        .pattern("C#C")
+        //                        .unlockedBy("has_item", has(TinkerTags.Items.SMELTERY_BRICKS)))
+        //        .setSource('#')
+        //        .build(consumer, location(folder + "drain_retextured"));
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.searedChute)
                 .define('#', TinkerSmeltery.searedBrick)
                 .define('C', Tags.Items.INGOTS_COPPER)
@@ -394,22 +400,24 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
                                 .unlockedBy("has_item", has(TinkerTags.Items.SMELTERY_BRICKS)))
                 .setSource('#')
                 .build(consumer, location(folder + "chute_retextured"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.searedDuct)
-                .define('#', TinkerSmeltery.searedBrick)
-                .define('C', Tags.Items.INGOTS_GOLD)
-                .pattern("# #")
-                .pattern("C C")
-                .pattern("# #")
-                .unlockedBy("has_item", has(Tags.Items.INGOTS_GOLD))
-                .save(consumer, location(folder + "duct"));
-        ShapedRetexturedRecipeBuilder.fromShaped(
-                        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.searedDuct)
-                                .define('#', TinkerTags.Items.SMELTERY_BRICKS)
-                                .define('C', Tags.Items.INGOTS_GOLD)
-                                .pattern("C#C")
-                                .unlockedBy("has_item", has(TinkerTags.Items.SMELTERY_BRICKS)))
-                .setSource('#')
-                .build(consumer, location(folder + "duct_retextured"));
+        // [CTNH] 焦黑疏导孔(seared_duct)原配方停用：金锭改为 Create 智能流体管道(smart fluid pipe)，
+        // 新配方由 CTNHCore 提供（crafttable/seared_duct）；retextured 变体一并停用。
+        //ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.searedDuct)
+        //        .define('#', TinkerSmeltery.searedBrick)
+        //        .define('C', Tags.Items.INGOTS_GOLD)
+        //        .pattern("# #")
+        //        .pattern("C C")
+        //        .pattern("# #")
+        //        .unlockedBy("has_item", has(Tags.Items.INGOTS_GOLD))
+        //        .save(consumer, location(folder + "duct"));
+        //ShapedRetexturedRecipeBuilder.fromShaped(
+        //                ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.searedDuct)
+        //                        .define('#', TinkerTags.Items.SMELTERY_BRICKS)
+        //                        .define('C', Tags.Items.INGOTS_GOLD)
+        //                        .pattern("C#C")
+        //                        .unlockedBy("has_item", has(TinkerTags.Items.SMELTERY_BRICKS)))
+        //        .setSource('#')
+        //        .build(consumer, location(folder + "duct_retextured"));
 
         // controllers
         Ingredient similarTanks = NoContainerIngredient.of(TinkerSmeltery.searedTank.get(TankType.FUEL_GAUGE), TinkerSmeltery.searedTank.get(TankType.INGOT_GAUGE));
@@ -1023,10 +1031,12 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
         String folder = "smeltery/casting/";
 
         // container filling
-        ContainerFillingRecipeBuilder.tableRecipe(Items.BUCKET, FluidType.BUCKET_VOLUME)
-                .save(consumer, location(folder + "filling/bucket"));
-        ContainerFillingRecipeBuilder.tableRecipe(TinkerSmeltery.copperCan, FluidValues.INGOT)
-                .save(consumer, location(folder + "filling/copper_can"));
+        // [CTNH] 流体->容器填充配方（桶、铜罐）原配方停用：不再通过铸造台灌装容器，
+        // EMI 铸造分类中的对应配方随之消失。
+        //ContainerFillingRecipeBuilder.tableRecipe(Items.BUCKET, FluidType.BUCKET_VOLUME)
+        //        .save(consumer, location(folder + "filling/bucket"));
+        //ContainerFillingRecipeBuilder.tableRecipe(TinkerSmeltery.copperCan, FluidValues.INGOT)
+        //        .save(consumer, location(folder + "filling/copper_can"));
         // potion filling
         FluidIngredient potionBottle = TinkerFluids.potion.ingredient(FluidValues.BOTTLE);
         PotionCastingRecipeBuilder.tableRecipe(Items.POTION)
@@ -1052,31 +1062,32 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
                 .setCoolingTime(1)
                 .save(consumer, location(folder + "filling/tipped_arrow_clean"));
         // tank filling - seared
-        ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.searedTank.get(TankType.INGOT_TANK), FluidValues.INGOT)
-                .save(consumer, location(folder + "filling/seared_ingot_tank"));
-        ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.searedTank.get(TankType.INGOT_GAUGE), FluidValues.INGOT)
-                .save(consumer, location(folder + "filling/seared_ingot_gauge"));
-        ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.searedTank.get(TankType.FUEL_TANK), FluidType.BUCKET_VOLUME / 4)
-                .save(consumer, location(folder + "filling/seared_fuel_tank"));
-        ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.searedTank.get(TankType.FUEL_GAUGE), FluidType.BUCKET_VOLUME / 4)
-                .save(consumer, location(folder + "filling/seared_fuel_gauge"));
-        ContainerFillingRecipeBuilder.tableRecipe(TinkerSmeltery.searedLantern, FluidValues.NUGGET)
-                .save(consumer, location(folder + "filling/seared_lantern_pixel"));
-        ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.searedLantern, FluidValues.LANTERN_CAPACITY)
-                .save(consumer, location(folder + "filling/seared_lantern_full"));
+        // [CTNH] 储罐/灯笼的流体->容器填充配方原配方停用（与桶/铜罐一致），见上方 container filling 注释。
+        //ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.searedTank.get(TankType.INGOT_TANK), FluidValues.INGOT)
+        //        .save(consumer, location(folder + "filling/seared_ingot_tank"));
+        //ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.searedTank.get(TankType.INGOT_GAUGE), FluidValues.INGOT)
+        //        .save(consumer, location(folder + "filling/seared_ingot_gauge"));
+        //ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.searedTank.get(TankType.FUEL_TANK), FluidType.BUCKET_VOLUME / 4)
+        //        .save(consumer, location(folder + "filling/seared_fuel_tank"));
+        //ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.searedTank.get(TankType.FUEL_GAUGE), FluidType.BUCKET_VOLUME / 4)
+        //        .save(consumer, location(folder + "filling/seared_fuel_gauge"));
+        //ContainerFillingRecipeBuilder.tableRecipe(TinkerSmeltery.searedLantern, FluidValues.NUGGET)
+        //        .save(consumer, location(folder + "filling/seared_lantern_pixel"));
+        //ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.searedLantern, FluidValues.LANTERN_CAPACITY)
+        //        .save(consumer, location(folder + "filling/seared_lantern_full"));
         // tank filling - scorched
-        ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.scorchedTank.get(TankType.INGOT_TANK), FluidValues.INGOT)
-                .save(consumer, location(folder + "filling/scorched_ingot_tank"));
-        ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.scorchedTank.get(TankType.INGOT_GAUGE), FluidValues.INGOT)
-                .save(consumer, location(folder + "filling/scorched_ingot_gauge"));
-        ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.scorchedTank.get(TankType.FUEL_TANK), FluidType.BUCKET_VOLUME / 4)
-                .save(consumer, location(folder + "filling/scorched_fuel_tank"));
-        ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.scorchedTank.get(TankType.FUEL_GAUGE), FluidType.BUCKET_VOLUME / 4)
-                .save(consumer, location(folder + "filling/scorched_fuel_gauge"));
-        ContainerFillingRecipeBuilder.tableRecipe(TinkerSmeltery.scorchedLantern, FluidValues.NUGGET)
-                .save(consumer, location(folder + "filling/scorched_lantern_pixel"));
-        ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.scorchedLantern, FluidValues.LANTERN_CAPACITY)
-                .save(consumer, location(folder + "filling/scorched_lantern_full"));
+        //ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.scorchedTank.get(TankType.INGOT_TANK), FluidValues.INGOT)
+        //        .save(consumer, location(folder + "filling/scorched_ingot_tank"));
+        //ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.scorchedTank.get(TankType.INGOT_GAUGE), FluidValues.INGOT)
+        //        .save(consumer, location(folder + "filling/scorched_ingot_gauge"));
+        //ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.scorchedTank.get(TankType.FUEL_TANK), FluidType.BUCKET_VOLUME / 4)
+        //        .save(consumer, location(folder + "filling/scorched_fuel_tank"));
+        //ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.scorchedTank.get(TankType.FUEL_GAUGE), FluidType.BUCKET_VOLUME / 4)
+        //        .save(consumer, location(folder + "filling/scorched_fuel_gauge"));
+        //ContainerFillingRecipeBuilder.tableRecipe(TinkerSmeltery.scorchedLantern, FluidValues.NUGGET)
+        //        .save(consumer, location(folder + "filling/scorched_lantern_pixel"));
+        //ContainerFillingRecipeBuilder.basinRecipe(TinkerSmeltery.scorchedLantern, FluidValues.LANTERN_CAPACITY)
+        //        .save(consumer, location(folder + "filling/scorched_lantern_full"));
 
         // Slime
         String slimeFolder = folder + "slime/";
@@ -2387,10 +2398,11 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
         Consumer<FinishedRecipe> ceramicsConsumer = withCondition(consumer, new ModLoadedCondition(ceramics));
 
         // fill clay and cracked clay buckets
-        ContainerFillingRecipeBuilder.tableRecipe(ceramicsId.apply("empty_clay_bucket"), FluidType.BUCKET_VOLUME)
-                .save(ceramicsConsumer, location(ceramicsFolder + "filling_clay_bucket"));
-        ContainerFillingRecipeBuilder.tableRecipe(ceramicsId.apply("cracked_empty_clay_bucket"), FluidType.BUCKET_VOLUME)
-                .save(ceramicsConsumer, location(ceramicsFolder + "filling_cracked_clay_bucket"));
+        // [CTNH] 陶瓷桶的流体->容器填充配方原配方停用，见上方 container filling 注释。
+        //ContainerFillingRecipeBuilder.tableRecipe(ceramicsId.apply("empty_clay_bucket"), FluidType.BUCKET_VOLUME)
+        //        .save(ceramicsConsumer, location(ceramicsFolder + "filling_clay_bucket"));
+        //ContainerFillingRecipeBuilder.tableRecipe(ceramicsId.apply("cracked_empty_clay_bucket"), FluidType.BUCKET_VOLUME)
+        //        .save(ceramicsConsumer, location(ceramicsFolder + "filling_cracked_clay_bucket"));
 
         // porcelain for ceramics
         AlloyRecipeBuilder.alloy(TinkerFluids.moltenPorcelain, FluidValues.BRICK * 4)

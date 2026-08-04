@@ -3,7 +3,6 @@ package slimeknights.tconstruct.plugin.emi;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
-import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -12,9 +11,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidType;
@@ -26,8 +22,6 @@ import slimeknights.tconstruct.common.registration.CompatMaterialFluidObject;
 import slimeknights.tconstruct.fluids.TinkerFluids;
 import slimeknights.tconstruct.fluids.fluids.PotionFluidType;
 import slimeknights.tconstruct.library.addon.TiCAddonRegistry;
-import slimeknights.tconstruct.library.recipe.TinkerRecipeTypes;
-import slimeknights.tconstruct.library.recipe.casting.container.ContainerFillingRecipe;
 import slimeknights.tconstruct.library.tools.helper.ToolBuildHandler;
 import slimeknights.tconstruct.library.tools.item.IModifiable;
 import slimeknights.tconstruct.library.tools.part.IMaterialItem;
@@ -38,12 +32,10 @@ import slimeknights.tconstruct.smeltery.block.component.SearedTankBlock.TankType
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.item.ModifierCrystalItem;
-import slimeknights.tconstruct.plugin.emi.casting.CastingEmiRecipe;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -57,7 +49,6 @@ public final class TConstructEmiFilterPlugin implements EmiPlugin {
 
   @Override
   public void register(EmiRegistry registry) {
-    hideContainerFillingRecipes(registry);
     if (!Config.CLIENT.showFilledFluidTanks.get()) {
       hideFilledFluidTanks(registry);
     }
@@ -67,37 +58,6 @@ public final class TConstructEmiFilterPlugin implements EmiPlugin {
     filterPotionFluids(registry);
     hideModifierItems(registry);
     HIDDEN_RECIPES.forEach(registry::removeRecipes);
-  }
-
-  private static void hideContainerFillingRecipes(EmiRegistry registry) {
-    Set<ResourceLocation> containerFillingIds = new HashSet<>();
-    addContainerFillingIds(containerFillingIds, registry.getRecipeManager(), TinkerRecipeTypes.CASTING_BASIN.get());
-    addContainerFillingIds(containerFillingIds, registry.getRecipeManager(), TinkerRecipeTypes.CASTING_TABLE.get());
-    registry.removeRecipes(recipe -> isContainerFillingRecipe(recipe, containerFillingIds));
-  }
-
-  private static void addContainerFillingIds(Set<ResourceLocation> ids, RecipeManager manager, RecipeType<?> type) {
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    Map<ResourceLocation, Recipe<?>> recipes = (Map)manager.byType((RecipeType)type);
-    ids.addAll(getContainerFillingIds(recipes.values()));
-  }
-
-  static Set<ResourceLocation> getContainerFillingIds(Iterable<? extends Recipe<?>> recipes) {
-    Set<ResourceLocation> ids = new HashSet<>();
-    for (Recipe<?> recipe : recipes) {
-      if (recipe instanceof ContainerFillingRecipe) {
-        ids.add(recipe.getId());
-      }
-    }
-    return ids;
-  }
-
-  static boolean isContainerFillingRecipe(EmiRecipe recipe, Set<ResourceLocation> containerFillingIds) {
-    if (!(recipe instanceof CastingEmiRecipe casting)) {
-      return false;
-    }
-    ResourceLocation sourceRecipeId = casting.getSourceRecipeId();
-    return sourceRecipeId != null && containerFillingIds.contains(sourceRecipeId);
   }
 
   private static void hideModifierItems(EmiRegistry registry) {

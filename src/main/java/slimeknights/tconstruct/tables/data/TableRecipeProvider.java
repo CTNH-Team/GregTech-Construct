@@ -215,30 +215,33 @@ public class TableRecipeProvider extends BaseRecipeProvider {
       nbt.put("display", display);
       toolForge = CraftingNBTWrapper.wrap(consumer, nbt);
     }
-    ShapedRetexturedRecipeBuilder.fromShaped(
-      ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.tinkersAnvil)
-        .define('m', TinkerTags.Items.ANVIL_METAL)
-        .define('s', TinkerTags.Items.SEARED_BLOCKS)
-        .define('t', TinkerTables.tinkerStation)
-        .pattern("sss")
-        .pattern("mtm")
-        .pattern("m m")
-        .unlockedBy("has_item", has(TinkerTags.Items.ANVIL_METAL)))
-      .setSource('m')
-      .setMatchAll()
-      .build(toolForge, location(folder + "tinkers_forge"));
-    ShapedRetexturedRecipeBuilder.fromShaped(
-      ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.scorchedAnvil)
-        .define('m', TinkerTags.Items.ANVIL_METAL)
-        .define('s', TinkerTags.Items.SCORCHED_BLOCKS)
-        .define('t', TinkerTables.tinkerStation)
-        .pattern("sss")
-        .pattern("mtm")
-        .pattern("m m")
-        .unlockedBy("has_item", has(TinkerTags.Items.ANVIL_METAL)))
-      .setSource('m')
-      .setMatchAll()
-      .build(toolForge, location(folder + "scorched_forge"));
+    // [CTNH] "工具锻造台"幽默配方（tinkers_forge / scorched_forge）停用：
+    // 不再生成带"工具锻造台"显示名的匠魂砧合成配方；
+    // EMI 原通过 HIDDEN_RECIPES 隐藏，因 CEI 覆盖 bake 后 removeRecipes 失效，改为从数据源直接停用。
+    //ShapedRetexturedRecipeBuilder.fromShaped(
+    //  ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.tinkersAnvil)
+    //    .define('m', TinkerTags.Items.ANVIL_METAL)
+    //    .define('s', TinkerTags.Items.SEARED_BLOCKS)
+    //    .define('t', TinkerTables.tinkerStation)
+    //    .pattern("sss")
+    //    .pattern("mtm")
+    //    .pattern("m m")
+    //    .unlockedBy("has_item", has(TinkerTags.Items.ANVIL_METAL)))
+    //  .setSource('m')
+    //  .setMatchAll()
+    //  .build(toolForge, location(folder + "tinkers_forge"));
+    //ShapedRetexturedRecipeBuilder.fromShaped(
+    //  ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.scorchedAnvil)
+    //    .define('m', TinkerTags.Items.ANVIL_METAL)
+    //    .define('s', TinkerTags.Items.SCORCHED_BLOCKS)
+    //    .define('t', TinkerTables.tinkerStation)
+    //    .pattern("sss")
+    //    .pattern("mtm")
+    //    .pattern("m m")
+    //    .unlockedBy("has_item", has(TinkerTags.Items.ANVIL_METAL)))
+    //  .setSource('m')
+    //  .setMatchAll()
+    //  .build(toolForge, location(folder + "scorched_forge"));
 
     // material recipes - for the material fallbacks
     Consumer<FinishedRecipe> materialConsumer = MaterialsConsumerBuilder.shaped("m").build(consumer);
@@ -259,25 +262,28 @@ public class TableRecipeProvider extends BaseRecipeProvider {
       .pattern("sss")
       .unlockedBy("has_item", has(TinkerToolParts.fakeStorageBlock))
       .save(materialConsumer, wrap(TinkerTables.scorchedAnvil, folder, "_material"));
-    materialConsumer = MaterialsConsumerBuilder.shaped("m").build(toolForge);
-    ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.tinkersAnvil)
-      .define('m', fakeStorageBlock)
-      .define('s', TinkerTags.Items.SEARED_BLOCKS)
-      .define('t', TinkerTables.tinkerStation)
-      .pattern("sss")
-      .pattern("mtm")
-      .pattern("m m")
-      .unlockedBy("has_item", has(TinkerToolParts.fakeStorageBlock))
-      .save(materialConsumer, location(folder + "seared_forge_material"));
-    ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.scorchedAnvil)
-      .define('m', fakeStorageBlock)
-      .define('s', TinkerTags.Items.SCORCHED_BLOCKS)
-      .define('t', TinkerTables.tinkerStation)
-      .pattern("sss")
-      .pattern("mtm")
-      .pattern("m m")
-      .unlockedBy("has_item", has(TinkerToolParts.fakeStorageBlock))
-      .save(materialConsumer, location(folder + "scorched_forge_material"));
+    // [CTNH] 材料回退配方（seared_forge_material / scorched_forge_material）停用：
+    // 不再生成 fakeStorageBlock 材料回退的"工具锻造台"版本；
+    // EMI 原通过 HIDDEN_RECIPES 隐藏，因 CEI 覆盖 bake 后 removeRecipes 失效，改为从数据源直接停用。
+    //materialConsumer = MaterialsConsumerBuilder.shaped("m").build(toolForge);
+    //ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.tinkersAnvil)
+    //  .define('m', fakeStorageBlock)
+    //  .define('s', TinkerTags.Items.SEARED_BLOCKS)
+    //  .define('t', TinkerTables.tinkerStation)
+    //  .pattern("sss")
+    //  .pattern("mtm")
+    //  .pattern("m m")
+    //  .unlockedBy("has_item", has(TinkerToolParts.fakeStorageBlock))
+    //  .save(materialConsumer, location(folder + "seared_forge_material"));
+    //ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.scorchedAnvil)
+    //  .define('m', fakeStorageBlock)
+    //  .define('s', TinkerTags.Items.SCORCHED_BLOCKS)
+    //  .define('t', TinkerTables.tinkerStation)
+    //  .pattern("sss")
+    //  .pattern("mtm")
+    //  .pattern("m m")
+    //  .unlockedBy("has_item", has(TinkerToolParts.fakeStorageBlock))
+    //  .save(materialConsumer, location(folder + "scorched_forge_material"));
 
     // part swapping
     TinkerStationPartSwappingBuilder.tools(DifferenceIngredient.of(Ingredient.of(TinkerTags.Items.MULTIPART_TOOL), Ingredient.of(TinkerTags.Items.UNSWAPPABLE)))
