@@ -28,7 +28,7 @@ public class FloatToolStat implements INumericToolStat<Float> {
   private final ToolStatId name;
   /** Color for this stat type */
   @Getter
-  private final TextColor color;
+  private TextColor color;
   /** Gets the default value for this stat */
   private final float defaultValue;
   /** Min value for this stat */
@@ -54,6 +54,14 @@ public class FloatToolStat implements INumericToolStat<Float> {
 
   public FloatToolStat(ToolStatId name, int color, float defaultValue, float minValue, float maxValue) {
     this(name, color, defaultValue, minValue, maxValue, ItemPredicate.ANY);
+  }
+
+  /** Updates the display color of this stat.
+   * Used by dynamically created capacity stats whose canonical color is set by the owning
+   * {@code StatCapacityBarModule} after a decode-time fallback may have created them first.
+   */
+  protected void setColor(int rgb) {
+    this.color = TextColor.fromRgb(rgb);
   }
 
   @Override
