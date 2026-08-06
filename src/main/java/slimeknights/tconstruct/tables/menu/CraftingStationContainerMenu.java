@@ -87,6 +87,26 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
         }
       }
       return ItemStack.EMPTY;
+    } else if (index >= this.playerInventoryStart) {
+      // shift clicking the player inventory moves into the adjacent side container first,
+      // the crafting grid is not a storage
+      ItemStack stack = slot.getItem().copy();
+      ItemStack remaining = stack.copy();
+      if (subContainers.size() > 0) {
+        this.refillAnyContainer(remaining, this.subContainers);
+        if (!remaining.isEmpty()) {
+          this.moveToAnyContainer(remaining, this.subContainers);
+        }
+      }
+      // only apply the slot when the side container accepted something
+      if (remaining.getCount() < stack.getCount()) {
+        slot.set(remaining);
+        if (!remaining.isEmpty()) {
+          slot.setChanged();
+        }
+        return stack;
+      }
+      return super.quickMoveStack(player, index);
     } else {
       return super.quickMoveStack(player, index);
     }

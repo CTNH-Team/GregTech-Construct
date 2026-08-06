@@ -50,6 +50,13 @@ public class BlockEntityTypeTagProvider extends IntrinsicHolderTagsProvider<Bloc
     ironchest(sideInventories, "obsidian");
     ironchest(sideInventories, "dirt");
 
+    // Sophisticated Storage chests/barrels and Sophisticated Backpacks' placed backpack block.
+    // Each family shares one block entity type across all material tiers.
+    sideInventories.addOptional(ResourceLocation.tryBuild("sophisticatedstorage", "chest"));
+    sideInventories.addOptional(ResourceLocation.tryBuild("sophisticatedstorage", "barrel"));
+    sideInventories.addOptional(ResourceLocation.tryBuild("sophisticatedstorage", "limited_barrel"));
+    sideInventories.addOptional(ResourceLocation.tryBuild("sophisticatedbackpacks", "backpack"));
+
     // these block entities don't fully sync the fluid to client, so show simplified information
     tag(MantleTags.BlockEntities.HIDES_GAUGE_AMOUNT).add(TinkerSmeltery.faucet.get(), TinkerSmeltery.channel.get());
   }

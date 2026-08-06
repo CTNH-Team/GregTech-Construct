@@ -90,6 +90,22 @@
     {
       "id": "ironchest:trapped_dirt_chest",
       "required": false
+    },
+    {
+      "id": "sophisticatedstorage:chest",
+      "required": false
+    },
+    {
+      "id": "sophisticatedstorage:barrel",
+      "required": false
+    },
+    {
+      "id": "sophisticatedstorage:limited_barrel",
+      "required": false
+    },
+    {
+      "id": "sophisticatedbackpacks:backpack",
+      "required": false
     }
   ]
 }
