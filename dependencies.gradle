@@ -62,6 +62,9 @@ dependencies {
     modRuntimeOnly("curse.maven:sophisticated-core-618298:8503031")
     modRuntimeOnly("curse.maven:sophisticated-backpacks-422301:8503063")
     modRuntimeOnly("curse.maven:sophisticated-storage-619320:8514721")
+    // Polymorph for crafting station recipe conflict selection
+    modCompileOnly("curse.maven:polymorph-388800:6450982")
+    modRuntimeOnly("curse.maven:polymorph-388800:6450982")
     //deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
