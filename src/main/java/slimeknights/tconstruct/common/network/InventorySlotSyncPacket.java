@@ -24,14 +24,14 @@ public class InventorySlotSyncPacket implements IThreadsafePacket {
   }
 
   public InventorySlotSyncPacket(FriendlyByteBuf buffer) {
-    this.itemStack = buffer.readItem();
+    this.itemStack = SyncContainerStackCodec.read(buffer);
     this.slot = buffer.readShort();
     this.pos = buffer.readBlockPos();
   }
 
   @Override
   public void encode(FriendlyByteBuf packetBuffer) {
-    packetBuffer.writeItem(this.itemStack);
+    SyncContainerStackCodec.write(packetBuffer, this.itemStack);
     packetBuffer.writeShort(this.slot);
     packetBuffer.writeBlockPos(this.pos);
   }

@@ -12,6 +12,7 @@ import slimeknights.mantle.client.screen.ModuleScreen;
 import slimeknights.mantle.client.screen.MultiModuleScreen;
 import slimeknights.mantle.client.screen.ScalableElementScreen;
 import slimeknights.mantle.client.screen.SliderWidget;
+import slimeknights.tconstruct.tables.client.inventory.BaseTabbedScreen;
 import slimeknights.mantle.inventory.BaseContainerMenu;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.tables.client.inventory.widget.BorderWidget;
@@ -91,18 +92,23 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
     return this.menu instanceof BaseContainerMenu<?>;
   }
 
+  /** True while the plugin search box has an active filter; side slots are reflowed to the matches. */
+  private boolean isSearching() {
+    return this.parent instanceof BaseTabbedScreen && BaseTabbedScreen.search != null && BaseTabbedScreen.search.isFilterActive();
+  }
+
   @Override
   public boolean shouldDrawSlot(Slot slot) {
-    if (slot.getSlotIndex() >= this.slotCount) {
+    int index = slot.getSlotIndex();
+    if (index >= this.slotCount) {
       return false;
     }
-
-    // all visible
-    if (!this.slider.isEnabled()) {
-      return true;
+    if (this.isSearching()) {
+      // searching: only the matches are visible, scrolled like Sophisticated Storage
+      int matchIndex = BaseTabbedScreen.search.getMatchIndex(slot);
+      return matchIndex >= 0 && (!this.slider.isEnabled() || (this.firstSlotId <= matchIndex && this.lastSlotId > matchIndex));
     }
-
-    return this.firstSlotId <= slot.getSlotIndex() && this.lastSlotId > slot.getSlotIndex();
+    return !this.slider.isEnabled() || (this.firstSlotId <= index && this.lastSlotId > index);
   }
 
   @Override
@@ -124,11 +130,20 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
 
   @Override
   public void updatePosition(int parentX, int parentY, int parentSizeX, int parentSizeY) {
+    // keep the match list in sync so the slider range reflects the current search
+    if (this.isSearching()) {
+      BaseTabbedScreen.search.refreshMatches(this.menu, this.slotCount);
+    }
     // at most as big as the parent
     this.imageHeight = this.calcCappedYSize(parentSizeY - 10);
     // slider needed?
     if (this.getDisplayedRows() < this.getTotalRows()) {
       this.slider.enable();
+      this.imageWidth = this.columns * this.slot.w + this.slider.width + 2 * this.border.w;
+    }
+    else if (this.isSearching()) {
+      // while searching the scroll bar stays visible like Sophisticated Storage, so the panel keeps room for it
+      this.slider.disable();
       this.imageWidth = this.columns * this.slot.w + this.slider.width + 2 * this.border.w;
     }
     else {
@@ -173,7 +188,8 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
 
     this.slider.setPosition(this.leftPos + this.columns * this.slot.w + this.border.w, y);
     this.slider.setSize(h);
-    this.slider.setSliderParameters(0, this.getTotalRows() - this.getDisplayedRows(), 1);
+    // while searching the matches may not fill the panel, keep the range non-negative
+    this.slider.setSliderParameters(0, Math.max(0, this.getTotalRows() - this.getDisplayedRows()), 1);
 
     this.updateSlots();
   }
@@ -182,10 +198,21 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
     return slider.height / slot.h;
   }
 
+  /** Rows for the slider range; while searching only the matches are counted. */
   private int getTotalRows() {
-    int total = this.slotCount / this.columns;
+    return getTotalRows(true);
+  }
 
-    if (this.slotCount % this.columns != 0) {
+  /** Rows for the given state; the panel itself always sizes to the full slot count so it does not resize while searching. */
+  private int getTotalRows(boolean filtered) {
+    int count = this.slotCount;
+    if (filtered && this.isSearching()) {
+      count = BaseTabbedScreen.search.getMatchCount();
+    }
+
+    int total = count / this.columns;
+
+    if (count % this.columns != 0) {
       total++;
     }
 
@@ -193,7 +220,7 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
   }
 
   private int calcCappedYSize(int max) {
-    int h = this.slot.h * this.getTotalRows();
+    int h = this.slot.h * this.getTotalRows(false);
 
     h = this.border.getHeightWithBorder(h);
 
@@ -211,8 +238,12 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
 
   // updates slot visibility
   protected void updateSlots() {
+    boolean searching = this.isSearching();
+    if (searching) {
+      BaseTabbedScreen.search.refreshMatches(this.menu, this.slotCount);
+    }
     this.firstSlotId = this.slider.getValue() * this.columns;
-    this.lastSlotId = Math.min(this.slotCount, this.firstSlotId + getDisplayedRows() * this.columns);
+    this.lastSlotId = Math.min(searching ? BaseTabbedScreen.search.getMatchCount() : this.slotCount, this.firstSlotId + getDisplayedRows() * this.columns);
 
     int xd = this.border.w + this.xOffset;
     int yd = this.border.h + this.yOffset;
@@ -223,8 +254,14 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
 
     for (Slot slot : this.menu.slots) {
       if (this.shouldDrawSlot(slot)) {
-        // calc position of the slot
-        int offset = slot.getSlotIndex() - this.firstSlotId;
+        // calc position of the slot; searching reflows the matches top to bottom, left to right
+        int offset;
+        if (searching) {
+          offset = BaseTabbedScreen.search.getMatchIndex(slot) - this.firstSlotId;
+        }
+        else {
+          offset = slot.getSlotIndex() - this.firstSlotId;
+        }
         int x = (offset % this.columns) * this.slot.w;
         int y = (offset / this.columns) * this.slot.h;
 
@@ -238,10 +275,29 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
           slot.x -= this.imageWidth;
         }
       }
+      else if (searching) {
+        // park filtered slots far off screen, same as Sophisticated Core's DISABLED_SLOT_X_POS
+        slot.x = -2000;
+        slot.y = -2000;
+      }
       else {
         slot.x = 0;
         slot.y = 0;
       }
+    }
+  }
+
+  /**
+   * Called by the search box when the filter phrase changes; refreshes the slider range and
+   * reflows the visible slots to the matches.
+   */
+  public void onSearchChanged() {
+    if (this.parent instanceof BaseTabbedScreen && BaseTabbedScreen.search != null) {
+      BaseTabbedScreen.search.refreshMatches(this.menu, this.slotCount);
+      // reset the scroll position to the top, matching Sophisticated Core's resetScrollDistance
+      this.slider.setSliderValue(0);
+      // relayout the panel: while searching it keeps room for the always visible scroll bar
+      this.updatePosition(this.parent.cornerX, this.parent.cornerY, this.parent.realWidth, this.parent.realHeight);
     }
   }
 
@@ -278,6 +334,12 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
 
       this.updateSlots();
     }
+    else if (this.isSearching()) {
+      // the scroll bar stays visible while searching, matching Sophisticated Storage
+      this.slider.draw(graphics);
+
+      this.updateSlots();
+    }
 
     this.leftPos -= this.border.w;
     this.topPos -= this.border.h;
@@ -286,7 +348,8 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
   protected int drawSlots(GuiGraphics graphics, int xPos, int yPos) {
     int width = this.columns * this.slot.w;
     int height = this.imageHeight - this.border.h * 2;
-    int fullRows = (this.lastSlotId - this.firstSlotId) / this.columns;
+    int slots = this.lastSlotId - this.firstSlotId;
+    int fullRows = slots / this.columns;
     int y;
 
     for (y = 0; y < fullRows * this.slot.h && y < height; y += this.slot.h) {
@@ -294,12 +357,20 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
     }
 
     // draw partial row and unused slots
-    int slotsLeft = (this.lastSlotId - this.firstSlotId) % this.columns;
+    int slotsLeft = slots % this.columns;
 
     if (slotsLeft > 0) {
       this.slot.drawScaledX(graphics, xPos, yPos + y, slotsLeft * this.slot.w);
       // empty slots that don't exist
       this.slotEmpty.drawScaledX(graphics, xPos + slotsLeft * this.slot.w, yPos + y, width - slotsLeft * this.slot.w);
+      y += this.slot.h;
+    }
+
+    // while searching the panel keeps its full height, fill the rows past the matches with empty slot backgrounds
+    if (this.isSearching()) {
+      for (int row = y / this.slot.h; row < this.getDisplayedRows(); row++) {
+        this.slotEmpty.drawScaledX(graphics, xPos, yPos + row * this.slot.h, width);
+      }
     }
 
     return width;

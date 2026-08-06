@@ -58,6 +58,17 @@ dependencies {
 
     modImplementation("curse.maven:curios-309927:6418456")
     modImplementation("curse.maven:patchouli-306770:6164575")
+
+    // Sophisticated storage family for workstation side-inventory high stack count testing.
+    // Declared as Gradle mods so ModDevGradle remaps them to the dev naming; manually placed
+    // release jars in run/mods/ fail with NoSuchField/NoSuchMethod errors in userdev.
+    modCompileOnly("curse.maven:sophisticated-core-618298:8503031")
+    modRuntimeOnly("curse.maven:sophisticated-core-618298:8503031")
+    modRuntimeOnly("curse.maven:sophisticated-backpacks-422301:8503063")
+    modRuntimeOnly("curse.maven:sophisticated-storage-619320:8514721")
+    // Polymorph for crafting station recipe conflict selection
+    modCompileOnly("curse.maven:polymorph-388800:6450982")
+    modRuntimeOnly("curse.maven:polymorph-388800:6450982")
     //deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'

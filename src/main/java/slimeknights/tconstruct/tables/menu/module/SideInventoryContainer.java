@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 import slimeknights.mantle.inventory.BaseContainerMenu;
-import slimeknights.mantle.inventory.SmartItemHandlerSlot;
+import slimeknights.tconstruct.tables.menu.slot.HighStackCountItemHandlerSlot;
 
 import javax.annotation.Nullable;
 
@@ -69,6 +69,6 @@ public class SideInventoryContainer<TILE extends BlockEntity> extends BaseContai
    * @return  Inventory slot
    */
   protected Slot createSlot(IItemHandler itemHandler, int index, int x, int y) {
-    return new SmartItemHandlerSlot(itemHandler, index, x, y);
+    return new HighStackCountItemHandlerSlot(itemHandler, index, x, y);
   }
 }

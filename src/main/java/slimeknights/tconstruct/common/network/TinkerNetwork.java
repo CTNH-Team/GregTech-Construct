@@ -54,9 +54,10 @@ public class TinkerNetwork extends NetworkWrapper {
    * Network versions:
    * 1: 3.10.1 and before
    * 2: 3.10.2 - new material stat type; item removal
+   * 3: int-sized container stack synchronization
    */
   private TinkerNetwork() {
-    super(TConstruct.getResource("network"), "2");
+    super(TConstruct.getResource("network"), "3");
   }
 
   /** Gets the instance of the network */
@@ -78,6 +79,9 @@ public class TinkerNetwork extends NetworkWrapper {
 
     // shared
     instance.registerPacket(InventorySlotSyncPacket.class, InventorySlotSyncPacket::new, NetworkDirection.PLAY_TO_CLIENT);
+    instance.registerPacket(SyncContainerStacksPacket.class, SyncContainerStacksPacket::new, NetworkDirection.PLAY_TO_CLIENT);
+    instance.registerPacket(SyncContainerSlotPacket.class, SyncContainerSlotPacket::new, NetworkDirection.PLAY_TO_CLIENT);
+    instance.registerPacket(SyncContainerCarriedPacket.class, SyncContainerCarriedPacket::new, NetworkDirection.PLAY_TO_CLIENT);
     instance.registerPacket(UpdateNeighborsPacket.class, UpdateNeighborsPacket::new, NetworkDirection.PLAY_TO_CLIENT);
     instance.registerPacket(GeneratePartTexturesPacket.class, GeneratePartTexturesPacket::new, NetworkDirection.PLAY_TO_CLIENT);
     instance.registerPacket(SyncPersistentDataPacket.class, SyncPersistentDataPacket::new, NetworkDirection.PLAY_TO_CLIENT);

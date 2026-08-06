@@ -7,9 +7,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import slimeknights.mantle.client.screen.ElementScreen;
+import slimeknights.mantle.client.screen.ModuleScreen;
 import slimeknights.mantle.client.screen.MultiModuleScreen;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.GuiUtil;
@@ -31,6 +33,84 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
   public static final ResourceLocation BLANK_BACK = TConstruct.getResource("textures/gui/blank.png");
   public static final ResourceLocation BLANK_BACK_PLUS_1 = TConstruct.getResource("textures/gui/blank_extra_row.png");
 
+  /** Optional search UI for the side inventory, provided by a plugin. */
+  @Nullable
+  public static IStationSearch search;
+
+  /** Hook for a plugin-provided side inventory search box. */
+  public interface IStationSearch {
+    /** Called each time a station screen initializes. */
+    void init(BaseTabbedScreen<?, ?> screen);
+
+    /** Tests whether the given side inventory slot is visible with the current search. */
+    boolean shouldShowSlot(Slot slot);
+
+    /** Renders the search box over the screen. */
+    void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick);
+
+    /** Mouse and keyboard input, returning true when the event was consumed. */
+    boolean mouseClicked(double mouseX, double mouseY, int button);
+
+    boolean keyPressed(int keyCode, int scanCode, int modifiers);
+
+    boolean charTyped(char codePoint, int modifiers);
+
+    /** Whether a filter is currently active; when false the side inventory shows every slot. */
+    default boolean isFilterActive() {
+      return false;
+    }
+
+    /**
+     * Recomputes which side slots match the active filter. Called by the side inventory module
+     * before laying out slots, so matches stay in sync with the current slot contents.
+     */
+    default void refreshMatches(AbstractContainerMenu menu, int slotCount) {
+    }
+
+    /**
+     * Returns the visible (search) order of the given side slot, or -1 when the slot is filtered
+     * out. Matches are ordered by slot index, top to bottom then left to right.
+     */
+    default int getMatchIndex(Slot slot) {
+      return slot.getSlotIndex();
+    }
+
+    /** Number of side slots matching the active filter. */
+    default int getMatchCount() {
+      return 0;
+    }
+  }
+
+  /** Optional button rendered over station screens, provided by a plugin. */
+  @Nullable
+  public static IStationButton stationButton;
+
+  /** Hook for a plugin-provided button drawn over station screens. */
+  public interface IStationButton {
+    /** Called each time a station screen initializes. */
+    void init(BaseTabbedScreen<?, ?> screen);
+
+    /** Renders the button over the screen. */
+    void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick);
+
+    /** Mouse input, returning true when the event was consumed. */
+    boolean mouseClicked(double mouseX, double mouseY, int button);
+  }
+
+  /** Optional per-slot overlay for station side inventories, provided by a plugin. */
+  @Nullable
+  public static IStationSlotOverlay slotOverlay;
+
+  /** Hook for overlays drawn after each side inventory slot, e.g. Sophisticated's locked slot ghosts. */
+  public interface IStationSlotOverlay {
+    /** Called each time a station screen initializes. */
+    default void init(BaseTabbedScreen<?, ?> screen) {
+    }
+
+    /** Draws overlay content for the given side slot, positioned at the slot's current coordinates. */
+    void render(GuiGraphics graphics, Slot slot);
+  }
+
   @Nullable
   protected final TILE tile;
   protected TinkerTabsWidget tabsScreen;
@@ -45,6 +125,63 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
     super.init();
 
     this.tabsScreen = addRenderableWidget(new TinkerTabsWidget(this));
+    if (search != null) {
+      search.init(this);
+    }
+    if (stationButton != null) {
+      stationButton.init(this);
+    }
+    if (slotOverlay != null) {
+      slotOverlay.init(this);
+    }
+  }
+
+  @Override
+  public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    super.render(graphics, mouseX, mouseY, partialTick);
+    if (search != null) {
+      search.render(graphics, mouseX, mouseY, partialTick);
+    }
+    if (stationButton != null) {
+      stationButton.render(graphics, mouseX, mouseY, partialTick);
+    }
+  }
+
+  @Override
+  public void renderSlot(GuiGraphics graphics, Slot slot) {
+    super.renderSlot(graphics, slot);
+    // plugin-provided overlays for side inventory slots, drawn over the slot content inside
+    // the container translate so their panel-relative coordinates line up with the slot
+    if (slotOverlay != null && this.getModuleForSlot(slot.index) instanceof SideInventoryScreen) {
+      slotOverlay.render(graphics, slot);
+    }
+  }
+
+  @Override
+  public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    if (search != null && search.keyPressed(keyCode, scanCode, modifiers)) {
+      return true;
+    }
+    return super.keyPressed(keyCode, scanCode, modifiers);
+  }
+
+  @Override
+  public boolean charTyped(char codePoint, int modifiers) {
+    if (search != null && search.charTyped(codePoint, modifiers)) {
+      return true;
+    }
+    return super.charTyped(codePoint, modifiers);
+  }
+
+  @Override
+  public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    if (search != null && search.mouseClicked(mouseX, mouseY, button)) {
+      return true;
+    }
+    if (stationButton != null && stationButton.mouseClicked(mouseX, mouseY, button)) {
+      return true;
+    }
+    return super.mouseClicked(mouseX, mouseY, button);
   }
 
   @Nullable
@@ -95,6 +232,34 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
       return true;
     }
     return false;
+  }
+
+  /** Returns the side inventory module, or null when this station has no side inventory. */
+  @Nullable
+  public SideInventoryScreen<?, ?> getSideInventory() {
+    for (ModuleScreen<?, ?> module : this.modules) {
+      if (module instanceof SideInventoryScreen) {
+        return (SideInventoryScreen<?, ?>) module;
+      }
+    }
+    return null;
+  }
+
+  /** Returns the side inventory module area, or null when this station has no side inventory. */
+  @Nullable
+  public Rect2i getSideInventoryArea() {
+    SideInventoryScreen<?, ?> sideInventory = getSideInventory();
+    return sideInventory == null ? null : sideInventory.getArea();
+  }
+
+  /** Content origin X, exposed for plugin widgets */
+  public int getCornerX() {
+    return this.cornerX;
+  }
+
+  /** Content origin Y, exposed for plugin widgets */
+  public int getCornerY() {
+    return this.cornerY;
   }
 
   @Override
