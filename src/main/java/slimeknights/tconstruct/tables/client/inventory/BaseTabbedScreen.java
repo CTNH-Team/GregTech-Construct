@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import slimeknights.mantle.client.screen.ElementScreen;
+import slimeknights.mantle.client.screen.ModuleScreen;
 import slimeknights.mantle.client.screen.MultiModuleScreen;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.GuiUtil;
@@ -31,6 +32,29 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
   public static final ResourceLocation BLANK_BACK = TConstruct.getResource("textures/gui/blank.png");
   public static final ResourceLocation BLANK_BACK_PLUS_1 = TConstruct.getResource("textures/gui/blank_extra_row.png");
 
+  /** Optional search UI for the side inventory, provided by a plugin. */
+  @Nullable
+  public static IStationSearch search;
+
+  /** Hook for a plugin-provided side inventory search box. */
+  public interface IStationSearch {
+    /** Called each time a station screen initializes. */
+    void init(BaseTabbedScreen<?, ?> screen);
+
+    /** Tests whether the given side inventory slot is visible with the current search. */
+    boolean shouldShowSlot(Slot slot);
+
+    /** Renders the search box over the screen. */
+    void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick);
+
+    /** Mouse and keyboard input, returning true when the event was consumed. */
+    boolean mouseClicked(double mouseX, double mouseY, int button);
+
+    boolean keyPressed(int keyCode, int scanCode, int modifiers);
+
+    boolean charTyped(char codePoint, int modifiers);
+  }
+
   @Nullable
   protected final TILE tile;
   protected TinkerTabsWidget tabsScreen;
@@ -45,6 +69,41 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
     super.init();
 
     this.tabsScreen = addRenderableWidget(new TinkerTabsWidget(this));
+    if (search != null) {
+      search.init(this);
+    }
+  }
+
+  @Override
+  public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    super.render(graphics, mouseX, mouseY, partialTick);
+    if (search != null) {
+      search.render(graphics, mouseX, mouseY, partialTick);
+    }
+  }
+
+  @Override
+  public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    if (search != null && search.keyPressed(keyCode, scanCode, modifiers)) {
+      return true;
+    }
+    return super.keyPressed(keyCode, scanCode, modifiers);
+  }
+
+  @Override
+  public boolean charTyped(char codePoint, int modifiers) {
+    if (search != null && search.charTyped(codePoint, modifiers)) {
+      return true;
+    }
+    return super.charTyped(codePoint, modifiers);
+  }
+
+  @Override
+  public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    if (search != null && search.mouseClicked(mouseX, mouseY, button)) {
+      return true;
+    }
+    return super.mouseClicked(mouseX, mouseY, button);
   }
 
   @Nullable
@@ -95,6 +154,27 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
       return true;
     }
     return false;
+  }
+
+  /** Returns the side inventory module area, or null when this station has no side inventory. */
+  @Nullable
+  public Rect2i getSideInventoryArea() {
+    for (ModuleScreen<?, ?> module : this.modules) {
+      if (module instanceof SideInventoryScreen) {
+        return module.getArea();
+      }
+    }
+    return null;
+  }
+
+  /** Content origin X, exposed for plugin widgets */
+  public int getCornerX() {
+    return this.cornerX;
+  }
+
+  /** Content origin Y, exposed for plugin widgets */
+  public int getCornerY() {
+    return this.cornerY;
   }
 
   @Override

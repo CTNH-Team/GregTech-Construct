@@ -12,6 +12,7 @@ import slimeknights.mantle.client.screen.ModuleScreen;
 import slimeknights.mantle.client.screen.MultiModuleScreen;
 import slimeknights.mantle.client.screen.ScalableElementScreen;
 import slimeknights.mantle.client.screen.SliderWidget;
+import slimeknights.tconstruct.tables.client.inventory.BaseTabbedScreen;
 import slimeknights.mantle.inventory.BaseContainerMenu;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.tables.client.inventory.widget.BorderWidget;
@@ -93,16 +94,14 @@ public class SideInventoryScreen<P extends MultiModuleScreen<?>, C extends Abstr
 
   @Override
   public boolean shouldDrawSlot(Slot slot) {
-    if (slot.getSlotIndex() >= this.slotCount) {
-      return false;
+    boolean visible = slot.getSlotIndex() < this.slotCount
+                      && (!this.slider.isEnabled()
+                          || (this.firstSlotId <= slot.getSlotIndex() && this.lastSlotId > slot.getSlotIndex()));
+    // station side inventories can be filtered by the plugin-provided search box
+    if (visible && this.parent instanceof BaseTabbedScreen && BaseTabbedScreen.search != null) {
+      return BaseTabbedScreen.search.shouldShowSlot(slot);
     }
-
-    // all visible
-    if (!this.slider.isEnabled()) {
-      return true;
-    }
-
-    return this.firstSlotId <= slot.getSlotIndex() && this.lastSlotId > slot.getSlotIndex();
+    return visible;
   }
 
   @Override

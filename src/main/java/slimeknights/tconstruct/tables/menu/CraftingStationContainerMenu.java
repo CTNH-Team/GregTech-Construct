@@ -4,6 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import slimeknights.tconstruct.tables.TinkerTables;
@@ -14,6 +15,27 @@ import javax.annotation.Nullable;
 
 public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingStationBlockEntity> {
   private final PlayerSensitiveLazyResultSlot resultSlot;
+  /** Button id for the shift click result target */
+  public static final int SHIFT_CLICK_TARGET_BUTTON = 0;
+
+  /** Plugin hook controlling where shift clicked results go. */
+  @Nullable
+  public static IShiftResultTarget resultTarget;
+
+  /** Hook for a plugin-provided shift click result target selection. */
+  public interface IShiftResultTarget {
+    /** Whether the shift clicked result prefers the adjacent container. */
+    boolean shiftClickIntoStorage(CraftingStationContainerMenu menu);
+
+    /** Sets the shift click result target. */
+    void setShiftClickIntoStorage(CraftingStationContainerMenu menu, boolean intoStorage);
+
+    /** Toggles the shift click result target. */
+    void toggle(CraftingStationContainerMenu menu);
+  }
+
+  /** Syncs whether shift clicking the result prefers the adjacent container */
+  public final DataSlot shiftClickIntoStorage;
 
   /**
    * Standard constructor
@@ -44,6 +66,23 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
       resultSlot = null;
     }
 
+    // sync the shift click result target to the client, driven by the plugin hook
+    this.shiftClickIntoStorage = this.addDataSlot(new DataSlot() {
+      @Override
+      public int get() {
+        IShiftResultTarget target = resultTarget;
+        return target != null && target.shiftClickIntoStorage(CraftingStationContainerMenu.this) ? 1 : 0;
+      }
+
+      @Override
+      public void set(int value) {
+        IShiftResultTarget target = resultTarget;
+        if (target != null) {
+          target.setShiftClickIntoStorage(CraftingStationContainerMenu.this, value != 0);
+        }
+      }
+    });
+
     this.addInventorySlots();
   }
 
@@ -58,6 +97,16 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
   }
 
   @Override
+  public boolean clickMenuButton(Player player, int id) {
+    IShiftResultTarget target = resultTarget;
+    if (id == SHIFT_CLICK_TARGET_BUTTON && target != null) {
+      target.toggle(this);
+      return true;
+    }
+    return super.clickMenuButton(player, id);
+  }
+
+  @Override
   public ItemStack quickMoveStack(Player player, int index) {
     Slot slot = this.slots.get(index);
     // fix issue on shift clicking from the result slot if the recipe result mismatches the displayed item
@@ -69,12 +118,25 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
         ItemStack result = tile.getResultForPlayer(player);
         if (!result.isEmpty()) {
           boolean nothingDone = true;
-          if (subContainers.size() > 0) { // the sub container check does not do well with 0 sub containers
-            nothingDone = this.refillAnyContainer(result, this.subContainers);
-          }
-          nothingDone &= this.moveToPlayerInventory(result);
-          if (subContainers.size() > 0) {
-            nothingDone &= this.moveToAnyContainer(result, this.subContainers);
+          // move into the selected target first, falling back to the other
+          IShiftResultTarget target = resultTarget;
+          boolean intoStorage = target == null || target.shiftClickIntoStorage(this);
+          if (intoStorage) {
+            if (subContainers.size() > 0) { // the sub container check does not do well with 0 sub containers
+              nothingDone = this.refillAnyContainer(result, this.subContainers);
+              if (!result.isEmpty()) {
+                nothingDone &= this.moveToAnyContainer(result, this.subContainers);
+              }
+            }
+            nothingDone &= this.moveToPlayerInventory(result);
+          } else {
+            nothingDone = this.moveToPlayerInventory(result);
+            if (subContainers.size() > 0) {
+              nothingDone &= this.refillAnyContainer(result, this.subContainers);
+              if (!result.isEmpty()) {
+                nothingDone &= this.moveToAnyContainer(result, this.subContainers);
+              }
+            }
           }
           // if successfully added to an inventory, update
           if (!nothingDone) {

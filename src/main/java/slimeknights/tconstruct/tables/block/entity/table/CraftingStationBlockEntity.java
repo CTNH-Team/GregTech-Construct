@@ -2,6 +2,7 @@ package slimeknights.tconstruct.tables.block.entity.table;
 
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,6 +42,8 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
   /** Result inventory, lazy loads results */
   @Getter
   private final LazyResultContainer craftingResult;
+  /** Whether shift clicking the result moves it into the adjacent container first */
+  private boolean shiftClickIntoStorage = true;
   /** Crafting inventory for the recipe calls */
   private final CraftingContainerWrapper craftingInventory;
 
@@ -237,5 +240,30 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
   public void updateRecipe(CraftingRecipe recipe) {
     this.lastRecipe = recipe;
     this.craftingResult.clearContent();
+  }
+
+  /** Whether shift clicking a crafted result prefers the adjacent container over the player inventory */
+  public boolean isShiftClickIntoStorage() {
+    return this.shiftClickIntoStorage;
+  }
+
+  /** Sets the shift click result target, marking the tile as changed */
+  public void setShiftClickIntoStorage(boolean shiftClickIntoStorage) {
+    if (this.shiftClickIntoStorage != shiftClickIntoStorage) {
+      this.shiftClickIntoStorage = shiftClickIntoStorage;
+      this.setChanged();
+    }
+  }
+
+  @Override
+  public void saveAdditional(CompoundTag tags) {
+    super.saveAdditional(tags);
+    tags.putBoolean("ShiftClickIntoStorage", this.shiftClickIntoStorage);
+  }
+
+  @Override
+  public void load(CompoundTag tags) {
+    super.load(tags);
+    this.shiftClickIntoStorage = tags.getBoolean("ShiftClickIntoStorage");
   }
 }
