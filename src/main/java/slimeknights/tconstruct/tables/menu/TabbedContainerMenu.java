@@ -13,6 +13,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.ContainerSynchronizer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,6 +29,7 @@ import slimeknights.mantle.inventory.EmptyItemHandler;
 import slimeknights.mantle.util.RegistryHelper;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.config.Config;
+import slimeknights.tconstruct.common.network.HighStackCountSynchronizer;
 import slimeknights.tconstruct.shared.inventory.TriggeringMultiModuleContainerMenu;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tables.block.ITabbedBlock;
@@ -51,6 +56,97 @@ public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMul
     if (tile != null && tile.getLevel() != null) {
       this.detectStationParts(tile.getLevel(), tile.getBlockPos());
     }
+  }
+
+  /**
+   * Vanilla serializes stack counts as a byte. Workstation inventories can expose modded stacks
+   * above that range, so use the wider synchronizer for the server-side menu projection.
+   */
+  @Override
+  public void setSynchronizer(@Nullable ContainerSynchronizer synchronizer) {
+    if (this.inv != null && this.inv.player instanceof ServerPlayer serverPlayer) {
+      super.setSynchronizer(new HighStackCountSynchronizer(serverPlayer));
+    } else {
+      super.setSynchronizer(synchronizer);
+    }
+  }
+
+  /**
+   * Vanilla caps stack merging at the item's stack size, which is a single stack in normal
+   * slots but wastes space in high capacity slots: a 200 stack would not merge 64 more items
+   * as 264 exceeds 64, forcing the items into a new slot. Cap by the target slot capacity
+   * instead, which equals the item limit for normal slots.
+   */
+  @Override
+  protected boolean moveItemStackTo(ItemStack stack, int start, int end, boolean reverse) {
+    boolean moved = false;
+    int index = reverse ? end - 1 : start;
+    // merge into existing stacks of the same item first
+    if (stack.isStackable()) {
+      while (!stack.isEmpty() && (reverse ? index >= start : index < end)) {
+        Slot slot = this.slots.get(index);
+        ItemStack current = slot.getItem();
+        if (!current.isEmpty() && ItemStack.isSameItemSameTags(stack, current)) {
+          int limit = slot.getMaxStackSize();
+          int combined = current.getCount() + stack.getCount();
+          if (combined <= limit) {
+            stack.setCount(0);
+            current.setCount(combined);
+            slot.setChanged();
+            moved = true;
+          } else if (current.getCount() < limit) {
+            stack.shrink(limit - current.getCount());
+            current.setCount(limit);
+            slot.setChanged();
+            moved = true;
+          }
+        }
+        index += reverse ? -1 : 1;
+      }
+    }
+    // place the remainder into empty slots
+    if (!stack.isEmpty()) {
+      index = reverse ? end - 1 : start;
+      while (reverse ? index >= start : index < end) {
+        Slot slot = this.slots.get(index);
+        if (slot.getItem().isEmpty() && slot.mayPlace(stack)) {
+          if (stack.getCount() > slot.getMaxStackSize()) {
+            slot.setByPlayer(stack.split(slot.getMaxStackSize()));
+          } else {
+            slot.setByPlayer(stack.split(stack.getCount()));
+          }
+          slot.setChanged();
+          moved = true;
+          break;
+        }
+        index += reverse ? -1 : 1;
+      }
+    }
+    return moved;
+  }
+
+  /**
+   * Shift clicking a side inventory slot moves straight to the player inventory. Mantle's
+   * default first tops up the station's own tile slots, which for the crafting station is
+   * the crafting grid, but those are not storage.
+   */
+  @Override
+  public ItemStack quickMoveStack(Player player, int index) {
+    if (this.getSlotContainer(index) != this) {
+      Slot slot = this.slots.get(index);
+      if (!slot.hasItem()) {
+        return ItemStack.EMPTY;
+      }
+      ItemStack stack = slot.getItem().copy();
+      ItemStack moved = stack.copy();
+      // Mantle helpers report "nothing done" as true, so compare the remainder instead
+      this.moveToPlayerInventory(moved);
+      if (moved.getCount() >= stack.getCount()) {
+        return ItemStack.EMPTY;
+      }
+      return this.notifySlotAfterTransfer(player, moved, stack, slot);
+    }
+    return super.quickMoveStack(player, index);
   }
 
   /**

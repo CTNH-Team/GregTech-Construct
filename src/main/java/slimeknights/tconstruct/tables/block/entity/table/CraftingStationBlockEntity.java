@@ -2,6 +2,7 @@ package slimeknights.tconstruct.tables.block.entity.table;
 
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,10 +31,25 @@ import slimeknights.tconstruct.tables.network.UpdateCraftingRecipePacket;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.List;
 
 public class CraftingStationBlockEntity extends RetexturedTableBlockEntity implements ILazyCrafter {
   public static final Component UNCRAFTABLE = TConstruct.makeTranslation("gui", "crafting_station.uncraftable");
   private static final Component NAME = TConstruct.makeTranslation("gui", "crafting_station");
+
+  /** Plugin hook selecting among conflicting crafting recipes, provided by an optional integration. */
+  @Nullable
+  public static ICraftingRecipeSelector recipeSelector;
+
+  /** Hook for plugins resolving crafting recipe conflicts. */
+  public interface ICraftingRecipeSelector {
+    /**
+     * Picks the recipe to use for the given crafting inventory from all matching recipes.
+     * May return null when no recipe should be used.
+     */
+    @Nullable
+    CraftingRecipe selectRecipe(CraftingStationBlockEntity tile, CraftingContainerWrapper inventory, List<CraftingRecipe> matches);
+  }
 
   /** Last crafted crafting recipe */
   @Nullable
@@ -41,7 +57,10 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
   /** Result inventory, lazy loads results */
   @Getter
   private final LazyResultContainer craftingResult;
+  /** Whether shift clicking the result moves it into the adjacent container first */
+  private boolean shiftClickIntoStorage = true;
   /** Crafting inventory for the recipe calls */
+  @Getter
   private final CraftingContainerWrapper craftingInventory;
 
   public CraftingStationBlockEntity(BlockPos pos, BlockState state) {
@@ -78,10 +97,16 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
       // first, try the cached recipe
       ForgeHooks.setCraftingPlayer(player);
       CraftingRecipe recipe = lastRecipe;
-      // if it does not match, find a new recipe
+      // if it does not match, find a new recipe; plugins may resolve conflicts between the matches
       // note we intentionally have no player access during matches, that could lead to an unstable recipe
       if (recipe == null || !recipe.matches(this.craftingInventory, this.level)) {
-        recipe = manager.getRecipeFor(RecipeType.CRAFTING, this.craftingInventory, this.level).orElse(null);
+        List<CraftingRecipe> matches = manager.getRecipesFor(RecipeType.CRAFTING, this.craftingInventory, this.level);
+        ICraftingRecipeSelector selector = recipeSelector;
+        if (selector != null && !matches.isEmpty()) {
+          recipe = selector.selectRecipe(this, this.craftingInventory, matches);
+        } else {
+          recipe = matches.isEmpty() ? null : matches.get(0);
+        }
       }
 
       // if we have a recipe, fetch its result
@@ -237,5 +262,30 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
   public void updateRecipe(CraftingRecipe recipe) {
     this.lastRecipe = recipe;
     this.craftingResult.clearContent();
+  }
+
+  /** Whether shift clicking a crafted result prefers the adjacent container over the player inventory */
+  public boolean isShiftClickIntoStorage() {
+    return this.shiftClickIntoStorage;
+  }
+
+  /** Sets the shift click result target, marking the tile as changed */
+  public void setShiftClickIntoStorage(boolean shiftClickIntoStorage) {
+    if (this.shiftClickIntoStorage != shiftClickIntoStorage) {
+      this.shiftClickIntoStorage = shiftClickIntoStorage;
+      this.setChanged();
+    }
+  }
+
+  @Override
+  public void saveAdditional(CompoundTag tags) {
+    super.saveAdditional(tags);
+    tags.putBoolean("ShiftClickIntoStorage", this.shiftClickIntoStorage);
+  }
+
+  @Override
+  public void load(CompoundTag tags) {
+    super.load(tags);
+    this.shiftClickIntoStorage = tags.getBoolean("ShiftClickIntoStorage");
   }
 }

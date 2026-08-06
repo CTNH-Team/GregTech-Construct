@@ -3,7 +3,6 @@ package slimeknights.tconstruct.tables.network;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +11,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.network.NetworkHooks;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
-import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.tables.block.ITabbedBlock;
 
 @RequiredArgsConstructor
@@ -54,7 +52,8 @@ public class StationTabPacket implements IThreadsafePacket {
 
       if (!heldStack.isEmpty()) {
         sender.containerMenu.setCarried(heldStack);
-        TinkerNetwork.getInstance().sendVanillaPacket(sender, new ClientboundContainerSetSlotPacket(-1, -1, -1, heldStack));
+        // The menu synchronizer uses an int-sized count for the carried stack as well.
+        sender.containerMenu.broadcastFullState();
       }
     }
   }
