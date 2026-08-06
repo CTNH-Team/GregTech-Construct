@@ -5,6 +5,7 @@ import net.minecraftforge.fml.DistExecutor;
 import slimeknights.tconstruct.library.addon.ITiCAddon;
 import slimeknights.tconstruct.library.addon.TiCAddon;
 import slimeknights.tconstruct.plugin.sophisticated.client.SophisticatedSearch;
+import slimeknights.tconstruct.plugin.sophisticated.client.SophisticatedShiftTargetButton;
 import slimeknights.tconstruct.tables.client.inventory.BaseTabbedScreen;
 import slimeknights.tconstruct.tables.menu.CraftingStationContainerMenu;
 
@@ -17,9 +18,12 @@ public class SophisticatedTiCAddon implements ITiCAddon {
   public static final String MOD_ID = "sophisticatedcore";
 
   public SophisticatedTiCAddon() {
-    // both sides need the result target hook, the search box UI is client only
+    // both sides need the result target hook, the search box and target button are client only
     CraftingStationContainerMenu.resultTarget = new SophisticatedShiftTarget();
-    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> BaseTabbedScreen.search = new SophisticatedSearch());
+    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+      BaseTabbedScreen.search = new SophisticatedSearch();
+      BaseTabbedScreen.stationButton = new SophisticatedShiftTargetButton();
+    });
   }
 
   @Override

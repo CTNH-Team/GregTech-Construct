@@ -55,6 +55,22 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
     boolean charTyped(char codePoint, int modifiers);
   }
 
+  /** Optional button rendered over station screens, provided by a plugin. */
+  @Nullable
+  public static IStationButton stationButton;
+
+  /** Hook for a plugin-provided button drawn over station screens. */
+  public interface IStationButton {
+    /** Called each time a station screen initializes. */
+    void init(BaseTabbedScreen<?, ?> screen);
+
+    /** Renders the button over the screen. */
+    void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick);
+
+    /** Mouse input, returning true when the event was consumed. */
+    boolean mouseClicked(double mouseX, double mouseY, int button);
+  }
+
   @Nullable
   protected final TILE tile;
   protected TinkerTabsWidget tabsScreen;
@@ -72,6 +88,9 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
     if (search != null) {
       search.init(this);
     }
+    if (stationButton != null) {
+      stationButton.init(this);
+    }
   }
 
   @Override
@@ -79,6 +98,9 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
     super.render(graphics, mouseX, mouseY, partialTick);
     if (search != null) {
       search.render(graphics, mouseX, mouseY, partialTick);
+    }
+    if (stationButton != null) {
+      stationButton.render(graphics, mouseX, mouseY, partialTick);
     }
   }
 
@@ -101,6 +123,9 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
     if (search != null && search.mouseClicked(mouseX, mouseY, button)) {
+      return true;
+    }
+    if (stationButton != null && stationButton.mouseClicked(mouseX, mouseY, button)) {
       return true;
     }
     return super.mouseClicked(mouseX, mouseY, button);

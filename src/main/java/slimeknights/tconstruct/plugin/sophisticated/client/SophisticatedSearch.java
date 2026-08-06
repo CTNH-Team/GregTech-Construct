@@ -1,21 +1,14 @@
 package slimeknights.tconstruct.plugin.sophisticated.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.p3pp3rf1y.sophisticatedcore.client.gui.utils.Dimension;
-import net.p3pp3rf1y.sophisticatedcore.client.gui.utils.GuiHelper;
-import net.p3pp3rf1y.sophisticatedcore.client.gui.utils.TextureBlitData;
-import net.p3pp3rf1y.sophisticatedcore.client.gui.utils.UV;
-import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.tables.client.inventory.BaseTabbedScreen;
-import slimeknights.tconstruct.tables.client.inventory.CraftingStationScreen;
-import slimeknights.tconstruct.tables.menu.CraftingStationContainerMenu;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -23,8 +16,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Search button for station side inventories styled after Sophisticated Core's {@code SearchBox}:
- * collapsed to a small grey button with the magnifying glass icon, expanding into an unbordered
+ * Search box for station side inventories styled after Sophisticated Core's {@code SearchBox}:
+ * collapsed to a small grey box with the magnifying glass glyph, expanding into an unbordered
  * edit box on click with a 200ms ease animation.
  */
 public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
@@ -32,27 +25,17 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
   private static final int TEXT_COLOR = 0xBBBBBB;
   private static final int BG_COLOR = 0xFF777777;
   private static final int MAX_LENGTH = 50;
-  private static final int COLLAPSED_WIDTH = 18;
+  private static final int COLLAPSED_WIDTH = 8;
   private static final int EXPANDED_WIDTH = 120;
-  private static final int HEIGHT = 14;
+  private static final int HEIGHT = 9;
   /** Animation duration in milliseconds, matching Sophisticated Core. */
   private static final float ANIMATION_TIME = 200.0f;
 
-  /** Icons from Sophisticated Core's icons.png, referenced the same way its GUI code does. */
-  private static final TextureBlitData MAGNIFYING_GLASS = new TextureBlitData(
-    GuiHelper.ICONS, Dimension.SQUARE_256, new UV(96, 0), Dimension.SQUARE_16);
-  private static final TextureBlitData BACKPACK_ICON = new TextureBlitData(
-    GuiHelper.ICONS, Dimension.SQUARE_256, new UV(208, 0), Dimension.SQUARE_16);
-  private static final TextureBlitData CHEST_ICON = new TextureBlitData(
-    GuiHelper.ICONS, Dimension.SQUARE_256, new UV(224, 16), Dimension.SQUARE_16);
-
-  /** Shift click result target button, left of the crafting grid */
-  private static final int BUTTON_X = 10;
-  private static final int BUTTON_Y = 27;
-  private static final int BUTTON_SIZE = 16;
-
-  private static final Component TOOLTIP_INTO_STORAGE = TConstruct.makeTranslation("gui", "crafting_station.shift_into_storage");
-  private static final Component TOOLTIP_INTO_INVENTORY = TConstruct.makeTranslation("gui", "crafting_station.shift_into_inventory");
+  /** Magnifying glass glyph rendered while collapsed, same as Sophisticated Core's SearchBox. */
+  private static final String MAGNIFYING_GLASS = "\uD83D\uDD0D";
+  /** Nudges the collapsed button slightly left and down within the side inventory panel. */
+  private static final int OFFSET_X = -6;
+  private static final int OFFSET_Y = 2;
 
   @Nullable
   private EditBox searchBox;
@@ -81,8 +64,12 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
 
   @Override
   public boolean shouldShowSlot(Slot slot) {
+    // without an active search every slot is visible, matching Sophisticated's storage screen
+    if (searchBox == null || searchBox.getValue().isBlank()) {
+      return true;
+    }
     ItemStack stack = slot.getItem();
-    return stack.isEmpty() || stackFilter.test(stack);
+    return !stack.isEmpty() && stackFilter.test(stack);
   }
 
   @Override
@@ -97,58 +84,36 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
       return;
     }
 
-    // animate the width between collapsed and expanded with ease in/out cubic
+    // animate the width between collapsed and expanded with ease in/out cubic, anchored to the
+    // right edge of the side inventory panel like Sophisticated Core's SearchBox
     float progress = Math.min((System.currentTimeMillis() - lastFocusChangeTime) / ANIMATION_TIME, 1.0f);
     float eased = easeInOutCubic(progress);
     boolean expanded = box.isFocused() || !box.getValue().isEmpty();
     float width = expanded
                   ? COLLAPSED_WIDTH + (EXPANDED_WIDTH - COLLAPSED_WIDTH) * eased
                   : EXPANDED_WIDTH - (EXPANDED_WIDTH - COLLAPSED_WIDTH) * eased;
-
-    // inside the side inventory panel, replacing its name bar
-    int x = area.getX() + (area.getWidth() - (int)width) / 2;
-    int y = area.getY() + 3;
+    int maximizedX = area.getX() + area.getWidth() - EXPANDED_WIDTH;
+    int x = maximizedX + EXPANDED_WIDTH - (int)width + OFFSET_X;
+    int y = area.getY() + 3 + OFFSET_Y;
     box.setX(x);
     box.setY(y);
     box.setWidth((int)width);
 
-    graphics.fill(x - 4, y - 3, x + box.getWidth() + 4, y + HEIGHT + 3, BG_COLOR);
-    if (width <= COLLAPSED_WIDTH + 1) {
-      // collapsed: show the magnifying glass icon instead of the edit box
-      GuiHelper.blit(graphics, x - 1, y - 1, MAGNIFYING_GLASS);
-    } else {
-      box.render(graphics, mouseX, mouseY, partialTick);
-    }
-
-    // shift click result target button on the crafting station, styled after Sophisticated buttons
-    if (currentScreen instanceof CraftingStationScreen craftingScreen) {
-      int bx = currentScreen.getCornerX() + BUTTON_X;
-      int by = currentScreen.getCornerY() + BUTTON_Y;
-      boolean intoStorage = craftingScreen.getMenu().shiftClickIntoStorage.get() != 0;
-      GuiHelper.blit(graphics, bx, by, intoStorage ? GuiHelper.SMALL_BUTTON_HOVERED_BACKGROUND : GuiHelper.SMALL_BUTTON_BACKGROUND,
-                     BUTTON_SIZE, BUTTON_SIZE);
-      GuiHelper.blit(graphics, bx + 2, by + 2, intoStorage ? CHEST_ICON : BACKPACK_ICON);
-      if (mouseX >= bx && mouseX < bx + BUTTON_SIZE && mouseY >= by && mouseY < by + BUTTON_SIZE) {
-        graphics.renderTooltip(Minecraft.getInstance().font, intoStorage ? TOOLTIP_INTO_STORAGE : TOOLTIP_INTO_INVENTORY, mouseX, mouseY);
-      }
+    // the background keeps the collapsed button size, expanding only towards the left
+    graphics.fill(x, y, x + box.getWidth(), y + HEIGHT, BG_COLOR);
+    box.render(graphics, mouseX, mouseY, partialTick);
+    if (box.getValue().isEmpty() && !box.isFocused()) {
+      // collapsed: draw the magnifying glass glyph instead of text, nudged a fraction left
+      PoseStack pose = graphics.pose();
+      pose.pushPose();
+      pose.translate(-0.6f, 0.0f, 0.0f);
+      graphics.drawCenteredString(Minecraft.getInstance().font, MAGNIFYING_GLASS, x + box.getWidth() / 2 + 1, y, TEXT_COLOR);
+      pose.popPose();
     }
   }
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    BaseTabbedScreen<?, ?> currentScreen = screen;
-    if (button == 0 && currentScreen instanceof CraftingStationScreen craftingScreen) {
-      int bx = currentScreen.getCornerX() + BUTTON_X;
-      int by = currentScreen.getCornerY() + BUTTON_Y;
-      if (mouseX >= bx && mouseX < bx + BUTTON_SIZE && mouseY >= by && mouseY < by + BUTTON_SIZE) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player != null) {
-          minecraft.player.connection.send(new ServerboundContainerButtonClickPacket(craftingScreen.getMenu().containerId,
-                                                                                    CraftingStationContainerMenu.SHIFT_CLICK_TARGET_BUTTON));
-        }
-        return true;
-      }
-    }
     EditBox box = searchBox;
     if (box == null) {
       return false;
