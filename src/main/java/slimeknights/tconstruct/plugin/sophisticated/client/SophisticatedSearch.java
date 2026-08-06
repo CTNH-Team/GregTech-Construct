@@ -6,13 +6,25 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.p3pp3rf1y.sophisticatedcore.api.IStorageWrapper;
+import net.p3pp3rf1y.sophisticatedcore.controller.IControllableStorage;
+import net.p3pp3rf1y.sophisticatedcore.settings.memory.MemorySettingsCategory;
 import slimeknights.tconstruct.tables.client.inventory.BaseTabbedScreen;
+import slimeknights.tconstruct.tables.client.inventory.module.SideInventoryScreen;
+import slimeknights.tconstruct.tables.menu.module.SideInventoryContainer;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.Predicate;
 
 /**
@@ -42,11 +54,19 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
   @Nullable
   private BaseTabbedScreen<?, ?> screen;
   private Predicate<ItemStack> stackFilter = stack -> true;
+  /** Side slots matching the active filter, slot -> visible order, rebuilt from the side inventory each frame. */
+  private final Map<Slot, Integer> matches = new HashMap<>();
+  /** Wrapper of the adjacent Sophisticated storage, provides the memorized items of locked slots. */
+  @Nullable
+  private IStorageWrapper wrapper;
   private long lastFocusChangeTime;
 
   @Override
   public void init(BaseTabbedScreen<?, ?> screen) {
     this.screen = screen;
+    // the side inventory tile is the adjacent container, which may be any Sophisticated storage
+    SideInventoryContainer<?> sideInventory = screen.getMenu().getSubContainer(SideInventoryContainer.class);
+    this.wrapper = sideInventory != null && sideInventory.getTile() instanceof IControllableStorage storage ? storage.getStorageWrapper() : null;
     if (searchBox == null) {
       searchBox = new EditBox(Minecraft.getInstance().font, 0, 0, COLLAPSED_WIDTH, HEIGHT, Component.empty());
       searchBox.setBordered(false);
@@ -65,11 +85,52 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
   @Override
   public boolean shouldShowSlot(Slot slot) {
     // without an active search every slot is visible, matching Sophisticated's storage screen
-    if (searchBox == null || searchBox.getValue().isBlank()) {
+    if (!isFilterActive()) {
       return true;
     }
-    ItemStack stack = slot.getItem();
-    return !stack.isEmpty() && stackFilter.test(stack);
+    return getMatchIndex(slot) >= 0;
+  }
+
+  @Override
+  public boolean isFilterActive() {
+    EditBox box = searchBox;
+    return box != null && !box.getValue().isBlank();
+  }
+
+  @Override
+  public void refreshMatches(AbstractContainerMenu menu, int slotCount) {
+    matches.clear();
+    if (!isFilterActive()) {
+      return;
+    }
+    int order = 0;
+    for (Slot slot : menu.slots) {
+      // side slots are the first slotCount slots of the menu, same as SideInventoryScreen
+      if (slot.getSlotIndex() >= slotCount) {
+        continue;
+      }
+      ItemStack stack = slot.getItem();
+      // an empty locked slot counts as its memorized item, like Sophisticated Core's slot ghosts
+      if (stack.isEmpty() && this.wrapper != null) {
+        stack = this.wrapper.getSettingsHandler()
+          .getTypeCategory(MemorySettingsCategory.class)
+          .getSlotFilterStack(slot.getSlotIndex(), false)
+          .orElse(ItemStack.EMPTY);
+      }
+      if (stackFilter.test(stack)) {
+        matches.put(slot, order++);
+      }
+    }
+  }
+
+  @Override
+  public int getMatchIndex(Slot slot) {
+    return matches.getOrDefault(slot, -1);
+  }
+
+  @Override
+  public int getMatchCount() {
+    return matches.size();
   }
 
   @Override
@@ -161,20 +222,49 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
     return value < 0.5f ? 4.0f * value * value * value : 1.0f - (float)Math.pow(-2.0f * value + 2.0f, 3.0f) / 2.0f;
   }
 
-  /** Builds the item name filter from the search text, matching Sophisticated Core's rules. */
+  /** Builds the item filter from the search text, matching Sophisticated Core's rules. */
   private void updateFilter(String text) {
     String trimmed = text.trim();
     if (trimmed.isEmpty()) {
       stackFilter = stack -> true;
-      return;
     }
-    List<Predicate<ItemStack>> predicates = new ArrayList<>();
-    for (String word : trimmed.split(" ")) {
-      if (!word.isEmpty()) {
-        String lower = word.toLowerCase();
-        predicates.add(stack -> stack.getHoverName().getString().toLowerCase().contains(lower));
+    else if (trimmed.startsWith("@")) {
+      // mod filter: items from a matching namespace, same as Sophisticated Core
+      String modId = trimmed.substring(1).toLowerCase(Locale.ROOT);
+      stackFilter = stack -> !stack.isEmpty() && ForgeRegistries.ITEMS.getKey(stack.getItem()) != null
+                             && ForgeRegistries.ITEMS.getKey(stack.getItem()).getNamespace().toLowerCase(Locale.ROOT).contains(modId);
+    }
+    else if (trimmed.startsWith("#")) {
+      // tooltip filter: any tooltip line contains the search, same as Sophisticated Core
+      String search = trimmed.substring(1).toLowerCase(Locale.ROOT);
+      Player player = screen == null ? null : screen.getMinecraft().player;
+      stackFilter = stack -> {
+        if (stack.isEmpty()) {
+          return false;
+        }
+        List<Component> tooltip = stack.getTooltipLines(player, TooltipFlag.Default.NORMAL);
+        return tooltip.stream().anyMatch(line -> line.getString().toLowerCase(Locale.ROOT).contains(search));
+      };
+    }
+    else {
+      // item name filter: space separated words all have to match, same as Sophisticated Core
+      List<Predicate<ItemStack>> predicates = new ArrayList<>();
+      for (String word : trimmed.split(" ")) {
+        if (!word.isEmpty()) {
+          String lower = word.toLowerCase(Locale.ROOT);
+          predicates.add(stack -> !stack.isEmpty() && stack.getHoverName().getString().toLowerCase(Locale.ROOT).contains(lower));
+        }
+      }
+      stackFilter = predicates.stream().reduce(Predicate::and).orElse(stack -> true);
+    }
+
+    // reflow the side inventory slots into the matches and refresh the scroll range
+    BaseTabbedScreen<?, ?> currentScreen = screen;
+    if (currentScreen != null) {
+      SideInventoryScreen<?, ?> sideInventory = currentScreen.getSideInventory();
+      if (sideInventory != null) {
+        sideInventory.onSearchChanged();
       }
     }
-    stackFilter = predicates.stream().reduce(Predicate::and).orElse(stack -> true);
   }
 }

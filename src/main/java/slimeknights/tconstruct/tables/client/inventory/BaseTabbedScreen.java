@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import slimeknights.mantle.client.screen.ElementScreen;
@@ -53,6 +54,31 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
     boolean keyPressed(int keyCode, int scanCode, int modifiers);
 
     boolean charTyped(char codePoint, int modifiers);
+
+    /** Whether a filter is currently active; when false the side inventory shows every slot. */
+    default boolean isFilterActive() {
+      return false;
+    }
+
+    /**
+     * Recomputes which side slots match the active filter. Called by the side inventory module
+     * before laying out slots, so matches stay in sync with the current slot contents.
+     */
+    default void refreshMatches(AbstractContainerMenu menu, int slotCount) {
+    }
+
+    /**
+     * Returns the visible (search) order of the given side slot, or -1 when the slot is filtered
+     * out. Matches are ordered by slot index, top to bottom then left to right.
+     */
+    default int getMatchIndex(Slot slot) {
+      return slot.getSlotIndex();
+    }
+
+    /** Number of side slots matching the active filter. */
+    default int getMatchCount() {
+      return 0;
+    }
   }
 
   /** Optional button rendered over station screens, provided by a plugin. */
@@ -69,6 +95,20 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
 
     /** Mouse input, returning true when the event was consumed. */
     boolean mouseClicked(double mouseX, double mouseY, int button);
+  }
+
+  /** Optional per-slot overlay for station side inventories, provided by a plugin. */
+  @Nullable
+  public static IStationSlotOverlay slotOverlay;
+
+  /** Hook for overlays drawn after each side inventory slot, e.g. Sophisticated's locked slot ghosts. */
+  public interface IStationSlotOverlay {
+    /** Called each time a station screen initializes. */
+    default void init(BaseTabbedScreen<?, ?> screen) {
+    }
+
+    /** Draws overlay content for the given side slot, positioned at the slot's current coordinates. */
+    void render(GuiGraphics graphics, Slot slot);
   }
 
   @Nullable
@@ -91,6 +131,9 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
     if (stationButton != null) {
       stationButton.init(this);
     }
+    if (slotOverlay != null) {
+      slotOverlay.init(this);
+    }
   }
 
   @Override
@@ -101,6 +144,16 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
     }
     if (stationButton != null) {
       stationButton.render(graphics, mouseX, mouseY, partialTick);
+    }
+  }
+
+  @Override
+  public void renderSlot(GuiGraphics graphics, Slot slot) {
+    super.renderSlot(graphics, slot);
+    // plugin-provided overlays for side inventory slots, drawn over the slot content inside
+    // the container translate so their panel-relative coordinates line up with the slot
+    if (slotOverlay != null && this.getModuleForSlot(slot.index) instanceof SideInventoryScreen) {
+      slotOverlay.render(graphics, slot);
     }
   }
 
@@ -181,15 +234,22 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
     return false;
   }
 
-  /** Returns the side inventory module area, or null when this station has no side inventory. */
+  /** Returns the side inventory module, or null when this station has no side inventory. */
   @Nullable
-  public Rect2i getSideInventoryArea() {
+  public SideInventoryScreen<?, ?> getSideInventory() {
     for (ModuleScreen<?, ?> module : this.modules) {
       if (module instanceof SideInventoryScreen) {
-        return module.getArea();
+        return (SideInventoryScreen<?, ?>) module;
       }
     }
     return null;
+  }
+
+  /** Returns the side inventory module area, or null when this station has no side inventory. */
+  @Nullable
+  public Rect2i getSideInventoryArea() {
+    SideInventoryScreen<?, ?> sideInventory = getSideInventory();
+    return sideInventory == null ? null : sideInventory.getArea();
   }
 
   /** Content origin X, exposed for plugin widgets */
