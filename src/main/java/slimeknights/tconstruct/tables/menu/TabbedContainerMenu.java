@@ -74,50 +74,54 @@ public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMul
   /**
    * Vanilla caps stack merging at the item's stack size, which is a single stack in normal
    * slots but wastes space in high capacity slots: a 200 stack would not merge 64 more items
-   * as 264 exceeds 64, forcing the items into a new slot. Cap by the target slot capacity
-   * instead, which equals the item limit for normal slots.
+   * as 264 exceeds 64, forcing the items into a new slot. Cap by the target slot's item aware
+   * capacity instead, which equals the slot limit for high capacity slots and the item limit
+   * for normal slots. Non-stackable items (buckets, tools) merge as well, since high capacity
+   * slots can hold several of them, and multi count stacks are split across empty slots by
+   * the target slot's item aware capacity.
    */
   @Override
   protected boolean moveItemStackTo(ItemStack stack, int start, int end, boolean reverse) {
+    return moveItemStackTo(this.slots, stack, start, end, reverse);
+  }
+
+  /** Static core of {@link #moveItemStackTo(ItemStack, int, int, boolean)}, shared with the unit tests. */
+  static boolean moveItemStackTo(List<Slot> slots, ItemStack stack, int start, int end, boolean reverse) {
     boolean moved = false;
     int index = reverse ? end - 1 : start;
-    // merge into existing stacks of the same item first
-    if (stack.isStackable()) {
-      while (!stack.isEmpty() && (reverse ? index >= start : index < end)) {
-        Slot slot = this.slots.get(index);
-        ItemStack current = slot.getItem();
-        if (!current.isEmpty() && ItemStack.isSameItemSameTags(stack, current)) {
-          int limit = slot.getMaxStackSize();
-          int combined = current.getCount() + stack.getCount();
-          if (combined <= limit) {
-            stack.setCount(0);
-            current.setCount(combined);
-            slot.setChanged();
-            moved = true;
-          } else if (current.getCount() < limit) {
-            stack.shrink(limit - current.getCount());
-            current.setCount(limit);
-            slot.setChanged();
-            moved = true;
-          }
-        }
-        index += reverse ? -1 : 1;
-      }
-    }
-    // place the remainder into empty slots
-    if (!stack.isEmpty()) {
-      index = reverse ? end - 1 : start;
-      while (reverse ? index >= start : index < end) {
-        Slot slot = this.slots.get(index);
-        if (slot.getItem().isEmpty() && slot.mayPlace(stack)) {
-          if (stack.getCount() > slot.getMaxStackSize()) {
-            slot.setByPlayer(stack.split(slot.getMaxStackSize()));
-          } else {
-            slot.setByPlayer(stack.split(stack.getCount()));
-          }
+    // merge into existing stacks of the same item first; also merges non-stackable items
+    // as high capacity slots can hold several of them
+    while (!stack.isEmpty() && (reverse ? index >= start : index < end)) {
+      Slot slot = slots.get(index);
+      ItemStack current = slot.getItem();
+      if (!current.isEmpty() && ItemStack.isSameItemSameTags(stack, current)) {
+        int limit = slot.getMaxStackSize(stack);
+        int combined = current.getCount() + stack.getCount();
+        if (combined <= limit) {
+          stack.setCount(0);
+          current.setCount(combined);
           slot.setChanged();
           moved = true;
-          break;
+        } else if (current.getCount() < limit) {
+          stack.shrink(limit - current.getCount());
+          current.setCount(limit);
+          slot.setChanged();
+          moved = true;
+        }
+      }
+      index += reverse ? -1 : 1;
+    }
+    // place the remainder into empty slots, splitting across several slots when the stack
+    // exceeds the target slot's item aware capacity (e.g. seven buckets into seven slots)
+    if (!stack.isEmpty()) {
+      index = reverse ? end - 1 : start;
+      while (!stack.isEmpty() && (reverse ? index >= start : index < end)) {
+        Slot slot = slots.get(index);
+        if (slot.getItem().isEmpty() && slot.mayPlace(stack)) {
+          int limit = slot.getMaxStackSize(stack);
+          slot.setByPlayer(stack.getCount() > limit ? stack.split(limit) : stack.split(stack.getCount()));
+          slot.setChanged();
+          moved = true;
         }
         index += reverse ? -1 : 1;
       }
