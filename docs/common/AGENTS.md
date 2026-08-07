@@ -27,6 +27,7 @@ Shared registration, configuration, networking, common events, and most static d
 
 ## NOTES
 - `common/network` initializes early because tool and table modules register packets during construction.
+- The `TinkerNetwork` channel version is `"3"` (int-sized container stack synchronization). `HighStackCountSynchronizer` swaps only the server-to-client stack projection; bump the version when packet schemas change.
 - `common/config` is read by multiple domains; avoid duplicating config keys in feature packages.
 - `common/registration` is an internal compatibility layer around Mantle registration objects.
 - `common/data` may reference registries from every domain, so provider changes can have a broad build impact.

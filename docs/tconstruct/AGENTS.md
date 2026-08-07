@@ -33,7 +33,7 @@ slimeknights/tconstruct/
 
 ## RUNTIME FLOW
 1. Forge instantiates `TConstruct` from `META-INF/mods.toml`.
-2. `TConstruct` constructs base, world, table, tool, smeltery, and fluid modules in order.
+2. `TConstruct` constructs shared, world, table, tool, smeltery, and fluid modules in order (`TinkerCommons` → `TinkerWorld` → `TinkerTables` → `TinkerTools` → `TinkerSmeltery` → `TinkerFluids`).
 3. `TinkerModule.initRegisters()` attaches shared deferred registers to the mod event bus.
 4. The constructor initializes networking, tags, client bootstrap, addon discovery, and optional integrations.
 5. Forge dispatches common setup, client setup, registry, data, and pack events reflectively.

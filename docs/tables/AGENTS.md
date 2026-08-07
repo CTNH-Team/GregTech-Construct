@@ -1,14 +1,14 @@
 # TABLES DOMAIN
 
 ## OVERVIEW
-Tinker Station, tool tables, menus, screens, block entities, slots, and their network packets.
+Tinker Station, tool tables (including the crafting station), menus, screens, block entities, slots, and their network packets.
 
 ## WHERE TO LOOK
 - Main registration module: `TinkerTables.java`.
-- Table blocks and block entities: `block/`.
-- Menus and slot rules: `menu/`.
-- Client screens and inventory views: `client/`.
-- Packets and synchronization: `network/`.
+- Table blocks and block entities: `block/` (crafting station: `block/CraftingStationBlock.java`, `block/entity/table/CraftingStationBlockEntity.java`).
+- Menus and slot rules: `menu/` (crafting station: `menu/CraftingStationContainerMenu.java`).
+- Client screens and inventory views: `client/` (crafting station: `client/inventory/CraftingStationScreen.java`).
+- Packets and synchronization: `network/` (crafting station: `network/UpdateCraftingRecipePacket.java`).
 - Table integration tests: `src/test/java/slimeknights/tconstruct/tables`.
 
 ## CONVENTIONS
@@ -28,6 +28,7 @@ Tinker Station, tool tables, menus, screens, block entities, slots, and their ne
 - `client/` screens are consumers of menu state, not owners of authoritative recipe or inventory rules.
 - Network packet tests live beside table tests and are useful for catching serialization drift.
 - Reuse `library/tools/layout` for slot layout contracts instead of duplicating slot indexes.
+- The crafting station menu syncs stacks through `common/network/HighStackCountSynchronizer` (channel version `"3"`) so counts beyond vanilla's byte field stay correct.
 
 ## CHANGE IMPACT
 - Menu slot order is a compatibility surface for packets and saved screen state.

@@ -1,7 +1,7 @@
 # PROJECT KNOWLEDGE BASE
 
-**Generated:** 2026-07-11
-**Commit:** bf5c7b3108
+**Generated:** 2026-08-07
+**Commit:** 34cd66e5d
 **Branch:** dev
 
 ## OVERVIEW
@@ -82,6 +82,8 @@ The domain guides live under `docs/` so they do not pollute source directories. 
 | `TiCDynamicDataPack` | runtime data pack | `src/main/java/slimeknights/tconstruct/data/pack/TiCDynamicDataPack.java` | Holds server-side generated addon/material data |
 | `TiCDynamicResourcePack` | runtime resource pack | `src/main/java/slimeknights/tconstruct/data/pack/TiCDynamicResourcePack.java` | Holds client-side generated resources |
 | `TConstructMixinPlugin` | mixin plugin | `src/main/java/slimeknights/tconstruct/mixin/TConstructMixinPlugin.java` | Enables integration mixins only when their mods are present |
+| `GTConstructAddon` | GTCEu entry | `src/main/java/slimeknights/tconstruct/data/gtceu/GTConstructAddon.java` | `@GTAddon` auto-discovered by GTCEu; routes recipe generation into `GTConstructRecipes` |
+| `HighStackCountSynchronizer` | container sync | `src/main/java/slimeknights/tconstruct/common/network/HighStackCountSynchronizer.java` | Custom `ContainerSynchronizer` keeping stack counts wider than vanilla's byte field; requires network version 3 |
 | `BaseMcTest` | test harness | `src/test/java/slimeknights/tconstruct/test/BaseMcTest.java` | Boots registries and a Forge test container for most tests |
 
 ## CONVENTIONS
@@ -121,3 +123,7 @@ Use Java 17. IntelliJ builds require the bundled JetBrains Runtime as the Gradle
 - `runData` writes static generated resources; runtime dynamic packs are assembled separately during Forge lifecycle events.
 - Forge event subscribers and reflective addon callbacks have few ordinary Java callers; trace them through annotations and registration sites.
 - Jenkins still references a Maven publication task that is not configured in the current `build.gradle`.
+- `TinkerNetwork` channel version is `"3"` (int-sized container stack sync). `HighStackCountSynchronizer` replaces only the server-to-client stack projection; the vanilla menu click packet is untouched because the server stays authoritative.
+- The recipe browser is EMI (`plugin/emi/EMIPlugin`); JEI integration was removed from the fork.
+- Create integration adds blaze-burner heating to the melting furnace under `plugin/create/burner`.
+- The GTCEu side of the fork is split across `data/gtceu` (recipes, scanners), `mixin/gtceu`, and `library/tools/item/ModifiableGTToolItem.java`; it is not a separate addon module.

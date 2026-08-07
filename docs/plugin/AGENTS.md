@@ -11,13 +11,17 @@ Optional compatibility integrations discovered and initialized only when their t
 | Json Things | `plugin/jsonthings` |
 | Apotheosis | `plugin/apotheosis` |
 | Crafting Tweaks | `plugin/craftingtweaks` |
-| Other bridges | neighboring integration classes under `plugin/` |
+| EMI | `plugin/emi` |
+| Polymorph | `plugin/polymorph` |
+| Sophisticated Backpacks | `plugin/sophisticated` |
+| Other bridges | neighboring integration classes under `plugin/` (Diet, Dummmmmmy, ImmersiveEngineering) |
 
 ## CONVENTIONS
 - Keep one integration's imports, event subscribers, recipes, and mixins inside its own package.
 - Check `ModList` or the existing addon/plugin discovery path before touching foreign APIs.
 - Put integration tests under the matching `src/test/java/slimeknights/tconstruct/plugin` package.
 - Use addon callbacks and dynamic pack registrars for integration-provided data.
+- Two integration styles coexist: Forge event-subscriber `*Plugin` classes (EMI, Apotheosis, Crafting Tweaks, Json Things, Diet, Dummmmmmy, ImmersiveEngineering) and `*TiCAddon` addons discovered by the addon registry (Botania, Create, Polymorph, Sophisticated). Match the style of the integration you extend.
 
 ## ANTI-PATTERNS
 - Do not turn an optional mod into a compile-time or runtime base dependency.
@@ -37,7 +41,7 @@ Optional compatibility integrations discovered and initialized only when their t
 Applies to `src/main/java/slimeknights/tconstruct/plugin` and integration-specific mixins, data, and tests.
 
 ## READ WHEN
-- Adding or changing support for Botania, Create, GTCEU, Apotheosis, Json Things, or another optional mod.
+- Adding or changing support for Botania, Create, GTCEU, Apotheosis, EMI, Json Things, Polymorph, Sophisticated, or another optional mod.
 
 ## SOURCE OF TRUTH
 - Integration guard and registration path in the integration package.
