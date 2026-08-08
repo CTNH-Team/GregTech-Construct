@@ -13,6 +13,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import slimeknights.mantle.recipe.data.ICommonRecipeHelper;
+import slimeknights.mantle.registration.object.WoodBlockObject;
 import slimeknights.tconstruct.common.data.BaseRecipeProvider;
 import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
 import slimeknights.tconstruct.common.registration.GeodeItemObject;
@@ -103,17 +104,47 @@ public class WorldRecipeProvider extends BaseRecipeProvider implements ICommonRe
                           .save(slimeConsumer, location("common/slime/magma_cream"));
 
     // wood
+    // [CTNH] 匠魂黏木木材配方已注释停用：原木→木板、木板→台阶/楼梯/栅栏/栅栏门/门/活板门/
+    // 按钮/压力板/告示牌/挂告示牌等手工配方由 GTCEu 统一木材加工体系（WoodTypeEntry）重写接管
+    // （锯木机/车床/装配机等机器配方）；对应注册见 CTNH-Core
+    // data/recipe/wood/WoodTypeEntries#addTConstructWood（recipe-name 均为 null，无原配方可移除）。
+    // 仅保留 WoodTypeEntry 未覆盖的原木→树皮木配方（barkCrafting）。
     String woodFolder = "world/wood/";
-    woodCrafting(consumer, TinkerWorld.greenheart, woodFolder + "greenheart/");
-    woodCrafting(consumer, TinkerWorld.skyroot, woodFolder + "skyroot/");
-    woodCrafting(consumer, TinkerWorld.bloodshroom, woodFolder + "bloodshroom/");
-    woodCrafting(consumer, TinkerWorld.enderbark, woodFolder + "enderbark/");
+    // woodCrafting(consumer, TinkerWorld.greenheart, woodFolder + "greenheart/");
+    // woodCrafting(consumer, TinkerWorld.skyroot, woodFolder + "skyroot/");
+    // woodCrafting(consumer, TinkerWorld.bloodshroom, woodFolder + "bloodshroom/");
+    // woodCrafting(consumer, TinkerWorld.enderbark, woodFolder + "enderbark/");
+    barkCrafting(consumer, TinkerWorld.greenheart, woodFolder + "greenheart/");
+    barkCrafting(consumer, TinkerWorld.skyroot, woodFolder + "skyroot/");
+    barkCrafting(consumer, TinkerWorld.bloodshroom, woodFolder + "bloodshroom/");
+    barkCrafting(consumer, TinkerWorld.enderbark, woodFolder + "enderbark/");
 
     // geodes
     geodeRecipes(consumer, TinkerWorld.earthGeode, SlimeType.EARTH, "common/slime/earth/");
     geodeRecipes(consumer, TinkerWorld.skyGeode,   SlimeType.SKY,   "common/slime/sky/");
     geodeRecipes(consumer, TinkerWorld.ichorGeode, SlimeType.ICHOR, "common/slime/ichor/");
     geodeRecipes(consumer, TinkerWorld.enderGeode, SlimeType.ENDER, "common/slime/ender/");
+  }
+
+  /**
+   * 仅生成树皮（bark）配方：原木→树皮木、去皮原木→去皮树皮木。
+   * 其余木板/家具配方由 GTCEu WoodTypeEntry 体系接管，见 buildRecipes 中 [CTNH] 注释。
+   */
+  private void barkCrafting(Consumer<FinishedRecipe> consumer, WoodBlockObject wood, String folder) {
+    ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, wood.getWood(), 3)
+                       .define('#', wood.getLog())
+                       .pattern("##")
+                       .pattern("##")
+                       .group("bark")
+                       .unlockedBy("has_log", has(wood.getLog()))
+                       .save(consumer, location(folder + "log_to_wood"));
+    ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, wood.getStrippedWood(), 3)
+                       .define('#', wood.getStrippedLog())
+                       .pattern("##")
+                       .pattern("##")
+                       .group("bark")
+                       .unlockedBy("has_log", has(wood.getStrippedLog()))
+                       .save(consumer, location(folder + "stripped_log_to_wood"));
   }
 
   private void geodeRecipes(Consumer<FinishedRecipe> consumer, GeodeItemObject geode, SlimeType slime, String folder) {
