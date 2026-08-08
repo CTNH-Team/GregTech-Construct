@@ -65,9 +65,10 @@ dependencies {
     // Polymorph for crafting station recipe conflict selection
     modCompileOnly("curse.maven:polymorph-388800:6450982")
     modRuntimeOnly("curse.maven:polymorph-388800:6450982")
-    // JEC (Just Enough Characters) for CJK/IME input in the side inventory search box
+    // JEC (Just Enough Characters) for CJK/pinyin input in the side inventory search box.
+    // Compile only, like the other optional integrations: JEC is client only and crashes on
+    // the dedicated server dist, so players install it themselves in the client.
     modCompileOnly("curse.maven:just-enough-characters-250702:8583972")
-    modRuntimeOnly("curse.maven:just-enough-characters-250702:8583972")
     //deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
