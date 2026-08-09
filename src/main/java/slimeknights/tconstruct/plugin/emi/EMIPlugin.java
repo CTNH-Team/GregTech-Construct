@@ -20,8 +20,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
-import slimeknights.mantle.recipe.helper.RecipeHelper;
-import slimeknights.mantle.recipe.ingredient.EntityIngredient;
+import slimeknights.mantle.recipe.helper.RecipeHelper;import slimeknights.mantle.recipe.ingredient.EntityIngredient;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.config.Config;
@@ -33,6 +32,8 @@ import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.materials.IMaterialRegistry;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
+import slimeknights.tconstruct.library.materials.definition.MaterialVariant;
+import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.library.recipe.modifiers.ModifierRecipeLookup;
 import slimeknights.tconstruct.library.recipe.melting.MeltingRecipe;
@@ -45,6 +46,7 @@ import slimeknights.tconstruct.library.recipe.worktable.IModifierWorktableRecipe
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
 import slimeknights.tconstruct.library.tools.definition.module.build.ToolTraitHook;
 import slimeknights.tconstruct.library.tools.item.IModifiableDisplay;
+import slimeknights.tconstruct.library.tools.part.IMaterialItem;
 import slimeknights.tconstruct.library.tools.layout.StationSlotLayoutLoader;
 import slimeknights.tconstruct.library.tools.nbt.MaterialNBT;
 import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
@@ -70,8 +72,11 @@ import slimeknights.tconstruct.smeltery.block.entity.module.EntityMeltingModule;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 
+import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Comparator;
 
@@ -79,6 +84,7 @@ import java.util.Comparator;
 public final class EMIPlugin implements EmiPlugin {
   @Override
   public void register(EmiRegistry registry) {
+    RECIPE_ID_COUNTS.clear();
     for (EMIConstants.TConstructEmiCategory category : EMIConstants.ALL) {
       registry.addCategory(category);
     }
@@ -113,9 +119,25 @@ public final class EMIPlugin implements EmiPlugin {
     List<IDisplayableCastingRecipe> recipes = RecipeHelper.getJEIRecipes(access, manager, (net.minecraft.world.item.crafting.RecipeType) type, IDisplayableCastingRecipe.class);
     for (int i = 0; i < recipes.size(); i++) {
       IDisplayableCastingRecipe recipe = recipes.get(i);
-      registry.addRecipe(new CastingEmiRecipe(recipeId(recipe.getRecipeId()), category, recipe,
+      registry.addRecipe(new CastingEmiRecipe(recipeId(recipe.getRecipeId(), outputMaterialPath(recipe)), category, recipe,
           category == EMIConstants.CASTING_BASIN));
     }
+  }
+
+  /**
+   * 铸造展开配方按输出材料区分 id。输出栈带材料 NBT 时返回材料 path(如 manyullyn);
+   * 非材料输出(如药水填充)返回 null,由 recipeId 退回数字序号。
+   */
+  @Nullable
+  private static String outputMaterialPath(IDisplayableCastingRecipe recipe) {
+    List<ItemStack> outputs = recipe.getOutputs();
+    if (!outputs.isEmpty()) {
+      MaterialVariantId material = IMaterialItem.getMaterialFromStack(outputs.get(0));
+      if (!material.equals(IMaterial.UNKNOWN_ID)) {
+        return material.getId().getPath();
+      }
+    }
+    return null;
   }
 
   private static void registerMolding(EmiRegistry registry, RegistryAccess access, RecipeManager manager) {
@@ -214,8 +236,15 @@ public final class EMIPlugin implements EmiPlugin {
     List<IDisplayPartBuilderRecipe> parts = RecipeHelper.getJEIRecipes(access, manager, TinkerRecipeTypes.PART_BUILDER.get(), IDisplayPartBuilderRecipe.class);
     for (int i = 0; i < parts.size(); i++) {
       IDisplayPartBuilderRecipe recipe = parts.get(i);
-      registry.addRecipe(new PartBuilderEmiRecipe(recipeId(recipe.getId()), recipe));
+      registry.addRecipe(new PartBuilderEmiRecipe(recipeId(recipe.getId(), partBuilderMaterial(recipe)), recipe));
     }
+  }
+
+  /** 部件加工展开配方按输出材料区分 id;无材料(如无材料成本配方)返回 null,退回数字序号 */
+  @Nullable
+  private static String partBuilderMaterial(IDisplayPartBuilderRecipe recipe) {
+    MaterialVariant material = recipe.getMaterial();
+    return material.isEmpty() ? null : material.getVariant().getId().getPath();
   }
 
   private static void registerWorktable(EmiRegistry registry, RegistryAccess access, RecipeManager manager) {
@@ -349,11 +378,27 @@ public final class EMIPlugin implements EmiPlugin {
   }
 
   /**
-   * EMI 配方 id 直接使用数据包原始配方 id，便于 EMI 显示/复制以及按 id 定位配方。
-   * 同一原始 id 注册到多个分类（如熔化/熔铸）或由 IMultiRecipe 展开出多条显示配方时，
-   * EMI 配方索引对重复 id 采用"首条胜出"策略，不会冲突；无原始 id 的合成配方使用以 / 开头的 id。
+   * 配方 id 保持玩家可读的数据包原始 id(与 JEI 时代显示一致)。同一原始 id 会由
+   * IMultiRecipe 展开出多条显示配方(如铸造、部件加工按材料展开)或注册到多个分类
+   * (如熔化/熔铸),而 EMI 的 byId 索引对重复 id 会互相覆盖并刷 "recipes loaded with
+   * the same id" 日志,且对非 / 开头的合成 id 做 RecipeManager 校验报错
+   * ("not present in recipe manager")。因此首个使用数据包原始 id,后续展开条目以
+   * / 开头(EMI 合成配方约定,跳过校验)并追加材料名(如 /manyullyn)保持可读与唯一;
+   * 无法提供材料时退回数字序号。每次 register 前清空计数,保证 reload 之间不串号。
    */
-  private static ResourceLocation recipeId(ResourceLocation id) {
-    return id;
+  /** 同包测试需要访问,故为包私有 */
+  static final Map<ResourceLocation, Integer> RECIPE_ID_COUNTS = new HashMap<>();
+
+  static ResourceLocation recipeId(ResourceLocation id) {
+    return recipeId(id, null);
+  }
+
+  static ResourceLocation recipeId(ResourceLocation id, @Nullable String discriminator) {
+    int count = RECIPE_ID_COUNTS.merge(id, 1, Integer::sum);
+    if (count == 1) {
+      return id;
+    }
+    String suffix = (discriminator == null || discriminator.isEmpty()) ? Integer.toString(count) : discriminator;
+    return new ResourceLocation(id.getNamespace(), "/" + id.getPath() + "/" + suffix);
   }
 }
