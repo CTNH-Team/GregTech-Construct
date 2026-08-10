@@ -104,6 +104,10 @@
       "required": false
     },
     {
+      "id": "sophisticatedstorage:controller",
+      "required": false
+    },
+    {
       "id": "sophisticatedbackpacks:backpack",
       "required": false
     }
