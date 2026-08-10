@@ -109,6 +109,7 @@ public final class EMIPlugin implements EmiPlugin {
     registerWorktable(registry, access, manager);
     registerModifiers(registry);
     registerMaterialStats(registry, manager);
+    registry.addRecipeHandler(TinkerTables.craftingStationContainer.get(), new CraftingStationEmiRecipeHandler());
 
     addWorkstations(registry, manager);
   }
