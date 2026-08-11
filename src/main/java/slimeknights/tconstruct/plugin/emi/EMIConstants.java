@@ -6,12 +6,19 @@ import lombok.Getter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Items;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.library.materials.definition.MaterialId;
+import slimeknights.tconstruct.library.modifiers.ModifierEntry;
+import slimeknights.tconstruct.library.recipe.ingredient.MaterialToolIngredient;
+import slimeknights.tconstruct.library.tools.item.IModifiableDisplay;
 import slimeknights.tconstruct.plugin.emi.material.MaterialStatsEmiConstants;
+import slimeknights.tconstruct.plugin.emi.modifiers.ModifierEmiStack;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tools.TinkerTools;
+import slimeknights.tconstruct.tools.data.ModifierIds;
 
 import java.util.List;
 
@@ -35,21 +42,23 @@ public final class EMIConstants {
       ALLOY_TEXTURE, 0, 0, 172, 62);
   public static final TConstructEmiCategory ENTITY_MELTING = category("entity_melting", TinkerSmeltery.smelteryController,
       MELTING_TEXTURE, 0, 41, 150, 62);
-  public static final TConstructEmiCategory MODIFIERS = category("modifiers", TinkerTables.tinkerStation,
+  public static final TConstructEmiCategory MODIFIERS = category("modifiers",
+      new ModifierEmiStack(new ModifierEntry(ModifierIds.writable, 1)),
       TINKER_STATION_TEXTURE, 0, 0, 128, 77);
-  public static final TConstructEmiCategory SEVERING = category("severing", TinkerTables.tinkerStation,
+  public static final TConstructEmiCategory SEVERING = category("severing", manyullynCleaver(),
       TINKER_STATION_TEXTURE, 0, 78, 100, 38);
-  public static final TConstructEmiCategory TOOL_BUILDING = category("tool_recipes", TinkerTables.tinkerStation,
+  public static final TConstructEmiCategory TOOL_BUILDING = category("tool_recipes", TinkerTables.tinkersAnvil,
       TINKER_STATION_TEXTURE, 122, 77, 134, 66);
   public static final TConstructEmiCategory PART_BUILDER = category("part_builder", TinkerTables.partBuilder,
       TINKER_STATION_TEXTURE, 0, 117, 121, 46);
   public static final TConstructEmiCategory MODIFIER_WORKTABLE = category("worktable", TinkerTables.modifierWorktable,
       TINKER_STATION_TEXTURE, 0, 166, 121, 35);
-  public static final TConstructEmiCategory HARVEST_STATS = category("harvest_stats", TinkerTables.tinkerStation,
+  public static final TConstructEmiCategory HARVEST_STATS = category("harvest_stats", toolIcon(TinkerTools.pickaxe.get()),
       TINKER_STATION_TEXTURE, 0, 0, 178, 200);
-  public static final TConstructEmiCategory RANGED_STATS = category("ranged_stats", TinkerTables.tinkerStation,
+  public static final TConstructEmiCategory RANGED_STATS = category("ranged_stats", toolIcon(TinkerTools.longbow.get()),
       TINKER_STATION_TEXTURE, 0, 0, 178, 200);
-  public static final TConstructEmiCategory ARMOR_STATS = category("armor_stats", TinkerTables.tinkerStation,
+  public static final TConstructEmiCategory ARMOR_STATS = category("armor_stats",
+      toolIcon(TinkerTools.plateArmor.get(ArmorItem.Type.CHESTPLATE)),
       TINKER_STATION_TEXTURE, 0, 0, 178, 200);
   public static final TConstructEmiCategory AMMO_STATS = category("ammo_stats", TinkerTools.arrow,
       TINKER_STATION_TEXTURE, 0, 0, 178, 200);
@@ -66,6 +75,25 @@ public final class EMIConstants {
   private static TConstructEmiCategory category(String path, ItemLike icon, ResourceLocation texture,
                                                 int u, int v, int width, int height) {
     return new TConstructEmiCategory(TConstruct.getResource(path), EmiStack.of(icon), path, texture, u, v, width, height);
+  }
+
+  private static TConstructEmiCategory category(String path, EmiStack icon, ResourceLocation texture,
+                                                int u, int v, int width, int height) {
+    return new TConstructEmiCategory(TConstruct.getResource(path), icon, path, texture, u, v, width, height);
+  }
+
+  /** Category icon for a modifiable tool, using the render tool so parts show with materials */
+  private static EmiStack toolIcon(IModifiableDisplay tool) {
+    return EmiStack.of(tool.getRenderTool());
+  }
+
+  /** Icon for the severing category: a manyullyn cleaver, built lazily once materials are loaded */
+  private static EmiStack manyullynCleaver() {
+    return new MaterialToolEmiStack(
+        MaterialToolIngredient.builder(new MaterialId(TConstruct.MOD_ID, "manyullyn"))
+            .tools(TinkerTools.cleaver.get())
+            .build(),
+        TinkerTools.cleaver.get());
   }
 
   public static final class TConstructEmiCategory extends EmiRecipeCategory {
