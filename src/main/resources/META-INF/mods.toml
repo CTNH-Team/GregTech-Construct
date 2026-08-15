@@ -63,3 +63,41 @@ mandatory=true
     versionRange="[7.1.0,)"
 ordering="BEFORE"
 side="BOTH"
+
+# Tinkers' Ponder (merged into this jar as a second mod, upstream: https://github.com/Chemiofitor4096/TinkersPonder, MIT)
+[[mods]]
+modId="tponder"
+version="${tponder_version}"
+displayName="Tinkers' Ponder"
+authors="Chemiofitor"
+description='''
+Ponder scenes for Tinkers' Construct, merged into GregTech-Construct.
+'''
+
+[[dependencies.tponder]]
+modId="forge"
+mandatory=true
+versionRange="${forge_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.tponder]]
+modId="minecraft"
+mandatory=true
+versionRange="${minecraft_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.tponder]]
+modId="ponder"
+mandatory=true
+versionRange="[1.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.tponder]]
+modId="tconstruct"
+mandatory=true
+versionRange="[3.10.1.0,)"
+ordering="NONE"
+side="BOTH"

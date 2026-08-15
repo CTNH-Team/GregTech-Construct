@@ -33,3 +33,11 @@ This branch incorporates selected ideas and generated-data outputs from third-pa
 - License: MIT
 - Notice: The EMI material-stat views are adapted from TConJEI's material-stat presentation and material-part lookup behavior; the runtime integration is implemented against the current EMI API.
 - License text: `docs/third_party/TConJEI-LICENSE`
+
+## Tinkers' Ponder
+
+- Upstream project: `https://github.com/Chemiofitor4096/TinkersPonder.git`
+- Author: Chemiofitor
+- License: MIT
+- Notice: The Tinkers' Ponder source files are bundled into this jar as a second mod (`tponder`) under their original MIT license, with only the Ponder scene fluids switched to GTCEu fluids for GregTech-Construct compatibility.
+- License text: `docs/third_party/TinkersPonder-LICENSE`

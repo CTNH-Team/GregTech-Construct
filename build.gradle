@@ -88,6 +88,10 @@ legacyForge {
         "${mod_id}" {
             sourceSet(sourceSets.main)
         }
+        // merged Tinkers' Ponder mod (same jar)
+        tponder {
+            sourceSet(sourceSets.main)
+        }
     }
 }
 jar {
@@ -128,7 +132,8 @@ tasks.named('processResources', ProcessResources).configure {
         'minecraft_range': minecraft_range,
         'mantle_range': mantle_range,
         'emi_range': emi_range,
-        'json_things_range': json_things_range
+        'json_things_range': json_things_range,
+        'tponder_version': tponder_version
 
 
     ]
