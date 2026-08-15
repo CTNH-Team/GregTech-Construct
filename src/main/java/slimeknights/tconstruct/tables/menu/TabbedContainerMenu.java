@@ -24,8 +24,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
-import slimeknights.mantle.inventory.EmptyItemHandler;
 import slimeknights.mantle.util.RegistryHelper;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.config.Config;
@@ -38,6 +38,7 @@ import slimeknights.tconstruct.tables.menu.module.SideInventoryContainer;
 
 import javax.annotation.Nullable;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Queue;
@@ -203,54 +204,65 @@ public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMul
     this.stationBlocks.sort(COMPARATOR);
   }
 
-  /** Adds a side inventory to this container */
+  /** Adds a single side inventory merging every adjacent container to this container */
   protected void addChestSideInventory() {
     if (tile == null || inv == null) {
       return;
     }
     Level world = tile.getLevel();
-    if (world != null) {
-      // detect side inventory
-      BlockEntity inventoryTE = null;
-      Direction accessDir = null;
+    if (world == null) {
+      return;
+    }
 
-      BlockPos pos = tile.getBlockPos();
-      horizontals:
-      for (Direction dir : Direction.Plane.HORIZONTAL) {
-        // skip any tables in this multiblock
-        BlockPos neighbor = pos.relative(dir);
-        for (Pair<BlockPos,BlockState> tinkerPos : this.stationBlocks) {
-          if (tinkerPos.getLeft().equals(neighbor)) {
-            continue horizontals;
-          }
-        }
-
-        // fetch tile entity
-        BlockEntity te = world.getBlockEntity(neighbor);
-        if (te != null && isUsable(te, inv.player)) {
-          // try internal access first
-          if (hasItemHandler(te, null)) {
-            inventoryTE = te;
-            break;
-          }
-
-          // try sided access next
-          Direction side = dir.getOpposite();
-          if (hasItemHandler(te, side)) {
-            inventoryTE = te;
-            accessDir = side;
-            break;
-          }
-        }
+    // detect every adjacent container and merge them into a single side inventory panel
+    BlockPos pos = tile.getBlockPos();
+    List<IItemHandlerModifiable> handlers = new ArrayList<>();
+    BlockEntity firstTile = null;
+    for (Direction dir : Direction.Plane.HORIZONTAL) {
+      // skip any tables in this multiblock
+      BlockPos neighbor = pos.relative(dir);
+      if (stationBlocks.stream().anyMatch(tinkerPos -> tinkerPos.getLeft().equals(neighbor))) {
+        continue;
       }
 
-      // if we found something, add the side inventory
-      if (inventoryTE != null) {
-        int invSlots = inventoryTE.getCapability(ForgeCapabilities.ITEM_HANDLER, accessDir).orElse(EmptyItemHandler.INSTANCE).getSlots();
-        int columns = Mth.clamp((invSlots - 1) / 9 + 1, 3, 6);
-        this.addSubContainer(new SideInventoryContainer<>(TinkerTables.craftingStationContainer.get(), containerId, inv, inventoryTE, accessDir, -6 - 18 * 6, 8, columns), false);
+      // fetch tile entity
+      BlockEntity te = world.getBlockEntity(neighbor);
+      if (te == null || !isUsable(te, inv.player)) {
+        continue;
+      }
+
+      // try internal access first, then sided access from the station's side
+      Direction accessDir = null;
+      if (!hasItemHandler(te, null)) {
+        Direction side = dir.getOpposite();
+        if (!hasItemHandler(te, side)) {
+          continue;
+        }
+        accessDir = side;
+      }
+
+      IItemHandlerModifiable handler = te.getCapability(ForgeCapabilities.ITEM_HANDLER, accessDir)
+        .filter(cap -> cap instanceof IItemHandlerModifiable)
+        .map(cap -> (IItemHandlerModifiable) cap)
+        .orElse(null);
+      if (handler != null) {
+        handlers.add(handler);
+        if (firstTile == null) {
+          firstTile = te;
+        }
       }
     }
+
+    // nothing adjacent: no side inventory
+    if (handlers.isEmpty()) {
+      return;
+    }
+
+    // one panel controlling all detected containers
+    IItemHandlerModifiable combined = handlers.size() == 1 ? handlers.get(0) : new CombinedInvWrapper(handlers.toArray(new IItemHandlerModifiable[0]));
+    int invSlots = combined.getSlots();
+    int columns = Mth.clamp((invSlots - 1) / 9 + 1, 3, 6);
+    this.addSubContainer(new SideInventoryContainer<>(TinkerTables.craftingStationContainer.get(), containerId, inv, firstTile, combined, -6 - 18 * 6, 8, columns), false);
   }
 
   /**

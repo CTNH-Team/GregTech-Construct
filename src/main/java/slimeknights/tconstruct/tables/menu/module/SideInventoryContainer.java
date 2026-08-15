@@ -24,7 +24,7 @@ public class SideInventoryContainer<TILE extends BlockEntity> extends BaseContai
   protected final LazyOptional<IItemHandler> itemHandler;
 
   public SideInventoryContainer(MenuType<?> containerType, int windowId, Inventory inv, @Nullable TILE tile, int x, int y, int columns) {
-    this(containerType, windowId, inv, tile, null, x, y, columns);
+    this(containerType, windowId, inv, tile, (Direction)null, x, y, columns);
   }
 
   public SideInventoryContainer(MenuType<?> containerType, int windowId, Inventory inv, @Nullable TILE tile, @Nullable Direction inventoryDirection, int x, int y, int columns) {
@@ -37,10 +37,26 @@ public class SideInventoryContainer<TILE extends BlockEntity> extends BaseContai
       this.itemHandler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, inventoryDirection);
     }
 
-    // slot properties
-    IItemHandler handler = itemHandler.orElse(EmptyHandler.INSTANCE);
-    this.slotCount = handler.getSlots();
+    this.slotCount = this.itemHandler.orElse(EmptyHandler.INSTANCE).getSlots();
     this.columns = columns;
+    this.addSlots(this.itemHandler.orElse(EmptyHandler.INSTANCE), x, y, columns);
+  }
+
+  /**
+   * Creates a side inventory from an explicit item handler, used when multiple adjacent
+   * containers are merged into a single panel.
+   */
+  public SideInventoryContainer(MenuType<?> containerType, int windowId, Inventory inv, @Nullable TILE tile, IItemHandler itemHandler, int x, int y, int columns) {
+    super(containerType, windowId, inv, tile);
+
+    this.itemHandler = LazyOptional.of(() -> itemHandler);
+    this.slotCount = itemHandler.getSlots();
+    this.columns = columns;
+    this.addSlots(itemHandler, x, y, columns);
+  }
+
+  /** Adds the slots for the given handler, shared by both constructors */
+  private void addSlots(IItemHandler handler, int x, int y, int columns) {
     int rows = this.slotCount / columns;
     if (this.slotCount % columns != 0) {
       rows++;
