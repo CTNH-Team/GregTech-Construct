@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import slimeknights.mantle.client.screen.ElementScreen;
 import slimeknights.mantle.client.screen.ModuleScreen;
 import slimeknights.mantle.client.screen.MultiModuleScreen;
+import slimeknights.mantle.inventory.WrapperSlot;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.GuiUtil;
 import slimeknights.tconstruct.library.client.Icons;
@@ -152,8 +153,15 @@ public class BaseTabbedScreen<TILE extends BlockEntity, CONTAINER extends Tabbed
     super.renderSlot(graphics, slot);
     // plugin-provided overlays for side inventory slots, drawn over the slot content inside
     // the container translate so their panel-relative coordinates line up with the slot
-    if (slotOverlay != null && this.getModuleForSlot(slot.index) instanceof SideInventoryScreen) {
-      slotOverlay.render(graphics, slot);
+    if (slotOverlay != null && this.getModuleForSlot(slot.index) instanceof SideInventoryScreen sideInventory) {
+      Slot unwrapped = slot;
+      if (slot instanceof WrapperSlot wrapper) {
+        unwrapped = wrapper.parent;
+      }
+      // only overlay actually visible slots; hidden (scrolled off) slots retain stale coordinates
+      if (sideInventory.shouldDrawSlot(unwrapped)) {
+        slotOverlay.render(graphics, slot);
+      }
     }
   }
 
