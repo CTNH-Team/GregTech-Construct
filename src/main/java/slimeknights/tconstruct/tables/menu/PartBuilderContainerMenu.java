@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import slimeknights.mantle.util.sync.LambdaDataSlot;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.tables.TinkerTables;
@@ -26,11 +27,15 @@ public class PartBuilderContainerMenu extends TabbedContainerMenu<PartBuilderBlo
   private final LazyResultSlot outputSlot;
 
   public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity) {
-    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, -1);
+    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, -1, null);
   }
 
   public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity, int sideInventorySlotCount) {
-    super(TinkerTables.partBuilderContainer.get(), windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount);
+    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount, null);
+  }
+
+  public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile) {
+    super(TinkerTables.partBuilderContainer.get(), windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount, sideInventoryTile);
 
     // unfortunately, nothing works with no tile
     if (tile != null) {
@@ -59,7 +64,7 @@ public class PartBuilderContainerMenu extends TabbedContainerMenu<PartBuilderBlo
   }
 
   public PartBuilderContainerMenu(int id, Inventory inv, FriendlyByteBuf buf) {
-    this(id, inv, getTileEntityFromBuf(buf, PartBuilderBlockEntity.class), buf == null ? -1 : buf.readVarInt());
+    this(id, inv, getTileEntityFromBuf(buf, PartBuilderBlockEntity.class), buf == null ? -1 : buf.readVarInt(), TabbedContainerMenu.readSideInventoryTile(buf));
   }
 
   @Override

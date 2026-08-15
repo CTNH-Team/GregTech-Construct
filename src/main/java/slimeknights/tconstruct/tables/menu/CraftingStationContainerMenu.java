@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tables.block.entity.table.CraftingStationBlockEntity;
 import slimeknights.tconstruct.tables.menu.slot.PlayerSensitiveLazyResultSlot;
@@ -44,11 +45,15 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
    * @param tile  Relevant tile entity
    */
   public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile) {
-    this(id, inv, tile, -1);
+    this(id, inv, tile, -1, null);
   }
 
   public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile, int sideInventorySlotCount) {
-    super(TinkerTables.craftingStationContainer.get(), id, inv, tile, sideInventorySlotCount);
+    this(id, inv, tile, sideInventorySlotCount, null);
+  }
+
+  public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile) {
+    super(TinkerTables.craftingStationContainer.get(), id, inv, tile, sideInventorySlotCount, sideInventoryTile);
 
     // unfortunately, nothing works with no tile
     if (tile != null) {
@@ -97,7 +102,7 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
    * @param buf  Buffer for fetching tile
    */
   public CraftingStationContainerMenu(int id, Inventory inv, FriendlyByteBuf buf) {
-    this(id, inv, getTileEntityFromBuf(buf, CraftingStationBlockEntity.class), buf == null ? -1 : buf.readVarInt());
+    this(id, inv, getTileEntityFromBuf(buf, CraftingStationBlockEntity.class), buf == null ? -1 : buf.readVarInt(), TabbedContainerMenu.readSideInventoryTile(buf));
   }
 
   @Override

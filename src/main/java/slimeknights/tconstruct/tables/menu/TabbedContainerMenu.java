@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
@@ -22,11 +23,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
+import slimeknights.mantle.util.BlockEntityHelper;
 import slimeknights.mantle.util.RegistryHelper;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.config.Config;
@@ -51,15 +54,24 @@ public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMul
   public final List<Pair<BlockPos, BlockState>> stationBlocks;
   /** Server-provided merged side inventory slot count; -1 means detect locally (server side) */
   protected int sideInventorySlotCount = -1;
+  /** Server-provided first adjacent container tile, used by the client mirror so container-specific overlays keep working */
+  @Nullable
+  protected BlockEntity sideInventoryTile;
 
   public TabbedContainerMenu(MenuType<?> containerType, int id, @Nullable Inventory inv, @Nullable TILE tile) {
-    this(containerType, id, inv, tile, -1);
+    this(containerType, id, inv, tile, -1, null);
   }
 
   /** Menu constructor with a server-provided side inventory slot count, used when reconstructing on the client */
   protected TabbedContainerMenu(MenuType<?> containerType, int id, @Nullable Inventory inv, @Nullable TILE tile, int sideInventorySlotCount) {
+    this(containerType, id, inv, tile, sideInventorySlotCount, null);
+  }
+
+  /** Menu constructor with server-provided side inventory data, used when reconstructing on the client */
+  protected TabbedContainerMenu(MenuType<?> containerType, int id, @Nullable Inventory inv, @Nullable TILE tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile) {
     super(containerType, id, inv, tile);
     this.sideInventorySlotCount = sideInventorySlotCount;
+    this.sideInventoryTile = sideInventoryTile;
 
     this.stationBlocks = Lists.newLinkedList();
 
@@ -267,6 +279,15 @@ public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMul
     return new SideInventoryInfo(handlers, tiles);
   }
 
+  /** Reads the optional first side container tile from the menu-open buffer (client side). */
+  @Nullable
+  public static BlockEntity readSideInventoryTile(FriendlyByteBuf buf) {
+    if (buf == null || !buf.readBoolean()) {
+      return null;
+    }
+    return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> BlockEntityHelper.get(BlockEntity.class, Minecraft.getInstance().level, buf.readBlockPos()).orElse(null));
+  }
+
   /** Adds a single side inventory merging every adjacent container to this container */
   protected void addChestSideInventory() {
     if (tile == null || inv == null) {
@@ -280,8 +301,10 @@ public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMul
     // client side: the server sent the merged slot count, mirror it so both sides stay aligned
     if (this.sideInventorySlotCount >= 0) {
       if (this.sideInventorySlotCount > 0) {
+        // use the real first container as the panel tile so Sophisticated Storage overlays/search keep working
+        BlockEntity displayTile = this.sideInventoryTile != null ? this.sideInventoryTile : tile;
         int columns = Mth.clamp((this.sideInventorySlotCount - 1) / 9 + 1, 3, 6);
-        this.addSubContainer(new SideInventoryContainer<>(TinkerTables.craftingStationContainer.get(), containerId, inv, tile, new ItemStackHandler(this.sideInventorySlotCount), -6 - 18 * 6, 8, columns), false);
+        this.addSubContainer(new SideInventoryContainer<BlockEntity>(TinkerTables.craftingStationContainer.get(), containerId, inv, displayTile, new ItemStackHandler(this.sideInventorySlotCount), -6 - 18 * 6, 8, columns), false);
       }
       return;
     }
