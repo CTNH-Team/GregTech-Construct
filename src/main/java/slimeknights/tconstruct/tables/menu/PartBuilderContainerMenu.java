@@ -26,7 +26,11 @@ public class PartBuilderContainerMenu extends TabbedContainerMenu<PartBuilderBlo
   private final LazyResultSlot outputSlot;
 
   public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity) {
-    super(TinkerTables.partBuilderContainer.get(), windowIdIn, playerInventoryIn, partBuilderTileEntity);
+    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, -1);
+  }
+
+  public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity, int sideInventorySlotCount) {
+    super(TinkerTables.partBuilderContainer.get(), windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount);
 
     // unfortunately, nothing works with no tile
     if (tile != null) {
@@ -55,7 +59,7 @@ public class PartBuilderContainerMenu extends TabbedContainerMenu<PartBuilderBlo
   }
 
   public PartBuilderContainerMenu(int id, Inventory inv, FriendlyByteBuf buf) {
-    this(id, inv, getTileEntityFromBuf(buf, PartBuilderBlockEntity.class));
+    this(id, inv, getTileEntityFromBuf(buf, PartBuilderBlockEntity.class), buf == null ? -1 : buf.readVarInt());
   }
 
   @Override

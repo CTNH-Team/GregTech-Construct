@@ -44,7 +44,11 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
    * @param tile  Relevant tile entity
    */
   public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile) {
-    super(TinkerTables.craftingStationContainer.get(), id, inv, tile);
+    this(id, inv, tile, -1);
+  }
+
+  public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile, int sideInventorySlotCount) {
+    super(TinkerTables.craftingStationContainer.get(), id, inv, tile, sideInventorySlotCount);
 
     // unfortunately, nothing works with no tile
     if (tile != null) {
@@ -93,7 +97,7 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
    * @param buf  Buffer for fetching tile
    */
   public CraftingStationContainerMenu(int id, Inventory inv, FriendlyByteBuf buf) {
-    this(id, inv, getTileEntityFromBuf(buf, CraftingStationBlockEntity.class));
+    this(id, inv, getTileEntityFromBuf(buf, CraftingStationBlockEntity.class), buf == null ? -1 : buf.readVarInt());
   }
 
   @Override

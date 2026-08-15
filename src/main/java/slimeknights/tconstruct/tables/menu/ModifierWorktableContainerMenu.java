@@ -28,7 +28,11 @@ public class ModifierWorktableContainerMenu extends TabbedContainerMenu<Modifier
   private final LazyResultSlot outputSlot;
 
   public ModifierWorktableContainerMenu(int windowIdIn, Inventory inv, @Nullable ModifierWorktableBlockEntity tile) {
-    super(TinkerTables.modifierWorktableContainer.get(), windowIdIn, inv, tile);
+    this(windowIdIn, inv, tile, -1);
+  }
+
+  public ModifierWorktableContainerMenu(int windowIdIn, Inventory inv, @Nullable ModifierWorktableBlockEntity tile, int sideInventorySlotCount) {
+    super(TinkerTables.modifierWorktableContainer.get(), windowIdIn, inv, tile, sideInventorySlotCount);
 
     // unfortunately, nothing works with no tile
     if (tile != null) {
@@ -68,7 +72,7 @@ public class ModifierWorktableContainerMenu extends TabbedContainerMenu<Modifier
   }
 
   public ModifierWorktableContainerMenu(int id, Inventory inv, FriendlyByteBuf buf) {
-    this(id, inv, getTileEntityFromBuf(buf, ModifierWorktableBlockEntity.class));
+    this(id, inv, getTileEntityFromBuf(buf, ModifierWorktableBlockEntity.class), buf == null ? -1 : buf.readVarInt());
   }
 
   @Override
