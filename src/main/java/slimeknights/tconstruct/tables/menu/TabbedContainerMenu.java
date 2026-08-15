@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
@@ -22,10 +23,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
+import slimeknights.mantle.util.BlockEntityHelper;
 import slimeknights.mantle.util.RegistryHelper;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.config.Config;
@@ -48,9 +52,35 @@ import java.util.Set;
 public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMultiModuleContainerMenu<TILE> {
   private static final TinkerBlockComp COMPARATOR = new TinkerBlockComp();
   public final List<Pair<BlockPos, BlockState>> stationBlocks;
+  /** Server-provided merged side inventory slot count; -1 means detect locally (server side) */
+  protected int sideInventorySlotCount = -1;
+  /** Server-provided first adjacent container tile, used by the client mirror so container-specific overlays keep working */
+  @Nullable
+  protected BlockEntity sideInventoryTile;
+  /** Server-provided per-slot capacity limits of the merged side inventory, used by the client mirror */
+  @Nullable
+  protected int[] sideInventoryLimits;
 
   public TabbedContainerMenu(MenuType<?> containerType, int id, @Nullable Inventory inv, @Nullable TILE tile) {
+    this(containerType, id, inv, tile, -1, null, null);
+  }
+
+  /** Menu constructor with a server-provided side inventory slot count, used when reconstructing on the client */
+  protected TabbedContainerMenu(MenuType<?> containerType, int id, @Nullable Inventory inv, @Nullable TILE tile, int sideInventorySlotCount) {
+    this(containerType, id, inv, tile, sideInventorySlotCount, null, null);
+  }
+
+  /** Menu constructor with server-provided side inventory data, used when reconstructing on the client */
+  protected TabbedContainerMenu(MenuType<?> containerType, int id, @Nullable Inventory inv, @Nullable TILE tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile) {
+    this(containerType, id, inv, tile, sideInventorySlotCount, sideInventoryTile, null);
+  }
+
+  /** Menu constructor with server-provided side inventory data, used when reconstructing on the client */
+  protected TabbedContainerMenu(MenuType<?> containerType, int id, @Nullable Inventory inv, @Nullable TILE tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile, @Nullable int[] sideInventoryLimits) {
     super(containerType, id, inv, tile);
+    this.sideInventorySlotCount = sideInventorySlotCount;
+    this.sideInventoryTile = sideInventoryTile;
+    this.sideInventoryLimits = sideInventoryLimits;
 
     this.stationBlocks = Lists.newLinkedList();
 
@@ -204,30 +234,35 @@ public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMul
     this.stationBlocks.sort(COMPARATOR);
   }
 
-  /** Adds a single side inventory merging every adjacent container to this container */
-  protected void addChestSideInventory() {
-    if (tile == null || inv == null) {
-      return;
+  /** Result of detecting adjacent side containers. */
+  public record SideInventoryInfo(List<IItemHandlerModifiable> handlers, List<BlockEntity> tiles) {
+    /** Total merged slot count across all detected containers. */
+    public int slotCount() {
+      int total = 0;
+      for (IItemHandlerModifiable handler : handlers) {
+        total += handler.getSlots();
+      }
+      return total;
     }
-    Level world = tile.getLevel();
-    if (world == null) {
-      return;
-    }
+  }
 
-    // detect every adjacent container and merge them into a single side inventory panel
-    BlockPos pos = tile.getBlockPos();
+  /** Detects every usable adjacent container around the given position, skipping other table parts. */
+  public static SideInventoryInfo detectSideInventories(Level world, BlockPos pos, Player player) {
     List<IItemHandlerModifiable> handlers = new ArrayList<>();
-    BlockEntity firstTile = null;
+    List<BlockEntity> tiles = new ArrayList<>();
+    if (world == null) {
+      return new SideInventoryInfo(handlers, tiles);
+    }
     for (Direction dir : Direction.Plane.HORIZONTAL) {
       // skip any tables in this multiblock
       BlockPos neighbor = pos.relative(dir);
-      if (stationBlocks.stream().anyMatch(tinkerPos -> tinkerPos.getLeft().equals(neighbor))) {
+      if (world.getBlockState(neighbor).getBlock() instanceof ITabbedBlock) {
         continue;
       }
 
       // fetch tile entity
       BlockEntity te = world.getBlockEntity(neighbor);
-      if (te == null || !isUsable(te, inv.player)) {
+      if (te == null || !isUsable(te, player)) {
         continue;
       }
 
@@ -247,22 +282,83 @@ public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMul
         .orElse(null);
       if (handler != null) {
         handlers.add(handler);
-        if (firstTile == null) {
-          firstTile = te;
-        }
+        tiles.add(te);
       }
     }
+    return new SideInventoryInfo(handlers, tiles);
+  }
 
-    // nothing adjacent: no side inventory
-    if (handlers.isEmpty()) {
+  /** Client-side side inventory data read from the menu-open buffer. */
+  public record SideInventoryClientData(int slotCount, @Nullable BlockEntity tile, @Nullable int[] limits) {
+    /** Reads the side inventory payload from the buffer, after the station position was consumed. */
+    public static SideInventoryClientData read(FriendlyByteBuf buf) {
+      if (buf == null) {
+        return new SideInventoryClientData(-1, null, null);
+      }
+      int slotCount = buf.readVarInt();
+      BlockEntity tile = buf.readBoolean()
+        ? DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> BlockEntityHelper.get(BlockEntity.class, Minecraft.getInstance().level, buf.readBlockPos()).orElse(null))
+        : null;
+      int[] limits = slotCount > 0 ? new int[slotCount] : null;
+      for (int i = 0; i < slotCount; i++) {
+        limits[i] = buf.readVarInt();
+      }
+      return new SideInventoryClientData(slotCount, tile, limits);
+    }
+  }
+
+  /** Item handler mirror for the client side panel, replicating the server's per-slot capacities. */
+  private static final class MirrorSideInventoryHandler extends ItemStackHandler {
+    private final int[] slotLimits;
+
+    private MirrorSideInventoryHandler(int[] slotLimits) {
+      super(slotLimits.length);
+      this.slotLimits = slotLimits;
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+      return this.slotLimits[slot];
+    }
+
+    @Override
+    public int getStackLimit(int slot, ItemStack stack) {
+      return this.slotLimits[slot];
+    }
+  }
+
+  /** Adds a single side inventory merging every adjacent container to this container */
+  protected void addChestSideInventory() {
+    if (tile == null || inv == null) {
+      return;
+    }
+    Level world = tile.getLevel();
+    if (world == null) {
+      return;
+    }
+
+    // client side: the server sent the merged slot count, mirror it so both sides stay aligned
+    if (this.sideInventorySlotCount >= 0) {
+      if (this.sideInventorySlotCount > 0) {
+        // use the real first container as the panel tile so Sophisticated Storage overlays/search keep working
+        BlockEntity displayTile = this.sideInventoryTile != null ? this.sideInventoryTile : tile;
+        IItemHandlerModifiable mirror = this.sideInventoryLimits != null ? new MirrorSideInventoryHandler(this.sideInventoryLimits) : new ItemStackHandler(this.sideInventorySlotCount);
+        int columns = Mth.clamp((this.sideInventorySlotCount - 1) / 9 + 1, 3, 6);
+        this.addSubContainer(new SideInventoryContainer<BlockEntity>(TinkerTables.craftingStationContainer.get(), containerId, inv, displayTile, mirror, -6 - 18 * 6, 8, columns), false);
+      }
+      return;
+    }
+
+    // server side: detect every adjacent container and merge them into a single side inventory panel
+    SideInventoryInfo info = detectSideInventories(world, tile.getBlockPos(), inv.player);
+    if (info.handlers().isEmpty()) {
       return;
     }
 
     // one panel controlling all detected containers
-    IItemHandlerModifiable combined = handlers.size() == 1 ? handlers.get(0) : new CombinedInvWrapper(handlers.toArray(new IItemHandlerModifiable[0]));
-    int invSlots = combined.getSlots();
-    int columns = Mth.clamp((invSlots - 1) / 9 + 1, 3, 6);
-    this.addSubContainer(new SideInventoryContainer<>(TinkerTables.craftingStationContainer.get(), containerId, inv, firstTile, combined, -6 - 18 * 6, 8, columns), false);
+    IItemHandlerModifiable combined = info.handlers().size() == 1 ? info.handlers().get(0) : new CombinedInvWrapper(info.handlers().toArray(new IItemHandlerModifiable[0]));
+    int columns = Mth.clamp((info.slotCount() - 1) / 9 + 1, 3, 6);
+    this.addSubContainer(new SideInventoryContainer<>(TinkerTables.craftingStationContainer.get(), containerId, inv, info.tiles().get(0), info.tiles(), combined, -6 - 18 * 6, 8, columns), false);
   }
 
   /**

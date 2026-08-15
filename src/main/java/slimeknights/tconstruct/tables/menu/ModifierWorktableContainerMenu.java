@@ -9,6 +9,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import slimeknights.mantle.util.sync.LambdaDataSlot;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tables.block.entity.table.ModifierWorktableBlockEntity;
@@ -28,7 +29,19 @@ public class ModifierWorktableContainerMenu extends TabbedContainerMenu<Modifier
   private final LazyResultSlot outputSlot;
 
   public ModifierWorktableContainerMenu(int windowIdIn, Inventory inv, @Nullable ModifierWorktableBlockEntity tile) {
-    super(TinkerTables.modifierWorktableContainer.get(), windowIdIn, inv, tile);
+    this(windowIdIn, inv, tile, -1, null, null);
+  }
+
+  public ModifierWorktableContainerMenu(int windowIdIn, Inventory inv, @Nullable ModifierWorktableBlockEntity tile, int sideInventorySlotCount) {
+    this(windowIdIn, inv, tile, sideInventorySlotCount, null, null);
+  }
+
+  public ModifierWorktableContainerMenu(int windowIdIn, Inventory inv, @Nullable ModifierWorktableBlockEntity tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile) {
+    this(windowIdIn, inv, tile, sideInventorySlotCount, sideInventoryTile, null);
+  }
+
+  public ModifierWorktableContainerMenu(int windowIdIn, Inventory inv, @Nullable ModifierWorktableBlockEntity tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile, @Nullable int[] sideInventoryLimits) {
+    super(TinkerTables.modifierWorktableContainer.get(), windowIdIn, inv, tile, sideInventorySlotCount, sideInventoryTile, sideInventoryLimits);
 
     // unfortunately, nothing works with no tile
     if (tile != null) {
@@ -68,7 +81,11 @@ public class ModifierWorktableContainerMenu extends TabbedContainerMenu<Modifier
   }
 
   public ModifierWorktableContainerMenu(int id, Inventory inv, FriendlyByteBuf buf) {
-    this(id, inv, getTileEntityFromBuf(buf, ModifierWorktableBlockEntity.class));
+    this(id, inv, getTileEntityFromBuf(buf, ModifierWorktableBlockEntity.class), TabbedContainerMenu.SideInventoryClientData.read(buf));
+  }
+
+  public ModifierWorktableContainerMenu(int id, Inventory inv, @Nullable ModifierWorktableBlockEntity tile, TabbedContainerMenu.SideInventoryClientData data) {
+    this(id, inv, tile, data.slotCount(), data.tile(), data.limits());
   }
 
   @Override
