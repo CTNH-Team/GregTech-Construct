@@ -45,15 +45,19 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
    * @param tile  Relevant tile entity
    */
   public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile) {
-    this(id, inv, tile, -1, null);
+    this(id, inv, tile, -1, null, null);
   }
 
   public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile, int sideInventorySlotCount) {
-    this(id, inv, tile, sideInventorySlotCount, null);
+    this(id, inv, tile, sideInventorySlotCount, null, null);
   }
 
   public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile) {
-    super(TinkerTables.craftingStationContainer.get(), id, inv, tile, sideInventorySlotCount, sideInventoryTile);
+    this(id, inv, tile, sideInventorySlotCount, sideInventoryTile, null);
+  }
+
+  public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile, @Nullable int[] sideInventoryLimits) {
+    super(TinkerTables.craftingStationContainer.get(), id, inv, tile, sideInventorySlotCount, sideInventoryTile, sideInventoryLimits);
 
     // unfortunately, nothing works with no tile
     if (tile != null) {
@@ -102,7 +106,11 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
    * @param buf  Buffer for fetching tile
    */
   public CraftingStationContainerMenu(int id, Inventory inv, FriendlyByteBuf buf) {
-    this(id, inv, getTileEntityFromBuf(buf, CraftingStationBlockEntity.class), buf == null ? -1 : buf.readVarInt(), TabbedContainerMenu.readSideInventoryTile(buf));
+    this(id, inv, getTileEntityFromBuf(buf, CraftingStationBlockEntity.class), TabbedContainerMenu.SideInventoryClientData.read(buf));
+  }
+
+  public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile, TabbedContainerMenu.SideInventoryClientData data) {
+    this(id, inv, tile, data.slotCount(), data.tile(), data.limits());
   }
 
   @Override

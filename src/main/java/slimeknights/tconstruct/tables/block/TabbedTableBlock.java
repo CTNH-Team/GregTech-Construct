@@ -6,6 +6,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.network.NetworkHooks;
 import slimeknights.mantle.inventory.BaseContainerMenu;
 import slimeknights.tconstruct.shared.block.TableBlock;
@@ -32,6 +33,12 @@ public abstract class TabbedTableBlock extends TableBlock implements ITabbedBloc
           buf.writeBoolean(firstTile != null);
           if (firstTile != null) {
             buf.writeBlockPos(firstTile.getBlockPos());
+          }
+          // per-slot capacities so the client mirror matches the server's high-capacity slots
+          for (IItemHandlerModifiable handler : sideInfo.handlers()) {
+            for (int slot = 0; slot < handler.getSlots(); slot++) {
+              buf.writeVarInt(handler.getSlotLimit(slot));
+            }
           }
         });
         if (player.containerMenu instanceof BaseContainerMenu<?> menu) {

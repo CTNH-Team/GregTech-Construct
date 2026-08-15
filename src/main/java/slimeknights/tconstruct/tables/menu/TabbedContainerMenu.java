@@ -57,21 +57,30 @@ public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMul
   /** Server-provided first adjacent container tile, used by the client mirror so container-specific overlays keep working */
   @Nullable
   protected BlockEntity sideInventoryTile;
+  /** Server-provided per-slot capacity limits of the merged side inventory, used by the client mirror */
+  @Nullable
+  protected int[] sideInventoryLimits;
 
   public TabbedContainerMenu(MenuType<?> containerType, int id, @Nullable Inventory inv, @Nullable TILE tile) {
-    this(containerType, id, inv, tile, -1, null);
+    this(containerType, id, inv, tile, -1, null, null);
   }
 
   /** Menu constructor with a server-provided side inventory slot count, used when reconstructing on the client */
   protected TabbedContainerMenu(MenuType<?> containerType, int id, @Nullable Inventory inv, @Nullable TILE tile, int sideInventorySlotCount) {
-    this(containerType, id, inv, tile, sideInventorySlotCount, null);
+    this(containerType, id, inv, tile, sideInventorySlotCount, null, null);
   }
 
   /** Menu constructor with server-provided side inventory data, used when reconstructing on the client */
   protected TabbedContainerMenu(MenuType<?> containerType, int id, @Nullable Inventory inv, @Nullable TILE tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile) {
+    this(containerType, id, inv, tile, sideInventorySlotCount, sideInventoryTile, null);
+  }
+
+  /** Menu constructor with server-provided side inventory data, used when reconstructing on the client */
+  protected TabbedContainerMenu(MenuType<?> containerType, int id, @Nullable Inventory inv, @Nullable TILE tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile, @Nullable int[] sideInventoryLimits) {
     super(containerType, id, inv, tile);
     this.sideInventorySlotCount = sideInventorySlotCount;
     this.sideInventoryTile = sideInventoryTile;
+    this.sideInventoryLimits = sideInventoryLimits;
 
     this.stationBlocks = Lists.newLinkedList();
 
@@ -279,13 +288,43 @@ public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMul
     return new SideInventoryInfo(handlers, tiles);
   }
 
-  /** Reads the optional first side container tile from the menu-open buffer (client side). */
-  @Nullable
-  public static BlockEntity readSideInventoryTile(FriendlyByteBuf buf) {
-    if (buf == null || !buf.readBoolean()) {
-      return null;
+  /** Client-side side inventory data read from the menu-open buffer. */
+  public record SideInventoryClientData(int slotCount, @Nullable BlockEntity tile, @Nullable int[] limits) {
+    /** Reads the side inventory payload from the buffer, after the station position was consumed. */
+    public static SideInventoryClientData read(FriendlyByteBuf buf) {
+      if (buf == null) {
+        return new SideInventoryClientData(-1, null, null);
+      }
+      int slotCount = buf.readVarInt();
+      BlockEntity tile = buf.readBoolean()
+        ? DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> BlockEntityHelper.get(BlockEntity.class, Minecraft.getInstance().level, buf.readBlockPos()).orElse(null))
+        : null;
+      int[] limits = slotCount > 0 ? new int[slotCount] : null;
+      for (int i = 0; i < slotCount; i++) {
+        limits[i] = buf.readVarInt();
+      }
+      return new SideInventoryClientData(slotCount, tile, limits);
     }
-    return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> BlockEntityHelper.get(BlockEntity.class, Minecraft.getInstance().level, buf.readBlockPos()).orElse(null));
+  }
+
+  /** Item handler mirror for the client side panel, replicating the server's per-slot capacities. */
+  private static final class MirrorSideInventoryHandler extends ItemStackHandler {
+    private final int[] slotLimits;
+
+    private MirrorSideInventoryHandler(int[] slotLimits) {
+      super(slotLimits.length);
+      this.slotLimits = slotLimits;
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+      return this.slotLimits[slot];
+    }
+
+    @Override
+    public int getStackLimit(int slot, ItemStack stack) {
+      return this.slotLimits[slot];
+    }
   }
 
   /** Adds a single side inventory merging every adjacent container to this container */
@@ -303,8 +342,9 @@ public class TabbedContainerMenu<TILE extends BlockEntity> extends TriggeringMul
       if (this.sideInventorySlotCount > 0) {
         // use the real first container as the panel tile so Sophisticated Storage overlays/search keep working
         BlockEntity displayTile = this.sideInventoryTile != null ? this.sideInventoryTile : tile;
+        IItemHandlerModifiable mirror = this.sideInventoryLimits != null ? new MirrorSideInventoryHandler(this.sideInventoryLimits) : new ItemStackHandler(this.sideInventorySlotCount);
         int columns = Mth.clamp((this.sideInventorySlotCount - 1) / 9 + 1, 3, 6);
-        this.addSubContainer(new SideInventoryContainer<BlockEntity>(TinkerTables.craftingStationContainer.get(), containerId, inv, displayTile, new ItemStackHandler(this.sideInventorySlotCount), -6 - 18 * 6, 8, columns), false);
+        this.addSubContainer(new SideInventoryContainer<BlockEntity>(TinkerTables.craftingStationContainer.get(), containerId, inv, displayTile, mirror, -6 - 18 * 6, 8, columns), false);
       }
       return;
     }

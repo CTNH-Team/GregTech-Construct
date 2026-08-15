@@ -27,15 +27,19 @@ public class PartBuilderContainerMenu extends TabbedContainerMenu<PartBuilderBlo
   private final LazyResultSlot outputSlot;
 
   public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity) {
-    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, -1, null);
+    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, -1, null, null);
   }
 
   public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity, int sideInventorySlotCount) {
-    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount, null);
+    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount, null, null);
   }
 
   public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile) {
-    super(TinkerTables.partBuilderContainer.get(), windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount, sideInventoryTile);
+    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount, sideInventoryTile, null);
+  }
+
+  public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile, @Nullable int[] sideInventoryLimits) {
+    super(TinkerTables.partBuilderContainer.get(), windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount, sideInventoryTile, sideInventoryLimits);
 
     // unfortunately, nothing works with no tile
     if (tile != null) {
@@ -64,7 +68,11 @@ public class PartBuilderContainerMenu extends TabbedContainerMenu<PartBuilderBlo
   }
 
   public PartBuilderContainerMenu(int id, Inventory inv, FriendlyByteBuf buf) {
-    this(id, inv, getTileEntityFromBuf(buf, PartBuilderBlockEntity.class), buf == null ? -1 : buf.readVarInt(), TabbedContainerMenu.readSideInventoryTile(buf));
+    this(id, inv, getTileEntityFromBuf(buf, PartBuilderBlockEntity.class), TabbedContainerMenu.SideInventoryClientData.read(buf));
+  }
+
+  public PartBuilderContainerMenu(int id, Inventory inv, @Nullable PartBuilderBlockEntity tile, TabbedContainerMenu.SideInventoryClientData data) {
+    this(id, inv, tile, data.slotCount(), data.tile(), data.limits());
   }
 
   @Override

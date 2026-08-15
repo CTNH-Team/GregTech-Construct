@@ -29,15 +29,19 @@ public class ModifierWorktableContainerMenu extends TabbedContainerMenu<Modifier
   private final LazyResultSlot outputSlot;
 
   public ModifierWorktableContainerMenu(int windowIdIn, Inventory inv, @Nullable ModifierWorktableBlockEntity tile) {
-    this(windowIdIn, inv, tile, -1, null);
+    this(windowIdIn, inv, tile, -1, null, null);
   }
 
   public ModifierWorktableContainerMenu(int windowIdIn, Inventory inv, @Nullable ModifierWorktableBlockEntity tile, int sideInventorySlotCount) {
-    this(windowIdIn, inv, tile, sideInventorySlotCount, null);
+    this(windowIdIn, inv, tile, sideInventorySlotCount, null, null);
   }
 
   public ModifierWorktableContainerMenu(int windowIdIn, Inventory inv, @Nullable ModifierWorktableBlockEntity tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile) {
-    super(TinkerTables.modifierWorktableContainer.get(), windowIdIn, inv, tile, sideInventorySlotCount, sideInventoryTile);
+    this(windowIdIn, inv, tile, sideInventorySlotCount, sideInventoryTile, null);
+  }
+
+  public ModifierWorktableContainerMenu(int windowIdIn, Inventory inv, @Nullable ModifierWorktableBlockEntity tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile, @Nullable int[] sideInventoryLimits) {
+    super(TinkerTables.modifierWorktableContainer.get(), windowIdIn, inv, tile, sideInventorySlotCount, sideInventoryTile, sideInventoryLimits);
 
     // unfortunately, nothing works with no tile
     if (tile != null) {
@@ -77,7 +81,11 @@ public class ModifierWorktableContainerMenu extends TabbedContainerMenu<Modifier
   }
 
   public ModifierWorktableContainerMenu(int id, Inventory inv, FriendlyByteBuf buf) {
-    this(id, inv, getTileEntityFromBuf(buf, ModifierWorktableBlockEntity.class), buf == null ? -1 : buf.readVarInt(), TabbedContainerMenu.readSideInventoryTile(buf));
+    this(id, inv, getTileEntityFromBuf(buf, ModifierWorktableBlockEntity.class), TabbedContainerMenu.SideInventoryClientData.read(buf));
+  }
+
+  public ModifierWorktableContainerMenu(int id, Inventory inv, @Nullable ModifierWorktableBlockEntity tile, TabbedContainerMenu.SideInventoryClientData data) {
+    this(id, inv, tile, data.slotCount(), data.tile(), data.limits());
   }
 
   @Override
