@@ -13,6 +13,8 @@ import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.data.tinkering.AbstractToolDefinitionDataProvider;
 import slimeknights.tconstruct.library.json.predicate.modifier.SingleModifierPredicate;
+import slimeknights.tconstruct.library.modifiers.util.OptionalModifier;
+import slimeknights.tconstruct.plugin.create.modifier.CreateModifierIds;
 import slimeknights.tconstruct.library.materials.RandomMaterial;
 import slimeknights.tconstruct.library.tools.SlotType;
 import slimeknights.tconstruct.library.tools.definition.ModifiableArmorMaterial;
@@ -435,6 +437,8 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                         .set(ToolStats.ATTACK_SPEED, 1.2f).build()))
                 .smallToolStartingSlots()
                 // traits
+                .module(ToolTraitsModule.builder()
+                        .trait(new OptionalModifier(CreateModifierIds.WRENCH)).build())
                 // harvest
                 .module(ToolActionsModule.of(WRENCH_CONFIGURE_ALL, WRENCH_CONFIGURE_ITEMS, WRENCH_CONFIGURE_FLUIDS, WRENCH_ROTATE, WRENCH_DIG, WRENCH_DISMANTLE, WRENCH_CONNECT))
                 .module(IsEffectiveModule.tag(CustomTags.MINEABLE_WITH_WRENCH))
