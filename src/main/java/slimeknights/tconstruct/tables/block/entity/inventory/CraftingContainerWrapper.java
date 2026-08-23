@@ -17,22 +17,30 @@ import java.util.List;
  */
 public class CraftingContainerWrapper implements CraftingContainer {
   private final Container crafter;
+  private final int offset;
   @Getter
   private final int width;
   @Getter
   private final int height;
   public CraftingContainerWrapper(Container crafter, int width, int height) {
-    Preconditions.checkArgument(crafter.getContainerSize() == width * height, "Invalid width and height for inventroy size");
+    this(crafter, width, height, 0);
+  }
+
+  /** Creates a view over a rectangular range in the backing container. */
+  public CraftingContainerWrapper(Container crafter, int width, int height, int offset) {
+    Preconditions.checkArgument(offset >= 0 && crafter.getContainerSize() >= offset + width * height,
+      "Invalid width and height for inventory size");
     this.crafter = crafter;
     this.width = width;
     this.height = height;
+    this.offset = offset;
   }
 
   /** Inventory redirection */
 
   @Override
   public ItemStack getItem(int index) {
-    return crafter.getItem(index);
+    return crafter.getItem(index + offset);
   }
 
   @Override
@@ -47,17 +55,17 @@ public class CraftingContainerWrapper implements CraftingContainer {
 
   @Override
   public ItemStack removeItemNoUpdate(int index) {
-    return crafter.removeItemNoUpdate(index);
+    return crafter.removeItemNoUpdate(index + offset);
   }
 
   @Override
   public ItemStack removeItem(int index, int count) {
-    return crafter.removeItem(index, count);
+    return crafter.removeItem(index + offset, count);
   }
 
   @Override
   public void setItem(int index, ItemStack stack) {
-    crafter.setItem(index, stack);
+    crafter.setItem(index + offset, stack);
   }
 
   @Override
@@ -77,8 +85,8 @@ public class CraftingContainerWrapper implements CraftingContainer {
 
   @Override
   public void fillStackedContents(StackedContents helper) {
-    for (int i = 0; i < crafter.getContainerSize(); i++) {
-      helper.accountSimpleStack(crafter.getItem(i));
+    for (int i = 0; i < getContainerSize(); i++) {
+      helper.accountSimpleStack(crafter.getItem(i + offset));
     }
   }
 
