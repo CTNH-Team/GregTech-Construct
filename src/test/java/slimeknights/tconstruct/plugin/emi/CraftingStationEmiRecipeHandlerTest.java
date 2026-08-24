@@ -6,6 +6,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.junit.jupiter.api.Test;
+import slimeknights.tconstruct.tables.block.entity.table.CraftingStationBlockEntity;
 import slimeknights.tconstruct.tables.menu.CraftingStationContainerMenu;
 import slimeknights.tconstruct.test.BaseMcTest;
 
@@ -15,11 +16,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * 工作站 EMI 配方填充 handler 的槽位映射,布局与 {@link CraftingStationContainerMenu}
- * 一致:前 9 槽为 3x3 合成格,第 10 槽为成品,之后是侧栏容器与玩家背包(末尾 36 槽)。
+ * 工作站 EMI 配方填充 handler 的槽位映射，布局与 {@link CraftingStationContainerMenu}
+ * 一致：前 9 槽为 3x3 合成格，之后是 9 个 GT 工具槽、成品槽、侧栏容器和玩家背包。
  */
 class CraftingStationEmiRecipeHandlerTest extends BaseMcTest {
-  private static final int GRID = 9;
+  private static final int GRID = CraftingStationBlockEntity.CRAFTING_SLOT_COUNT;
+  private static final int TOOLS = CraftingStationBlockEntity.TOOL_SLOT_COUNT;
+  private static final int OUTPUT = GRID + TOOLS;
   private static final int SIDE = 18;
   private static final int PLAYER = 36;
 
@@ -28,11 +31,15 @@ class CraftingStationEmiRecipeHandlerTest extends BaseMcTest {
     CraftingStationContainerMenu menu = allocateMenu();
     NonNullList<Slot> slots = NonNullList.create();
     SimpleContainer grid = new SimpleContainer(GRID);
+    SimpleContainer tools = new SimpleContainer(TOOLS);
     SimpleContainer result = new SimpleContainer(1);
     SimpleContainer side = new SimpleContainer(SIDE);
     SimpleContainer player = new SimpleContainer(PLAYER);
     for (int i = 0; i < GRID; i++) {
       slots.add(new Slot(grid, i, 0, 0));
+    }
+    for (int i = 0; i < TOOLS; i++) {
+      slots.add(new Slot(tools, i, 0, 0));
     }
     slots.add(new Slot(result, 0, 0, 0));
     for (int i = 0; i < SIDE; i++) {
@@ -62,12 +69,12 @@ class CraftingStationEmiRecipeHandlerTest extends BaseMcTest {
   }
 
   @Test
-  void outputSlotIsTheResultSlotAfterTheGrid() {
+  void outputSlotIsTheResultSlotAfterTheToolSlots() {
     CraftingStationContainerMenu menu = createMenu(null);
 
     Slot output = new CraftingStationEmiRecipeHandler().getOutputSlot(menu);
 
-    assertThat(output).isSameAs(menu.slots.get(GRID));
+    assertThat(output).isSameAs(menu.slots.get(OUTPUT));
   }
 
   @Test
@@ -82,14 +89,14 @@ class CraftingStationEmiRecipeHandlerTest extends BaseMcTest {
       assertThat(sources).contains(menu.slots.get(i));
     }
     // 成品槽不是来源
-    assertThat(sources).doesNotContain(menu.slots.get(GRID));
+    assertThat(sources).doesNotContain(menu.slots.get(OUTPUT));
     // 侧栏仅非空槽进入来源
-    assertThat(sources).contains(menu.slots.get(GRID + 1));
+    assertThat(sources).contains(menu.slots.get(OUTPUT + 1));
     for (int i = 1; i < SIDE; i++) {
-      assertThat(sources).doesNotContain(menu.slots.get(GRID + 1 + i));
+      assertThat(sources).doesNotContain(menu.slots.get(OUTPUT + 1 + i));
     }
     // 玩家背包(末尾 36 槽)全部在来源中
-    int playerStart = GRID + 1 + SIDE;
+    int playerStart = OUTPUT + 1 + SIDE;
     for (int i = 0; i < PLAYER; i++) {
       assertThat(sources).contains(menu.slots.get(playerStart + i));
     }
