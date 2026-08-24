@@ -8,7 +8,6 @@
   "mixins": [
     "PlayerHurtSoundMixin",
     "ToolHelperMixin",
-    "gtceu.ToolIngredientMixin",
     "botania.PlayerAncientWillMixin",
     "create.AirCurrentFanProcessingMixin",
     "create.BlazeBurnerBlockEntityTargetMixin",
@@ -16,9 +15,11 @@
     "create.DivingBootsItemMixin",
     "create.GogglesItemMixin",
     "create.WrenchEventHandlerMixin",
+    "gtceu.ToolIngredientAccess",
+    "gtceu.ToolIngredientMixin",
     "tconstruct.create.AlloyerBlockEntityFuelMixin",
-    "tconstruct.create.CastingBlockEntityGoggleTooltipMixin",
     "tconstruct.create.CastingBlockEntityFanProcessingMixin",
+    "tconstruct.create.CastingBlockEntityGoggleTooltipMixin",
     "tconstruct.create.MelterBlockEntityFuelMixin",
     "tconstruct.create.TinyMultiblockControllerBlockMixin"
   ],

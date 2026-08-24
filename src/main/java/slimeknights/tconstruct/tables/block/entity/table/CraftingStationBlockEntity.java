@@ -28,12 +28,17 @@ import slimeknights.tconstruct.tables.block.entity.inventory.LazyResultContainer
 import slimeknights.tconstruct.tables.block.entity.inventory.LazyResultContainer.ILazyCrafter;
 import slimeknights.tconstruct.tables.menu.CraftingStationContainerMenu;
 import slimeknights.tconstruct.tables.network.UpdateCraftingRecipePacket;
+import slimeknights.tconstruct.tables.recipe.ToolCraftingResolver;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 
 public class CraftingStationBlockEntity extends RetexturedTableBlockEntity implements ILazyCrafter {
+  public static final int CRAFTING_SLOT_COUNT = 9;
+  public static final int TOOL_SLOT_COUNT = 9;
+  public static final int TOOL_SLOT_START = CRAFTING_SLOT_COUNT;
   public static final Component UNCRAFTABLE = TConstruct.makeTranslation("gui", "crafting_station.uncraftable");
   private static final Component NAME = TConstruct.makeTranslation("gui", "crafting_station");
 
@@ -54,6 +59,12 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
   /** Last crafted crafting recipe */
   @Nullable
   private CraftingRecipe lastRecipe;
+  /** Resolved virtual-input match when the selected recipe uses dedicated GT tool slots. */
+  @Nullable
+  private ToolCraftingResolver.Match lastToolMatch;
+  /** Cached tool-recipe candidates; invalidated only when station inputs change. */
+  @Nullable
+  private List<ToolCraftingResolver.Match> cachedToolMatches;
   /** Result inventory, lazy loads results */
   @Getter
   private final LazyResultContainer craftingResult;
@@ -64,11 +75,19 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
   private final CraftingContainerWrapper craftingInventory;
 
   public CraftingStationBlockEntity(BlockPos pos, BlockState state) {
-    super(TinkerTables.craftingStationTile.get(), pos, state, NAME, 9);
+    super(TinkerTables.craftingStationTile.get(), pos, state, NAME, CRAFTING_SLOT_COUNT + TOOL_SLOT_COUNT);
     this.itemHandler = new ConfigurableInvWrapperCapability(this, false, false);
     this.itemHandlerCap = LazyOptional.of(() -> this.itemHandler);
-    this.craftingInventory = new CraftingContainerWrapper(this, 3, 3);
+    this.craftingInventory = new CraftingContainerWrapper(this, 3, 3, 0);
     this.craftingResult = new LazyResultContainer(this);
+  }
+
+  /** Returns a dedicated tool slot stack without exposing it through the crafting grid. */
+  public ItemStack getToolStack(int index) {
+    if (index < 0 || index >= TOOL_SLOT_COUNT) {
+      return ItemStack.EMPTY;
+    }
+    return getItem(TOOL_SLOT_START + index);
   }
 
   @Nullable
@@ -99,19 +118,25 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
       CraftingRecipe recipe = lastRecipe;
       // if it does not match, find a new recipe; plugins may resolve conflicts between the matches
       // note we intentionally have no player access during matches, that could lead to an unstable recipe
-      if (recipe == null || !recipe.matches(this.craftingInventory, this.level)) {
+      if (recipe == null || (lastToolMatch == null && !recipe.matches(this.craftingInventory, this.level))
+          || (lastToolMatch != null && !ToolCraftingResolver.isStillValid(this, lastToolMatch))) {
         List<CraftingRecipe> matches = manager.getRecipesFor(RecipeType.CRAFTING, this.craftingInventory, this.level);
+        List<ToolCraftingResolver.Match> toolMatches = getToolMatches();
+        toolMatches.forEach(match -> { if (!matches.contains(match.recipe())) matches.add(match.recipe()); });
         ICraftingRecipeSelector selector = recipeSelector;
         if (selector != null && !matches.isEmpty()) {
           recipe = selector.selectRecipe(this, this.craftingInventory, matches);
         } else {
           recipe = matches.isEmpty() ? null : matches.get(0);
         }
+        CraftingRecipe selectedRecipe = recipe;
+        lastToolMatch = toolMatches.stream().filter(match -> match.recipe() == selectedRecipe).findFirst().orElse(null);
       }
 
       // if we have a recipe, fetch its result
       if (recipe != null) {
-        result = recipe.assemble(this.craftingInventory, level.registryAccess());
+        result = lastToolMatch == null ? recipe.assemble(this.craftingInventory, level.registryAccess())
+          : recipe.assemble(lastToolMatch.inventory(), level.registryAccess());
 
         // sync if the recipe is different
         if (recipe != lastRecipe) {
@@ -121,9 +146,19 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
       }
       ForgeHooks.setCraftingPlayer(null);
     }
-    else if (this.lastRecipe != null && this.lastRecipe.matches(this.craftingInventory, this.level)) {
+    else if (this.lastRecipe != null) {
+      ToolCraftingResolver.Match toolMatch = lastToolMatch;
+      if (toolMatch == null && !this.lastRecipe.matches(this.craftingInventory, this.level)) {
+        toolMatch = getToolMatches().stream()
+          .filter(match -> match.recipe().getId().equals(this.lastRecipe.getId())).findFirst().orElse(null);
+      }
+      if (toolMatch == null && !this.lastRecipe.matches(this.craftingInventory, this.level)) {
+        return ItemStack.EMPTY;
+      }
       ForgeHooks.setCraftingPlayer(player);
-      result = this.lastRecipe.assemble(this.craftingInventory, level.registryAccess());
+      result = toolMatch == null ? this.lastRecipe.assemble(this.craftingInventory, level.registryAccess())
+        : this.lastRecipe.assemble(toolMatch.inventory(), level.registryAccess());
+      this.lastToolMatch = toolMatch;
       ForgeHooks.setCraftingPlayer(null);
     }
     return result;
@@ -139,9 +174,17 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
     CraftingRecipe recipe = this.lastRecipe; // local variable just to prevent race conditions if the field changes, though that is unlikely
 
     // try matches again now that we have player access
-    if (recipe == null || this.level == null || !recipe.matches(craftingInventory, level)) {
+    if (recipe == null || this.level == null) {
       ForgeHooks.setCraftingPlayer(null);
       return ItemStack.EMPTY;
+    }
+    if (lastToolMatch == null && !recipe.matches(craftingInventory, level)) {
+      lastToolMatch = getToolMatches().stream()
+        .filter(match -> match.recipe().getId().equals(recipe.getId())).findFirst().orElse(null);
+      if (lastToolMatch == null) {
+        ForgeHooks.setCraftingPlayer(null);
+        return ItemStack.EMPTY;
+      }
     }
 
     // check if the player has access to the recipe, if not give up
@@ -163,7 +206,8 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
 //      }
 //    }
 
-    ItemStack result = recipe.assemble(craftingInventory, level.registryAccess());
+    ItemStack result = lastToolMatch == null ? recipe.assemble(craftingInventory, level.registryAccess())
+      : recipe.assemble(lastToolMatch.inventory(), level.registryAccess());
     ForgeHooks.setCraftingPlayer(null);
     return result;
   }
@@ -176,6 +220,7 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
    */
   public void takeResult(Player player, ItemStack result, int amount) {
     CraftingRecipe recipe = this.lastRecipe; // local variable just to prevent race conditions if the field changes, though that is unlikely
+    ToolCraftingResolver.Match toolMatch = this.lastToolMatch;
     if (recipe == null || this.level == null) {
       return;
     }
@@ -191,11 +236,20 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
     // update all slots in the inventory
     // remove remaining items
     ForgeHooks.setCraftingPlayer(player);
-    NonNullList<ItemStack> remaining = recipe.getRemainingItems(craftingInventory);
+    NonNullList<ItemStack> remaining = recipe.getRemainingItems(toolMatch == null ? craftingInventory : toolMatch.inventory());
     ForgeHooks.setCraftingPlayer(null);
     for (int i = 0; i < remaining.size(); ++i) {
       ItemStack original = this.getItem(i);
       ItemStack newStack = remaining.get(i);
+
+      // A virtual GT tool input has no corresponding real grid slot. Never materialize its
+      // remaining stack into the 3x3 inventory; the dedicated tool slot is damaged below.
+      if (toolMatch != null && contains(toolMatch.toolCells(), i)) {
+        continue;
+      }
+      if (original.isEmpty() && !newStack.isEmpty()) {
+        continue;
+      }
 
       // if empty or size 1, set directly (decreases by 1)
       if (original.isEmpty() || original.getCount() == 1) {
@@ -215,6 +269,14 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
         }
       }
     }
+    if (toolMatch != null) {
+      ToolCraftingResolver.damageTools(this, toolMatch, player, amount);
+    }
+  }
+
+  private static boolean contains(int[] values, int value) {
+    for (int candidate : values) if (candidate == value) return true;
+    return false;
   }
 
   /** Sends a message alerting the player this item is currently uncraftable, typically due to gamerules */
@@ -237,8 +299,23 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
   @Override
   public void setItem(int slot, ItemStack itemstack) {
     super.setItem(slot, itemstack);
+    this.cachedToolMatches = null;
+    this.lastToolMatch = null;
     // clear the crafting result when the matrix changes so we recalculate the result
     this.craftingResult.clearContent();
+  }
+
+  private List<ToolCraftingResolver.Match> getToolMatches() {
+    if (this.cachedToolMatches == null && this.level != null) {
+      this.cachedToolMatches = new ArrayList<>(ToolCraftingResolver.findMatches(this, this.level));
+    }
+    return this.cachedToolMatches == null ? Collections.emptyList() : this.cachedToolMatches;
+  }
+
+  /** Invalidates cached tool candidates after direct durability/NBT mutation. */
+  public void invalidateToolMatches() {
+    this.cachedToolMatches = null;
+    this.lastToolMatch = null;
   }
 
 
@@ -261,6 +338,7 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
    */
   public void updateRecipe(CraftingRecipe recipe) {
     this.lastRecipe = recipe;
+    this.lastToolMatch = null;
     this.craftingResult.clearContent();
   }
 

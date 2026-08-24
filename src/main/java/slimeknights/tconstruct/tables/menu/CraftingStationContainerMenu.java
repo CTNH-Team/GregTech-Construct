@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tables.block.entity.table.CraftingStationBlockEntity;
 import slimeknights.tconstruct.tables.menu.slot.PlayerSensitiveLazyResultSlot;
+import slimeknights.tconstruct.tables.menu.slot.CraftingStationToolSlot;
 
 import javax.annotation.Nullable;
 
@@ -69,6 +70,12 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
         for (int col = 0; col < 3; col++) {
           this.addSlot(new Slot(tile, col + row * 3, 30 + col * 18, 17 + row * 18));
         }
+      }
+      // GT crafting tools live in their own nine single-item slots. They are deliberately
+      // outside the CraftingContainerWrapper used for recipe matching.
+      for (int index = 0; index < CraftingStationBlockEntity.TOOL_SLOT_COUNT; index++) {
+        this.addSlot(new CraftingStationToolSlot(tile, CraftingStationBlockEntity.TOOL_SLOT_START + index,
+          8 + index * 18, 0));
       }
       // add result slot, will fetch result cache
       this.addSlot(resultSlot = new PlayerSensitiveLazyResultSlot(inv.player, tile.getCraftingResult(), 124, 35));
@@ -157,7 +164,10 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
           }
           // if successfully added to an inventory, update
           if (!nothingDone) {
-            tile.takeResult(player, result, result.getCount());
+            // The moved stack count is the recipe output count, not the number of
+            // recipe executions. A single shift-click performs one craft, so keep
+            // ingredient consumption and dedicated-tool damage to one use.
+            tile.takeResult(player, result, 1);
             tile.getCraftingResult().clearContent();
             return original;
           }

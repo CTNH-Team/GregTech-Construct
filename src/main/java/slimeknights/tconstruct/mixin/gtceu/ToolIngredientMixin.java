@@ -10,8 +10,8 @@ import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.item.ModifiableItem;
 
 @Mixin(value = ToolIngredient.class)
-public abstract class ToolIngredientMixin {
-  @Inject(method = "test", at = @At("HEAD"), cancellable = true)
+public abstract class ToolIngredientMixin{
+  @Inject(method = "test(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
   private void tconstruct$rejectBrokenTool(ItemStack input, CallbackInfoReturnable<Boolean> cir) {
     if (input != null && input.getItem() instanceof ModifiableItem && ToolDamageUtil.isBroken(input)) {
       cir.setReturnValue(false);

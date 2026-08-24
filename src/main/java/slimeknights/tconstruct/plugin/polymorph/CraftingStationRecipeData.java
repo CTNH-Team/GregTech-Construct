@@ -19,6 +19,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import slimeknights.tconstruct.tables.block.entity.table.CraftingStationBlockEntity;
+import slimeknights.tconstruct.tables.recipe.ToolCraftingResolver;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -208,6 +209,10 @@ public class CraftingStationRecipeData implements IBlockEntityRecipeData {
     Level level = tile.getLevel();
     if (level != null) {
       for (CraftingRecipe recipe : level.getRecipeManager().getRecipesFor(RecipeType.CRAFTING, tile.getCraftingInventory(), level)) {
+        pairs.add(new RecipePair(recipe.getId(), recipe.getResultItem(level.registryAccess())));
+      }
+      for (ToolCraftingResolver.Match match : ToolCraftingResolver.findMatches(tile, level)) {
+        CraftingRecipe recipe = match.recipe();
         pairs.add(new RecipePair(recipe.getId(), recipe.getResultItem(level.registryAccess())));
       }
     }
