@@ -250,7 +250,7 @@ public class AdvancementsProvider extends GenericDataProvider {
         });
         builder(TinkerTools.veinHammer.get().getRenderTool(), resource("smeltery/tool_forge"), anvil, FrameType.CHALLENGE, builder -> {
             Consumer<ItemObject<?>> with = item -> builder.addCriterion(item.getId().getPath(), hasItem(item));
-            with.accept(TinkerTools.sledgeHammer);
+            with.accept(TinkerTools.HAMMER);
             with.accept(TinkerTools.veinHammer);
             with.accept(TinkerTools.excavator);
             with.accept(TinkerTools.broadAxe);

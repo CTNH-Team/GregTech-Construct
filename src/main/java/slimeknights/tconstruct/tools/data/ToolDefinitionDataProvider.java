@@ -93,7 +93,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // faster tool name logic
                 .module(FixedMaterialToolName.FIRST);
 
-        define(ToolDefinitions.SLEDGE_HAMMER)
+        define(ToolDefinitions.HAMMER)
                 // parts
                 .module(PartStatsModule.parts()
                         .part(hammerHead, 0.5f)

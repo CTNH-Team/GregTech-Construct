@@ -784,7 +784,7 @@
 "_comment": "Bastelwerkzeuge",
 
 "item.tconstruct.pickaxe": "Spitzhacke",
-"item.tconstruct.sledge_hammer": "Vorschlaghammer",
+"item.tconstruct.hammer": "Vorschlaghammer",
 "item.tconstruct.vein_hammer": "Venenhammer",
 
 "item.tconstruct.mattock": "Mattock",
@@ -855,7 +855,7 @@
 "_conment": "Werkzeugbeschreibungen",
 
 "item.tconstruct.pickaxe.description": "Die Spitzhacke ist ein präzises Bergbauwerkzeug. Sie ist effektiv bei Steinen und Erzen.\nSie bricht Blöcke, OK?",
-"item.tconstruct.sledge_hammer.description": "Der Vorschlaghammer ist ein breites Bergbauwerkzeug. Er erntet Blöcke in einem breiten Spektrum.\nAuch effektiv gegen Untote.",
+"item.tconstruct.hammer.description": "Der Vorschlaghammer ist ein breites Bergbauwerkzeug. Er erntet Blöcke in einem breiten Spektrum.\nAuch effektiv gegen Untote.",
 "item.tconstruct.vein_hammer.description": "Der Vein Hammer ist ein breites Bergbauwerkzeug. Er erntet viele zusammenhängende Blöcke des gleichen Typs, perfekt für Erze.",
 
 "item.tconstruct.mattock.description": "Der Cutter Mattock ist ein vielseitiges landwirtschaftliches Werkzeug. Er ist effektiv bei Baumstämmen, Erde, Sand, Kies und Pflanzen.\nGrab nur nicht dein eigenes Grab!",

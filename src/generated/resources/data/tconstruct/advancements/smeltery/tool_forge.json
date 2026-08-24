@@ -37,6 +37,18 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "hammer": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tconstruct:hammer"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "javelin": {
       "conditions": {
         "items": [
@@ -67,18 +79,6 @@
           {
             "items": [
               "tconstruct:scythe"
-            ]
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "sledge_hammer": {
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "tconstruct:sledge_hammer"
             ]
           }
         ]
@@ -116,7 +116,7 @@
   },
   "requirements": [
     [
-      "sledge_hammer"
+      "hammer"
     ],
     [
       "vein_hammer"

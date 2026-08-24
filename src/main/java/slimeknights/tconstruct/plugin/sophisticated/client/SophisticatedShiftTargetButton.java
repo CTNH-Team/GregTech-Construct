@@ -31,7 +31,7 @@ public class SophisticatedShiftTargetButton implements BaseTabbedScreen.IStation
 
   /** Button position, directly below the crafting result slot */
   private static final int BUTTON_X = 124;
-  private static final int BUTTON_Y = 58;
+  private static final int BUTTON_Y = 53;
   private static final int BUTTON_SIZE = 18;
 
   /** Tooltips describing the shift click result target. */

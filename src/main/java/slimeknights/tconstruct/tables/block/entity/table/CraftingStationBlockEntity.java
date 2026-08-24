@@ -130,7 +130,9 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
           recipe = matches.isEmpty() ? null : matches.get(0);
         }
         CraftingRecipe selectedRecipe = recipe;
-        lastToolMatch = toolMatches.stream().filter(match -> match.recipe() == selectedRecipe).findFirst().orElse(null);
+        lastToolMatch = selectedRecipe == null ? null : toolMatches.stream()
+          .filter(match -> match.recipe().getId().equals(selectedRecipe.getId()))
+          .findFirst().orElse(null);
       }
 
       // if we have a recipe, fetch its result
@@ -148,8 +150,8 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
     }
     else if (this.lastRecipe != null) {
       ToolCraftingResolver.Match toolMatch = lastToolMatch;
-      if (toolMatch == null && !this.lastRecipe.matches(this.craftingInventory, this.level)) {
-        toolMatch = getToolMatches().stream()
+      if (toolMatch == null) {
+        toolMatch = ToolCraftingResolver.findMatches(this, this.level).stream()
           .filter(match -> match.recipe().getId().equals(this.lastRecipe.getId())).findFirst().orElse(null);
       }
       if (toolMatch == null && !this.lastRecipe.matches(this.craftingInventory, this.level)) {
@@ -178,10 +180,10 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
       ForgeHooks.setCraftingPlayer(null);
       return ItemStack.EMPTY;
     }
-    if (lastToolMatch == null && !recipe.matches(craftingInventory, level)) {
-      lastToolMatch = getToolMatches().stream()
+    if (lastToolMatch == null) {
+      lastToolMatch = ToolCraftingResolver.findMatches(this, level).stream()
         .filter(match -> match.recipe().getId().equals(recipe.getId())).findFirst().orElse(null);
-      if (lastToolMatch == null) {
+      if (lastToolMatch == null && !recipe.matches(craftingInventory, level)) {
         ForgeHooks.setCraftingPlayer(null);
         return ItemStack.EMPTY;
       }
@@ -220,9 +222,16 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
    */
   public void takeResult(Player player, ItemStack result, int amount) {
     CraftingRecipe recipe = this.lastRecipe; // local variable just to prevent race conditions if the field changes, though that is unlikely
-    ToolCraftingResolver.Match toolMatch = this.lastToolMatch;
     if (recipe == null || this.level == null) {
       return;
+    }
+    ToolCraftingResolver.Match toolMatch = this.lastToolMatch;
+    if (toolMatch == null && this.level != null) {
+      // Re-resolve here because result clicks can arrive after a client recipe sync cleared the cached match.
+      toolMatch = ToolCraftingResolver.findMatches(this, this.level).stream()
+        .filter(match -> match.recipe().getId().equals(recipe.getId()))
+        .findFirst()
+        .orElse(null);
     }
 
     // fire crafting events
@@ -270,7 +279,7 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
       }
     }
     if (toolMatch != null) {
-      ToolCraftingResolver.damageTools(this, toolMatch, player, amount);
+      ToolCraftingResolver.damageTools(this, toolMatch, player);
     }
   }
 

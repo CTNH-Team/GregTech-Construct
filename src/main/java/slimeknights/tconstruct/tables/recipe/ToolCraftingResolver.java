@@ -1,11 +1,13 @@
 package slimeknights.tconstruct.tables.recipe;
 
 import com.gregtechceu.gtceu.api.item.CustomToolIngredientHelper;
+import com.gregtechceu.gtceu.api.item.tool.GTToolType;
 import com.gregtechceu.gtceu.api.item.tool.ToolHelper;
 import com.gregtechceu.gtceu.api.recipe.ingredient.ToolIngredient;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -14,8 +16,6 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.Level;
 import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
-import slimeknights.tconstruct.library.tools.item.ModifiableItem;
-import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.mixin.gtceu.ToolIngredientAccess;
 import slimeknights.tconstruct.tables.block.entity.inventory.CraftingContainerWrapper;
 import slimeknights.tconstruct.tables.block.entity.table.CraftingStationBlockEntity;
@@ -208,25 +208,28 @@ public final class ToolCraftingResolver {
 
   /** Applies one craft's tool damage after the normal grid inputs are consumed. */
   public static void damageTools(CraftingStationBlockEntity station, Match match,
-                                 @Nullable LivingEntity user, int amount) {
+                                 @Nullable LivingEntity user) {
     List<Ingredient> ingredients = match.recipe().getIngredients();
     int toolIndex = 0;
     for (Ingredient ingredient : ingredients) {
       if (ingredient instanceof ToolIngredient toolIngredient) {
-        ItemStack stack = station.getToolStack(match.toolSlots()[toolIndex++]);
+        int slot = match.toolSlots()[toolIndex++];
+        ItemStack stack = station.getToolStack(slot);
         if (stack.isEmpty()) continue;
         var type = ((ToolIngredientAccess) toolIngredient).tconstruct$getToolType();
-        if (!CustomToolIngredientHelper.damageTool(stack, type, user, amount)) {
-          if (stack.getItem() instanceof ModifiableItem) {
-            ToolDamageUtil.damage(ToolStack.from(stack), amount, user, stack);
-          } else {
-            ToolHelper.damageItem(stack, user, amount);
-          }
-        }
-        station.setChanged();
+        damageToolStack(station, slot, stack, type, user);
       }
     }
-    station.invalidateToolMatches();
+  }
+
+  static void damageToolStack(CraftingStationBlockEntity station, int slot, ItemStack stack, GTToolType type,
+                              @Nullable LivingEntity user) {
+    ItemStack damaged = stack.copy();
+    LivingEntity damageUser = user instanceof Player player && player.isCreative() ? null : user;
+    if (!CustomToolIngredientHelper.damageTool(damaged, type, damageUser, 1)) {
+      ToolHelper.damageItemWhenCrafting(damaged, damageUser);
+    }
+    station.setItem(CraftingStationBlockEntity.TOOL_SLOT_START + slot, damaged);
   }
 
   /** Minimal mutable container used only for a candidate recipe match. */

@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
-import slimeknights.tconstruct.library.tools.helper.NoOpConsumers;
 import slimeknights.tconstruct.library.tools.item.ModifiableItem;
+import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 
 @Mixin(value = ToolHelper.class, remap = false)
 public abstract class ToolHelperMixin
@@ -27,10 +27,7 @@ public abstract class ToolHelperMixin
 	{
 		if (stack.getItem() instanceof ModifiableItem)
 		{
-			if (user != null)
-			{
-				stack.hurtAndBreak(damage, user, NoOpConsumers::LivingEntity);
-			}
+			ToolDamageUtil.damage(ToolStack.from(stack), damage, user, stack);
 
 			ci.cancel();
 		}

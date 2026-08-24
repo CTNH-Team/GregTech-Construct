@@ -84,7 +84,7 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
         String armorFolder = "tools/armor/";
         // stone
         toolBuilding(consumer, TinkerTools.pickaxe, folder);
-        toolBuilding(consumer, TinkerTools.sledgeHammer, folder);
+        toolBuilding(consumer, TinkerTools.HAMMER, folder);
         toolBuilding(consumer, TinkerTools.veinHammer, folder);
         // dirt
         toolBuilding(consumer, TinkerTools.mattock, folder);

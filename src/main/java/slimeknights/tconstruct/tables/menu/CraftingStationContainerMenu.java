@@ -68,17 +68,17 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
       // add crafting slots first, as each added slot will clear the result cache
       for (int row = 0; row < 3; row++) {
         for (int col = 0; col < 3; col++) {
-          this.addSlot(new Slot(tile, col + row * 3, 30 + col * 18, 17 + row * 18));
+          this.addSlot(new Slot(tile, col + row * 3, 30 + col * 18, 12 + row * 18));
         }
       }
       // GT crafting tools live in their own nine single-item slots. They are deliberately
       // outside the CraftingContainerWrapper used for recipe matching.
       for (int index = 0; index < CraftingStationBlockEntity.TOOL_SLOT_COUNT; index++) {
         this.addSlot(new CraftingStationToolSlot(tile, CraftingStationBlockEntity.TOOL_SLOT_START + index,
-          8 + index * 18, 0));
+          8 + index * 18, 73));
       }
       // add result slot, will fetch result cache
-      this.addSlot(resultSlot = new PlayerSensitiveLazyResultSlot(inv.player, tile.getCraftingResult(), 124, 35));
+      this.addSlot(resultSlot = new PlayerSensitiveLazyResultSlot(inv.player, tile.getCraftingResult(), 124, 30));
 
       this.addChestSideInventory();
     } else {
@@ -104,6 +104,11 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
     });
 
     this.addInventorySlots();
+  }
+
+  @Override
+  protected int getInventoryYOffset() {
+    return 102;
   }
 
   /**
@@ -133,7 +138,7 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
   @Override
   public ItemStack quickMoveStack(Player player, int index) {
     Slot slot = this.slots.get(index);
-    // fix issue on shift clicking from the result slot if the recipe result mismatches the displayed item
+    // fix issue on shift clicking the result slot if the recipe result mismatches the displayed item
     if (slot == resultSlot) {
       if (tile != null && slot.hasItem()) {
         // return the original result so shift click works
@@ -176,7 +181,35 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
         }
       }
       return ItemStack.EMPTY;
-    } else if (index >= this.playerInventoryStart) {
+    }
+
+    // Dedicated tools always leave for the player's inventory, never the side container.
+    if (slot instanceof CraftingStationToolSlot) {
+      ItemStack original = slot.getItem().copy();
+      ItemStack remainder = original.copy();
+      if (this.moveItemStackTo(remainder, this.playerInventoryStart, this.slots.size(), true)) {
+        slot.set(remainder);
+        slot.setChanged();
+        return original;
+      }
+      return ItemStack.EMPTY;
+    }
+
+    // Tools from the player inventory or the left-side container go to the dedicated tool row first.
+    boolean fromPlayerInventory = index >= this.playerInventoryStart;
+    boolean fromSideContainer = this.getSlotContainer(index) != this;
+    if ((fromPlayerInventory || fromSideContainer) && CraftingStationToolSlot.isCraftingTool(slot.getItem())) {
+      ItemStack original = slot.getItem().copy();
+      ItemStack remainder = original.copy();
+      if (this.moveItemStackTo(remainder, CraftingStationBlockEntity.TOOL_SLOT_START,
+        CraftingStationBlockEntity.TOOL_SLOT_START + CraftingStationBlockEntity.TOOL_SLOT_COUNT, false)) {
+        slot.set(remainder);
+        slot.setChanged();
+        return original;
+      }
+    }
+
+    if (fromPlayerInventory) {
       // shift clicking the player inventory moves into the adjacent side container first,
       // the crafting grid is not a storage
       ItemStack stack = slot.getItem().copy();
@@ -196,9 +229,8 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
         return stack;
       }
       return super.quickMoveStack(player, index);
-    } else {
-      return super.quickMoveStack(player, index);
     }
+    return super.quickMoveStack(player, index);
   }
 
   @Override

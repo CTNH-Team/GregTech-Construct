@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.api.data.chemical.material.properties.ToolProperty;
 import com.gregtechceu.gtceu.api.item.IGTTool;
 import com.gregtechceu.gtceu.api.item.tool.GTToolType;
 import com.gregtechceu.gtceu.api.item.tool.IGTToolDefinition;
+import com.gregtechceu.gtceu.api.item.tool.ToolHelper;
 import com.gregtechceu.gtceu.api.sound.SoundEntry;
 import com.lowdragmc.lowdraglib.gui.factory.HeldItemUIFactory;
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI;
@@ -43,7 +44,6 @@ import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.InteractionSource;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
-import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
@@ -198,14 +198,17 @@ public class ModifiableGTToolItem extends ModifiableItem implements IGTTool {
     @Override
     public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
         ItemStack stack = itemStack.copy();
-        ToolStack tool = ToolStack.from(stack);
         Player player = ForgeHooks.getCraftingPlayer();
-
-        ToolDamageUtil.damage(tool, 1, player, stack);
+        damageCraftingRemainder(stack, player);
 
         this.playCraftingSound(player, stack);
 
         return stack;
+    }
+
+    static void damageCraftingRemainder(ItemStack stack, @Nullable Player player) {
+        LivingEntity damageUser = player != null && player.isCreative() ? null : player;
+        ToolHelper.damageItemWhenCrafting(stack, damageUser);
     }
 
     @Override

@@ -993,7 +993,7 @@
   "item.tconstruct.tool.material_separator": "と",
 
   "item.tconstruct.pickaxe": "ツルハシ",
-  "item.tconstruct.sledge_hammer": "大型ハンマー",
+  "item.tconstruct.hammer": "大型ハンマー",
   "item.tconstruct.vein_hammer": "鉱脈ハンマー",
 
   "item.tconstruct.mattock": "マトック",
@@ -1099,7 +1099,7 @@
   "_conment": "Tool Descriptions",
 
   "item.tconstruct.pickaxe.description": "ツルハシは精密な採掘道具です。石や鉱石に効果的です。\nそのブロックを壊しても大丈夫？",
-  "item.tconstruct.sledge_hammer.description": "大型ハンマーは大型の採掘道具です。広範囲のブロックを壊します。\nアンデッドに対しても効果的です。",
+  "item.tconstruct.hammer.description": "大型ハンマーは大型の採掘道具です。広範囲のブロックを壊します。\nアンデッドに対しても効果的です。",
   "item.tconstruct.vein_hammer.description": "鉱脈ハンマーは大型の採掘道具です。採掘するブロックに接する同種のブロックを一度に壊します。鉱石採掘に最適です。",
 
   "item.tconstruct.mattock.description": "カッターマトックは万能な農具です。木、土、砂、砂利、植物に効果的です。\n墓穴を掘らないでください！",

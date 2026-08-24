@@ -13,7 +13,6 @@ import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -26,19 +25,11 @@ import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerModule;
 import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.common.config.ConfigurableAction;
-import slimeknights.tconstruct.library.client.data.material.GeneratorPartTextureJsonGenerator;
-import slimeknights.tconstruct.library.client.data.material.MaterialPaletteDebugGenerator;
-import slimeknights.tconstruct.library.client.data.material.MaterialPartTextureGenerator;
-import slimeknights.tconstruct.library.client.data.material.TrimMaterialPaletteGenerator;
-import slimeknights.tconstruct.library.client.data.spritetransformer.GreyToColorMapping;
-import slimeknights.tconstruct.library.client.data.spritetransformer.ISpriteTransformer;
-import slimeknights.tconstruct.library.client.data.spritetransformer.RecolorSpriteTransformer;
 import slimeknights.tconstruct.library.json.loot.AddToolDataFunction;
 import slimeknights.tconstruct.library.json.predicate.tool.*;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.materials.RandomMaterial;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
-import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
@@ -88,8 +79,6 @@ import slimeknights.tconstruct.library.utils.BlockSideHitListener;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tools.data.*;
 import slimeknights.tconstruct.tools.data.material.*;
-import slimeknights.tconstruct.tools.data.sprite.TinkerMaterialSpriteProvider;
-import slimeknights.tconstruct.tools.data.sprite.TinkerPartSpriteProvider;
 import slimeknights.tconstruct.tools.entity.CombatFishingHook;
 import slimeknights.tconstruct.tools.entity.ModifiableArrow;
 import slimeknights.tconstruct.tools.entity.ThrownShuriken;
@@ -138,7 +127,7 @@ public final class TinkerTools extends TinkerModule {
      * Items
      */
     public static final ItemObject<ModifiableItem> pickaxe = ITEMS.register("pickaxe", () -> new ModifiableItem(UNSTACKABLE_PROPS, ToolDefinitions.PICKAXE));
-    public static final ItemObject<ModifiableItem> sledgeHammer = ITEMS.register("sledge_hammer", () -> new ModifiableItem(UNSTACKABLE_PROPS, ToolDefinitions.SLEDGE_HAMMER));
+    public static final ItemObject<ModifiableItem> HAMMER = ITEMS.register("hammer", () -> new ModifiableGTToolItem(UNSTACKABLE_PROPS, ToolDefinitions.HAMMER));
     public static final ItemObject<ModifiableItem> veinHammer = ITEMS.register("vein_hammer", () -> new ModifiableItem(UNSTACKABLE_PROPS, ToolDefinitions.VEIN_HAMMER));
 
     public static final ItemObject<ModifiableItem> mattock = ITEMS.register("mattock", () -> new ModifiableItem(UNSTACKABLE_PROPS, ToolDefinitions.MATTOCK));
@@ -370,7 +359,7 @@ public final class TinkerTools extends TinkerModule {
         acceptTool(output, sword);
 
         // broad tools
-        acceptTool(output, sledgeHammer);
+        acceptTool(output, HAMMER);
         acceptTool(output, veinHammer);
         acceptTool(output, excavator);
         acceptTool(output, broadAxe);

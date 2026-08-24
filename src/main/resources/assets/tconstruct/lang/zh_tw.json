@@ -852,7 +852,7 @@
   "item.tconstruct.tool.material_separator": "-",
 
   "item.tconstruct.pickaxe": "鎬",
-  "item.tconstruct.sledge_hammer": "大錘",
+  "item.tconstruct.hammer": "大錘",
   "item.tconstruct.vein_hammer": "礦脈錘",
 
   "item.tconstruct.mattock": "鶴嘴鋤",
@@ -939,7 +939,7 @@
   "_conment": "Tool Descriptions",
 
   "item.tconstruct.pickaxe.description": "鎬是一種精準型挖掘工具，能夠高效挖掘石頭、礦石等石類方塊。\n挖方塊用的，懂？",
-  "item.tconstruct.sledge_hammer.description": "大錘是一種範圍型挖掘工具，能單次挖掘一整片區域內的方塊。\n攻擊不死生物有奇效。",
+  "item.tconstruct.hammer.description": "大錘是一種範圍型挖掘工具，能單次挖掘一整片區域內的方塊。\n攻擊不死生物有奇效。",
   "item.tconstruct.vein_hammer.description": "礦脈錘是一種範圍型採礦工具，能一次挖掘相連的同類型方塊，用以採礦收效甚佳。",
 
   "item.tconstruct.mattock.description": "鶴嘴鋤是一種多用途農耕工具，適用於挖掘木頭、泥土、沙子、礫石等方塊，亦可用以收割作物。\n請勿自掘墳墓！",

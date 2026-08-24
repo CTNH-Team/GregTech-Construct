@@ -1104,7 +1104,7 @@
   "entity.tconstruct.fishing_bobber": "Boya de pesca",
 
   "item.tconstruct.pickaxe": "Picota",
-  "item.tconstruct.sledge_hammer": "Mazo",
+  "item.tconstruct.hammer": "Mazo",
   "item.tconstruct.vein_hammer": "Mazo de Vetas",
 
   "item.tconstruct.mattock": "Azadón",
@@ -1223,7 +1223,7 @@
   "_conment": "Descripciones de herramientas",
 
   "item.tconstruct.pickaxe.description": "Las Picotas son una herramienta para la minería precisa. Es efectiva en piedra o en minerales.\nRompe bloques, Okey?",
-  "item.tconstruct.sledge_hammer.description": "El Mazo es una herramienta de minería bruta. Recoge bloques en un rango ámplio.\nTambién es efectiva contra los no-muertos.",
+  "item.tconstruct.hammer.description": "El Mazo es una herramienta de minería bruta. Recoge bloques en un rango ámplio.\nTambién es efectiva contra los no-muertos.",
   "item.tconstruct.vein_hammer.description": "El Mazo de vetas es una herramienta de minería bruta. Recoge varios bloques del mismo tipo, perfecto para minerales.",
 
   "item.tconstruct.mattock.description": "El Azadón es una herramienta de granja versátil. Es efectiva en troncos, tierra, arena, grava, y plantas.\n¡Pero asegúrate de no cavar tu propia tumba!",

@@ -815,7 +815,7 @@
   "_comment": "Tinkers Tools",
 
   "item.tconstruct.pickaxe": "Кайло",
-  "item.tconstruct.sledge_hammer": "Молот-вершляг",
+  "item.tconstruct.hammer": "Молот-вершляг",
   "item.tconstruct.vein_hammer": "Гірничий молот",
 
   "item.tconstruct.mattock": "Кайломотика",
@@ -887,7 +887,7 @@
   "_conment": "Tool Descriptions",
 
   "item.tconstruct.pickaxe.description":"Кайло є точним шахтарським знаряддям. Воно ефективне для добування блоків і руд.\nВоно ламає блоки, ясно?",
-  "item.tconstruct.sledge_hammer.description": "Молот-вершляг є широким шахтарським знаряддям. Він добуває блоки в широкому радіусі.\nТакож ефективний проти нечисти.",
+  "item.tconstruct.hammer.description": "Молот-вершляг є широким шахтарським знаряддям. Він добуває блоки в широкому радіусі.\nТакож ефективний проти нечисти.",
   "item.tconstruct.vein_hammer.description": "Гірничий молот є широким шахтарським знаряддям. Він добуває сполучені блоки одного виду, ідеально для добування руд.",
 
   "item.tconstruct.mattock.description": "Ріжуча кайломотика є універсальним знаряддям для сільського господарства. Вона ефективна для добування дерева, ґрунту, піску, гравію та рослин.\nТільки не викопай собі могилу!",

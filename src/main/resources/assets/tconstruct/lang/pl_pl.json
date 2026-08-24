@@ -710,7 +710,7 @@
     "_comment": "Tinkers Tools",
 
     "item.tconstruct.pickaxe": "Kilof",
-    "item.tconstruct.sledge_hammer": "Młot dwuręczny",
+    "item.tconstruct.hammer": "Młot dwuręczny",
     "item.tconstruct.vein_hammer": "Ciężki młot",
 
     "item.tconstruct.mattock": "Motyka",
@@ -751,7 +751,7 @@
     "_conment": "Tool Descriptions",
 
     "item.tconstruct.pickaxe.description": "Kilof jest precyzyjnym narzędziem do kopania. Działa dobrze na skały i rudy. Kilof kopie, OK?",
-    "item.tconstruct.sledge_hammer.description": "Młot dwuręczny jest dużym narzędziem do kopania. Niszczy bloki na dużą odległość. Również efektywny przeciwko nieumarłym.",
+    "item.tconstruct.hammer.description": "Młot dwuręczny jest dużym narzędziem do kopania. Niszczy bloki na dużą odległość. Również efektywny przeciwko nieumarłym.",
     "item.tconstruct.vein_hammer.description": "Cięzki młot jest dużym narzędiem do kopania. Niszczy połączone bloki tego samego typu, idealny do kopania rud.",
 
     "item.tconstruct.mattock.description": "Motyka jest wszechstronnym narzędziem rolniczym. Działa dobrze na drewno, ziemię, piasek, żwir i rośliny. Nie kop sobie grobu!",

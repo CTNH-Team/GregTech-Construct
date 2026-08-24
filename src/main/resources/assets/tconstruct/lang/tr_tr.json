@@ -852,7 +852,7 @@
   "item.tconstruct.tool.material_separator": "-",
 
   "item.tconstruct.pickaxe": "Kazma",
-  "item.tconstruct.sledge_hammer": "Balyoz",
+  "item.tconstruct.hammer": "Balyoz",
   "item.tconstruct.vein_hammer": "Damar Çekici",
 
   "item.tconstruct.mattock": "Keser Çapası",
@@ -939,7 +939,7 @@
   "_conment": "Araç Tanımlamaları",
 
   "item.tconstruct.pickaxe.description": "Kazma eksiksiz bir madencilik aracıdır. Taş ve cevherler üzerinde etkilidir.\nBlokları kırar, TAMAM mı?",
-  "item.tconstruct.sledge_hammer.description": "Balyoz koca bir madencilik aracıdır. Geniş alanda blokları kazar.\nAyrıca yaşayan ölülere karşı etkilidir.",
+  "item.tconstruct.hammer.description": "Balyoz koca bir madencilik aracıdır. Geniş alanda blokları kazar.\nAyrıca yaşayan ölülere karşı etkilidir.",
   "item.tconstruct.vein_hammer.description": "Damar Çekici koca bir madencilik aracıdır. Aynı türden birbirlerine değen blokları kırar, cevherler için kusursuzdur.",
 
   "item.tconstruct.mattock.description": "Keser Çapası çok amaçlı çiftçilik aracıdır. Toprak, kum, çakıl, kütükler ve bitkiler üzerinde etkilidir.\nYeter ki kendi mezarını kazma!",

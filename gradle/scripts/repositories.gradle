@@ -50,9 +50,6 @@ repositories {
         url = "https://maven.saps.dev/minecraft"
     }
     maven {
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
         url = "https://modmaven.dev"
     }
     maven {
@@ -97,10 +94,6 @@ repositories {
         }
     }
     maven { url = "https://maven.createmod.net" }
-    maven { // Mantle
-        name 'DVS1 Maven FS'
-        url 'https://dvs1.progwml6.com/files/maven'
-    }
     maven { // TOP
         name 'tterrag maven'
         url "https://maven.tterrag.com/"

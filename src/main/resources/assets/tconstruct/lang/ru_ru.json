@@ -807,7 +807,7 @@
   "_comment": "Tinkers Tools",
 
   "item.tconstruct.pickaxe": "Кирка",
-  "item.tconstruct.sledge_hammer": "Молот",
+  "item.tconstruct.hammer": "Молот",
   "item.tconstruct.vein_hammer": "Жильный молот",
 
   "item.tconstruct.mattock": "Киркомотыга",
@@ -880,7 +880,7 @@
   "_conment": "Tool Descriptions",
 
   "item.tconstruct.pickaxe.description":"Кирка - это точный инструмент для копания. Она эффективна для добычи камня и руд.\nОна ломает блоки, ЯСНО?",
-  "item.tconstruct.sledge_hammer.description": "Молот - это инструмент для копания. Он добывает блоки в широкой области.\nТакже эффективен против нежити.",
+  "item.tconstruct.hammer.description": "Молот - это инструмент для копания. Он добывает блоки в широкой области.\nТакже эффективен против нежити.",
   "item.tconstruct.vein_hammer.description": "Жильный молот - это широкий инструмент для добычи руд. Он выкапывает группу из соединённых блоков одного и того же типа. Идеален для руд.",
 
   "item.tconstruct.mattock.description": "Киркомотыга - это универсальный фермерский инструмент. Он эффективен при работе с деревом, землёй, гравием, песком и посевами.\nТолько не выкопайте себе могилу!",

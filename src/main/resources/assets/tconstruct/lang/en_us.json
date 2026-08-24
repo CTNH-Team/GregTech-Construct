@@ -1225,7 +1225,7 @@
   "entity.tconstruct.fishing_bobber": "Fishing Bobber",
 
   "item.tconstruct.pickaxe": "Pickaxe",
-  "item.tconstruct.sledge_hammer": "Sledge Hammer",
+  "item.tconstruct.hammer": "Sledge Hammer",
   "item.tconstruct.vein_hammer": "Vein Hammer",
 
   "item.tconstruct.mattock": "Mattock",
@@ -1397,7 +1397,7 @@
   "_conment": "Tool Descriptions",
 
   "item.tconstruct.pickaxe.description": "The Pickaxe is a precise mining tool. It is effective on stone and ores.\nIt breaks blocks, OK?",
-  "item.tconstruct.sledge_hammer.description": "The Sledge Hammer is a broad mining tool. It harvests blocks in a wide range.\nAlso effective against undead.",
+  "item.tconstruct.hammer.description": "The Sledge Hammer is a broad mining tool. It harvests blocks in a wide range.\nAlso effective against undead.",
   "item.tconstruct.vein_hammer.description": "The Vein Hammer is a broad mining tool. It harvests many connected blocks of the same type, perfect for ores.",
 
   "item.tconstruct.mattock.description": "The Cutter Mattock is a versatile farming tool. It is effective on logs, dirt, sand, gravel, and plants.\nJust don't dig your own grave!",

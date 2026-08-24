@@ -758,7 +758,7 @@
 "item.tconstruct.tool.material_separator": "-",
 
 "item.tconstruct.pickaxe": "Pico",
-"item.tconstruct.sledge_hammer": "Mazo pesado",
+"item.tconstruct.hammer": "Mazo pesado",
 "item.tconstruct.vein_hammer": "Mazo de vetas",
 
 "item.tconstruct.mattock": "Azadón",
@@ -863,7 +863,7 @@
 "_comentario": "Descripciones de herramientas",
 
 "item.tconstruct.pickaxe.description": "El Pico es una herramienta de minería precisa. Es efectiva en piedra y minerales.\nRompe bloques, ¿ok?",
-"item.tconstruct.sledge_hammer.description": "El Martillo de Maza es una herramienta de minería amplia. Extrae bloques en un área extensa.\nTambién es eficaz contra los no-muertos.",
+"item.tconstruct.hammer.description": "El Martillo de Maza es una herramienta de minería amplia. Extrae bloques en un área extensa.\nTambién es eficaz contra los no-muertos.",
 "item.tconstruct.vein_hammer.description": "El Martillo de Vetas es una herramienta de minería amplia. Extrae muchos bloques conectados del mismo tipo, perfecto para minerales.",
 
 "item.tconstruct.mattock.description": "La Azada Cortante es una herramienta de agricultura versátil. Es efectiva en troncos, tierra, arena, grava y plantas.\n¡Solo no caves tu propia tumba!",

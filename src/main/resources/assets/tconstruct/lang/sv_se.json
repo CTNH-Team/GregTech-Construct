@@ -786,7 +786,7 @@
   "_comment": "Tinkers Tools",
   
   "item.tconstruct.pickaxe": "Hacka",
-  "item.tconstruct.sledge_hammer": "Slägga",
+  "item.tconstruct.hammer": "Slägga",
   "item.tconstruct.vein_hammer": "Åderhammare",
   
   "item.tconstruct.mattock": "Jordhacka",
@@ -857,7 +857,7 @@
   "_conment": "Tool Descriptions",
   
   "item.tconstruct.pickaxe.description": "Hackan är ett ensidigt grävverktyg. Den är effektiv på sten och malm.\nDen bryter block, hajar du?",
-  "item.tconstruct.sledge_hammer.description": "Släggan är ett mångsidigt grävverktyg. Den skördar block i ett brett område.\nDen är även effektiv mot odöda.",
+  "item.tconstruct.hammer.description": "Släggan är ett mångsidigt grävverktyg. Den skördar block i ett brett område.\nDen är även effektiv mot odöda.",
   "item.tconstruct.vein_hammer.description": "Åderhammaren är ett mångsidigt grävverktyg. Den skördar många block av samma typ som ligger intill varandra, vilket gör den perfekt för malmer.",
   
   "item.tconstruct.mattock.description": "Jordhackan är ett mångsidigt jordbruksverktyg. Den är effektiv på stammar, jord och plantor.\nGräv bara inte din egen grav!",

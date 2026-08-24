@@ -1,5 +1,5 @@
 {
-  "tool": "tconstruct:sledge_hammer",
+  "tool": "tconstruct:hammer",
   "text": [
     { "text": "大锤是一种范围挖掘工具，可以挖掘3x3范围的石头。" },
     { "text": "“延展”会交替增加挖掘宽度和高度。", "paragraph": true }

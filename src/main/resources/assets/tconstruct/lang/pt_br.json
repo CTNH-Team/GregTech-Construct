@@ -1011,7 +1011,7 @@
 "item.tconstruct.tool.material_separator": "-",
 
 "item.tconstruct.pickaxe": "Picareta",
-"item.tconstruct.sledge_hammer": "Marreta",
+"item.tconstruct.hammer": "Marreta",
 "item.tconstruct.vein_hammer": "Martelo de Mineração",
 
 "item.tconstruct.mattock": "Chibanca",
@@ -1118,7 +1118,7 @@
 "_conment": "Tool Descriptions",
 
 "item.tconstruct.pickaxe.description": "A Picareta é uma ferramenta de mineração precisa. Ela é muito eficaz para minerar pedras e minérios.\nEla quebra blocos, ENTENDEU?",
-"item.tconstruct.sledge_hammer.description": "O Martelo Pesado é uma ferramenta de mineração em larga escala. Ele coleta blocos em uma grande área.\nTambém eficaz contra mortos-vivos.",
+"item.tconstruct.hammer.description": "O Martelo Pesado é uma ferramenta de mineração em larga escala. Ele coleta blocos em uma grande área.\nTambém eficaz contra mortos-vivos.",
 "item.tconstruct.vein_hammer.description": "O Martelo de Mineração é uma ferramenta de mineração em larga escala. Ele consegue coletar blocos conectados, contanto que sejam do mesmo tipo, perfeito para minérios.",
 
 "item.tconstruct.mattock.description": "A Chibanca é uma ferramenta agrícola versátil. É eficaz para coletar madeira, terra, areia, cascalho e plantas.\nSó não cave sua própria cova!",
