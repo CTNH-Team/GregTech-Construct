@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tables.recipe;
 
 import com.gregtechceu.gtceu.api.item.CustomToolIngredientHelper;
+import com.gregtechceu.gtceu.api.item.IGTTool;
 import com.gregtechceu.gtceu.api.item.tool.GTToolType;
 import com.gregtechceu.gtceu.api.item.tool.ToolHelper;
 import com.gregtechceu.gtceu.api.recipe.ingredient.ToolIngredient;
@@ -228,6 +229,9 @@ public final class ToolCraftingResolver {
     LivingEntity damageUser = user instanceof Player player && player.isCreative() ? null : user;
     if (!CustomToolIngredientHelper.damageTool(damaged, type, damageUser, 1)) {
       ToolHelper.damageItemWhenCrafting(damaged, damageUser);
+    }
+    if (damaged.getItem() instanceof IGTTool tool && user instanceof Player player) {
+      tool.playCraftingSound(player, damaged);
     }
     station.setItem(CraftingStationBlockEntity.TOOL_SLOT_START + slot, damaged);
   }

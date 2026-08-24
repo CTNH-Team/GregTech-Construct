@@ -1,8 +1,10 @@
 package slimeknights.tconstruct.tables.recipe;
 
 import com.gregtechceu.gtceu.api.item.CustomToolIngredientHelper;
+import com.gregtechceu.gtceu.api.item.IGTTool;
 import com.gregtechceu.gtceu.api.item.tool.ToolHelper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@SuppressWarnings("DataFlowIssue")
 class ToolCraftingResolverTest extends BaseMcTest {
   @Test
   void creativeCraftingStillWritesDamagedCopyBackToDedicatedSlot() {
@@ -46,6 +49,29 @@ class ToolCraftingResolverTest extends BaseMcTest {
       assertThat(damagedCaptor.getValue()).isNotSameAs(original);
       assertThat(damagedCaptor.getValue().getOrCreateTag().getBoolean("TestDamage")).isTrue();
       assertThat(original.getOrCreateTag().getBoolean("TestDamage")).isFalse();
+    }
+  }
+
+  @Test
+  void craftingWithGTToolPlaysSoundUsingStoredDamagedCopy() {
+    CraftingStationBlockEntity station = mock(CraftingStationBlockEntity.class);
+    Player player = mock(Player.class);
+    Item item = mock(Item.class, Mockito.withSettings().extraInterfaces(IGTTool.class));
+    IGTTool tool = (IGTTool) item;
+    ItemStack original = mock(ItemStack.class);
+    ItemStack damaged = mock(ItemStack.class);
+    Mockito.when(original.copy()).thenReturn(damaged);
+    Mockito.when(damaged.getItem()).thenReturn(item);
+
+    try (MockedStatic<CustomToolIngredientHelper> customTools = Mockito.mockStatic(CustomToolIngredientHelper.class);
+         MockedStatic<ToolHelper> toolHelper = Mockito.mockStatic(ToolHelper.class)) {
+      customTools.when(() -> CustomToolIngredientHelper.damageTool(damaged, null, player, 1)).thenReturn(false);
+
+      ToolCraftingResolver.damageToolStack(station, 4, original, null, player);
+
+      toolHelper.verify(() -> ToolHelper.damageItemWhenCrafting(damaged, player), times(1));
+      verify(tool).playCraftingSound(player, damaged);
+      verify(station).setItem(CraftingStationBlockEntity.TOOL_SLOT_START + 4, damaged);
     }
   }
 }
