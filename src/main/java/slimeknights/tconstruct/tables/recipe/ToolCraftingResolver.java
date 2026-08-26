@@ -227,13 +227,30 @@ public final class ToolCraftingResolver {
                               @Nullable LivingEntity user) {
     ItemStack damaged = stack.copy();
     LivingEntity damageUser = user instanceof Player player && player.isCreative() ? null : user;
-    if (!CustomToolIngredientHelper.damageTool(damaged, type, damageUser, 1)) {
+    int amount = getToolDamagePerCraft(stack, type);
+    if (!CustomToolIngredientHelper.damageTool(damaged, type, damageUser, amount)) {
       ToolHelper.damageItemWhenCrafting(damaged, damageUser);
     }
     if (damaged.getItem() instanceof IGTTool tool && user instanceof Player player) {
       tool.playCraftingSound(player, damaged);
     }
     station.setItem(CraftingStationBlockEntity.TOOL_SLOT_START + slot, damaged);
+  }
+
+  private static int getToolDamagePerCraft(ItemStack slotStack, GTToolType type) {
+    // Direct GT/Tinkers tool: use its own definition, preserves material overrides if any
+    if (slotStack.getItem() instanceof IGTTool gtTool) {
+      try {
+        return Math.max(1, gtTool.getToolStats().getToolDamagePerCraft(slotStack));
+      } catch (Exception ignored) {}
+    }
+    // Toolbox or unknown container: damage is defined by the required GTToolType
+    if (type != null && type.toolDefinition != null) {
+      try {
+        return Math.max(1, type.toolDefinition.getToolDamagePerCraft(slotStack));
+      } catch (Exception ignored) {}
+    }
+    return 1;
   }
 
   /** Minimal mutable container used only for a candidate recipe match. */

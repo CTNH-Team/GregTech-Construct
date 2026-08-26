@@ -244,8 +244,12 @@ public class CraftingStationBlockEntity extends RetexturedTableBlockEntity imple
 
     // update all slots in the inventory
     // remove remaining items
+    // Dedicated GT tools live in TOOL_SLOT_START..; the virtual wrapper holds copies that share the same
+    // CTPP SavedData record (UUID). Calling getRemainingItems on the wrapper would damage the shared
+    // record a second time (tool 2 + wrapper 1 => 3). Compute remaining from the real 3x3 only; tool
+    // durability is applied once in ToolCraftingResolver.damageTools.
     ForgeHooks.setCraftingPlayer(player);
-    NonNullList<ItemStack> remaining = recipe.getRemainingItems(toolMatch == null ? craftingInventory : toolMatch.inventory());
+    NonNullList<ItemStack> remaining = recipe.getRemainingItems(craftingInventory);
     ForgeHooks.setCraftingPlayer(null);
     for (int i = 0; i < remaining.size(); ++i) {
       ItemStack original = this.getItem(i);

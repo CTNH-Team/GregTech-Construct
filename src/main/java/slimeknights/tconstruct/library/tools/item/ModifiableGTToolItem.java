@@ -11,6 +11,8 @@ import com.lowdragmc.lowdraglib.gui.factory.HeldItemUIFactory;
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -26,10 +28,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,11 +52,16 @@ import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 
+import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class ModifiableGTToolItem extends ModifiableItem implements IGTTool {
+
+    private static final ThreadLocal<Integer> LAST_HARVEST_LEVEL = new ThreadLocal<>();
 
     private final GTToolType gtToolType;
 
@@ -68,7 +77,9 @@ public class ModifiableGTToolItem extends ModifiableItem implements IGTTool {
     }
 
     @Override
+    @Nullable
     public Material getMaterial() {
+        // Tinkers tools have multiple materials, no single GT material
         return null;
     }
 
@@ -99,7 +110,8 @@ public class ModifiableGTToolItem extends ModifiableItem implements IGTTool {
 
     @Override
     public @Nullable ToolProperty getToolProperty() {
-        return IGTTool.super.getToolProperty();
+        // Avoid NPE from IGTTool.super.getToolProperty() which dereferences getMaterial()
+        return null;
     }
 
     @Override
@@ -127,12 +139,29 @@ public class ModifiableGTToolItem extends ModifiableItem implements IGTTool {
 
     @Override
     public int getTotalEnchantability(ItemStack stack) {
-        return IGTTool.super.getTotalEnchantability(stack);
+        // GT material enchantability does not apply to Tinkers tools
+        return 0;
     }
 
     @Override
     public int getTotalHarvestLevel(ItemStack stack) {
-        return IGTTool.super.getTotalHarvestLevel(stack);
+        try {
+            Tier tier = ToolStack.from(stack).getStats().get(ToolStats.HARVEST_TIER);
+            int level = tier != null ? tier.getLevel() : 0;
+            LAST_HARVEST_LEVEL.set(level);
+            return level;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getProspectingDepth() {
+        Integer level = LAST_HARVEST_LEVEL.get();
+        if (level != null) {
+            return level * 2 + 1;
+        }
+        return 5;
     }
 
     @Override
@@ -167,7 +196,26 @@ public class ModifiableGTToolItem extends ModifiableItem implements IGTTool {
 
     @Override
     public Map<Enchantment, Integer> getDefaultEnchantments(ItemStack stack) {
-        return IGTTool.super.getDefaultEnchantments(stack);
+        // GT default implementation dereferences getMaterial() without null check, replicate without material part
+        CompoundTag toolTag = ToolHelper.getToolTag(stack);
+        if (toolTag.contains(ToolHelper.DEFAULT_ENCHANTMENTS_KEY, Tag.TAG_LIST)) {
+            ListTag defaultsTag = toolTag.getList(ToolHelper.DEFAULT_ENCHANTMENTS_KEY, Tag.TAG_COMPOUND);
+            return EnchantmentHelper.deserializeEnchantments(defaultsTag);
+        }
+        Object2IntMap<Enchantment> defaultEnchantments = new Object2IntLinkedOpenHashMap<>();
+        defaultEnchantments.putAll(getToolStats().getDefaultEnchantments(stack));
+        // Skip material enchantments: getMaterial() is null for Tinkers tools
+        ListTag enchantList = new ListTag();
+        for (var entry : defaultEnchantments.object2IntEntrySet()) {
+            Enchantment enchantment = entry.getKey();
+            if (enchantment == null || !this.definition$canApplyAtEnchantingTable(stack, enchantment)) {
+                continue;
+            }
+            int level = entry.getIntValue();
+            enchantList.add(EnchantmentHelper.storeEnchantment(EnchantmentHelper.getEnchantmentId(enchantment), level));
+        }
+        toolTag.put(ToolHelper.DEFAULT_ENCHANTMENTS_KEY, enchantList);
+        return defaultEnchantments;
     }
 
     @Override
