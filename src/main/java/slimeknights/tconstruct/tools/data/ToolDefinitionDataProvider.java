@@ -871,6 +871,20 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // display name - helmet displays a name for each material
                 .module(ArmorItem.Type.HELMET, UniqueMaterialToolName.FIRST);
 
+        // slime wings - chestplate slot item worn as a back accessory
+        define(ArmorDefinitions.SLIME_WINGS)
+                .module(MaterialStatsModule.stats().stat(SlimeStats.ID, 1).build())
+                .module(DefaultMaterialsModule.builder().material(RandomMaterial.fixed(MaterialIds.skyslime)).build())
+                .module(MaterialRepairModule.of(MaterialIds.phantom, ArmorItem.Type.CHESTPLATE, 42))
+                .module(new SetStatsModule(StatsNBT.builder()
+                        .set(ToolStats.DURABILITY, 222)
+                        .set(ToolStats.ATTACK_DAMAGE, 0.5f).build()))
+                .module(ToolSlotsModule.builder()
+                        .slots(SlotType.UPGRADE, 4)
+                        .slots(SlotType.ABILITY, 1).build())
+                .module(ToolTraitsModule.builder().trait(ModifierIds.wings).build())
+                .module(UniqueMaterialToolName.FIRST);
+
         defineArmorPartFamilies(tier1Material);
 
         // ancient
