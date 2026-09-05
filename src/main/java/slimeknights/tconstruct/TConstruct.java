@@ -301,6 +301,8 @@ public class TConstruct {
             case "round_plate_cast" -> TinkerSmeltery.adzeHeadCast.get();
             case "round_plate_sand_cast" -> TinkerSmeltery.adzeHeadCast.getSand();
             case "round_plate_red_sand_cast" -> TinkerSmeltery.adzeHeadCast.getRedSand();
+            // slime chestplate removed in favor of slime wings and other items
+            case "slime_chestplate" -> TinkerTools.slimeWings.get();
             default -> null;
         });
     }
