@@ -178,7 +178,14 @@ public class ModifierIds {
     // internal
     public static final ModifierId overslimeFriend = id("overslime_friend");
     public static final ModifierId snowBoots = id("snow_boots");
-
+    // upstream 3.12 JSON-migrated ids (fork keeps java classes; constants mirror upstream ModifierIds)
+    public static final ModifierId bucketing = id("bucketing");
+    public static final ModifierId firestarter = id("firestarter");
+    public static final ModifierId knockback = id("knockback");
+    public static final ModifierId necrotic = id("necrotic");
+    public static final ModifierId silky = id("silky");
+    public static final ModifierId soulspeed = id("soulspeed");
+    public static final ModifierId unbreakable = id("unbreakable");
     // traits - tier 1
     public static final ModifierId cultivated = id("cultivated");
     public static final ModifierId economical = id("economical");
