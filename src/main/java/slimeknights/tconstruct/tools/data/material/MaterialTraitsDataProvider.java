@@ -97,7 +97,9 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
 
         // tier 2
         addDefaultTraits(MaterialIds.iron, TinkerModifiers.magnetic);
-        addTraits(MaterialIds.iron, ARMOR, ModifierIds.projectileProtection);
+        addTraits(MaterialIds.iron, ARMOR, ModifierIds.projectileProtection, ModifierIds.ironArmor);
+        // don't count iron maille for the iron armor achievement
+        addTraits(MaterialIds.iron, ArmorPartMaterialStats.MAILLE.getId(), ModifierIds.projectileProtection);
         addDefaultTraits(MaterialIds.andesiteAlloy, TinkerModifiers.magnetic);
         addDefaultTraits(MaterialIds.wroughtIron, TinkerModifiers.magnetic);
         addTraits(MaterialIds.wroughtIron, ARMOR, ModifierIds.projectileProtection);

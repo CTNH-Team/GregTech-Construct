@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.tools.data;
 
+import slimeknights.tconstruct.common.data.advancement.AdvancementIds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.PackOutput;
 import net.minecraft.sounds.SoundEvents;
@@ -198,7 +199,10 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .addModule(StatBoostModule.add(ToolStats.MINING_SPEED).flat(2))
                 .addModule(SetStatModule.set(ToolStats.HARVEST_TIER).value(Tiers.DIAMOND))
                 // ranged
-                .addModule(StatBoostModule.add(ToolStats.PROJECTILE_DAMAGE).flat(0.5f));
+                // ranged
+                .addModule(StatBoostModule.add(ToolStats.PROJECTILE_DAMAGE).flat(0.5f))
+                // achievement
+                .addModule(new VolatileFlagModule(AdvancementIds.DIAMOND_ARMOR, ModifierCondition.ANY_CONTEXT.with(ToolContextPredicate.tag(TinkerTags.Items.WORN_ARMOR))));
         // netherite
         buildModifier(ModifierIds.netherite)
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
@@ -213,9 +217,12 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .addModule(StatBoostModule.multiplyBase(ToolStats.MINING_SPEED).flat(0.25f))
                 .addModule(SetStatModule.set(ToolStats.HARVEST_TIER).value(Tiers.NETHERITE))
                 // ranged
-                .addModule(StatBoostModule.multiplyBase(ToolStats.VELOCITY).flat(0.1f));
+                .addModule(StatBoostModule.multiplyBase(ToolStats.VELOCITY).flat(0.1f))
+                // achievement
+                .addModule(new VolatileFlagModule(AdvancementIds.NETHERITE));
 
         // general
+        buildModifier(ModifierIds.ironArmor).tooltipDisplay(TooltipDisplay.NEVER).addModule(new VolatileFlagModule(AdvancementIds.IRON_ARMOR));
         buildModifier(ModifierIds.worldbound).addModule(new VolatileFlagModule(IndestructibleItemEntity.INDESTRUCTIBLE_ENTITY)).addModule(new RarityModule(Rarity.UNCOMMON)).levelDisplay(ModifierLevelDisplay.NO_LEVELS);
         buildModifier(ModifierIds.shiny).addModule(new VolatileFlagModule(IModifiable.SHINY)).addModule(new RarityModule(Rarity.EPIC)).levelDisplay(ModifierLevelDisplay.NO_LEVELS);
         buildModifier(ModifierIds.offhanded)

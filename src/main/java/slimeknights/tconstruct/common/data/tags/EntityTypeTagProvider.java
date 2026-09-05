@@ -52,6 +52,7 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
       EntityType.ITEM, TinkerTools.indestructibleItem.get(),
       EntityType.EXPERIENCE_ORB).addTag(TinkerTags.EntityTypes.DISCARDABLE_COLLECTABLES);
     this.tag(TinkerTags.EntityTypes.DISCARDABLE_COLLECTABLES).add(EntityType.ARROW, EntityType.SPECTRAL_ARROW, TinkerTools.materialArrow.get());
+    this.tag(EntityTypeTags.ARROWS).add(TinkerTools.materialArrow.get());
     // prevent dummy from healing you with necrotic
     this.tag(TinkerTags.EntityTypes.NECROTIC_BLACKLIST).addOptional(ResourceLocation.tryBuild("dummmmmmy", "target_dummy"));
   }

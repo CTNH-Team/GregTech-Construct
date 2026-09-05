@@ -178,6 +178,7 @@ public class ModifierIds {
     // internal
     public static final ModifierId overslimeFriend = id("overslime_friend");
     public static final ModifierId snowBoots = id("snow_boots");
+    public static final ModifierId ironArmor = id("iron_armor");
     // upstream 3.12 JSON-migrated ids (fork keeps java classes; constants mirror upstream ModifierIds)
     public static final ModifierId bucketing = id("bucketing");
     public static final ModifierId firestarter = id("firestarter");

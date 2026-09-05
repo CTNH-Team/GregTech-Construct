@@ -1,5 +1,6 @@
 package slimeknights.tconstruct;
 
+import slimeknights.tconstruct.common.data.advancement.FunctionProvider;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
@@ -245,6 +246,7 @@ public class TConstruct {
         generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
         generator.addProvider(server, new LootTableInjectionProvider(packOutput));
         generator.addProvider(server, new ConfigurationDataProvider(packOutput));
+        generator.addProvider(server, new FunctionProvider(packOutput));
     }
 
     @SubscribeEvent
