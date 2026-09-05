@@ -251,6 +251,9 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
                         .addARGB(178, 0xFF545454)
                         .addARGB(216, 0xFF727272)
                         .addARGB(255, 0xFF8A8A8A).build());
+    buildMaterial(MaterialIds.redstone)
+      .arrowHead()
+      .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF2D0000).addARGB(102, 0xFF410500).addARGB(140, 0xFF720000).addARGB(178, 0xFF720000).addARGB(216, 0xFFAA0F01).addARGB(255, 0xFFFF0000).build());
         buildMaterial(MaterialIds.polyethylene)
                 .meleeHarvest().ranged().armor()
                 .fallbacks("metal")

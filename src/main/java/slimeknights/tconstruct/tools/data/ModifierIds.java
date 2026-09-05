@@ -185,6 +185,7 @@ public class ModifierIds {
     public static final ModifierId knockback = id("knockback");
     public static final ModifierId necrotic = id("necrotic");
     public static final ModifierId silky = id("silky");
+    public static final ModifierId supercharged = id("supercharged");
     public static final ModifierId soulspeed = id("soulspeed");
     public static final ModifierId unbreakable = id("unbreakable");
     // traits - tier 1
