@@ -160,6 +160,7 @@ public class MaterialDataProvider extends AbstractMaterialDataProvider {
         addMaterial(MaterialIds.clay,  1, ORDER_REPAIR, true);
         addMaterial(MaterialIds.honey, 1, ORDER_REPAIR, true);
         addMaterial(MaterialIds.horn, 1, ORDER_REPAIR, true);
+        addMaterial(MaterialIds.cheese, 2, ORDER_REPAIR, true);
         //addMaterial(MaterialIds.venom,      3, ORDER_REPAIR, true);
         // slimesuit - repair
         addMaterial(MaterialIds.phantom, 2, ORDER_REPAIR + 5, true);

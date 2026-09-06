@@ -308,6 +308,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new GripMaterialStats(-0.3f, 0.1f, 2.25f));
         // tier 2 - bowstring
         addMaterialStats(MaterialIds.skyslimeVine, StatlessMaterialStats.BOWSTRING);
+        addMaterialStats(MaterialIds.cheese, StatlessMaterialStats.BOWSTRING);
         addMaterialStats(MaterialIds.weepingVine, StatlessMaterialStats.BOWSTRING);
         addMaterialStats(MaterialIds.twistingVine, StatlessMaterialStats.BOWSTRING);
         addMaterialStats(MaterialIds.slimeskin, StatlessMaterialStats.BOWSTRING);
@@ -1102,6 +1103,17 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.kobold, RepairStats.shell(450));
         addMaterialStats(MaterialIds.magnetite, RepairStats.shell(435));
         addMaterialStats(MaterialIds.knightly, RepairStats.shell(300));
+        // slime boots (upstream 3.12 laces repair values; fork has LACES stat + laces part)
+        addMaterialStats(MaterialIds.string, RepairStats.laces(140));
+        addMaterialStats(MaterialIds.leather, RepairStats.laces(97));
+        addMaterialStats(MaterialIds.vine, RepairStats.laces(75));
+        addMaterialStats(MaterialIds.skyslimeVine, RepairStats.laces(150));
+        addMaterialStats(MaterialIds.cheese, RepairStats.laces(111));
+        addMaterialStats(MaterialIds.darkthread, RepairStats.laces(200));
+        addMaterialStats(MaterialIds.twistingVine, RepairStats.laces(87));
+        addMaterialStats(MaterialIds.weepingVine, RepairStats.laces(90));
+        addMaterialStats(MaterialIds.jeweledHide, RepairStats.laces(250));
+        addMaterialStats(MaterialIds.enderslimeVine, RepairStats.laces(180));
         addMaterialStats(MaterialIds.enderslime, StatlessMaterialStats.REPAIR_KIT);
         addMaterialStats(MaterialIds.phantom, StatlessMaterialStats.REPAIR_KIT);
         // slimesuit embellishments

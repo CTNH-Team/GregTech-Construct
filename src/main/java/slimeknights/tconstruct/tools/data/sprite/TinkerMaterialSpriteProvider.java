@@ -632,6 +632,8 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
                 .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF6F516C).addARGB(102, 0xFF7E627B).addARGB(140, 0xFF958C79).addARGB(178, 0xFFA99B87).addARGB(216, 0xFFC3B9A1).addARGB(255, 0xFFDCD9C0).build());
         buildMaterial(MaterialIds.horn).ribcage()
                 .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF433E3D).addARGB(102, 0xFF494845).addARGB(140, 0xFF595959).addARGB(178, 0xFF666460).addARGB(216, 0xFF817E76).addARGB(255, 0xFFA3A393).build());
+        buildMaterial(MaterialIds.cheese).laces().statType(StatlessMaterialStats.BOWSTRING)
+                .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF8E6100).addARGB(102, 0xFFAF7F05).addARGB(140, 0xFFCC990E).addARGB(178, 0xFFE2B221).addARGB(216, 0xFFFFDD59).addARGB(255, 0xFFFFEC89).build());
         // slimesuit embellishments
         buildMaterial(MaterialIds.earthslime)
                 .statType(SLIMESUIT).arrowHead().fletching()

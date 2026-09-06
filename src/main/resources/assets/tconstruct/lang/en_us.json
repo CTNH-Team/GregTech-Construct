@@ -198,6 +198,11 @@
   "block.tconstruct.cheese_block": "Cheese Block",
   "item.tconstruct.cheese.tooltip": "Removes a random effect when eaten",
 
+  "material.tconstruct.cheese": "Cheese",
+  "material.tconstruct.cheese.flavor": "Well Aged!",
+  "material.tconstruct.cheese.encyclopedia.ranged": "Can be eaten (consuming some durability) to restore 1 hunger at 0.4 saturation and to remove a random effect.",
+  "material.tconstruct.cheese.encyclopedia.laces": "Grants a 15% chance per level of eating the armor (consuming some durability) for 1 hunger per level at 0.4 saturation and to removes a random effect.",
+
   "item.tconstruct.earth_slime_crystal": "Earthslime Crystal",
   "block.tconstruct.earth_slime_crystal_block": "Earthslime Crystal Block",
   "block.tconstruct.small_earth_slime_crystal_bud": "Small Earthslime Crystal Bud",

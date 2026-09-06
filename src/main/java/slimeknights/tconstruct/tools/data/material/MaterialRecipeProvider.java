@@ -240,6 +240,8 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         // slimesuit
         materialRecipe(consumer, MaterialIds.enderslime, Ingredient.of(TinkerWorld.enderGeode), 1, 1, folder + "enderslime");
         materialRecipe(consumer, MaterialIds.phantom,    Ingredient.of(Items.PHANTOM_MEMBRANE), 1, 1, folder + "phantom_membrane");
+        materialRecipe(consumer, MaterialIds.cheese,     Ingredient.of(TinkerCommons.cheeseIngot), 1, 1, folder + "cheese_ingot");
+        materialRecipe(consumer, MaterialIds.cheese,     Ingredient.of(TinkerCommons.cheeseBlock), 4, 1, folder + "cheese_block");
         // TODO upstream parity: 8 variant goat-horn recipes via InstrumentIngredient; single default keeps horn obtainable
         materialRecipe(consumer, MaterialIds.horn, Ingredient.of(Items.GOAT_HORN), 1, 1, folder + "horn");
     }
