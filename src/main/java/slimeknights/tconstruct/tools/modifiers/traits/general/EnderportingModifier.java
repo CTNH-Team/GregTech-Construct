@@ -20,6 +20,7 @@ import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.events.teleport.EnderportingTeleportEvent;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.entity.ReusableProjectile;
 import slimeknights.tconstruct.library.modifiers.hook.combat.MeleeHitModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.combat.MonsterMeleeHitModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.mining.BlockHarvestModifierHook;
@@ -35,6 +36,7 @@ import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
 import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
+import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
 import slimeknights.tconstruct.library.utils.TeleportHelper;
 
 import javax.annotation.Nullable;
@@ -142,8 +144,9 @@ public class EnderportingModifier extends NoLevelsModifier implements PlantHarve
     if (attacker != null && canTeleport(persistentData)) {
       BlockPos target = hit.getBlockPos().relative(hit.getDirection());
       // attempt the teleport, if successful and the projectile is not reusable then discard it
-      if (attacker.level() == projectile.level() && tryTeleport(modifier, attacker, target.getX() + 0.5f, target.getY(), target.getZ() + 0.5f) && !projectile.getType().is(TinkerTags.EntityTypes.REUSABLE_AMMO)) {
-        projectile.discard();
+      if (attacker.level() == projectile.level() && tryTeleport(modifier, attacker, target.getX() + 0.5f, target.getY(), target.getZ() + 0.5f)) {
+        ModifierUtil.updateFishingRod(projectile, 10, true);
+        ReusableProjectile.discard(projectile);
       }
     }
   }
