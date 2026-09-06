@@ -121,12 +121,18 @@ public class ModifierIds {
     public static final ModifierId malleability = id("malleability");
     public static final ModifierId insulation = id("insulation");
     public static final ModifierId turtleShell = id("turtle_shell");
+    public static final ModifierId turtlesGrace = id("turtles_grace");
     public static final ModifierId shulking = id("shulking");
     public static final ModifierId dragonborn = id("dragonborn");
+    public static final ModifierId dragonfall = id("dragonfall");
     public static final ModifierId wings = id("wings");
     public static final ModifierId knockbackResistance = id("knockback_resistance");
+    public static final ModifierId cobalamin = id("cobalamin");
+    public static final ModifierId shellGut = id("shell_gut");
+    public static final ModifierId ramAttack = id("ram_attack");
     // counter
     public static final ModifierId thorns = id("thorns");
+    public static final ModifierId thornsShell = id("thorns_shell");
     public static final ModifierId ricochet = id("ricochet");
     // defense
     public static final ModifierId revitalizing = id("revitalizing");
@@ -137,7 +143,11 @@ public class ModifierIds {
     // chestplate
     public static final ModifierId strength = id("strength");
     // leggings
+    public static final ModifierId pocket = id("pocket");
     public static final ModifierId pockets = id("pockets");
+    public static final ModifierId shellStorage = id("shell_storage");
+    public static final ModifierId shulkerBox = id("shulker_box");
+    public static final ModifierId reverted = id("reverted");
     public static final ModifierId stepUp = id("step_up");
     public static final ModifierId speedy = id("speedy");
     public static final ModifierId swiftSneak = id("swift_sneak");
@@ -211,6 +221,7 @@ public class ModifierIds {
     public static final ModifierId antitoxin = id("antitoxin");
     public static final ModifierId airborne = id("airborne");
     public static final ModifierId skyfall = id("skyfall");
+    public static final ModifierId floaty = id("floaty");
     public static final ModifierId flamestance = id("flamestance");
     public static final ModifierId entangled = id("entangled");
     public static final ModifierId stoneshield = id("stoneshield");
@@ -270,6 +281,7 @@ public class ModifierIds {
     public static final ModifierId vintage = id("vintage");
     public static final ModifierId valiant = id("valiant");
     public static final ModifierId stalwart = id("stalwart");
+    public static final ModifierId loyal = id("loyal");
     public static final ModifierId dragonshot = id("dragonshot");
     public static final ModifierId reclaim = id("reclaim");
     public static final ModifierId hover = id("hover");

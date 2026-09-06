@@ -152,9 +152,13 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
         buildRenderInfo(MaterialIds.glowstone).luminosity(15);
         buildRenderInfo(MaterialIds.gunpowder);
     buildRenderInfo(MaterialIds.redstone);
+        buildRenderInfo(MaterialIds.turtle);
+        buildRenderInfo(MaterialIds.nautilus).color(0xFFD4CCC3);
+        buildRenderInfo(MaterialIds.horn);
         buildRenderInfo(MaterialIds.dragonScale);
         buildRenderInfo(MaterialIds.endRod);
         redirect(MaterialIds.magnetite, MaterialIds.steel);
+        redirect(MaterialIds.kobold, MaterialIds.cobalt);
         redirect(MaterialIds.shulker, MaterialIds.chorus);
         redirect(MaterialIds.knightly, MaterialIds.knightmetal);
 

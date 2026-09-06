@@ -988,6 +988,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .smallReductionFactor(0.375f)
                         .smallProtectionFactor(0.375f)
                         .build());
+        addMaterialStats(MaterialIds.turtle, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.enderslimeVine, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f), StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
         addMaterialStats(MaterialIds.dragonScale, ArmorPartMaterialStats.maille(-0.1f, 0.05f, 0.1f, 0.0f));
         addMaterialStats(MaterialIds.shulker, ArmorPartMaterialStats.maille(0.0f, 0.0f, 0.1f, 0.0f));
@@ -1040,7 +1041,25 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.pigIron,      new SkullStats(150, 2));
         // slimesuit
         // slimesuit parts (upstream 3.12 ribcage/shell/laces materials)
+        addMaterialStats(MaterialIds.bone,         RepairStats.ribcage(100));
+        addMaterialStats(MaterialIds.venombone,    RepairStats.ribcage(175));
+        addMaterialStats(MaterialIds.necroticBone, RepairStats.ribcage(125));
+        addMaterialStats(MaterialIds.blazingBone,  RepairStats.ribcage(205));
+        addMaterialStats(MaterialIds.necronium,    RepairStats.ribcage(357));
+        addMaterialStats(MaterialIds.blaze,        RepairStats.ribcage(150));
+        addMaterialStats(MaterialIds.endRod,       RepairStats.ribcage(250));
         addMaterialStats(MaterialIds.jadeite, RepairStats.ribcage(616));
+        addMaterialStats(MaterialIds.horn, RepairStats.ribcage(275));
+        // slimeshell (upstream 3.12)
+        addMaterialStats(MaterialIds.turtle, RepairStats.shell(275));
+        addMaterialStats(MaterialIds.nautilus, RepairStats.shell(350));
+        addMaterialStats(MaterialIds.phantom, RepairStats.shell(432));
+        addMaterialStats(MaterialIds.prismarine, RepairStats.shell(175));
+        addMaterialStats(MaterialIds.shulker, RepairStats.shell(250));
+        addMaterialStats(MaterialIds.dragonScale, RepairStats.shell(100));
+        addMaterialStats(MaterialIds.kobold, RepairStats.shell(450));
+        addMaterialStats(MaterialIds.magnetite, RepairStats.shell(435));
+        addMaterialStats(MaterialIds.knightly, RepairStats.shell(300));
         addMaterialStats(MaterialIds.enderslime, StatlessMaterialStats.REPAIR_KIT);
         addMaterialStats(MaterialIds.phantom, StatlessMaterialStats.REPAIR_KIT);
         // slimesuit embellishments

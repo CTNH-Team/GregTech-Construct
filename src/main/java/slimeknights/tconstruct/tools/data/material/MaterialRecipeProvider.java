@@ -134,6 +134,8 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         materialRecipe(consumer, MaterialIds.necroticBone, Ingredient.of(TinkerTags.Items.WITHER_BONES), 1, 1, folder + "necrotic_bone");
         materialRecipe(consumer, MaterialIds.endstone, Ingredient.of(Tags.Items.END_STONES), 1, 1, folder + "endstone");
         // ammo
+        materialRecipe(consumer, MaterialIds.turtle,   Ingredient.of(Items.SCUTE),          1, 1, folder + "turtle_scute");
+        materialRecipe(consumer, MaterialIds.nautilus, Ingredient.of(Items.NAUTILUS_SHELL), 4, 1, folder + "nautilus_shell");
         materialRecipe(consumer, MaterialIds.earthslime, Ingredient.of(TinkerWorld.earthGeode),      1, 1, folder + "earthslime");
         materialRecipe(consumer, MaterialIds.skyslime,   Ingredient.of(TinkerWorld.skyGeode),        1, 1, folder + "skyslime");
         materialRecipe(consumer, MaterialIds.blaze,      Ingredient.of(Tags.Items.RODS_BLAZE),       1, 1, folder + "blaze");
@@ -179,6 +181,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         materialRecipe(consumer, MaterialIds.glowstone, Ingredient.of(Tags.Items.DUSTS_GLOWSTONE), 1, 4, folder + "glowstone/dust");
         materialRecipe(consumer, MaterialIds.glowstone, Ingredient.of(Blocks.GLOWSTONE), 1, 1, ItemOutput.fromItem(Items.GLOWSTONE_DUST),folder + "glowstone/block");
         materialRecipe(consumer, MaterialIds.magnetite, Ingredient.of(TinkerTags.Items.STEEL_SHARD), 1, 1, folder + "magnetite");
+        materialRecipe(consumer, MaterialIds.kobold, Ingredient.of(TinkerTags.Items.COBALT_SHARD), 1, 1, folder + "kobold");
         materialRecipe(consumer, MaterialIds.gunpowder, Ingredient.of(Tags.Items.GUNPOWDER), 1, 4, folder + "gunpowder");
         materialRecipe(consumer, MaterialIds.redstone, Ingredient.of(Tags.Items.DUSTS_REDSTONE), 1, 4, folder + "redstone/dust");
         materialRecipe(consumer, MaterialIds.redstone, Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE), 9, 4, ItemOutput.fromItem(Items.REDSTONE, 4), folder + "redstone/block");
@@ -235,6 +238,8 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         // slimesuit
         materialRecipe(consumer, MaterialIds.enderslime, Ingredient.of(TinkerWorld.enderGeode), 1, 1, folder + "enderslime");
         materialRecipe(consumer, MaterialIds.phantom,    Ingredient.of(Items.PHANTOM_MEMBRANE), 1, 1, folder + "phantom_membrane");
+        // TODO upstream parity: 8 variant goat-horn recipes via InstrumentIngredient; single default keeps horn obtainable
+        materialRecipe(consumer, MaterialIds.horn, Ingredient.of(Items.GOAT_HORN), 1, 1, folder + "horn");
     }
 
     private void addMaterialSmeltery(Consumer<FinishedRecipe> consumer) {

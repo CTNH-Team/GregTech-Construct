@@ -861,7 +861,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // traits
                 .module(ArmorItem.Type.CHESTPLATE, slimeTraits.copy().trait(ModifierIds.wings).build())
                 .module(ArmorItem.Type.LEGGINGS, slimeTraits.copy()
-                        .trait(ModifierIds.pockets, 1)
+                        .trait(ModifierIds.shellStorage, 1)
                         .trait(ModifierIds.shulking, 1).build())
                 .module(ArmorItem.Type.LEGGINGS, ToolTraitsModule.builder().trait(ModifierIds.shulking, 1).build(), ToolHooks.REBALANCED_TRAIT)
                 .module(ArmorItem.Type.BOOTS, slimeTraits.copy()

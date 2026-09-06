@@ -11,6 +11,7 @@ import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
 import slimeknights.tconstruct.tools.stats.SkullStats;
+import slimeknights.tconstruct.tools.stats.RepairStats;
 
 import static slimeknights.tconstruct.library.materials.MaterialRegistry.*;
 
@@ -126,6 +127,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addTraits(MaterialIds.skyslimeVine, ARMOR, ModifierIds.skyfall);
         addDefaultTraits(MaterialIds.weepingVine, ModifierIds.flamestance);
         addDefaultTraits(MaterialIds.twistingVine, ModifierIds.entangled);
+        addDefaultTraits(MaterialIds.turtle, ModifierIds.turtleShell);
         // tier 2 - ammo
         addTraits(MaterialIds.amethyst, AMMO, ModifierIds.crystalbound);
         addTraits(MaterialIds.prismarine, AMMO, ModifierIds.finsAmmo, ModifierIds.lureRod);
@@ -137,6 +139,8 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addTraits(MaterialIds.slimeball, AMMO, ModifierIds.erratic);
         addTraits(MaterialIds.gunpowder, AMMO, ModifierIds.explosive);
         addTraits(MaterialIds.redstone, AMMO, ModifierIds.supercharged);
+        addTraits(MaterialIds.magnetite, AMMO, ModifierIds.attractive);
+        addTraits(MaterialIds.knightly, AMMO, ModifierIds.valiant);
 
         // tier 3
         addDefaultTraits(MaterialIds.slimesteel, ModifierIds.overcast, TinkerModifiers.overslime.getId());
@@ -160,7 +164,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addTraits(MaterialIds.quartz, AMMO, ModifierIds.keen);
         addTraits(MaterialIds.ichor, AMMO, ModifierIds.rebound, ModifierIds.bounce);
         addTraits(MaterialIds.glowstone, AMMO, ModifierIds.spectral);
-        addDefaultTraits(MaterialIds.magnetite, ModifierIds.attractive);
+        addTraits(MaterialIds.magnetite, AMMO, ModifierIds.attractive);
         addTraits(MaterialIds.magma, AMMO, ModifierIds.fuse);
 
         // tier 4
@@ -189,7 +193,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         // tier 4 (end)
         addDefaultTraits(MaterialIds.knightmetal, ModifierIds.valiant);
         addTraits(MaterialIds.knightmetal, ARMOR, ModifierIds.stalwart, ModifierIds.guarding, ModifierIds.plating, ModifierIds.hardening);
-        addDefaultTraits(MaterialIds.knightly, ModifierIds.valiant);
+        addTraits(MaterialIds.knightly, AMMO, ModifierIds.valiant);
         addDefaultTraits(MaterialIds.enderslimeVine, TinkerModifiers.enderporting);
         addTraits(MaterialIds.enderslimeVine, ARMOR, ModifierIds.enderclearance);
         addDefaultTraits(MaterialIds.endRod, ModifierIds.hover);
@@ -245,6 +249,23 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         noTraits(MaterialIds.clay);
         noTraits(MaterialIds.honey);
         noTraits(MaterialIds.phantom);
+        // slimecage (upstream 3.12)
+        MaterialStatsId cage = RepairStats.RIBCAGE.getId();
+        addTraits(MaterialIds.blaze, cage, ModifierIds.scorching);
+        addTraits(MaterialIds.blazingBone, cage, ModifierIds.conductive);
+        addTraits(MaterialIds.horn, cage, ModifierIds.ramAttack);
+        addTraits(MaterialIds.endRod, cage, ModifierIds.floaty);
+        // slimeshell (upstream 3.12)
+        MaterialStatsId shell = RepairStats.SHELL.getId();
+        addTraits(MaterialIds.turtle, shell, ModifierIds.turtlesGrace);
+        addTraits(MaterialIds.nautilus, shell, ModifierIds.shellGut);
+        addTraits(MaterialIds.phantom, shell, ModifierIds.skyfall);
+        addTraits(MaterialIds.prismarine, shell, ModifierIds.thornsShell);
+        addTraits(MaterialIds.shulker, shell, ModifierIds.shulkerBox);
+        addTraits(MaterialIds.dragonScale, shell, ModifierIds.dragonfall);
+        addTraits(MaterialIds.magnetite, shell, ModifierIds.magnetic);
+        addTraits(MaterialIds.kobold, shell, ModifierIds.cobalamin);
+        addTraits(MaterialIds.knightly, shell, ModifierIds.loyal);
 
         overrideTraits(MaterialIds.wool, ARMOR, ModifierIds.cushion);
         overrideTraits(MaterialIds.leather, ARMOR, TinkerModifiers.tanned.getId());

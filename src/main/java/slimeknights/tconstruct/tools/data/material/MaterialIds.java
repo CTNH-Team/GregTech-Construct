@@ -54,8 +54,10 @@ public final class MaterialIds {
     public static final MaterialId enderPearl = id("ender_pearl");
     public static final MaterialId glass = id("glass");
     public static final MaterialId gunpowder = id("gunpowder");
-  public static final MaterialId redstone = id("redstone");
+    public static final MaterialId redstone = id("redstone");
     // tier 2 - ammo slimeballs
+    public static final MaterialId turtle = id("turtle");
+    public static final MaterialId nautilus = id("nautilus");
     public static final MaterialId slimeball = id("slimeball");
     // tier 3
     public static final MaterialId slimesteel = id("slimesteel");
@@ -67,6 +69,7 @@ public final class MaterialIds {
     // tier 3 (nether)
     public static final MaterialId cobalt = id("cobalt");
     public static final MaterialId steel = id("steel");
+    public static final MaterialId kobold = id("kobold");
     // tier 3 - bindings
     public static final MaterialId darkthread = id("darkthread");
     public static final MaterialId ichorskin = id("ichorskin");
@@ -140,6 +143,7 @@ public final class MaterialIds {
     public static final MaterialId blood = id("blood");
     public static final MaterialId clay = id("clay");
     public static final MaterialId honey = id("honey");
+    public static final MaterialId horn = id("horn");
 
     /** List of custom trim materials we support */
     public static final MaterialId[] TRIM_MATERIALS = {
