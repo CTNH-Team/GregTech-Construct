@@ -100,7 +100,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
         ).addTag(TinkerTags.Materials.COMPATABILITY_BLOCKS);
         tag(TinkerTags.Materials.COMPATABILITY_BLOCKS).addTag(TinkerTags.Materials.COMPATABILITY_ALLOYS);
         tag(TinkerTags.Materials.COMPATABILITY_ALLOYS).addOptional(
-                MaterialIds.andesiteAlloy, MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter);
+                MaterialIds.andesiteAlloy, MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter, MaterialIds.nicrosil);
 
         tag(TinkerTags.Materials.METALS).addTag(TinkerTags.Materials.HARD_METALS).addOptional(
                 MaterialIds.gold, MaterialIds.roseGold
@@ -122,7 +122,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 4
                 MaterialIds.manyullyn, MaterialIds.hepatizon,
                 MaterialIds.cinderslime, MaterialIds.queensSlime,
-                MaterialIds.knightmetal, MaterialIds.knightly,
+                MaterialIds.knightmetal, MaterialIds.knightly, MaterialIds.knightslime,
                 MaterialIds.fiery,
                 MaterialIds.ironwood, MaterialIds.steeleaf
         );

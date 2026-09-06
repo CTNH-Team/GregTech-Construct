@@ -235,6 +235,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         // no plated slimewood, use repair kits
         // tier 4 (mod integration)
         metalMaterialRecipe(consumer, MaterialIds.fiery, folder, "fiery", true);
+        metalMaterialRecipe(consumer, MaterialIds.nicrosil, folder, "nicrosil", true);
 
         // slimesuit
         materialRecipe(consumer, MaterialIds.enderslime, Ingredient.of(TinkerWorld.enderGeode), 1, 1, folder + "enderslime");
@@ -356,6 +357,10 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         MaterialMeltingRecipeBuilder.material(MaterialIds.fiery, TinkerFluids.fieryLiquid, FluidValues.BOTTLE)
                 .addByproduct(TinkerFluids.moltenIron.result(FluidValues.INGOT))
                 .save(fieryConsumer, location(folder + "melting/fiery"));
+        // nicrosil has three different ores that let it appear, tin, nickel, and chromium (fork: GT ingots gated by compat alloy conditions)
+        materialMeltingCasting(
+                withCondition(consumer, new OrCondition(tagCondition("ingots/nicrosil"), tagCondition("ingots/tin"), tagCondition("ingots/nickel"), tagCondition("ingots/chromium"))),
+                MaterialIds.nicrosil, TinkerFluids.moltenNicrosil, folder);
 
         // slimesuit
         materialMeltingCasting(consumer, MaterialIds.gold, TinkerFluids.moltenGold, folder);
