@@ -437,8 +437,10 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
                 .save(consumer, location(folder + "heater"));
         // fluid cannon
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.searedFluidCannon)
+                .define('R', Tags.Items.DUSTS_REDSTONE)
                 .define('T', similarTanks)
                 .define('C', Tags.Items.INGOTS_COPPER)
+                .pattern(" R ")
                 .pattern("CTC")
                 .pattern("CCC")
                 .unlockedBy("has_item", has(Tags.Items.INGOTS_COPPER))
@@ -884,8 +886,10 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
         //        .save(consumer, location(folder + "alloyer"));
         // fluid cannon
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, TinkerSmeltery.scorchedFluidCannon)
+                .define('R', Tags.Items.DUSTS_REDSTONE)
                 .define('T', similarTanks)
                 .define('C', TinkerTags.Items.INGOTS_COBALT)
+                .pattern(" R ")
                 .pattern("CTC")
                 .pattern("CCC")
                 .unlockedBy("has_item", has(TinkerTags.Items.INGOTS_COBALT))

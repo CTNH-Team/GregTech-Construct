@@ -653,7 +653,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .levelDisplay(ModifierLevelDisplay.NO_LEVELS)
                 .addModule(ArmorPieceDamageReductionModule.perPiece(DamageSourcePredicate.tag(TinkerTags.DamageTypes.INSULATION), 0.25f));
         buildModifier(ModifierIds.turtleShell)
-                .addModule(AttributeModule.builder(ForgeMod.SWIM_SPEED.get(), Operation.MULTIPLY_TOTAL).slots(armorSlots).eachLevel(0.05f))
+                .addModule(MaxArmorAttributeModule.builder(ForgeMod.SWIM_SPEED.get(), Operation.MULTIPLY_TOTAL).heldTag(TinkerTags.Items.HELD).eachLevel(0.1f))
                 .addModule(ProtectionModule.builder()
                         .toolItem(ItemPredicate.or(ItemPredicate.tag(TinkerTags.Items.HELMETS), ItemPredicate.tag(TinkerTags.Items.CHESTPLATES)))
                         .entity(LivingEntityPredicate.EYES_IN_WATER).eachLevel(2.5f))
