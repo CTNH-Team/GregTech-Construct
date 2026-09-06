@@ -438,7 +438,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.steeleaf, StatlessMaterialStats.ARROW_HEAD);
         addMaterialStats(MaterialIds.slimeball, StatlessMaterialStats.FLETCHING);
         addMaterialStats(MaterialIds.gunpowder, StatlessMaterialStats.ARROW_HEAD);
-    addMaterialStats(MaterialIds.redstone, StatlessMaterialStats.ARROW_HEAD);
+        addMaterialStats(MaterialIds.redstone, StatlessMaterialStats.ARROW_HEAD);
         // tier 3
         addMaterialStats(MaterialIds.ice, StatlessMaterialStats.ARROW_HEAD);
         addMaterialStats(MaterialIds.quartz, StatlessMaterialStats.ARROW_HEAD);
@@ -1039,6 +1039,8 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.roseGold,     new SkullStats(175, 1));
         addMaterialStats(MaterialIds.pigIron,      new SkullStats(150, 2));
         // slimesuit
+        // slimesuit parts (upstream 3.12 ribcage/shell/laces materials)
+        addMaterialStats(MaterialIds.jadeite, RepairStats.ribcage(616));
         addMaterialStats(MaterialIds.enderslime, StatlessMaterialStats.REPAIR_KIT);
         addMaterialStats(MaterialIds.phantom, StatlessMaterialStats.REPAIR_KIT);
         // slimesuit embellishments

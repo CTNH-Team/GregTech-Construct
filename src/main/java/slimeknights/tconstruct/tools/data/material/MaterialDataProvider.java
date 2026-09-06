@@ -69,7 +69,7 @@ public class MaterialDataProvider extends AbstractMaterialDataProvider {
         addMaterial(MaterialIds.enderPearl, 2, ORDER_REPAIR, false);
         addMaterial(MaterialIds.glass,      2, ORDER_REPAIR, false);
         addMaterial(MaterialIds.slimeball,  2, ORDER_REPAIR, true);
-    addMaterial(MaterialIds.redstone,  2, ORDER_REPAIR, true);
+        addMaterial(MaterialIds.redstone,  2, ORDER_REPAIR, true);
         addMaterial(MaterialIds.gunpowder,  2, ORDER_REPAIR, true);
         // bloodbone reworked into venombone
         addRedirect(new MaterialId(TConstruct.MOD_ID, "bloodbone"), redirect(MaterialIds.venombone));
@@ -88,13 +88,17 @@ public class MaterialDataProvider extends AbstractMaterialDataProvider {
         addMaterial(MaterialIds.darkthread, 3, ORDER_BINDING, false);
         addMaterial(MaterialIds.ichorskin,  3, ORDER_BINDING, false);
         // tier 3 - shield cores
-        addMaterial(MaterialIds.ice, 3, ORDER_BINDING, true);
+        // tier 3 - misc
+        addMaterial(MaterialIds.ice,     3, ORDER_BINDING, true);
+        addMaterial(MaterialIds.jadeite, 3, ORDER_BINDING, true);
         // tier 3 - ammo
         addMaterial(MaterialIds.quartz,    3, ORDER_REPAIR, false);
         addMaterial(MaterialIds.ichor,     3, ORDER_REPAIR, true);
         addMaterial(MaterialIds.glowstone, 3, ORDER_REPAIR, true);
         addMaterial(MaterialIds.magnetite, 3, ORDER_REPAIR, true);
         addMaterial(MaterialIds.magma,     3, ORDER_REPAIR, true);
+        // tier 3 - misc
+        addMaterial(MaterialIds.jadeite, 3, ORDER_BINDING, true);
 
         // tier 4
         addMaterial(MaterialIds.queensSlime, 4, ORDER_GENERAL, false);

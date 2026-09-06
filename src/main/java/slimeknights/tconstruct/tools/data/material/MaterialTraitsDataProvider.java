@@ -136,7 +136,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addTraits(MaterialIds.glass, AMMO, ModifierIds.amorphous, ModifierIds.smashingAmmo, ModifierIds.spillingRod);
         addTraits(MaterialIds.slimeball, AMMO, ModifierIds.erratic);
         addTraits(MaterialIds.gunpowder, AMMO, ModifierIds.explosive);
-    addTraits(MaterialIds.redstone, AMMO, ModifierIds.supercharged);
+        addTraits(MaterialIds.redstone, AMMO, ModifierIds.supercharged);
 
         // tier 3
         addDefaultTraits(MaterialIds.slimesteel, ModifierIds.overcast, TinkerModifiers.overslime.getId());
@@ -240,6 +240,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addTraits(MaterialIds.roseGold,     SkullStats.ID, TinkerModifiers.goldGuard.getId(), ModifierIds.piglinBruteDisguise, TinkerModifiers.golden.getId());
         addTraits(MaterialIds.pigIron,      SkullStats.ID, TinkerModifiers.revenge.getId(), ModifierIds.zombifiedPiglinDisguise);
         // slimesuit
+        addDefaultTraits(MaterialIds.jadeite, TinkerModifiers.insatiable);
         noTraits(MaterialIds.blood);
         noTraits(MaterialIds.clay);
         noTraits(MaterialIds.honey);
