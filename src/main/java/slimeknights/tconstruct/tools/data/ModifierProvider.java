@@ -457,7 +457,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .variable(MULTIPLIER).multiply()
                 .variable(VALUE).add().build());
         buildModifier(ModifierIds.reclaim).levelDisplay(ModifierLevelDisplay.NO_LEVELS).addModule(new VolatileFlagModule(IndestructibleItemEntity.INDESTRUCTIBLE_ENTITY));
-        buildModifier(ModifierIds.attractive).addModule(new ProjectileAttractMobsModule(LevelingValue.eachLevel(3), LevelingValue.flat(0.5f)));
+        buildModifier(ModifierIds.attractive).priority(125).addModule(new ProjectileAttractMobsModule(LevelingValue.eachLevel(3), LevelingValue.flat(0.5f)));
         buildModifier(ModifierIds.hover).levelDisplay(ModifierLevelDisplay.NO_LEVELS).addModule(new ProjectileGravityModule(LevelingInt.flat(20)));
         buildModifier(ModifierIds.fuse).levelDisplay(ModifierLevelDisplay.NO_LEVELS).addModule(new ProjectileFuseModule(ParticleTypes.FLAME, LevelingInt.flat(10)));
 
@@ -1095,12 +1095,11 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
         buildModifier(ModifierIds.crystalstrike)
                 .addModule(AttributeModule.builder(Attributes.ATTACK_SPEED, Operation.MULTIPLY_TOTAL).eachLevel(0.025f))
                 .addModule(new ArmorLevelModule(TinkerDataKeys.CRYSTALSTRIKE, false, TinkerTags.Items.HELD_ARMOR));
-        buildModifier(ModifierIds.spectral).priority(60) // after explosive, before enderference
+        buildModifier(ModifierIds.spectral).priority(10) // run late so we don't cancel another effect by deleting the projectile
                 .addModule(MobEffectModule.builder(MobEffects.GLOWING).chance(LevelingValue.flat(1)).time(RandomLevelingValue.perLevel(0, 200)).build())
                 // damage is for fishing rods
                 .addModule(new ProjectilePlaceGlowModule(5, true, false));
-        buildModifier(ModifierIds.explosive).priority(75) // after bounce, before spectral
-                .addModule(ProjectileExplosionModule.radius(1, 1).eflnBonus(0.5f).blockInteraction(BlockInteraction.DESTROY).build());
+        buildModifier(ModifierIds.explosive).addModule(ProjectileExplosionModule.radius(1, 1).eflnBonus(0.5f).blockInteraction(BlockInteraction.DESTROY).build());
         // traits - tier 3 nether
         buildModifier(ModifierIds.lightweight)
                 .addModule(StatBoostModule.multiplyBase(ToolStats.ATTACK_SPEED).eachLevel(0.08f))

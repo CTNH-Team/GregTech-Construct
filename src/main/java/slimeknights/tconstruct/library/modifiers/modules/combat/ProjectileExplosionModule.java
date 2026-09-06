@@ -86,6 +86,12 @@ public record ProjectileExplosionModule(LevelingValue radius, float eflnBonus, L
     return DEFAULT_HOOKS;
   }
 
+  @Override
+  public Integer getPriority() {
+    // run late as we cancel all future interactions entirely
+    return 25;
+  }
+
   /** Triggers the explosion at the given location */
   private boolean explode(ModifierEntry modifier, Projectile projectile, ModDataNBT persistentData, Vec3 location) {
     float level = modifier.getEffectiveLevel();
