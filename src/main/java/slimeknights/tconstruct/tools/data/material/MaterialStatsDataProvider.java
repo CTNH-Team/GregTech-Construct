@@ -238,6 +238,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(530, 6f, IRON, 3f),
                 HandleMaterialStats.multipliers().durability(0.85f).attackDamage(1.05f).attackSpeed(1.2f).build(),
                 StatlessMaterialStats.BINDING);
+        addMaterialStats(MaterialIds.jeweledHide, StatlessMaterialStats.BINDING);
         addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.BINDING);
         addMaterialStats(MaterialIds.ancient, new HeadMaterialStats(745, 7f, NETHERITE, 2.5f));
 
@@ -407,6 +408,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new LimbMaterialStats(1250, -0.35f, 0.25f, 0f),
                 new GripMaterialStats(0.1f, -0.20f, 3.5f));
         addMaterialStats(MaterialIds.ancient, new LimbMaterialStats(745, -0.15f, 0.1f, 0.1f));
+        addMaterialStats(MaterialIds.jeweledHide, StatlessMaterialStats.BOWSTRING);
         addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.BOWSTRING);
 
         // tier 4 (end)
@@ -980,6 +982,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorToughnessMultiplier(0.0f)
                         .build());
         addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.jeweledHide, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f), StatlessMaterialStats.CUIRASS);
         addMaterialStats(MaterialIds.ancientHide, ArmorPartMaterialStats.maille(0.25f, 0.1f, 0.0f, 0.0f));
         // tier 4 (end)
         addMaterialStats(MaterialIds.knightmetal,
@@ -1057,6 +1060,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.skyslimeVine, StatlessMaterialStats.REPAIR_KIT);
         addMaterialStats(MaterialIds.ichorskin, StatlessMaterialStats.REPAIR_KIT);
         addMaterialStats(MaterialIds.enderslimeVine, StatlessMaterialStats.REPAIR_KIT);
+        addMaterialStats(MaterialIds.jeweledHide, StatlessMaterialStats.REPAIR_KIT);
         addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.REPAIR_KIT);
         // travelers's shield
         addMaterialStats(MaterialIds.ice, StatlessMaterialStats.REPAIR_KIT);

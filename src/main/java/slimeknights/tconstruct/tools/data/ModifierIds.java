@@ -69,6 +69,7 @@ public class ModifierIds {
     public static final ModifierId luck    = id("luck");
     public static final ModifierId looting = id("looting");
     public static final ModifierId fortune = id("fortune");
+    public static final ModifierId fortunate = id("fortunate");
     public static final ModifierId experienced = id("experienced");
 
     // damage boost
@@ -153,6 +154,8 @@ public class ModifierIds {
     public static final ModifierId swiftSneak = id("swift_sneak");
     public static final ModifierId workbench = id("workbench");
     public static final ModifierId toolBelt = id("tool_belt");
+    public static final ModifierId looter = id("looter");
+    public static final ModifierId entwined = id("entwined");
     public static final ModifierId leaping = id("leaping");
     public static final ModifierId soulBelt = id("soul_belt");
     public static final ModifierId craftingTable = id("crafting_table");

@@ -180,6 +180,8 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         addDefaultTraits(MaterialIds.blazewood, ModifierIds.spectral);
         addDefaultTraits(MaterialIds.ancient, ModifierIds.vintage, ModifierIds.worldbound);
         // tier 4 - binding
+        addDefaultTraits(MaterialIds.jeweledHide, ModifierIds.fortune);
+        addTraits(MaterialIds.jeweledHide, ARMOR, ModifierIds.revitalizing);
         addTraits(MaterialIds.ancientHide, MELEE_HARVEST, ModifierIds.fortune);
         addDefaultTraits(MaterialIds.ancientHide, ModifierIds.fortified);
         addTraits(MaterialIds.ancientHide, ARMOR, ModifierIds.totem);
@@ -253,6 +255,15 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
         noTraits(MaterialIds.clay);
         noTraits(MaterialIds.honey);
         noTraits(MaterialIds.phantom);
+        // slimeboot laces (upstream 3.12; fork has RepairStats.LACES + laces part, traits mirror upstream)
+        MaterialStatsId laces = RepairStats.LACES.getId();
+        addTraits(MaterialIds.string, laces, ModifierIds.stepUp);
+        addTraits(MaterialIds.leather, laces, ModifierIds.snowBoots);
+        addTraits(MaterialIds.skyslimeVine, laces, ModifierIds.leaping);
+        addTraits(MaterialIds.darkthread, laces, ModifierIds.looter);
+        addTraits(MaterialIds.twistingVine, laces, ModifierIds.entwined);
+        addTraits(MaterialIds.weepingVine, laces, ModifierIds.soulspeed);
+        addTraits(MaterialIds.jeweledHide, laces, ModifierIds.fortunate);
         // slimecage (upstream 3.12)
         MaterialStatsId cage = RepairStats.RIBCAGE.getId();
         addTraits(MaterialIds.blaze, cage, ModifierIds.scorching);

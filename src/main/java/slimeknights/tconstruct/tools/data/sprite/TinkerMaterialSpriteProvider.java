@@ -543,6 +543,10 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
                 .statType(StatlessMaterialStats.BINDING, StatlessMaterialStats.BOWSTRING).cuirass().maille()
                 .armorLinear()
                 .colorMapper(ancientDebrisPalette);
+        buildMaterial(MaterialIds.jeweledHide)
+                .fallbacks("cloth")
+                .statType(StatlessMaterialStats.BINDING, StatlessMaterialStats.BOWSTRING).cuirass().maille().laces()
+                .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF433E3D).addARGB(102, 0xFF494845).addARGB(140, 0xFF595959).addARGB(178, 0xFF666460).addARGB(216, 0xFF817E76).addARGB(255, 0xFFA3A393).build());
         buildMaterial(MaterialIds.enderslimeVine)
                 .statType(StatlessMaterialStats.BINDING, StatlessMaterialStats.BOWSTRING).cuirass().maille()
                 .armorLinear()
