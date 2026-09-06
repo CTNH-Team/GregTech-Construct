@@ -2353,6 +2353,9 @@
 
   "material.tconstruct.soulsteel": "Soulsteel",
 
+  "material.tconstruct.jadeite": "Jadeite",
+  "material.tconstruct.jadeite.flavor": "Crystalized Gemstones",
+
   "material.tconstruct.ancient_hide": "Ancient Hide",
   "material.tconstruct.ancient_hide.flavor": "Leather tanned by the oldest of stone",
   "material.tconstruct.ancient_hide.encyclopedia": "Increases drop chances from blocks, stacking with luck",
