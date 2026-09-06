@@ -42,6 +42,7 @@ import slimeknights.mantle.recipe.condition.TagFilledCondition;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerDamageTypes;
 import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.common.TinkerTags.Modifiers;
 import slimeknights.tconstruct.library.data.tinkering.AbstractModifierProvider;
 import slimeknights.tconstruct.library.json.LevelingInt;
 import slimeknights.tconstruct.library.json.LevelingValue;
@@ -374,11 +375,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                         // knockback multiplier is a simple multiplier, though we skip if the knockback sync is disabled
                         .customVariable("knockback_multiplier", new EntityConditionalStatVariable(new AttributeEntityVariable(TinkerAttributes.KNOCKBACK_MULTIPLIER), 1))
                         .multiply()
-                        // padded level reduces just knockback, not a good way to not hardcode this so knockback handles it
-                        // goal is knockback / 2^PADDED, note if PADDED is absent this gives knockback / 2^0 = knockback / 1
-                        .constant(2)
-                        .customVariable("padded", ModifierLevelVariable.modifier(TinkerModifiers.padded.getId()))
-                        .power().divide()
+                        .multiply()
                         // finally, add to the base effect
                         .variable(VALUE).add().build())
                 // bonking does the same but without the attributes
@@ -386,12 +383,6 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                         .formula()
                         // 0.25 per level, that makes each level like adding 1 level of the power modifier (after the first)
                         .constant(0.25f).variable(LEVEL).multiply()
-                        .variable(MULTIPLIER).multiply() // cooldown and sling properties
-                        // padded level reduces just knockback, not a good way to not hardcode this so knockback handles it
-                        // goal is knockback / 2^PADDED, note if PADDED is absent this gives knockback / 2^0 = knockback / 1
-                        .constant(2)
-                        .customVariable("padded", ModifierLevelVariable.modifier(TinkerModifiers.padded.getId()))
-                        .power().divide()
                         // finally, add to the base effect
                         .variable(VALUE).add().build());
         buildModifier(TinkerModifiers.padded)
@@ -399,8 +390,11 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .addModule(KnockbackModule.builder().formula()
                         .variable(VALUE)
                         .constant(2).variable(LEVEL).power() // 2^LEVEL
-                        .divide().build()); // KNOCKBACK / 2^LEVEL
-        // sling is handled by knockback module
+                        .divide().build()) // KNOCKBACK / 2^LEVEL
+                .addModule(SlingForceModule.builder().sling(ModifierPredicate.tag(Modifiers.KNOCKBACK_SLINGS)).formula()
+                        .variable(VALUE)
+                        .constant(2).variable(LEVEL).power() // 2^LEVEL
+                        .divide().build()); // FORCE / 2^LEVEL
         buildModifier(ModifierIds.sticky)
                 .addModule(MobEffectModule.builder(MobEffects.MOVEMENT_SLOWDOWN).level(RandomLevelingValue.perLevel(0, 0.5f)).time(RandomLevelingValue.random(20, 10)).build());
 
@@ -1053,9 +1047,9 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                 .addModule(AttributeModule.builder(Attributes.MOVEMENT_SPEED, Operation.MULTIPLY_BASE).eachLevel(-0.1f))
                 .addModule(AttributeModule.builder(ForgeMod.ENTITY_GRAVITY, Operation.MULTIPLY_TOTAL).tooltipStyle(TooltipStyle.PERCENT).eachLevel(0.05f));
         buildModifier(ModifierIds.featherweight)
-                .addModule(StatBoostModule.add(ToolStats.DRAW_SPEED).eachLevel(0.07f))
-                .addModule(StatBoostModule.add(ToolStats.ACCURACY).eachLevel(0.07f))
-                .addModule(ProtectionModule.builder().eachLevel(-1.25f))
+                .addModule(StatBoostModule.add(ToolStats.DRAW_SPEED).eachLevel(0.05f))
+                .addModule(StatBoostModule.add(ToolStats.ACCURACY).eachLevel(0.05f))
+                .addModule(ProtectionModule.builder().toolTag(TinkerTags.Items.ARMOR).eachLevel(-1.25f))
                 .addModule(AttributeModule.builder(TinkerAttributes.USE_ITEM_SPEED, Operation.ADDITION).tooltipStyle(TooltipStyle.PERCENT).toolItem(ItemPredicate.tag(ARMOR)).eachLevel(0.1f));
         buildModifier(ModifierIds.dense)
                 // from 0 to 5, repair formula is FACTOR * (1 - 0.025 * LEVEL * (11 - LEVEL))

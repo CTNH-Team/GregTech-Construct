@@ -69,6 +69,7 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
     tag(DRILL_ATTACKS).add(TinkerModifiers.flinging.getId(), TinkerModifiers.springing.getId(), ModifierIds.grapple);
     tag(SELF_KNOCKBACK_SLINGS).add(TinkerModifiers.flinging.getId(), TinkerModifiers.springing.getId());
     tag(TARGET_KNOCKBACK_SLINGS).add(TinkerModifiers.bonking.getId());
+    tag(KNOCKBACK_SLINGS).addTag(SELF_KNOCKBACK_SLINGS, TARGET_KNOCKBACK_SLINGS);
 
     // book tags
     this.tag(UPGRADES).addTag(GENERAL_UPGRADES, MELEE_UPGRADES, DAMAGE_UPGRADES, HARVEST_UPGRADES, ARMOR_UPGRADES, RANGED_UPGRADES);
