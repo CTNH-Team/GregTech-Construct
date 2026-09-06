@@ -447,8 +447,8 @@ public final class TinkerFluids extends TinkerModule {
         acceptRegistered(output, moltenHepatizon);
         acceptRegistered(output, moltenNetherite);
         acceptRegistered(output, moltenKnightmetal);
+        acceptRegistered(output, moltenKnightslime);
         // future: soulsteel
-        // future: knightslime
 
         // compat ores
         acceptMolten(output, moltenTin);

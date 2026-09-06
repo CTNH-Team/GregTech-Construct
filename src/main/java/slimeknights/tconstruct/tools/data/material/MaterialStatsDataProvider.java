@@ -246,6 +246,10 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(512, 8f, NETHERITE, 3.0f),
                 HandleMaterialStats.multipliers().miningSpeed(0.85f).attackSpeed(1.05f).attackDamage(1.15f).build(),
                 StatlessMaterialStats.BINDING);
+        addMaterialStats(MaterialIds.knightslime,
+                new HeadMaterialStats(1047, 7.5f, NETHERITE, 3.25f),
+                HandleMaterialStats.multipliers().durability(0.95f).miningSpeed(1.15f).attackSpeed(1.15f).attackDamage(0.95f).build(),
+                StatlessMaterialStats.BINDING);
         addMaterialStats(MaterialIds.enderslimeVine, StatlessMaterialStats.BINDING);
 
         // tier 4 (mod integration)
@@ -404,6 +408,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.knightmetal,
                 new LimbMaterialStats(512, 0.2f, 0.05f, -0.1f),
                 new GripMaterialStats(0, 0.1f, 3.0f));
+        addMaterialStats(MaterialIds.knightslime,
+                new LimbMaterialStats(1047, 0.15f, 0.05f, -0.15f),
+                new GripMaterialStats(-0.05f, 0.1f, 3.25f));
         addMaterialStats(MaterialIds.enderslimeVine, StatlessMaterialStats.BOWSTRING);
 
         // tier 4 (compat)
@@ -987,6 +994,28 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorToughnessMultiplier(0.08f)
                         .smallReductionFactor(0.375f)
                         .smallProtectionFactor(0.375f)
+                        .build());
+        // knightslime armor: fork keeps full ArmorPartStatsBuilder chain, values mapped from upstream plating(33/2,5,7,2/tough1/kb0.10)
+        addMaterialStats(MaterialIds.knightslime,
+                ArmorPartStatsBuilder.builder()
+                        .platingDurability(33f)
+                        .platingArmor(2f, 7f, 5f, 2f)
+                        .platingToughness(1f)
+                        .platingKnockbackResistance(0.10f)
+                        .maille(0f, 0f, 0f, 0f)
+                        .partDurability(37.6f)
+                        .armor(2.5f, 7.0f, 6.0f, 2.5f)
+                        .armorStrength(1.5f)
+                        .armorToughness(1.5f)
+                        .reduction(0.5f)
+                        .protection(0.075f)
+                        .knockbackResistance(0.10f)
+                        .durabilityMultiplier(0.16f)
+                        .armorMultiplier(0.02f)
+                        .armorStrengthMultiplier(0.0f)
+                        .armorToughnessMultiplier(0.0f)
+                        .smallReductionFactor(0.5f)
+                        .smallProtectionFactor(0.6f)
                         .build());
         addMaterialStats(MaterialIds.turtle, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.enderslimeVine, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f), StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);

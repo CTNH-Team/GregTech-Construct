@@ -246,6 +246,7 @@ public class ModifierIds {
   public static final ModifierId magnetic = id("magnetic");
     // traits - tier 3
     public static final ModifierId overcast = id("overcast");
+    public static final ModifierId overwield = id("overwield");
     public static final ModifierId overshield = id("overshield");
     public static final ModifierId crumbling = id("crumbling");
     public static final ModifierId enhanced = id("enhanced");

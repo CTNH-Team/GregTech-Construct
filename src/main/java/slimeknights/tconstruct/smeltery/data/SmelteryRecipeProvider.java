@@ -1915,6 +1915,12 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
                 .addInput(TinkerFluids.magma.ingredient(FluidValues.SLIMEBALL))
                 .save(consumer, prefix(TinkerFluids.moltenQueensSlime, folder));
 
+        // knightslime: 1 cobalt + 1 enderslime + 1 obsidian = 2
+        AlloyRecipeBuilder.alloy(TinkerFluids.moltenKnightslime, FluidValues.INGOT * 2)
+                .addInput(TinkerFluids.moltenCobalt.ingredient(FluidValues.INGOT))
+                .addInput(TinkerFluids.enderSlime.ingredient(FluidValues.SLIMEBALL))
+                .addInput(TinkerFluids.moltenObsidian.ingredient(FluidValues.BRICK))
+                .save(consumer, prefix(TinkerFluids.moltenKnightslime, folder));
         // manyullyn: 3 cobalt + 1 debris = 3
         AlloyRecipeBuilder.alloy(TinkerFluids.moltenManyullyn, FluidValues.INGOT * 4)
                 .addInput(TinkerFluids.moltenCobalt.ingredient(FluidValues.INGOT * 3))
@@ -2274,6 +2280,7 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
         metal(consumer, TinkerFluids.moltenHepatizon  ).metal();
         metal(consumer, TinkerFluids.moltenCinderslime).metal();
         metal(consumer, TinkerFluids.moltenQueensSlime).metal();
+        metal(consumer, TinkerFluids.moltenKnightslime).metal();
         String tf = "twilightforest";
         CommonRecipe tfHelmet     = new ToolItemMelting(5, tf, "helmet");
         CommonRecipe tfChestplate = new ToolItemMelting(8, tf, "chestplate");
