@@ -27,6 +27,8 @@ public class TinkerDamageTypes {
   public static final ResourceKey<DamageType> THROWN_TOOL = create("thrown_tool");
   /** Damage from a fishing rod */
   public static final ResourceKey<DamageType> FISHING_HOOK = create("fishing_hook");
+  /** Damage source for a "non-projectile" with {@link #FISHING_HOOK}. Used in enderference. */
+  public static final ResourceKey<DamageType> MELEE_FISHING_HOOK = create("melee_fishing_hook");
 
   /* Modifiers */
   /** Damage source that bypasses armor */
