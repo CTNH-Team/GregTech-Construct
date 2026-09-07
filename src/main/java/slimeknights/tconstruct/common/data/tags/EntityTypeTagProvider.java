@@ -30,7 +30,8 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
     this.tag(TinkerTags.EntityTypes.BACON_PRODUCER).add(EntityType.PIG, EntityType.PIGLIN, EntityType.HOGLIN);
 
     this.tag(TinkerTags.EntityTypes.MELTING_SHOW).add(EntityType.IRON_GOLEM, EntityType.SNOW_GOLEM, EntityType.VILLAGER, EntityType.PLAYER);
-    this.tag(TinkerTags.EntityTypes.MELTING_HIDE).add(EntityType.GIANT);
+    this.tag(TinkerTags.EntityTypes.MELTING_HIDE).add(EntityType.GIANT).addTag(TinkerTags.EntityTypes.MELTING_BLACKLIST).addOptionalTag(TinkerTags.HIDDEN_FROM_EMI);
+    this.tag(TinkerTags.EntityTypes.MELTING_BLACKLIST);
     this.tag(TinkerTags.EntityTypes.PIGGYBACKPACK_BLACKLIST);
 
     // players use tool daamge util

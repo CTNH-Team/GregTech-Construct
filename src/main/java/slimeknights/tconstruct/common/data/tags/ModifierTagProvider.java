@@ -164,6 +164,12 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
       TinkerModifiers.dyed.getId(), TinkerModifiers.embellishment.getId(), TinkerModifiers.trim.getId(),
       TinkerModifiers.farsighted.getId(), TinkerModifiers.nearsighted.getId());
 
+    // recipe viewer catalysts, keep upstream jei/ names to avoid datapack forks; consumed in plugin/emi
+    this.tag(CRAFTING).add(ModifierIds.workbench, ModifierIds.craftingTable);
+    this.tag(SMELTING).add(ModifierIds.smelting, TinkerModifiers.autosmelt.getId());
+    this.tag(MELTING).add(TinkerModifiers.melting.getId());
+    this.tag(SEVERING).add(TinkerModifiers.severing.getId());
+
     addonTags.accept(new ModifierTagRegistrar());
   }
 

@@ -626,7 +626,10 @@ public class TinkerTags {
         public static final TagKey<EntityType<?>> DAMAGE_MODIFIER_BLACKLIST = local("damage_modifier_blacklist");
 
         public static final TagKey<EntityType<?>> MELTING_SHOW = local("melting/show_in_default");
+        /** Entities in this tag are hidden from EMI and blacklisted from melting in the smeltery */
         public static final TagKey<EntityType<?>> MELTING_HIDE = local("melting/hide_in_default");
+        /** Entities in this tag blacklisted from melting in the smeltery, notably in the default recipe */
+        public static final TagKey<EntityType<?>> MELTING_BLACKLIST = local("melting/blacklist");
         public static final TagKey<EntityType<?>> PIGGYBACKPACK_BLACKLIST = local("piggybackpack_blacklist");
 
         /** Entities in this tag take more damage from bane of sssss */
@@ -784,7 +787,14 @@ public class TinkerTags {
 
         // EMI
         public static final TagKey<Modifier> HIDDEN_FROM_EMI = hiddenFromEMI(ModifierManager.REGISTRY_KEY);
-
+        /** Modifiers in this tag allow crafting and should be listed as a crafting table catalyst */
+        public static final TagKey<Modifier> CRAFTING = local("jei/crafting");
+        /** Modifiers in this tag allow smelting and should be listed as a furnace catalyst */
+        public static final TagKey<Modifier> SMELTING = local("jei/smelting");
+        /** Modifiers in this tag allow melting recipes and should be listed as an item and entity melting catalyst. If a modifier needs these separated make a feature request. */
+        public static final TagKey<Modifier> MELTING = local("jei/melting");
+        /** Modifiers in this tag allow severing and are listed as a severing catalyst */
+        public static final TagKey<Modifier> SEVERING = local("jei/severing");
 
         private static TagKey<Modifier> local(String name) {
             return ModifierManager.getTag(getResource(name));
