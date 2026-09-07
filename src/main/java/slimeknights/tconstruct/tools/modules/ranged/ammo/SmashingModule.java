@@ -395,7 +395,7 @@ public enum SmashingModule implements ModifierModule, FluidModifierHook, Project
     // if the arrow is stopping, discard it to prevent a fluid dupe
     if (used || persistentData.getBoolean(KEY_USED)) {
       projectile.playSound(SoundEvents.SPLASH_POTION_BREAK);
-      projectile.discard();
+      projectile.discard(); // ensure discarded, smashing overrides reusable
     }
   }
 

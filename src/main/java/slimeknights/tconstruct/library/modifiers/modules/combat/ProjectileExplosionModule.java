@@ -96,8 +96,8 @@ public record ProjectileExplosionModule(LevelingValue radius, float eflnBonus, L
   private boolean explode(ModifierEntry modifier, Projectile projectile, ModDataNBT persistentData, Vec3 location) {
     float level = modifier.getEffectiveLevel();
     float radius = this.radius.computeForLevel(level);
-    // limit to non-reusable ammo, mostly ensures ballisa doesn't explode as the damage will be wrong
-    // TODO: consider dedicated tag blacklist
+    // blacklist lets us skip things like thrown tools, which lack power context to deal the right damage and would bypass too many modifiers
+    // also make sure we have not exploded yet, deals with reusable ammo
     if (radius > 0.5f && !projectile.getType().is(TinkerTags.EntityTypes.REUSABLE_AMMO)) {
       Level world = projectile.level();
       if (!world.isClientSide) {
