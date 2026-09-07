@@ -328,7 +328,7 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
                 .fallbacks("wood", "stick")
                 .colorMapper(GreyToColorMapping.builderFromBlack().addARGB(63, 0xFF100C1C).addARGB(102, 0xFF271E3D).addARGB(140, 0xFF2D2347).addARGB(178, 0xFF49332E).addARGB(216, 0xFF553F3A).addARGB(234, 0xFF5C4641).addARGB(255, 0xFF644E49).build());
         buildMaterial(MaterialIds.pigIron)
-                .meleeHarvest().armor()
+                .meleeHarvest().ranged().armor()
                 .statType(ArmorPartMaterialStats.ARMOR_PLATE)
                 .statType(ArmorPartMaterialStats.ARMOR_MAIL)
                 .statType(ArmorPartMaterialStats.CAST_TYPES)

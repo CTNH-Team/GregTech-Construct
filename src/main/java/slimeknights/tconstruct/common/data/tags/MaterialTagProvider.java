@@ -204,8 +204,8 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 2
                 MaterialIds.slimewood, MaterialIds.necroticBone, MaterialIds.skyslimeVine, MaterialIds.cheese,
                 // tier 3
-                MaterialIds.slimesteel, MaterialIds.roseGold, MaterialIds.darkthread,
-                MaterialIds.cobalt,
+                MaterialIds.slimesteel, MaterialIds.darkthread,
+                MaterialIds.cobalt, MaterialIds.pigIron,
                 // tier 4
                 MaterialIds.blazingBone, MaterialIds.jeweledHide, MaterialIds.enderslimeVine
         ).addOptional(
@@ -223,7 +223,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
                 // tier 2
                 MaterialIds.venombone, MaterialIds.twistingVine,
                 // tier 3
-                MaterialIds.nahuatl,
+                MaterialIds.nahuatl, MaterialIds.roseGold,
                 // tier 4
                 MaterialIds.hepatizon, MaterialIds.queensSlime, MaterialIds.knightmetal, MaterialIds.knightslime
         ).addOptional(
