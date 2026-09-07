@@ -106,6 +106,8 @@ public class SpittingModifier extends Modifier implements GeneralInteractionModi
               int primaryIndex = level / 2;
               for (int shotIndex = 0; shotIndex < level; shotIndex++) {
                 FluidEffectProjectile spit = new FluidEffectProjectile(world, entity, new FluidStack(fluid, amount), power);
+                // apply fins
+                spit.setWaterInertia(ConditionalStatModifierHook.getModifiedStat(tool, entity, ToolStats.WATER_INERTIA));
 
                 // setup projectile target
                 Vec3 upVector = entity.getUpVector(1.0f);

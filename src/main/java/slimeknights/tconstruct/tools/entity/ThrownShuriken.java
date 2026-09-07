@@ -28,6 +28,8 @@ import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.entity.ProjectileWithKnockback;
 import slimeknights.tconstruct.library.modifiers.entity.ProjectileWithPower;
+import slimeknights.tconstruct.library.modifiers.entity.ReusableProjectile;
+import slimeknights.tconstruct.library.modifiers.entity.ProjectileWithPower;
 import slimeknights.tconstruct.library.modifiers.hook.build.ConditionalStatModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.ranged.ScheduledProjectileTaskModifierHook;
 import slimeknights.tconstruct.library.tools.IndestructibleItemEntity;
@@ -45,7 +47,7 @@ import slimeknights.tconstruct.tools.TinkerTools;
 import javax.annotation.Nullable;
 
 /** Modifiable shuriken entity */
-public class ThrownShuriken extends Projectile implements ToolProjectile, ProjectileWithPower, ProjectileWithKnockback {
+public class ThrownShuriken extends Projectile implements ToolProjectile, ProjectileWithPower, ProjectileWithKnockback, ReusableProjectile {
   /** Key to sync the stack to the client */
   protected static final EntityDataAccessor<ItemStack> STACK = SynchedEntityData.defineId(ThrownShuriken.class, EntityDataSerializers.ITEM_STACK);
   /** Movement speed in water */
@@ -72,6 +74,11 @@ public class ThrownShuriken extends Projectile implements ToolProjectile, Projec
   public ThrownShuriken(Level level, LivingEntity shooter) {
     this(level, shooter.getX(), shooter.getEyeY() - 0.1, shooter.getZ());
     this.setOwner(shooter);
+  }
+
+  @Override
+  public boolean isReusable() {
+    return reclaim;
   }
 
 
