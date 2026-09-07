@@ -132,8 +132,10 @@ public class SpittingModifier extends Modifier implements GeneralInteractionModi
               }
 
               // consume the fluid and durability
-              fluid.shrink(amount * level);
-              TANK_HELPER.setFluid(tool, fluid);
+              if (ModifierUtil.consumesResources(entity)) {
+                fluid.shrink(amount * level);
+                TANK_HELPER.setFluid(tool, fluid);
+              }
               ToolDamageUtil.damageAnimated(tool, level, entity, entity.getUsedItemHand());
             }
           }

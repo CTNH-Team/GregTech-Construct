@@ -33,6 +33,7 @@ import slimeknights.tconstruct.library.module.ModuleHookMap.Builder;
 import slimeknights.tconstruct.library.tools.capability.TinkerDataCapability;
 import slimeknights.tconstruct.library.tools.capability.TinkerDataCapability.TinkerDataKey;
 import slimeknights.tconstruct.library.tools.capability.fluid.ToolTankHelper;
+import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.shared.TinkerCommons;
@@ -109,7 +110,7 @@ public class SlurpingModifier extends Modifier implements KeybindInteractModifie
     if (!player.level().isClientSide) {
       FluidStack fluid = TANK_HELPER.getFluid(tool);
       int consumed = slurp(fluid, tool.getModifier(this).getEffectiveLevel(), player, FluidAction.EXECUTE);
-      if (!player.isCreative() && consumed > 0) {
+      if (ModifierUtil.consumesResources(player) && consumed > 0) {
         fluid.shrink(consumed);
         TANK_HELPER.setFluid(tool, fluid);
       }
