@@ -18,6 +18,7 @@ import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.library.recipe.TinkerRecipeTypes;
 import slimeknights.tconstruct.library.recipe.casting.IDisplayableCastingRecipe;
 import slimeknights.tconstruct.library.tools.nbt.MaterialIdNBT;
+import slimeknights.tconstruct.library.utils.Util;
 import slimeknights.tconstruct.tools.TinkerToolParts;
 import slimeknights.tconstruct.tools.TinkerTools;
 import slimeknights.tconstruct.tools.stats.SkullStats;
@@ -58,7 +59,12 @@ public class ContentMaterialSkull extends AbstractMaterialContent {
 
   @Override
   protected String getTextKey(MaterialId material) {
-    return String.format(detailed ? "material.%s.%s.skull_encyclopedia" : "material.%s.%s.skull_flavor", material.getNamespace(), material.getPath());
+    // TOOD 1.21: drop legacy key
+    String legacyKey = "material." + material.toLanguageKey() + (detailed ? ".skull_encyclopedia" : ".skull_flavor");
+    if (Util.canTranslate(legacyKey)) {
+      return legacyKey;
+    }
+    return super.getTextKey(material);
   }
 
   /** Gets the recipe to cast this skull */
