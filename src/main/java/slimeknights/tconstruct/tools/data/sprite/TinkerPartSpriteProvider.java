@@ -103,20 +103,12 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
         addSprite("staff/large_modifiers/tconstruct_embellishment", WOOD);
 
         // slimesuit textures - the armor model won't be animated, so don't animate the item
-        addSprite("armor/slime/skull_modifiers/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/skull_modifiers/broken/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/wings_modifiers/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/wings_modifiers/broken/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/shell_modifiers/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/shell_modifiers/broken/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/boot_modifiers/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/boot_modifiers/broken/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
+        buildTool("armor/slime").disallowAnimated();
         addTexture("tinker_armor/slime/armor", SLIMESUIT).disallowAnimated();
         addTexture("tinker_armor/slime/leggings", SLIMESUIT).disallowAnimated();
         addTexture("tinker_armor/slime/wings", SLIMESUIT).disallowAnimated();
         addTexture("tinker_armor/slime/overlay_armor", SLIMESUIT_OVERLAY).disallowAnimated();
         addTexture("tinker_armor/slime/overlay_leggings", slimeknights.tconstruct.tools.stats.RepairStats.SHELL.getId()).disallowAnimated();
-
         // tools
         // pickaxe - regular variant uses handle on frypans as a grip so generate those too
         buildTool("pickaxe").addBreakableHead("head").addHandle("handle").addBinding("binding");

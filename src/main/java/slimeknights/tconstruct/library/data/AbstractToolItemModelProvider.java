@@ -254,10 +254,25 @@ public abstract class AbstractToolItemModelProvider extends GenericDataProvider 
     transformTool("armor/" + setName + "/shield_broken", readJson(id), "", false, "broken", parts);
   }
 
+  /** Adds broken and blocking models for the armor item */
+  protected void armor(String overrideName, ResourceLocation itemId, String... textures) throws IOException {
+    transformTool("armor/" + overrideName + "_broken", readJson(itemId), "", false, '_', "broken", textures);
+  }
+
+  /** Adds broken and blocking models for the armor item */
+  protected void armor(String overrideName, IdAwareObject item, String... textures) throws IOException {
+    armor(overrideName, item.getId(), textures);
+  }
+
+  /** Adds broken and blocking models for the armor set */
+  protected void armor(String name, EnumObject<ArmorItem.Type,? extends Item> armor, ArmorItem.Type slot, String... textures) throws IOException {
+    armor(name + '/' + slot.getName(), Loadables.ITEM.getKey(armor.get(slot)), textures);
+  }
+
   /** Adds broken and blocking models for the armor set */
   protected void armor(String name, EnumObject<ArmorItem.Type,? extends Item> armor, ArmorItem.Type[] types, String... textures) throws IOException {
     for (ArmorItem.Type slot : types) {
-      transformTool("armor/" + name + '/' + slot.getName() + "_broken", readJson(Loadables.ITEM.getKey(armor.get(slot))), "", false, "broken", textures);
+      armor(name, armor, slot, textures);
     }
   }
 
@@ -347,7 +362,13 @@ public abstract class AbstractToolItemModelProvider extends GenericDataProvider 
   }
 
   /** Transforms the given tool by adding suffixes to listed textures and the modifier roots */
+  @Deprecated
   protected JsonObject transformTool(String destination, JsonObject tool, String parent, boolean allRoots, String suffix, String... updateTextures) {
+    return transformTool(destination, tool, parent, allRoots, '_', suffix, updateTextures);
+  }
+
+  /** Transforms the given tool by adding suffixes to listed textures and the modifier roots */
+  protected JsonObject transformTool(String destination, JsonObject tool, String parent, boolean allRoots, char mapSeparator, String suffix, String... updateTextures) {
     JsonObject transformed = tool.deepCopy();
     // set parent if given
     if (!parent.isEmpty()) {
@@ -356,12 +377,17 @@ public abstract class AbstractToolItemModelProvider extends GenericDataProvider 
     // update parts that we were told to update
     suffixTextures(transformed, suffix, updateTextures);
     // add modifier roots
-    if (GsonHelper.getAsBoolean(transformed, "large", false)) {
-      JsonObject roots = transformed.getAsJsonObject("modifier_roots");
-      roots.add("small", copyAndSuffixRoot(roots.getAsJsonArray("small"), suffix + '/', allRoots));
-      roots.add("large", copyAndSuffixRoot(roots.getAsJsonArray("large"), suffix + '/', allRoots));
-    } else {
-      transformed.add("modifier_roots", copyAndSuffixRoot(transformed.getAsJsonArray("modifier_roots"), suffix + '/', allRoots));
+    if (transformed.has("modifier_roots")) {
+      if (GsonHelper.getAsBoolean(transformed, "large", false)) {
+        JsonObject roots = transformed.getAsJsonObject("modifier_roots");
+        roots.add("small", copyAndSuffixRoot(roots.getAsJsonArray("small"), suffix + '/', allRoots));
+        roots.add("large", copyAndSuffixRoot(roots.getAsJsonArray("large"), suffix + '/', allRoots));
+      } else {
+        transformed.add("modifier_roots", copyAndSuffixRoot(transformed.getAsJsonArray("modifier_roots"), suffix + '/', allRoots));
+      }
+    }
+    if (transformed.has("modifier_maps")) {
+      transformed.add("modifier_maps", copyAndSuffixRoot(transformed.getAsJsonArray("modifier_maps"), mapSeparator + suffix, allRoots));
     }
     // delete overrides, no need to nest them
     transformed.remove("overrides");
