@@ -130,4 +130,4 @@ Use Java 17. IntelliJ builds require the bundled JetBrains Runtime as the Gradle
 - The recipe browser is EMI (`plugin/emi/EMIPlugin`); JEI integration was removed from the fork.
 - Create integration adds blaze-burner heating to the melting furnace under `plugin/create/burner`.
 - The GTCEu side of the fork is split across `data/gtceu` (recipes, scanners), `mixin/gtceu`, and `library/tools/item/ModifiableGTToolItem.java`; it is not a separate addon module.
-- Upstream sync baseline `v3.12.0.220` (`e86e8b9522`) on branch `v3.12.0.220`; ledger `docs/upstream/3.12.0.220.md`. Mantle floor 1.11.113, `pack_format=15`; `FluidValues` stays 144/144 and network channel stays `3`.
+- Upstream sync baseline `v3.12.0.220` (`e86e8b9522`) on branch `v3.12.0.220`. Mantle floor 1.11.113, `pack_format=15`; `FluidValues` stays 144/144 and network channel stays `3`.
