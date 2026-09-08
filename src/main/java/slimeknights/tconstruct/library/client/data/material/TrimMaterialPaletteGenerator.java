@@ -66,6 +66,7 @@ public class TrimMaterialPaletteGenerator extends GenericTextureGenerator implem
   @Override
   public void addToDynamicPack(DynamicResourceRegistrar registrar) {
     assert existingFileHelper != null;
+    MaterialPartTextureGenerator.runCallbacks(existingFileHelper, null);
     DataGenSpriteReader spriteReader = new DataGenSpriteReader(existingFileHelper, PALETTE_TEXTURES);
     try {
       JsonObject trimmedJson = buildTrimmedJson();
@@ -78,6 +79,7 @@ public class TrimMaterialPaletteGenerator extends GenericTextureGenerator implem
       throw new IllegalStateException("Failed to generate dynamic trim material palettes", ex);
     } finally {
       spriteReader.closeAll();
+      MaterialPartTextureGenerator.runCallbacks(null, null);
     }
   }
 
