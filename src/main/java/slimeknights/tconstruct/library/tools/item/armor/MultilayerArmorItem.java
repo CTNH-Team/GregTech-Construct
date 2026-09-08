@@ -28,9 +28,19 @@ public class MultilayerArmorItem extends ModifiableArmorItem {
     this.name = slotAwareModel ? materialId.withPath(path -> path + "/" + slot.getName()) : materialId;
   }
 
+  public MultilayerArmorItem(ModifiableArmorMaterial material, ArmorItem.Type slot, Properties properties, ResourceLocation name) {
+    super(material, slot, properties);
+    this.name = name;
+  }
+
+  @SuppressWarnings("removal")
   public MultilayerArmorItem(ArmorMaterial material, ArmorItem.Type slot, Properties properties, ToolDefinition toolDefinition) {
+    this(material, slot, properties, toolDefinition, new ResourceLocation(material.getName()));
+  }
+
+  public MultilayerArmorItem(ArmorMaterial material, ArmorItem.Type slot, Properties properties, ToolDefinition toolDefinition, ResourceLocation name) {
     super(material, slot, properties, toolDefinition);
-    this.name = ResourceLocation.tryParse(material.getName());
+    this.name = name;
   }
 
   @Nullable

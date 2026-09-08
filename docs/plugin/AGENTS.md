@@ -33,7 +33,7 @@ Optional compatibility integrations discovered and initialized only when their t
 - Botania and Create can also have mixin implications; coordinate plugin and mixin changes.
 - Local GTCEU compatibility code is part of this fork's supported surface and uses the `gtceu` dependency in `libs`.
 - Compatibility tests should be runnable without enabling every optional integration at once.
-
+- Recipe-viewer visibility tags keep upstream `tconstruct:jei/*` names to avoid datapack forks; they are consumed in `plugin/emi`. Creative tab order intentionally diverges from upstream.
 ## CHANGE IMPACT
 - Dependency metadata and plugin guards must change together when an integration API changes.
 

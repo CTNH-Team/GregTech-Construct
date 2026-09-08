@@ -13,6 +13,16 @@ import slimeknights.tconstruct.library.tools.stat.INumericToolStat;
  * If you receive an instance of this interface a parameter, do NOT use an instanceof check and cast it to a ToolStack. Don't make me use a private wrapper class.
  */
 public interface IToolStackView extends IToolContext {
+  /* Item stack */
+
+  /**
+   * Checks if this tool stack represents the same item stack instance as the passed stack.
+   * In other words, this is a shallow comparison, not deep comparison.
+   * Condition compares based on same stack tag instance. */
+  default boolean isSameStack(ItemStack stack) {
+    return false;
+  }
+
   /* Stats */
 
   /** On built tools, contains the full tool stats. During tool rebuild, contains the base stats before considering modifiers. */

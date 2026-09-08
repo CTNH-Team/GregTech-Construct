@@ -62,8 +62,10 @@ import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.library.client.materials.MaterialRenderInfo.TintedSprite;
 import slimeknights.tconstruct.library.client.materials.MaterialRenderInfoLoader;
 import slimeknights.tconstruct.library.client.modifiers.IBakedModifierModel;
-import slimeknights.tconstruct.library.client.modifiers.ModifierModelManager;
-import slimeknights.tconstruct.library.materials.definition.IMaterial;
+import slimeknights.tconstruct.library.client.modifiers.ModifierModelMap;
+import slimeknights.tconstruct.library.client.modifiers.ModifierModelMapManager;
+import slimeknights.tconstruct.library.client.modifiers.model.ModifierModel;
+import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
@@ -82,7 +84,6 @@ import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -113,7 +114,6 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
       if (itemModel != null && itemModel.getOverrides() instanceof MaterialOverrideHandler overrides) {
         ToolStack tool = ToolStack.from(stack);
         // modifier model indexes start at the last part
-        int localIndex = 0;
         List<ModifierEntry> modifiers = (overrides.showTraits ? tool.getModifiers() : tool.getUpgrades()).getModifiers();
         ModifierEntry[] firsts = new ModifierEntry[overrides.firstModifiers.size()];
         for (int i = modifiers.size() - 1; i >= 0; i--) {
@@ -130,10 +130,10 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
               // if below the range, make the index model relative
               // if above the range, add the count and let the next model handle it
               int modelIndexes = modifierModel.getTintIndexes();
-              if (localIndex + modelIndexes > index) {
-                return modifierModel.getTint(tool, entry, index - localIndex);
+              if (index < modelIndexes) {
+                return modifierModel.getTint(tool, entry, index);
               }
-              localIndex += modelIndexes;
+              index -= modelIndexes;
             }
           }
         }
@@ -145,15 +145,23 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
             IBakedModifierModel model = overrides.modifierModels.get(first.id);
             if (model != null) {
               int modelIndexes = model.getTintIndexes();
-              if (localIndex + modelIndexes > index) {
+              if (index < modelIndexes) {
                 if (entry == null) {
                   entry = new ModifierEntry(first.id, 0);
                 }
-                return model.getTint(tool, entry, index - localIndex);
+                return model.getTint(tool, entry, index);
               }
-              localIndex += modelIndexes;
+              index -= modelIndexes;
             }
           }
+        }
+        // iterate the constant in order of key (already reverse alphabetical)
+        for (ModifierModel model : overrides.modifierModels.sortedConstant()) {
+          int modelIndexes = model.getTintIndexes();
+          if (index < modelIndexes) {
+            return model.getTint(tool, ModifierEntry.EMPTY, index);
+          }
+          index -= modelIndexes;
         }
       }
     }
@@ -188,8 +196,12 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
     boolean showTraits = GsonHelper.getAsBoolean(json, "show_traits", false);
     Vec2 offset = getOffset(json, "large_offset");
     // modifier root fetching
-    List<ResourceLocation> smallModifierRoots = Collections.emptyList();
-    List<ResourceLocation> largeModifierRoots = Collections.emptyList();
+    List<ResourceLocation> modifierModels = List.of();
+    if (json.has("modifier_maps")) {
+      modifierModels = JsonHelper.parseList(json, "modifier_maps", Loadables.RESOURCE_LOCATION);
+    }
+    List<ResourceLocation> smallModifierRoots = List.of();
+    List<ResourceLocation> largeModifierRoots = List.of();
     if (json.has("modifier_roots")) {
       // large model requires an object
       if (isLarge) {
@@ -227,7 +239,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
 
     // modifiers first
     List<FirstModifier> firstModifiers = FirstModifier.LOADABLE.getOrDefault(json, "first_modifiers", List.of());
-    return new ToolModel(parts, isLarge, offset, smallModifierRoots, largeModifierRoots, firstModifiers, ammoKey, flipAmmo, leftAmmo, smallAmmoOffset, largeAmmoOffset, showTraits);
+    return new ToolModel(parts, isLarge, offset, modifierModels, smallModifierRoots, largeModifierRoots, firstModifiers, ammoKey, flipAmmo, leftAmmo, smallAmmoOffset, largeAmmoOffset, showTraits);
   }
 
   /** List of tool parts in this model */
@@ -236,11 +248,22 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
   private final boolean isLarge;
   /** Transform matrix to apply to child parts */
   private final Vec2 offset;
-  /** Location to fetch modifier textures for small variant */
+  /** List of modifier models to read for this tool. Separate from the tool model for the sake of reuse. */
+  private final List<ResourceLocation> modifierModels;
+  /**
+   * Location to fetch modifier textures for small variant.
+   * @deprecated use {@link #modifierModels}
+   */
+  @Deprecated
   private final List<ResourceLocation> smallModifierRoots;
-  /** Location to fetch modifier textures for large variant */
+  /**
+   * Location to fetch modifier textures for large variant
+   * @deprecated use {@link #modifierModels}
+   */
+  @Deprecated
   private final List<ResourceLocation> largeModifierRoots;
   /** Modifiers that show first on tools, bypassing normal sort order */
+  @Deprecated
   private final List<FirstModifier> firstModifiers;
   /** Location in tool NBT to find the ammo */
   @Nullable
@@ -265,7 +288,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
    * @param transforms      Transforms to apply
    * @param isLarge         If true, the quads are for a large tool
    */
-  private static void addModifierQuads(Function<Material, TextureAtlasSprite> spriteGetter, Map<ModifierId,IBakedModifierModel> modifierModels, List<FirstModifier> firstModifiers, boolean showTraits, IToolStackView tool, Consumer<Collection<BakedQuad>> quadConsumer, @Nullable ItemLayerPixels pixels, Transformation transforms, boolean isLarge) {
+  private static void addModifierQuads(Function<Material, TextureAtlasSprite> spriteGetter, ModifierModelMap modifierModels, List<FirstModifier> firstModifiers, boolean showTraits, IToolStackView tool, Consumer<Collection<BakedQuad>> quadConsumer, @Nullable ItemLayerPixels pixels, Transformation transforms, boolean isLarge) {
     if (!modifierModels.isEmpty()) {
       // keep a running tint index so models know where they should start, currently starts at 0 as the main model does not use tint indexes
       int modelIndex = 0;
@@ -307,6 +330,11 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
             modelIndex += model.getTintIndexes();
           }
         }
+      }
+      // iterate the constant in order of key (already reverse alphabetical)
+      for (ModifierModel model : modifierModels.sortedConstant()) {
+        model.addQuads(tool, ModifierEntry.EMPTY, spriteGetter, transforms, isLarge, modelIndex, quadConsumer, pixels);
+        modelIndex += model.getTintIndexes();
       }
     }
   }
@@ -352,7 +380,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
    * @return  Baked model
    */
   private static BakedModel bakeInternal(IGeometryBakingContext owner, Function<Material, TextureAtlasSprite> spriteGetter, @Nullable Transformation largeTransforms,
-                                         List<ToolPart> parts, Map<ModifierId,IBakedModifierModel> modifierModels, List<FirstModifier> firstModifiers, boolean showTraits,
+                                         List<ToolPart> parts, ModifierModelMap modifierModels, List<FirstModifier> firstModifiers, boolean showTraits,
                                          List<MaterialVariantId> materials, @Nullable IToolStackView tool, ItemOverrides overrides,
                                          Collection<BakedQuad> smallExtraQuads, Collection<BakedQuad> largeExtraQuads, Collection<BakedQuad> leftExtraQuads) {
     Transformation smallTransforms = Transformation.identity();
@@ -383,7 +411,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
       if (part.hasMaterials()) {
         // start by fetching the material we are rendering at this position, should only be null on invalid tools or during the initial bake
         int index = part.index();
-        MaterialVariantId material = index < materials.size() ? materials.get(index) : IMaterial.UNKNOWN_ID;
+        MaterialVariantId material = index < materials.size() ? materials.get(index) : MaterialId.UNKNOWN;
         TintedSprite materialSprite = MaterialModel.getMaterialSprite(spriteGetter, owner.getMaterial(part.getName(false)), material);
         particle = materialSprite.sprite();
 
@@ -480,6 +508,19 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
 
   @Override
   public BakedModel bake(IGeometryBakingContext owner, ModelBaker baker, Function<Material,TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
+    // warn on deprecated keys
+    if (showTraits) {
+      TConstruct.LOG.warn("Using deprecated key 'show_traits' in tool model {}, use 'constant' in modifier model maps with 'tconstruct:trait' instead", modelLocation);
+    }
+    if (!firstModifiers.isEmpty()) {
+      TConstruct.LOG.warn("Using deprecated key 'first_modifiers' in tool model {}, use 'constant' in modifier model maps with 'tconstruct:crafted' and an early ID instead", modelLocation);
+    }
+    for (FirstModifier modifier : firstModifiers) {
+      if (modifier.forced) {
+        break;
+      }
+    }
+
     // default is just a single part named tool, no material
     List<ToolPart> toolParts = this.toolParts;
     if (toolParts.isEmpty()) {
@@ -497,7 +538,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
       }
     }
     // load modifier models
-    Map<ModifierId,IBakedModifierModel> modifierModels = ModifierModelManager.getModelsForTool(spriteGetter, smallModifierRoots, isLarge ? largeModifierRoots : Collections.emptyList());
+    ModifierModelMap modifierModels = ModifierModelMapManager.INSTANCE.getModelsForTool(spriteGetter, this.modifierModels, smallModifierRoots, largeModifierRoots, modelLocation);
 
     // build transforms for various states
     // large tools are stretched in X and Y by 200%, and get a special offset
@@ -614,7 +655,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
     // contains all the baked models since they'll never change, cleared automatically as the baked model is discarded
     private final Cache<ToolCacheKey, BakedModel> cache = CacheBuilder
       .newBuilder()
-      // ensure we can display every single tool that shows in EMI, plus a couple extra
+      // ensure we can display every single tool that shows in JEI, plus a couple extra
       .maximumSize(MaterialRenderInfoLoader.INSTANCE.getAllRenderInfos().size() * 3L / 2)
       .build();
 
@@ -625,7 +666,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
     private final boolean showTraits;
     @Nullable
     private final Transformation largeTransforms;
-    private final Map<ModifierId,IBakedModifierModel> modifierModels;
+    private final ModifierModelMap modifierModels;
     @Nullable
     private final ResourceLocation ammoKey;
     private final boolean flipAmmo;
@@ -636,7 +677,7 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
     @Nullable
     private final Transformation leftAmmoTransforms;
 
-    private MaterialOverrideHandler(IGeometryBakingContext owner, List<ToolPart> toolParts, List<FirstModifier> firstModifiers, boolean showTraits, @Nullable Transformation largeTransforms, Map<ModifierId, IBakedModifierModel> modifierModels, ItemOverrides nested, @Nullable ResourceLocation ammoKey, boolean flipAmmo, @Nullable Transformation smallAmmoTransforms, @Nullable Transformation largeAmmoTransforms, @Nullable Transformation leftAmmoTransforms) {
+    private MaterialOverrideHandler(IGeometryBakingContext owner, List<ToolPart> toolParts, List<FirstModifier> firstModifiers, boolean showTraits, @Nullable Transformation largeTransforms, ModifierModelMap modifierModels, ItemOverrides nested, @Nullable ResourceLocation ammoKey, boolean flipAmmo, @Nullable Transformation smallAmmoTransforms, @Nullable Transformation largeAmmoTransforms, @Nullable Transformation leftAmmoTransforms) {
       super(nested);
       this.owner = owner;
       this.toolParts = toolParts;
@@ -662,52 +703,48 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
       List<BakedQuad> largeAmmoQuads = List.of();
       List<BakedQuad> leftAmmoQuads = List.of();
       if (!ammo.isEmpty()) {
-        // find ammo model
+        // find ammo model, this automatically resolves ammo overrides
         BakedModel ammoModel = Minecraft.getInstance().getItemRenderer().getModel(ammo, null, null, seed);
         if (ammoModel != Minecraft.getInstance().getModelManager().getMissingModel()) {
-          // resolve ammo model (for materials and such)
-          ammoModel = ammoModel.getOverrides().resolve(ammoModel, ammo, null, null, seed);
-          if (ammoModel != null) {
-            // get all the quads for the ammo model
-            List<BakedQuad> ammoQuads = new ArrayList<>();
-            RandomSource rand = RandomSource.create();
-            for (Direction direction : Direction.values()) {
-              ammoQuads.addAll(ammoModel.getQuads(null, direction, rand, ModelData.EMPTY, null));
-            }
-            ammoQuads.addAll(ammoModel.getQuads(null, null, rand, ModelData.EMPTY, null));
+          // get all the quads for the ammo model
+          List<BakedQuad> ammoQuads = new ArrayList<>();
+          RandomSource rand = RandomSource.create();
+          for (Direction direction : Direction.values()) {
+            ammoQuads.addAll(ammoModel.getQuads(null, direction, rand, ModelData.EMPTY, null));
+          }
+          ammoQuads.addAll(ammoModel.getQuads(null, null, rand, ModelData.EMPTY, null));
 
-            // bake tints into static colors; saves us having to redirect item colors which is slow
-            Int2IntMap tints = new Int2IntArrayMap();
-            ItemColors colors = Minecraft.getInstance().getItemColors();
-            Int2IntFunction colorGetter = tint -> ColoredBlockModel.swapColorRedBlue(colors.getColor(ammo, tint));
-            ammoQuads = ammoQuads.stream().map(quad -> {
-              if (quad.isTinted() || (flipAmmo && quad.getDirection().getAxis() != Direction.Axis.Y)) {
-                int[] vertices = quad.getVertices();
-                if (quad.isTinted()) {
-                  int abgr = 0xFF000000 | tints.computeIfAbsent(quad.getTintIndex(), colorGetter);
-                  vertices = Arrays.copyOf(vertices, vertices.length);
-                  for (int i = 0; i < 4; i++) {
-                    vertices[i * IQuadTransformer.STRIDE + IQuadTransformer.COLOR] = abgr;
-                  }
+          // bake tints into static colors; saves us having to redirect item colors which is slow
+          Int2IntMap tints = new Int2IntArrayMap();
+          ItemColors colors = Minecraft.getInstance().getItemColors();
+          Int2IntFunction colorGetter = tint -> ColoredBlockModel.swapColorRedBlue(colors.getColor(ammo, tint));
+          ammoQuads = ammoQuads.stream().map(quad -> {
+            if (quad.isTinted() || (flipAmmo && quad.getDirection().getAxis() != Direction.Axis.Y)) {
+              int[] vertices = quad.getVertices();
+              if (quad.isTinted()) {
+                int abgr = 0xFF000000 | tints.computeIfAbsent(quad.getTintIndex(), colorGetter);
+                vertices = Arrays.copyOf(vertices, vertices.length);
+                for (int i = 0; i < 4; i++) {
+                  vertices[i * IQuadTransformer.STRIDE + IQuadTransformer.COLOR] = abgr;
                 }
-                Direction direction = quad.getDirection();
-                if (flipAmmo && direction.getAxis() != Direction.Axis.Y) {
-                  direction = direction.getOpposite();
-                }
-                return new BakedQuad(vertices, -1, direction, quad.getSprite(), quad.isShade(), quad.hasAmbientOcclusion());
               }
-              return quad;
-            }).toList();
-            // got our quads, now we need to offset them for the model
-            if (smallAmmoTransforms != null) {
-              smallAmmoQuads = QuadTransformers.applying(smallAmmoTransforms).process(ammoQuads);
+              Direction direction = quad.getDirection();
+              if (flipAmmo && direction.getAxis() != Direction.Axis.Y) {
+                direction = direction.getOpposite();
+              }
+              return new BakedQuad(vertices, -1, direction, quad.getSprite(), quad.isShade(), quad.hasAmbientOcclusion());
             }
-            if (largeAmmoTransforms != null) {
-              largeAmmoQuads = QuadTransformers.applying(largeAmmoTransforms).process(ammoQuads);
-            }
-            if (leftAmmoTransforms != null) {
-              leftAmmoQuads = QuadTransformers.applying(leftAmmoTransforms).process(ammoQuads);
-            }
+            return quad;
+          }).toList();
+          // got our quads, now we need to offset them for the model
+          if (smallAmmoTransforms != null) {
+            smallAmmoQuads = QuadTransformers.applying(smallAmmoTransforms).process(ammoQuads);
+          }
+          if (largeAmmoTransforms != null) {
+            largeAmmoQuads = QuadTransformers.applying(largeAmmoTransforms).process(ammoQuads);
+          }
+          if (leftAmmoTransforms != null) {
+            leftAmmoQuads = QuadTransformers.applying(leftAmmoTransforms).process(ammoQuads);
           }
         }
       }
@@ -730,9 +767,10 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
       IToolStackView tool = ToolStack.from(stack);
 
       // if nothing unique, render original
+      // TODO 1.21: with how forced modifiers work, this will probably be true way more often
       ModifierNBT modifiers = showTraits ? tool.getModifiers() : tool.getUpgrades();
       skip:
-      if (materialIds.isEmpty() && modifiers.isEmpty()) {
+      if (materialIds.isEmpty() && modifiers.isEmpty() && modifierModels.sortedConstant().isEmpty()) {
         for (FirstModifier modifier : firstModifiers) {
           if (modifier.forced) {
             break skip;
@@ -778,6 +816,13 @@ public class ToolModel implements IUnbakedGeometry<ToolModel> {
           }
         }
       }
+      for (ModifierModel model : modifierModels.constant().values()) {
+        Object cacheKey = model.getCacheKey(tool, ModifierEntry.EMPTY);
+        if (cacheKey != null) {
+          builder.add(cacheKey);
+        }
+      }
+
       // fetch ammo info from the stack
       ItemStack ammo;
       ModDataNBT persistentData = tool.getPersistentData();

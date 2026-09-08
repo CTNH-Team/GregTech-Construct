@@ -1,8 +1,8 @@
 # PROJECT KNOWLEDGE BASE
 
 **Generated:** 2026-08-07
-**Commit:** 34cd66e5d
-**Branch:** dev
+**Commit:** 99ea2759a0
+**Branch:** v3.12.0.220
 
 ## OVERVIEW
 Single-module Gradle Java 17 Minecraft mod. This fork keeps the upstream `tconstruct` mod id and `slimeknights.tconstruct` namespace while adding GregTech/GTCEU compatibility.
@@ -85,6 +85,9 @@ The domain guides live under `docs/` so they do not pollute source directories. 
 | `GTConstructAddon` | GTCEu entry | `src/main/java/slimeknights/tconstruct/data/gtceu/GTConstructAddon.java` | `@GTAddon` auto-discovered by GTCEu; routes recipe generation into `GTConstructRecipes` |
 | `HighStackCountSynchronizer` | container sync | `src/main/java/slimeknights/tconstruct/common/network/HighStackCountSynchronizer.java` | Custom `ContainerSynchronizer` keeping stack counts wider than vanilla's byte field; requires network version 3 |
 | `BaseMcTest` | test harness | `src/test/java/slimeknights/tconstruct/test/BaseMcTest.java` | Boots registries and a Forge test container for most tests |
+| `ModifierModelMapManager` | client model map | `src/main/java/slimeknights/tconstruct/library/client/modifiers/ModifierModelMapManager.java` | First-stage reload listener registered in `ToolClientEvents`; keeps `LEGACY_BLACKLIST` (trim) |
+| `AbstractModifierModelMapProvider` | data base | `src/main/java/slimeknights/tconstruct/library/data/AbstractModifierModelMapProvider.java` | Base for modifier model map datagen; concrete tools-side provider deferred |
+| `FunctionProvider` | advancement mcfunctions | `src/main/java/slimeknights/tconstruct/common/data/advancement/FunctionProvider.java` | Emits `functions/grant_advancement/*.mcfunction`; registered in `TConstruct.gatherData()` |
 
 ## CONVENTIONS
 - Java packages are lowercase under `slimeknights.tconstruct`; domain boundaries are top-level packages.
@@ -127,3 +130,4 @@ Use Java 17. IntelliJ builds require the bundled JetBrains Runtime as the Gradle
 - The recipe browser is EMI (`plugin/emi/EMIPlugin`); JEI integration was removed from the fork.
 - Create integration adds blaze-burner heating to the melting furnace under `plugin/create/burner`.
 - The GTCEu side of the fork is split across `data/gtceu` (recipes, scanners), `mixin/gtceu`, and `library/tools/item/ModifiableGTToolItem.java`; it is not a separate addon module.
+- Upstream sync baseline `v3.12.0.220` (`e86e8b9522`) on branch `v3.12.0.220`. Mantle floor 1.11.113, `pack_format=15`; `FluidValues` stays 144/144 and network channel stays `3`.

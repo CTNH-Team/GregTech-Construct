@@ -1,7 +1,10 @@
 package slimeknights.tconstruct.library.client.book.content;
 
 import net.minecraft.resources.ResourceLocation;
+import slimeknights.mantle.client.book.data.BookData;
 import slimeknights.mantle.client.screen.book.element.ItemElement;
+import slimeknights.mantle.util.html.HtmlElement;
+import slimeknights.mantle.util.html.HtmlSerializable;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
@@ -44,15 +47,20 @@ public class RangedMaterialContent extends AbstractMaterialContent {
   }
 
   @Override
+  protected String translationSuffix() {
+    return "ranged";
+  }
+
+  @Override
   protected String getTextKey(MaterialId material) {
+    // TODO 1.21: drop legacy key
     if (detailed) {
-      String primaryKey = String.format("material.%s.%s.ranged", material.getNamespace(), material.getPath());
-      if (Util.canTranslate(primaryKey)) {
-        return primaryKey;
+      String legacyKey = "material." + material.toLanguageKey() + ".ranged";
+      if (Util.canTranslate(legacyKey)) {
+        return legacyKey;
       }
-      return String.format("material.%s.%s.encyclopedia", material.getNamespace(), material.getPath());
     }
-    return String.format("material.%s.%s.flavor", material.getNamespace(), material.getPath());
+    return super.getTextKey(material);
   }
 
   @Override
@@ -72,5 +80,14 @@ public class RangedMaterialContent extends AbstractMaterialContent {
     } else if (MaterialRegistry.getInstance().isInTag(material, TinkerTags.Materials.HEAVY)) {
       displayTools.add(makeCategoryIcon(TinkerTools.longbow.get().getRenderTool(), getResource("heavy")));
     }
+  }
+
+  @Override
+  protected HtmlSerializable makeStatsHtml(BookData data) {
+    return HtmlElement.div().classes("row-material-stats")
+      .add(HtmlElement.div().classes("column")
+        .add(makeStatHtml(LimbMaterialStats.ID))
+        .add(makeStatHtml(StatlessMaterialStats.BOWSTRING.getIdentifier())))
+      .add(makeStatHtml(GripMaterialStats.ID));
   }
 }

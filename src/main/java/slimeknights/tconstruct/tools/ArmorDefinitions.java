@@ -20,6 +20,7 @@ public class ArmorDefinitions {
 
   /** High modifiers armor set */
   public static final ModifiableArmorMaterial SLIMESUIT = ModifiableArmorMaterial.create(getResource("slime"), Sounds.EQUIP_SLIME.getSound());
+  public static final ToolDefinition SLIME_WINGS = ToolDefinition.create(TinkerTools.slimeWings);
 
   public static final ModifiableArmorMaterial STANDARD = ModifiableArmorMaterial.create(getResource("standard"), Sounds.EQUIP_STANDARD.getSound());
   public static final ModifiableArmorMaterial KNIGHTS = ModifiableArmorMaterial.create(getResource("knights"), Sounds.EQUIP_KNIGHTS.getSound());

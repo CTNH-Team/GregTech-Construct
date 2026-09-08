@@ -134,6 +134,8 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         materialRecipe(consumer, MaterialIds.necroticBone, Ingredient.of(TinkerTags.Items.WITHER_BONES), 1, 1, folder + "necrotic_bone");
         materialRecipe(consumer, MaterialIds.endstone, Ingredient.of(Tags.Items.END_STONES), 1, 1, folder + "endstone");
         // ammo
+        materialRecipe(consumer, MaterialIds.turtle,   Ingredient.of(Items.SCUTE),          1, 1, folder + "turtle_scute");
+        materialRecipe(consumer, MaterialIds.nautilus, Ingredient.of(Items.NAUTILUS_SHELL), 4, 1, folder + "nautilus_shell");
         materialRecipe(consumer, MaterialIds.earthslime, Ingredient.of(TinkerWorld.earthGeode),      1, 1, folder + "earthslime");
         materialRecipe(consumer, MaterialIds.skyslime,   Ingredient.of(TinkerWorld.skyGeode),        1, 1, folder + "skyslime");
         materialRecipe(consumer, MaterialIds.blaze,      Ingredient.of(Tags.Items.RODS_BLAZE),       1, 1, folder + "blaze");
@@ -179,7 +181,10 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         materialRecipe(consumer, MaterialIds.glowstone, Ingredient.of(Tags.Items.DUSTS_GLOWSTONE), 1, 4, folder + "glowstone/dust");
         materialRecipe(consumer, MaterialIds.glowstone, Ingredient.of(Blocks.GLOWSTONE), 1, 1, ItemOutput.fromItem(Items.GLOWSTONE_DUST),folder + "glowstone/block");
         materialRecipe(consumer, MaterialIds.magnetite, Ingredient.of(TinkerTags.Items.STEEL_SHARD), 1, 1, folder + "magnetite");
+        materialRecipe(consumer, MaterialIds.kobold, Ingredient.of(TinkerTags.Items.COBALT_SHARD), 1, 1, folder + "kobold");
         materialRecipe(consumer, MaterialIds.gunpowder, Ingredient.of(Tags.Items.GUNPOWDER), 1, 4, folder + "gunpowder");
+        materialRecipe(consumer, MaterialIds.redstone, Ingredient.of(Tags.Items.DUSTS_REDSTONE), 1, 4, folder + "redstone/dust");
+        materialRecipe(consumer, MaterialIds.redstone, Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE), 9, 4, ItemOutput.fromItem(Items.REDSTONE, 4), folder + "redstone/block");
 
         // tier 3 (nether)
         metalMaterialRecipe(consumer, MaterialIds.cobalt, folder, "cobalt", true);
@@ -190,6 +195,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         metalMaterialRecipe(consumer, MaterialIds.manyullyn, folder, "manyullyn", false);
         metalMaterialRecipe(consumer, MaterialIds.hepatizon, folder, "hepatizon", false);
         metalMaterialRecipe(consumer, MaterialIds.knightmetal, folder, "knightmetal", false);
+        metalMaterialRecipe(consumer, MaterialIds.knightslime, folder, "knightslime", false);
         materialRecipe(consumer, MaterialIds.blazewood, Ingredient.of(TinkerMaterials.blazewood), 1, 1, folder + "blazewood");
         materialRecipe(consumer, MaterialIds.blazingBone, Ingredient.of(TinkerMaterials.blazingBone), 1, 1, folder + "blazing_bone");
         //registerMetalMaterial(consumer, MaterialIds.soulsteel,   "soulsteel",    false);
@@ -229,10 +235,15 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         // no plated slimewood, use repair kits
         // tier 4 (mod integration)
         metalMaterialRecipe(consumer, MaterialIds.fiery, folder, "fiery", true);
+        metalMaterialRecipe(consumer, MaterialIds.nicrosil, folder, "nicrosil", true);
 
         // slimesuit
         materialRecipe(consumer, MaterialIds.enderslime, Ingredient.of(TinkerWorld.enderGeode), 1, 1, folder + "enderslime");
         materialRecipe(consumer, MaterialIds.phantom,    Ingredient.of(Items.PHANTOM_MEMBRANE), 1, 1, folder + "phantom_membrane");
+        materialRecipe(consumer, MaterialIds.cheese,     Ingredient.of(TinkerCommons.cheeseIngot), 1, 1, folder + "cheese_ingot");
+        materialRecipe(consumer, MaterialIds.cheese,     Ingredient.of(TinkerCommons.cheeseBlock), 4, 1, folder + "cheese_block");
+        // TODO upstream parity: 8 variant goat-horn recipes via InstrumentIngredient; single default keeps horn obtainable
+        materialRecipe(consumer, MaterialIds.horn, Ingredient.of(Items.GOAT_HORN), 1, 1, folder + "horn");
     }
 
     private void addMaterialSmeltery(Consumer<FinishedRecipe> consumer) {
@@ -285,6 +296,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         materialMeltingComposite(consumer, MaterialIds.string, MaterialIds.darkthread, TinkerFluids.moltenObsidian, FluidValues.GLASS_PANE, folder);
         MaterialMeltingRecipeBuilder.material(MaterialIds.ice, 10, FluidOutput.fromFluid(Fluids.WATER, FluidType.BUCKET_VOLUME * 9))
                 .save(consumer, location(folder + "melting/ice"));
+        materialComposite(consumer, MaterialIds.blaze, MaterialIds.jadeite, TinkerFluids.moltenEmerald, FluidValues.GEM, folder);
 
         // tier 4
         materialMeltingCasting(consumer, MaterialIds.cinderslime, TinkerFluids.moltenCinderslime, folder);
@@ -292,8 +304,11 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         materialMeltingCasting(consumer, MaterialIds.hepatizon,   TinkerFluids.moltenHepatizon,   folder);
         materialMeltingCasting(consumer, MaterialIds.manyullyn,   TinkerFluids.moltenManyullyn,   folder);
         materialMeltingCasting(consumer, MaterialIds.knightmetal, TinkerFluids.moltenKnightmetal, folder);
+        materialMeltingCasting(consumer, MaterialIds.knightslime, TinkerFluids.moltenKnightslime, folder);
         materialComposite(consumer, MaterialIds.bloodshroom,  MaterialIds.blazewood,   TinkerFluids.blazingBlood, FluidType.BUCKET_VOLUME / 5, folder);
         materialComposite(consumer, MaterialIds.necroticBone, MaterialIds.blazingBone, TinkerFluids.blazingBlood, FluidType.BUCKET_VOLUME / 5, folder);
+        materialMeltingComposite(consumer, MaterialIds.leather, MaterialIds.jeweledHide, TinkerFluids.moltenDiamond, FluidValues.GEM, folder);
+        materialComposite(consumer, MaterialIds.jeweledHide, MaterialIds.leather, TinkerFluids.venom, FluidValues.SIP, folder, "jeweled_hide_cleaning");
         materialMeltingComposite(consumer, MaterialIds.leather, MaterialIds.ancientHide, TinkerFluids.moltenDebris, FluidValues.INGOT, folder);
         materialComposite(consumer, MaterialIds.ancientHide, MaterialIds.leather, TinkerFluids.venom, FluidValues.SIP, folder, "ancient_hide_cleaning");
         // no casting ancient, only melting it. Smeltery Recipe Provider adds in a repair kit casting
@@ -346,6 +361,10 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
         MaterialMeltingRecipeBuilder.material(MaterialIds.fiery, TinkerFluids.fieryLiquid, FluidValues.BOTTLE)
                 .addByproduct(TinkerFluids.moltenIron.result(FluidValues.INGOT))
                 .save(fieryConsumer, location(folder + "melting/fiery"));
+        // nicrosil has three different ores that let it appear, tin, nickel, and chromium (fork: GT ingots gated by compat alloy conditions)
+        materialMeltingCasting(
+                withCondition(consumer, new OrCondition(tagCondition("ingots/nicrosil"), tagCondition("ingots/tin"), tagCondition("ingots/nickel"), tagCondition("ingots/chromium"))),
+                MaterialIds.nicrosil, TinkerFluids.moltenNicrosil, folder);
 
         // slimesuit
         materialMeltingCasting(consumer, MaterialIds.gold, TinkerFluids.moltenGold, folder);

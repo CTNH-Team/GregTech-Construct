@@ -29,7 +29,7 @@ Runtime generation of addon, material, recipe, tinkering, and resource-pack cont
 - `registerDynamicResources()` runs after resource manager initialization.
 - Dynamic generators are reset during pack registration so reloads do not retain stale output.
 - The dynamic pack path is exercised by the data and addon integration tests.
-
+- `ModifierModelMapManager` reloads first-stage client resources; `ModelManagerMixin` triggers `RegisterDynamicResourcesEvent` during `ModelManager.reload`, and `ToolClientEvents` registers the manager plus legacy trim blacklist and banner sprite source.
 ## CHANGE IMPACT
 - Runtime generator changes affect addon loading and resource reload behavior.
 - Keep pack identifiers and registrar ownership stable for compatibility.

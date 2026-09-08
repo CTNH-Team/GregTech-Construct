@@ -17,6 +17,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import slimeknights.mantle.datagen.MantleTags;
 import slimeknights.mantle.registration.object.*;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
@@ -189,8 +190,8 @@ public class ItemTagProvider extends ItemTagsProvider {
 
         this.copy(TinkerTags.Blocks.COPPER_PLATFORMS, TinkerTags.Items.COPPER_PLATFORMS);
 
-        this.tag(TinkerTags.Items.SPLASH_BOTTLE).add(TinkerFluids.splashBottle.get());
-        this.tag(TinkerTags.Items.LINGERING_BOTTLE).add(TinkerFluids.lingeringBottle.get());
+        this.tag(MantleTags.Items.SPLASH_BOTTLE).add(TinkerFluids.splashBottle.get());
+        this.tag(MantleTags.Items.LINGERING_BOTTLE).add(TinkerFluids.lingeringBottle.get());
 
         // trim materials
         this.tag(ItemTags.TRIM_MATERIALS).add(
@@ -206,11 +207,10 @@ public class ItemTagProvider extends ItemTagsProvider {
                 // internal item for modifiers
                 TinkerTools.crystalshotItem.asItem(),
                 // unused future fluids
-                TinkerFluids.moltenSoulsteel.asItem(), TinkerFluids.moltenKnightslime.asItem()
+                TinkerFluids.moltenSoulsteel.asItem()
         );
         // unused future material items
         TinkerMaterials.soulsteel.forEach(item -> hidden.add(item.asItem()));
-        TinkerMaterials.knightslime.forEach(item -> hidden.add(item.asItem()));
         // ichor foliage
         hidden.add(
                 TinkerWorld.slimeLeaves.get(FoliageType.ICHOR).asItem(),

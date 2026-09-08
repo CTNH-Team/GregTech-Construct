@@ -1,7 +1,10 @@
 package slimeknights.tconstruct.library.client.book.content;
 
 import net.minecraft.resources.ResourceLocation;
+import slimeknights.mantle.client.book.data.BookData;
 import slimeknights.mantle.client.screen.book.element.ItemElement;
+import slimeknights.mantle.util.html.HtmlElement;
+import slimeknights.mantle.util.html.HtmlSerializable;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
@@ -45,8 +48,8 @@ public class MeleeHarvestMaterialContent extends AbstractMaterialContent {
   }
 
   @Override
-  protected String getTextKey(MaterialId material) {
-    return String.format(detailed ? "material.%s.%s.encyclopedia" : "material.%s.%s.flavor", material.getNamespace(), material.getPath());
+  protected String translationSuffix() {
+    return "melee_harvest";
   }
 
   @Override
@@ -66,5 +69,14 @@ public class MeleeHarvestMaterialContent extends AbstractMaterialContent {
     } else if (MaterialRegistry.getInstance().isInTag(material, TinkerTags.Materials.HARVEST)) {
       displayTools.add(makeCategoryIcon(TinkerTools.pickaxe.get().getRenderTool(), getResource("harvest")));
     }
+  }
+
+  @Override
+  protected HtmlSerializable makeStatsHtml(BookData data) {
+    return HtmlElement.div().classes("row-material-stats")
+      .add(HtmlElement.div().classes("column")
+        .add(makeStatHtml(HeadMaterialStats.ID))
+        .add(makeStatHtml(StatlessMaterialStats.BINDING.getIdentifier())))
+      .add(makeStatHtml(HandleMaterialStats.ID));
   }
 }

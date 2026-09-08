@@ -238,6 +238,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(530, 6f, IRON, 3f),
                 HandleMaterialStats.multipliers().durability(0.85f).attackDamage(1.05f).attackSpeed(1.2f).build(),
                 StatlessMaterialStats.BINDING);
+        addMaterialStats(MaterialIds.jeweledHide, StatlessMaterialStats.BINDING);
         addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.BINDING);
         addMaterialStats(MaterialIds.ancient, new HeadMaterialStats(745, 7f, NETHERITE, 2.5f));
 
@@ -246,6 +247,10 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(512, 8f, NETHERITE, 3.0f),
                 HandleMaterialStats.multipliers().miningSpeed(0.85f).attackSpeed(1.05f).attackDamage(1.15f).build(),
                 StatlessMaterialStats.BINDING);
+        addMaterialStats(MaterialIds.knightslime,
+                new HeadMaterialStats(1047, 7.5f, NETHERITE, 3.25f),
+                HandleMaterialStats.multipliers().durability(0.95f).miningSpeed(1.15f).attackSpeed(1.15f).attackDamage(0.95f).build(),
+                StatlessMaterialStats.BINDING);
         addMaterialStats(MaterialIds.enderslimeVine, StatlessMaterialStats.BINDING);
 
         // tier 4 (mod integration)
@@ -253,6 +258,11 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new HeadMaterialStats(1024, 8, NETHERITE, 3.5f),
                 HandleMaterialStats.multipliers().miningSpeed(1.15f).attackSpeed(0.9f).attackDamage(1.15f).build(),
                 StatlessMaterialStats.BINDING);
+        addMaterialStats(MaterialIds.nicrosil,
+                new HeadMaterialStats(816, 6f, NETHERITE, 3.16f),
+                HandleMaterialStats.multipliers().durability(1.16f).miningSpeed(0.92f).attackSpeed(1.16f).attackDamage(0.92f).build(),
+                new LimbMaterialStats(1024, -0.1f, 0.2f, -0.05f),
+                new GripMaterialStats(0, 0.05f, 3.5f));
     }
 
     private void addRanged() {
@@ -298,6 +308,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new GripMaterialStats(-0.3f, 0.1f, 2.25f));
         // tier 2 - bowstring
         addMaterialStats(MaterialIds.skyslimeVine, StatlessMaterialStats.BOWSTRING);
+        addMaterialStats(MaterialIds.cheese, StatlessMaterialStats.BOWSTRING);
         addMaterialStats(MaterialIds.weepingVine, StatlessMaterialStats.BOWSTRING);
         addMaterialStats(MaterialIds.twistingVine, StatlessMaterialStats.BOWSTRING);
         addMaterialStats(MaterialIds.slimeskin, StatlessMaterialStats.BOWSTRING);
@@ -336,6 +347,9 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new LimbMaterialStats(175, 0.15f, -0.25f, 0.15f),
                 new GripMaterialStats(-0.3f, 0.25f, 1.0f),
                 StatlessMaterialStats.BOWSTRING);
+        addMaterialStats(MaterialIds.pigIron,
+                new LimbMaterialStats(580, 0, 0, 0.1f),
+                new GripMaterialStats(0.1f, -0.15f, 2.5f));
         addMaterialStats(MaterialIds.cobalt,
                 new LimbMaterialStats(800, 0.05f, 0.05f, 0.05f),
                 new GripMaterialStats(0.05f, 0.05f, 2.25f));
@@ -398,18 +412,25 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                 new LimbMaterialStats(1250, -0.35f, 0.25f, 0f),
                 new GripMaterialStats(0.1f, -0.20f, 3.5f));
         addMaterialStats(MaterialIds.ancient, new LimbMaterialStats(745, -0.15f, 0.1f, 0.1f));
+        addMaterialStats(MaterialIds.jeweledHide, StatlessMaterialStats.BOWSTRING);
         addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.BOWSTRING);
 
         // tier 4 (end)
         addMaterialStats(MaterialIds.knightmetal,
-                new LimbMaterialStats(512, 0.2f, 0.05f, -0.1f),
+                new LimbMaterialStats(512, 0, 0.15f, -0.1f),
                 new GripMaterialStats(0, 0.1f, 3.0f));
+        addMaterialStats(MaterialIds.knightslime,
+                new LimbMaterialStats(1047, 0.15f, 0.05f, -0.15f),
+                new GripMaterialStats(-0.05f, 0.1f, 3.25f));
         addMaterialStats(MaterialIds.enderslimeVine, StatlessMaterialStats.BOWSTRING);
 
         // tier 4 (compat)
         addMaterialStats(MaterialIds.fiery,
                 new LimbMaterialStats(1024, -0.25f, 0.2f, -0.05f),
                 new GripMaterialStats(0, 0.05f, 3.5f));
+        addMaterialStats(MaterialIds.nicrosil,
+                new LimbMaterialStats(816, 0.16f, -0.08f, 0),
+                new GripMaterialStats(0.16f, -0.16f, 3.16f));
     }
 
     private void addAmmo() {
@@ -438,6 +459,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.steeleaf, StatlessMaterialStats.ARROW_HEAD);
         addMaterialStats(MaterialIds.slimeball, StatlessMaterialStats.FLETCHING);
         addMaterialStats(MaterialIds.gunpowder, StatlessMaterialStats.ARROW_HEAD);
+        addMaterialStats(MaterialIds.redstone, StatlessMaterialStats.ARROW_HEAD);
         // tier 3
         addMaterialStats(MaterialIds.ice, StatlessMaterialStats.ARROW_HEAD);
         addMaterialStats(MaterialIds.quartz, StatlessMaterialStats.ARROW_HEAD);
@@ -964,6 +986,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorToughnessMultiplier(0.0f)
                         .build());
         addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
+        addMaterialStats(MaterialIds.jeweledHide, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f), StatlessMaterialStats.CUIRASS);
         addMaterialStats(MaterialIds.ancientHide, ArmorPartMaterialStats.maille(0.25f, 0.1f, 0.0f, 0.0f));
         // tier 4 (end)
         addMaterialStats(MaterialIds.knightmetal,
@@ -987,6 +1010,29 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .smallReductionFactor(0.375f)
                         .smallProtectionFactor(0.375f)
                         .build());
+        // knightslime armor: fork keeps full ArmorPartStatsBuilder chain, values mapped from upstream plating(33/2,5,7,2/tough1/kb0.10)
+        addMaterialStats(MaterialIds.knightslime,
+                ArmorPartStatsBuilder.builder()
+                        .platingDurability(33f)
+                        .platingArmor(2f, 7f, 5f, 2f)
+                        .platingToughness(1f)
+                        .platingKnockbackResistance(0.10f)
+                        .maille(0f, 0f, 0f, 0f)
+                        .partDurability(37.6f)
+                        .armor(2.5f, 7.0f, 6.0f, 2.5f)
+                        .armorStrength(1.5f)
+                        .armorToughness(1.5f)
+                        .reduction(0.5f)
+                        .protection(0.075f)
+                        .knockbackResistance(0.10f)
+                        .durabilityMultiplier(0.16f)
+                        .armorMultiplier(0.02f)
+                        .armorStrengthMultiplier(0.0f)
+                        .armorToughnessMultiplier(0.0f)
+                        .smallReductionFactor(0.5f)
+                        .smallProtectionFactor(0.6f)
+                        .build());
+        addMaterialStats(MaterialIds.turtle, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
         addMaterialStats(MaterialIds.enderslimeVine, ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f), StatlessMaterialStats.CUIRASS, StatlessMaterialStats.LINEAR);
         addMaterialStats(MaterialIds.dragonScale, ArmorPartMaterialStats.maille(-0.1f, 0.05f, 0.1f, 0.0f));
         addMaterialStats(MaterialIds.shulker, ArmorPartMaterialStats.maille(0.0f, 0.0f, 0.1f, 0.0f));
@@ -1008,6 +1054,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
                         .armorStrengthMultiplier(0.05f)
                         .armorToughnessMultiplier(0.03f)
                         .build());
+        addArmorShieldStats(MaterialIds.nicrosil, PlatingMaterialStats.builder().durabilityFactor(28).armor(2, 5, 7, 2).knockbackResistance(0.16f), ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
     }
 
     private void addMisc() {
@@ -1017,6 +1064,7 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.skyslimeVine, StatlessMaterialStats.REPAIR_KIT);
         addMaterialStats(MaterialIds.ichorskin, StatlessMaterialStats.REPAIR_KIT);
         addMaterialStats(MaterialIds.enderslimeVine, StatlessMaterialStats.REPAIR_KIT);
+        addMaterialStats(MaterialIds.jeweledHide, StatlessMaterialStats.REPAIR_KIT);
         addMaterialStats(MaterialIds.ancientHide, StatlessMaterialStats.REPAIR_KIT);
         // travelers's shield
         addMaterialStats(MaterialIds.ice, StatlessMaterialStats.REPAIR_KIT);
@@ -1038,6 +1086,37 @@ public class MaterialStatsDataProvider extends AbstractMaterialStatsDataProvider
         addMaterialStats(MaterialIds.roseGold,     new SkullStats(175, 1));
         addMaterialStats(MaterialIds.pigIron,      new SkullStats(150, 2));
         // slimesuit
+        // slimesuit parts (upstream 3.12 ribcage/shell/laces materials)
+        addMaterialStats(MaterialIds.bone,         RepairStats.ribcage(100));
+        addMaterialStats(MaterialIds.venombone,    RepairStats.ribcage(175));
+        addMaterialStats(MaterialIds.necroticBone, RepairStats.ribcage(125));
+        addMaterialStats(MaterialIds.blazingBone,  RepairStats.ribcage(205));
+        addMaterialStats(MaterialIds.necronium,    RepairStats.ribcage(357));
+        addMaterialStats(MaterialIds.blaze,        RepairStats.ribcage(150));
+        addMaterialStats(MaterialIds.endRod,       RepairStats.ribcage(250));
+        addMaterialStats(MaterialIds.jadeite, RepairStats.ribcage(616));
+        addMaterialStats(MaterialIds.horn, RepairStats.ribcage(275));
+        // slimeshell (upstream 3.12)
+        addMaterialStats(MaterialIds.turtle, RepairStats.shell(275));
+        addMaterialStats(MaterialIds.nautilus, RepairStats.shell(350));
+        addMaterialStats(MaterialIds.phantom, RepairStats.shell(432));
+        addMaterialStats(MaterialIds.prismarine, RepairStats.shell(175));
+        addMaterialStats(MaterialIds.shulker, RepairStats.shell(250));
+        addMaterialStats(MaterialIds.dragonScale, RepairStats.shell(100));
+        addMaterialStats(MaterialIds.kobold, RepairStats.shell(450));
+        addMaterialStats(MaterialIds.magnetite, RepairStats.shell(435));
+        addMaterialStats(MaterialIds.knightly, RepairStats.shell(300));
+        // slime boots (upstream 3.12 laces repair values; fork has LACES stat + laces part)
+        addMaterialStats(MaterialIds.string, RepairStats.laces(140));
+        addMaterialStats(MaterialIds.leather, RepairStats.laces(97));
+        addMaterialStats(MaterialIds.vine, RepairStats.laces(75));
+        addMaterialStats(MaterialIds.skyslimeVine, RepairStats.laces(150));
+        addMaterialStats(MaterialIds.cheese, RepairStats.laces(111));
+        addMaterialStats(MaterialIds.darkthread, RepairStats.laces(200));
+        addMaterialStats(MaterialIds.twistingVine, RepairStats.laces(87));
+        addMaterialStats(MaterialIds.weepingVine, RepairStats.laces(90));
+        addMaterialStats(MaterialIds.jeweledHide, RepairStats.laces(250));
+        addMaterialStats(MaterialIds.enderslimeVine, RepairStats.laces(180));
         addMaterialStats(MaterialIds.enderslime, StatlessMaterialStats.REPAIR_KIT);
         addMaterialStats(MaterialIds.phantom, StatlessMaterialStats.REPAIR_KIT);
         // slimesuit embellishments

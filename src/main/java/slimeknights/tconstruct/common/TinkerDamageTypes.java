@@ -23,10 +23,15 @@ public class TinkerDamageTypes {
   /** Damage from a knightmetal block */
   public static final ResourceKey<DamageType> KNIGHTMETAL = create("knightmetal");
 
-  /** Damage from throwing a tool */
   public static final ResourceKey<DamageType> THROWN_TOOL = create("thrown_tool");
+  /** Damage source for a non-projectile with {@link net.minecraft.world.damagesource.DamageTypes#THROWN} death messages. Used in enderference. */
+  public static final ResourceKey<DamageType> MELEE_THROWN = create("melee_thrown");
+  /** Damage source for a "non-projectile" with {@link #THROWN_TOOL}. Used in enderference. */
+  public static final ResourceKey<DamageType> MELEE_THROWN_TOOL = create("melee_thrown_tool");
   /** Damage from a fishing rod */
   public static final ResourceKey<DamageType> FISHING_HOOK = create("fishing_hook");
+  /** Damage source for a "non-projectile" with {@link #FISHING_HOOK}. Used in enderference. */
+  public static final ResourceKey<DamageType> MELEE_FISHING_HOOK = create("melee_fishing_hook");
 
   /* Modifiers */
   /** Damage source that bypasses armor */

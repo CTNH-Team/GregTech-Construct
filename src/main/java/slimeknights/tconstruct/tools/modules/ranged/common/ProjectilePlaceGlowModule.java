@@ -12,6 +12,7 @@ import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.entity.ReusableProjectile;
 import slimeknights.tconstruct.library.modifiers.hook.ranged.ProjectileHitModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.ranged.ProjectileLaunchModifierHook;
 import slimeknights.tconstruct.library.modifiers.modules.ModifierModule;
@@ -76,10 +77,9 @@ public record ProjectilePlaceGlowModule(int damage, boolean blocks, boolean enti
   public boolean onProjectileHitsBlock(ModifierNBT modifiers, ModDataNBT persistentData, ModifierEntry modifier, Projectile projectile, BlockHitResult hit, @Nullable LivingEntity owner) {
     if (blocks) {
       Direction direction = hit.getDirection();
-      TinkerCommons.glow.get().addGlow(projectile.level(), hit.getBlockPos().relative(direction), direction.getOpposite());
-      if (!projectile.getType().is(TinkerTags.EntityTypes.REUSABLE_AMMO)) {
-        ModifierUtil.updateFishingRod(projectile, damage, true);
-        projectile.discard();
+      if (TinkerCommons.glow.get().addGlow(projectile.level(), hit.getBlockPos().relative(direction), direction.getOpposite())) {
+        ModifierUtil.updateFishingRod(projectile, damage, true, modifier.getId());
+        ReusableProjectile.discard(projectile);
         return true;
       }
     }

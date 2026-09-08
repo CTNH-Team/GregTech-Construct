@@ -189,9 +189,11 @@ public final class TinkerTools extends TinkerModule {
     public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> travelersGear = ITEMS.registerEnum("travelers", ArmorItem.Type.values(), type -> new MultilayerArmorItem(ArmorDefinitions.TRAVELERS, type, UNSTACKABLE_PROPS));
     public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> plateArmor = ITEMS.registerEnum("plate", ArmorItem.Type.values(), type -> new MultilayerArmorItem(ArmorDefinitions.PLATE, type, UNSTACKABLE_PROPS));
     public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> slimesuit = new EnumObject.Builder<ArmorItem.Type,ModifiableArmorItem>(ArmorItem.Type.class)
-            .putAll(ITEMS.registerEnum("slime", new ArmorItem.Type[] {ArmorItem.Type.BOOTS, ArmorItem.Type.LEGGINGS, ArmorItem.Type.CHESTPLATE}, type -> new MultilayerArmorItem(ArmorDefinitions.SLIMESUIT, type, UNSTACKABLE_PROPS)))
-            .put(ArmorItem.Type.HELMET, ITEMS.register("slime_helmet", () -> new SlimeskullItem(ArmorDefinitions.SLIMESUIT, UNSTACKABLE_PROPS)))
+            .put(ArmorItem.Type.HELMET, ITEMS.register("slime_helmet", () -> new SlimeskullItem(ArmorDefinitions.SLIMESUIT, SlimeskullItem.MODEL_LOCATION, UNSTACKABLE_PROPS)))
+            .put(ArmorItem.Type.CHESTPLATE, ITEMS.register("slimy_chestplate", () -> new MultilayerArmorItem(ArmorDefinitions.SLIMESUIT, ArmorItem.Type.CHESTPLATE, UNSTACKABLE_PROPS)))
+            .putAll(ITEMS.registerEnum("slime", new ArmorItem.Type[] {ArmorItem.Type.LEGGINGS, ArmorItem.Type.BOOTS}, type -> new MultilayerArmorItem(ArmorDefinitions.SLIMESUIT, type, UNSTACKABLE_PROPS)))
             .build();
+    public static final ItemObject<MultilayerArmorItem> slimeWings = ITEMS.register("slime_wings", () -> new MultilayerArmorItem(ArmorDefinitions.SLIMESUIT, ArmorItem.Type.CHESTPLATE, UNSTACKABLE_PROPS, ArmorDefinitions.SLIME_WINGS, TinkerTools.slimeWings.getId()));
     public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> standardArmor = ITEMS.registerEnum("standard", ArmorItem.Type.values(), type -> slotAwareArmor(ArmorDefinitions.STANDARD, type));
     public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> knightsArmor = ITEMS.registerEnum("knights", ArmorItem.Type.values(), type -> slotAwareArmor(ArmorDefinitions.KNIGHTS, type));
     public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> explorersArmor = ITEMS.registerEnum("explorers", ArmorItem.Type.values(), type -> slotAwareArmor(ArmorDefinitions.EXPLORERS, type));
@@ -336,6 +338,7 @@ public final class TinkerTools extends TinkerModule {
             ToolStackPredicate.LOADER.register(getResource("stat_in_range"), StatInRangePredicate.LOADER);
             ToolStackPredicate.LOADER.register(getResource("stat_in_set"), StatInSetPredicate.LOADER);
             ToolStackPredicate.LOADER.register(getResource("has_volatile_key"), VolatileDataPredicate.LOADER);
+            ToolStackPredicate.LOADER.register(getResource("tool_action"), ToolActionPredicate.LOADER);
         }
     }
 

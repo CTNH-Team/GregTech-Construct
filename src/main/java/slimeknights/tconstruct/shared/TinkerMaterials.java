@@ -115,6 +115,7 @@ public final class TinkerMaterials extends TinkerModule {
     accept(output, hepatizon);
     output.accept(netheriteNugget);
     accept(output, knightmetal);
+    accept(output, knightslime);
     // fake storage items make more sense here than tool parts
     Consumer<ItemStack> consumer = output::accept;
     TinkerToolParts.fakeIngot.get().addVariants(consumer, "");

@@ -69,6 +69,7 @@ public class ModifierIds {
     public static final ModifierId luck    = id("luck");
     public static final ModifierId looting = id("looting");
     public static final ModifierId fortune = id("fortune");
+    public static final ModifierId fortunate = id("fortunate");
     public static final ModifierId experienced = id("experienced");
 
     // damage boost
@@ -121,12 +122,18 @@ public class ModifierIds {
     public static final ModifierId malleability = id("malleability");
     public static final ModifierId insulation = id("insulation");
     public static final ModifierId turtleShell = id("turtle_shell");
+    public static final ModifierId turtlesGrace = id("turtles_grace");
     public static final ModifierId shulking = id("shulking");
     public static final ModifierId dragonborn = id("dragonborn");
+    public static final ModifierId dragonfall = id("dragonfall");
     public static final ModifierId wings = id("wings");
     public static final ModifierId knockbackResistance = id("knockback_resistance");
+    public static final ModifierId cobalamin = id("cobalamin");
+    public static final ModifierId shellGut = id("shell_gut");
+    public static final ModifierId ramAttack = id("ram_attack");
     // counter
     public static final ModifierId thorns = id("thorns");
+    public static final ModifierId thornsShell = id("thorns_shell");
     public static final ModifierId ricochet = id("ricochet");
     // defense
     public static final ModifierId revitalizing = id("revitalizing");
@@ -137,12 +144,18 @@ public class ModifierIds {
     // chestplate
     public static final ModifierId strength = id("strength");
     // leggings
+    public static final ModifierId pocket = id("pocket");
     public static final ModifierId pockets = id("pockets");
+    public static final ModifierId shellStorage = id("shell_storage");
+    public static final ModifierId shulkerBox = id("shulker_box");
+    public static final ModifierId reverted = id("reverted");
     public static final ModifierId stepUp = id("step_up");
     public static final ModifierId speedy = id("speedy");
     public static final ModifierId swiftSneak = id("swift_sneak");
     public static final ModifierId workbench = id("workbench");
     public static final ModifierId toolBelt = id("tool_belt");
+    public static final ModifierId looter = id("looter");
+    public static final ModifierId entwined = id("entwined");
     public static final ModifierId leaping = id("leaping");
     public static final ModifierId soulBelt = id("soul_belt");
     public static final ModifierId craftingTable = id("crafting_table");
@@ -178,7 +191,16 @@ public class ModifierIds {
     // internal
     public static final ModifierId overslimeFriend = id("overslime_friend");
     public static final ModifierId snowBoots = id("snow_boots");
-
+    public static final ModifierId ironArmor = id("iron_armor");
+    // upstream 3.12 JSON-migrated ids (fork keeps java classes; constants mirror upstream ModifierIds)
+    public static final ModifierId bucketing = id("bucketing");
+    public static final ModifierId firestarter = id("firestarter");
+    public static final ModifierId knockback = id("knockback");
+    public static final ModifierId necrotic = id("necrotic");
+    public static final ModifierId silky = id("silky");
+    public static final ModifierId supercharged = id("supercharged");
+    public static final ModifierId soulspeed = id("soulspeed");
+    public static final ModifierId unbreakable = id("unbreakable");
     // traits - tier 1
     public static final ModifierId cultivated = id("cultivated");
     public static final ModifierId economical = id("economical");
@@ -202,6 +224,7 @@ public class ModifierIds {
     public static final ModifierId antitoxin = id("antitoxin");
     public static final ModifierId airborne = id("airborne");
     public static final ModifierId skyfall = id("skyfall");
+    public static final ModifierId floaty = id("float");
     public static final ModifierId flamestance = id("flamestance");
     public static final ModifierId entangled = id("entangled");
     public static final ModifierId stoneshield = id("stoneshield");
@@ -226,6 +249,7 @@ public class ModifierIds {
   public static final ModifierId magnetic = id("magnetic");
     // traits - tier 3
     public static final ModifierId overcast = id("overcast");
+    public static final ModifierId overwield = id("overwield");
     public static final ModifierId overshield = id("overshield");
     public static final ModifierId crumbling = id("crumbling");
     public static final ModifierId enhanced = id("enhanced");
@@ -261,6 +285,7 @@ public class ModifierIds {
     public static final ModifierId vintage = id("vintage");
     public static final ModifierId valiant = id("valiant");
     public static final ModifierId stalwart = id("stalwart");
+    public static final ModifierId loyal = id("loyal");
     public static final ModifierId dragonshot = id("dragonshot");
     public static final ModifierId reclaim = id("reclaim");
     public static final ModifierId hover = id("hover");

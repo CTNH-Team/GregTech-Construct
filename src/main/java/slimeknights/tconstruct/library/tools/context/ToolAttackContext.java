@@ -11,6 +11,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,6 +28,7 @@ import slimeknights.tconstruct.library.tools.helper.ToolAttackUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.library.utils.Util;
+import slimeknights.tconstruct.shared.TinkerEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -113,7 +116,9 @@ public class ToolAttackContext {
   /** Creates a damage source from the given context */
   public DamageSource makeDamageSource() {
     if (projectile != null) {
-      return CombatHelper.damageSource(TinkerDamageTypes.THROWN_TOOL, projectile, attacker);
+      // if we have a projectile, use the projectile damage source except when targeting an enderman with enderference
+    ResourceKey<DamageType> damageType = TinkerEffects.needsEnderferenceOverride(livingTarget) ? TinkerDamageTypes.MELEE_THROWN_TOOL : TinkerDamageTypes.THROWN_TOOL;
+    return CombatHelper.damageSource(damageType, projectile, attacker);
     }
     if (playerAttacker != null) {
       return attacker.damageSources().playerAttack(playerAttacker);

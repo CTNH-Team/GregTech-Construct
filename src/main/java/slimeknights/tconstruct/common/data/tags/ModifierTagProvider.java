@@ -65,10 +65,11 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
     );
     tag(AOE_INTERACTION).add(ModifierIds.pathing, ModifierIds.stripping, ModifierIds.tilling, ModifierIds.brushing, TinkerModifiers.splashing.getId(), TinkerModifiers.harvest.getId());
     tag(CHARGE_EMPTY_BOW_WITH_DRAWTIME).add(TinkerModifiers.flinging.getId(), TinkerModifiers.springing.getId(), TinkerModifiers.bonking.getId(), TinkerModifiers.warping.getId(), ModifierIds.throwing);
-    tag(CHARGE_EMPTY_BOW_WITHOUT_DRAWTIME).add(TinkerModifiers.blocking.getId(), ModifierIds.scope, ModifierIds.zoom);
+    tag(CHARGE_EMPTY_BOW_WITHOUT_DRAWTIME).add(TinkerModifiers.blocking.getId(), ModifierIds.scope, ModifierIds.zoom, TinkerModifiers.slurping.getId(), TinkerModifiers.tasty.getId());
     tag(DRILL_ATTACKS).add(TinkerModifiers.flinging.getId(), TinkerModifiers.springing.getId(), ModifierIds.grapple);
     tag(SELF_KNOCKBACK_SLINGS).add(TinkerModifiers.flinging.getId(), TinkerModifiers.springing.getId());
     tag(TARGET_KNOCKBACK_SLINGS).add(TinkerModifiers.bonking.getId());
+    tag(KNOCKBACK_SLINGS).addTag(SELF_KNOCKBACK_SLINGS, TARGET_KNOCKBACK_SLINGS);
 
     // book tags
     this.tag(UPGRADES).addTag(GENERAL_UPGRADES, MELEE_UPGRADES, DAMAGE_UPGRADES, HARVEST_UPGRADES, ARMOR_UPGRADES, RANGED_UPGRADES);
@@ -162,6 +163,12 @@ public class ModifierTagProvider extends AbstractModifierTagProvider {
       ModifierIds.shiny,
       TinkerModifiers.dyed.getId(), TinkerModifiers.embellishment.getId(), TinkerModifiers.trim.getId(),
       TinkerModifiers.farsighted.getId(), TinkerModifiers.nearsighted.getId());
+
+    // recipe viewer catalysts, keep upstream jei/ names to avoid datapack forks; consumed in plugin/emi
+    this.tag(CRAFTING).add(ModifierIds.workbench, ModifierIds.craftingTable);
+    this.tag(SMELTING).add(ModifierIds.smelting, TinkerModifiers.autosmelt.getId());
+    this.tag(MELTING).add(TinkerModifiers.melting.getId());
+    this.tag(SEVERING).add(TinkerModifiers.severing.getId());
 
     addonTags.accept(new ModifierTagRegistrar());
   }

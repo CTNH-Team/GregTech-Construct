@@ -21,6 +21,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
+import slimeknights.mantle.datagen.MantleTags;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.materials.definition.MaterialManager;
 import slimeknights.tconstruct.library.modifiers.Modifier;
@@ -518,9 +519,12 @@ public class TinkerTags {
         /** Tag so mods like thermal know our scyhtes can harvest */
         public static final TagKey<Item> SCYTHES = common("tools/scythe");
 
-        /** Tag for others adding empty potion bottles */
-        public static final TagKey<Item> SPLASH_BOTTLE = common("bottles/splash");
-        public static final TagKey<Item> LINGERING_BOTTLE = common("bottles/lingering");
+        /** @deprecated use {@link MantleTags.Items#SPLASH_BOTTLE} */
+        @Deprecated(forRemoval = true)
+        public static final TagKey<Item> SPLASH_BOTTLE = MantleTags.Items.SPLASH_BOTTLE;
+        /** @deprecated use {@link MantleTags.Items#LINGERING_BOTTLE} */
+        @Deprecated(forRemoval = true)
+        public static final TagKey<Item> LINGERING_BOTTLE = MantleTags.Items.LINGERING_BOTTLE;
 
         // compat tags
         /** @deprecated necronium bones now show based on {@link slimeknights.tconstruct.tools.data.material.MaterialIds#necronium} */
@@ -622,7 +626,10 @@ public class TinkerTags {
         public static final TagKey<EntityType<?>> DAMAGE_MODIFIER_BLACKLIST = local("damage_modifier_blacklist");
 
         public static final TagKey<EntityType<?>> MELTING_SHOW = local("melting/show_in_default");
+        /** Entities in this tag are hidden from EMI and blacklisted from melting in the smeltery */
         public static final TagKey<EntityType<?>> MELTING_HIDE = local("melting/hide_in_default");
+        /** Entities in this tag blacklisted from melting in the smeltery, notably in the default recipe */
+        public static final TagKey<EntityType<?>> MELTING_BLACKLIST = local("melting/blacklist");
         public static final TagKey<EntityType<?>> PIGGYBACKPACK_BLACKLIST = local("piggybackpack_blacklist");
 
         /** Entities in this tag take more damage from bane of sssss */
@@ -645,10 +652,14 @@ public class TinkerTags {
 
         /** Projectiles with this tag will not be discarded by any relevant modifiers. */
         public static final TagKey<EntityType<?>> REUSABLE_AMMO = common("reusable_ammo");
+        /** {@link net.minecraft.world.entity.projectile.AbstractArrow} with this tag will not run the enderference override. Ensures we run the proper damaging logic for weird arrows like tridents. */
+        public static final TagKey<EntityType<?>> ENDERFERENCE_ARROW_BLACKLIST = common("enderference_arrow_blacklist");
         /** Projectiles with this tag cannot be reflected */
         public static final TagKey<EntityType<?>> REFLECTING_BLACKLIST = common("reflecting/blacklist");
         /** Projectiles with this tag cannot be reflected */
         public static final TagKey<EntityType<?>> REFLECTING_PRESERVE_OWNER = common("reflecting/preserve_owner");
+        /** Common tag of fishing bobbers. Note we don't use this so we don't bother adding vanilla to it. */
+        public static final TagKey<EntityType<?>> BOBBERS = common("bobber");
 
         /** Entities that will not heal you using necrotic */
         public static final TagKey<EntityType<?>> NECROTIC_BLACKLIST = common("necrotic_blacklist");
@@ -727,6 +738,8 @@ public class TinkerTags {
         public static final TagKey<Modifier> CHARGE_EMPTY_BOW_WITHOUT_DRAWTIME = local("charge_empty_bow/without_drawtime");
         /** Movement modifiers that can activate the drill attack */
         public static final TagKey<Modifier> DRILL_ATTACKS = local("drill_attacks");
+        /** Sling modifiers that get a bonus from knockback. */
+        public static final TagKey<Modifier> KNOCKBACK_SLINGS = local("knockback_slings");
         /** Sling modifiers that get a bonus from knockback, targeting yourself (so should add in attributes). */
         public static final TagKey<Modifier> SELF_KNOCKBACK_SLINGS = local("knockback_slings/self");
         /** Sling modifiers that get a bonus from knockback, targeting someone else (so attributes are automatically applied). */
@@ -774,7 +787,14 @@ public class TinkerTags {
 
         // EMI
         public static final TagKey<Modifier> HIDDEN_FROM_EMI = hiddenFromEMI(ModifierManager.REGISTRY_KEY);
-
+        /** Modifiers in this tag allow crafting and should be listed as a crafting table catalyst */
+        public static final TagKey<Modifier> CRAFTING = local("jei/crafting");
+        /** Modifiers in this tag allow smelting and should be listed as a furnace catalyst */
+        public static final TagKey<Modifier> SMELTING = local("jei/smelting");
+        /** Modifiers in this tag allow melting recipes and should be listed as an item and entity melting catalyst. If a modifier needs these separated make a feature request. */
+        public static final TagKey<Modifier> MELTING = local("jei/melting");
+        /** Modifiers in this tag allow severing and are listed as a severing catalyst */
+        public static final TagKey<Modifier> SEVERING = local("jei/severing");
 
         private static TagKey<Modifier> local(String name) {
             return ModifierManager.getTag(getResource(name));
@@ -847,6 +867,8 @@ public class TinkerTags {
 
     public static class DamageTypes {
         private static void init() {}
+        /** Damage types dealt by a melee attack, notably excluding damage that is merely in melee range such as cramming. Shared by the melee protection modifier and the loot modifier whitelist. */
+        public static final TagKey<DamageType> IS_MELEE = local("is_melee");
         /** Damage types reduced by the melee protection modifier */
         public static final TagKey<DamageType> MELEE_PROTECTION = local("protection/melee");
         /** Damage types reduced by the projectile protection modifier */
@@ -869,6 +891,8 @@ public class TinkerTags {
 
         /** Damage types that can use modifiers. */
         public static final TagKey<DamageType> MODIFIER_WHITELIST = local("modifier_whitelist");
+        /** Damage types where the held tool is responsible for the kill, allowing it to apply loot modifiers such as severing. Projectiles instead use the modifiers stored on the projectile. */
+        public static final TagKey<DamageType> LOOT_MODIFIER_WHITELIST = local("loot_modifier_whitelist");
 
         private static TagKey<DamageType> local(String name) {
             return TagKey.create(Registries.DAMAGE_TYPE, getResource(name));

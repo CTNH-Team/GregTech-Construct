@@ -9,6 +9,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import slimeknights.tconstruct.common.Sounds;
+import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.hook.special.sling.SlingAngleModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.special.sling.SlingForceModifierHook;
@@ -18,6 +19,7 @@ import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.item.ModifiableItem;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.utils.SlimeBounceHandler;
+import slimeknights.tconstruct.library.modifiers.ModifierManager;
 import slimeknights.tconstruct.tools.TinkerToolActions;
 
 /** Add velocity opposite of the targeted block */
@@ -58,7 +60,8 @@ public class FlingingModifier extends SlingModifier {
               ToolDamageUtil.damageAnimated(tool, 1, entity);
             }
             // apply drill attack if the modifier is present
-            if (ModifierUtil.canPerformAction(tool, TinkerToolActions.DRILL_ATTACK)) {
+            // if supported, perform drill attack if the modifier is available
+            if (ModifierManager.isInTag(modifier.getId(), TinkerTags.Modifiers.DRILL_ATTACKS) && ModifierUtil.canPerformAction(tool, TinkerToolActions.DRILL_ATTACK)) {
               player.startAutoSpinAttack(20);
             }
             return;

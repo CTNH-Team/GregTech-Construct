@@ -7,6 +7,8 @@ import slimeknights.tconstruct.library.materials.stats.MaterialStatType;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
+import slimeknights.tconstruct.tools.stats.RepairStats;
+import slimeknights.tconstruct.tools.stats.SlimeStats;
 import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
 
 import java.util.List;
@@ -18,6 +20,8 @@ import java.util.List;
 public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
     public static final MaterialStatsId WOOD = new MaterialStatsId(TConstruct.MOD_ID, "wood");
     public static final MaterialStatsId SLIMESUIT = new MaterialStatsId(TConstruct.MOD_ID, "slimesuit");
+    /** Used for slimesuit ribcage and laces on armor models */
+    public static final MaterialStatsId SLIMESUIT_OVERLAY = new MaterialStatsId(TConstruct.MOD_ID, "slimesuit_overlay");
     public static final MaterialStatsId ARMOR_PLATING = new MaterialStatsId(TConstruct.MOD_ID, "armor_plating");
     public static final MaterialStatsId ARMOR_MAILLE = new MaterialStatsId(TConstruct.MOD_ID, "armor_maille");
     public static final MaterialStatsId ARMOR_CUIRASS = new MaterialStatsId(TConstruct.MOD_ID, "armor_cuirass");
@@ -101,18 +105,20 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
         addSprite("staff/large_modifiers/tconstruct_embellishment", WOOD);
 
         // slimesuit textures - the armor model won't be animated, so don't animate the item
-        addSprite("armor/slime/skull_modifiers/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/skull_modifiers/broken/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/wings_modifiers/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/wings_modifiers/broken/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/shell_modifiers/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/shell_modifiers/broken/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/boot_modifiers/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
-        addSprite("armor/slime/boot_modifiers/broken/tconstruct_embellishment", SLIMESUIT).disallowAnimated();
+        buildTool("armor/slime").disallowAnimated()
+                .addBreakablePart("helmet/slime", SlimeStats.ID)
+                .addBreakablePart("chestplate/slime", SlimeStats.ID)
+                .addBreakablePart("chestplate/ribcage", RepairStats.RIBCAGE.getId())
+                .addBreakablePart("leggings/slime", SlimeStats.ID)
+                .addBreakablePart("leggings/shell", RepairStats.SHELL.getId())
+                .addBreakablePart("boots/slime", SlimeStats.ID)
+                .addPart("boots/laces", RepairStats.LACES.getId())
+                .addBreakablePart("wings/slime", SlimeStats.ID);
         addTexture("tinker_armor/slime/armor", SLIMESUIT).disallowAnimated();
         addTexture("tinker_armor/slime/leggings", SLIMESUIT).disallowAnimated();
         addTexture("tinker_armor/slime/wings", SLIMESUIT).disallowAnimated();
-
+        addTexture("tinker_armor/slime/overlay_armor", SLIMESUIT_OVERLAY).disallowAnimated();
+        addTexture("tinker_armor/slime/overlay_leggings", RepairStats.SHELL.getId()).disallowAnimated();
         // tools
         // pickaxe - regular variant uses handle on frypans as a grip so generate those too
         buildTool("pickaxe").addBreakableHead("head").addHandle("handle").addBinding("binding");
@@ -153,7 +159,8 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
         buildTool("fishing_rod")
                 .addLimb("rod")
                 .addBreakableBowstring("string").addBowstring("string_cast")
-                .addBreakablePart("hook", StatlessMaterialStats.ARROW_HEAD.getIdentifier());
+                .addBreakablePart("hook", StatlessMaterialStats.ARROW_HEAD.getIdentifier())
+                .addPart("hook_cast", StatlessMaterialStats.ARROW_HEAD.getIdentifier());
         buildTool("javelin").withLarge().addBreakableHead("head").addLimb("guard").addHandle("handle").addGrip("grip");
         buildTool("ammo")
                 // arrow

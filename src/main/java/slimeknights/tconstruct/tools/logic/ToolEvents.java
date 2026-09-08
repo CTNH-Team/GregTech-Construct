@@ -1055,13 +1055,25 @@ public class ToolEvents {
           // cancel all effects on endermen unless we have enderference, endermen like to teleport away
           // yes, hardcoded to enderference, if you need your own enderference for whatever reason, talk to us
           Entity entity = entityHit.getEntity();
-          if (entity.getType() != EntityType.ENDERMAN || modifiers.getLevel(TinkerModifiers.enderference.getId()) > 0) {
-            // extract a living target as that is the most common need
-            LivingEntity target = ToolAttackUtil.getLivingEntity(entity);
+          // extract a living target as that is the most common need
+          LivingEntity target = ToolAttackUtil.getLivingEntity(entity);
+          if (TinkerEffects.canHitWithProjectile(target) || nbt.getBoolean(TinkerEffects.ENDERFERENCE_KEY)) {
+
+            // if its a piercing arrow, skip modifier effects when at the piercing limit, arrow is going to skip the hit
+            boolean canBlock = true;
+            if (projectile instanceof AbstractArrow arrow) {
+              int pierce = arrow.getPierceLevel();
+              if (pierce > 0) {
+                if (arrow.piercingIgnoreEntityIds != null && arrow.piercingIgnoreEntityIds.size() >= pierce + 1) {
+                  return;
+                }
+                canBlock = false;
+              }
+            }
 
             // ensure we are not blocking, that means projectile shouldn't hit
             boolean notBlocked = true;
-            if (target != null && target.isBlocking() && (!(projectile instanceof AbstractArrow arrow) || arrow.getPierceLevel() == 0)) {
+            if (canBlock && target != null && target.isBlocking()) {
               Vec3 direction = projectile.position().vectorTo(target.position()).normalize();
               direction = new Vec3(direction.x, 0.0D, direction.z);
               if (direction.dot(target.getViewVector(1.0F)) < 0.0D) {

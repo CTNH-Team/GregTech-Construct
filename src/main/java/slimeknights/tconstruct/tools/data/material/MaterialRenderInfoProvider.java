@@ -93,6 +93,7 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
         buildRenderInfo(MaterialIds.steel).color(0x959595).fallbacks("metal");
         buildRenderInfo(MaterialIds.darkthread);
         buildRenderInfo(MaterialIds.ichorskin);
+    buildRenderInfo(MaterialIds.jadeite);
 
         // tier 4
         buildRenderInfo(MaterialIds.cinderslime).luminosity(SlimeType.ICHOR.getLightLevel());
@@ -100,8 +101,10 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
         buildRenderInfo(MaterialIds.hepatizon).color(0x60496b).fallbacks("metal");
         buildRenderInfo(MaterialIds.manyullyn).color(0x9261cc).fallbacks("metal");
         buildRenderInfo(MaterialIds.knightmetal).color(0xC4D6AE).fallbacks("metal");
+        buildRenderInfo(MaterialIds.knightslime);
         buildRenderInfo(MaterialIds.blazingBone).color(0xF2D500).fallbacks("bone", "rock").luminosity(15);
         buildRenderInfo(MaterialIds.blazewood).fallbacks("wood", "stick").luminosity(7);
+        buildRenderInfo(MaterialIds.jeweledHide);
         buildRenderInfo(MaterialIds.ancientHide);
         buildRenderInfo(MaterialIds.ancient);
         buildRenderInfo(MaterialIds.enderslimeVine).color(0xa92dff).fallbacks("vine");
@@ -135,6 +138,7 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
 
         // tier 4 compat
         buildRenderInfo(MaterialIds.fiery).color(0x893D14).fallbacks("metal").luminosity(15);
+        buildRenderInfo(MaterialIds.nicrosil).color(0xD9E6DC);
 
         // ammo
         buildRenderInfo(MaterialIds.amethyst);
@@ -150,9 +154,14 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
         buildRenderInfo(MaterialIds.magma).luminosity(5);
         buildRenderInfo(MaterialIds.glowstone).luminosity(15);
         buildRenderInfo(MaterialIds.gunpowder);
+    buildRenderInfo(MaterialIds.redstone);
+        buildRenderInfo(MaterialIds.turtle);
+        buildRenderInfo(MaterialIds.nautilus).color(0xFFD4CCC3);
+        buildRenderInfo(MaterialIds.horn);
         buildRenderInfo(MaterialIds.dragonScale);
         buildRenderInfo(MaterialIds.endRod);
         redirect(MaterialIds.magnetite, MaterialIds.steel);
+        redirect(MaterialIds.kobold, MaterialIds.cobalt);
         redirect(MaterialIds.shulker, MaterialIds.chorus);
         redirect(MaterialIds.knightly, MaterialIds.knightmetal);
 
@@ -163,6 +172,7 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
         buildRenderInfo(MaterialIds.blood);
         buildRenderInfo(MaterialIds.clay);
         buildRenderInfo(MaterialIds.honey);
+        buildRenderInfo(MaterialIds.cheese);
         buildRenderInfo(MaterialIds.phantom);
 
         // UI internal

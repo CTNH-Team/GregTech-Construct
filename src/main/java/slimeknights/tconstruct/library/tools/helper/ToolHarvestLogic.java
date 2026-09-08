@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -150,7 +151,7 @@ public class ToolHarvestLogic {
 
     // remove the block
     boolean canHarvest = context.canHarvest();
-    BlockEntity te = canHarvest ? world.getBlockEntity(pos) : null; // ensures tile entity is fetched so its around for afterBlockBreak
+    BlockEntity te = canHarvest ? world.getBlockEntity(pos) : null; // ensures tile entity is fetched so it's around for afterBlockBreak
     boolean removed = removeBlock(tool, context);
 
     // harvest drops
@@ -166,14 +167,14 @@ public class ToolHarvestLogic {
 
     // handle modifiers if not broken
     // broken means we are using "empty hand"
-    if (!tool.isBroken() && removed) {
+    if (removed && !tool.isBroken()) {
       for (ModifierEntry entry : tool.getModifierList()) {
         entry.getHook(ModifierHooks.BLOCK_BREAK).afterBlockBreak(tool, entry, context);
       }
-      ToolDamageUtil.damageAnimated(tool, damage, player);
+      ToolDamageUtil.damageAnimated(tool, damage, player, EquipmentSlot.MAINHAND);
     }
 
-    return true;
+    return removed;
   }
 
   /**
@@ -295,8 +296,6 @@ public class ToolHarvestLogic {
     int harvested = 0;
     if (breakBlock(tool, stack, context, true)) {
       harvested += 1;
-    }
-    if (harvested > 0) {
       for (BlockPos extraPos : extraBlocks) {
         BlockState extraState = world.getBlockState(extraPos);
         // prevent calling that stuff for air blocks, could lead to unexpected behaviour since it fires events
@@ -313,7 +312,7 @@ public class ToolHarvestLogic {
     if (originalEnchantments != null) {
       HarvestEnchantmentsModifierHook.restoreEnchantments(stack, originalEnchantments);
     }
-    // alert modifiers we finished harvesting
+    // alert modifiers we finished harvesting. Always run even if we broke nothing as it's important for cleanup
     for (ModifierEntry entry : tool.getModifierList()) {
       entry.getHook(ModifierHooks.BLOCK_HARVEST).finishHarvest(tool, entry, context, harvested);
     }
@@ -337,7 +336,7 @@ public class ToolHarvestLogic {
       for (ModifierEntry entry : tool.getModifierList()) {
         entry.getHook(ModifierHooks.BLOCK_BREAK).afterBlockBreak(tool, entry, context);
       }
-      ToolDamageUtil.damageAnimated(tool, ToolHarvestLogic.getDamage(tool, worldIn, pos, state), entityLiving);
+      ToolDamageUtil.damageAnimated(tool, ToolHarvestLogic.getDamage(tool, worldIn, pos, state), entityLiving, EquipmentSlot.MAINHAND);
     }
 
     return true;

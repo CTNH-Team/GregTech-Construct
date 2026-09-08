@@ -26,6 +26,8 @@ import java.util.List;
 /**
  * Module that just sets a boolean flag to true on a tool.
  * @see slimeknights.tconstruct.library.tools.definition.module.build.VolatileFlagModule
+ * @see VolatileIntModule
+ * @see VolatileFloatModule
  */
 public record VolatileFlagModule(ResourceLocation flag, ModifierCondition<IToolContext> condition) implements VolatileDataModifierHook, ProjectileLaunchModifierHook, ModifierModule, ConditionalModule<IToolContext> {
   private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<VolatileFlagModule>defaultHooks(ModifierHooks.VOLATILE_DATA);
@@ -42,6 +44,7 @@ public record VolatileFlagModule(ResourceLocation flag, ModifierCondition<IToolC
     }
   }
 
+  @Deprecated
   @Override
   public void onProjectileLaunch(IToolStackView tool, ModifierEntry modifier, LivingEntity shooter, Projectile projectile, @Nullable AbstractArrow arrow, ModDataNBT persistentData, boolean primary) {
     if (condition.matches(tool, modifier)) {
