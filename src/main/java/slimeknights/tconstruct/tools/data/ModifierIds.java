@@ -224,7 +224,7 @@ public class ModifierIds {
     public static final ModifierId antitoxin = id("antitoxin");
     public static final ModifierId airborne = id("airborne");
     public static final ModifierId skyfall = id("skyfall");
-    public static final ModifierId floaty = id("floaty");
+    public static final ModifierId floaty = id("float");
     public static final ModifierId flamestance = id("flamestance");
     public static final ModifierId entangled = id("entangled");
     public static final ModifierId stoneshield = id("stoneshield");

@@ -1420,6 +1420,9 @@
   "item.tconstruct.boots_plating_dummy": "Stone Boot Plating",
   "item.tconstruct.maille": "Maille",
   "item.tconstruct.shield_core": "Shield Core",
+  "item.tconstruct.ribcage": "Ribcage",
+  "item.tconstruct.laces": "Laces",
+  "item.tconstruct.shell": "Shell",
 
 
   "_conment": "Tool Descriptions",
@@ -3516,6 +3519,9 @@
   "modifier.tconstruct.skyfall": "Skyfall",
   "modifier.tconstruct.skyfall.flavor": "Falling with style!",
   "modifier.tconstruct.skyfall.description": "Reduces the effect of gravity",
+  "modifier.tconstruct.float": "Float",
+  "modifier.tconstruct.float.flavor": "Release!",
+  "modifier.tconstruct.float.description": "Causes the target to temporarily float.",
   "modifier.tconstruct.flamestance": "Flamestance",
   "modifier.tconstruct.flamestance.flavor": "Power of Fire!",
   "modifier.tconstruct.flamestance.description": "Increases power and protection in hot biomes, but reduces it in cold biomes",

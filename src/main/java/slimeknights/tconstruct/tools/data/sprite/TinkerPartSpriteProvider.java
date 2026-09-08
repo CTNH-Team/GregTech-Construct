@@ -7,6 +7,8 @@ import slimeknights.tconstruct.library.materials.stats.MaterialStatType;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.PlatingMaterialStats;
+import slimeknights.tconstruct.tools.stats.RepairStats;
+import slimeknights.tconstruct.tools.stats.SlimeStats;
 import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
 
 import java.util.List;
@@ -103,12 +105,20 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
         addSprite("staff/large_modifiers/tconstruct_embellishment", WOOD);
 
         // slimesuit textures - the armor model won't be animated, so don't animate the item
-        buildTool("armor/slime").disallowAnimated();
+        buildTool("armor/slime").disallowAnimated()
+                .addBreakablePart("helmet/slime", SlimeStats.ID)
+                .addBreakablePart("chestplate/slime", SlimeStats.ID)
+                .addBreakablePart("chestplate/ribcage", RepairStats.RIBCAGE.getId())
+                .addBreakablePart("leggings/slime", SlimeStats.ID)
+                .addBreakablePart("leggings/shell", RepairStats.SHELL.getId())
+                .addBreakablePart("boots/slime", SlimeStats.ID)
+                .addPart("boots/laces", RepairStats.LACES.getId())
+                .addBreakablePart("wings/slime", SlimeStats.ID);
         addTexture("tinker_armor/slime/armor", SLIMESUIT).disallowAnimated();
         addTexture("tinker_armor/slime/leggings", SLIMESUIT).disallowAnimated();
         addTexture("tinker_armor/slime/wings", SLIMESUIT).disallowAnimated();
         addTexture("tinker_armor/slime/overlay_armor", SLIMESUIT_OVERLAY).disallowAnimated();
-        addTexture("tinker_armor/slime/overlay_leggings", slimeknights.tconstruct.tools.stats.RepairStats.SHELL.getId()).disallowAnimated();
+        addTexture("tinker_armor/slime/overlay_leggings", RepairStats.SHELL.getId()).disallowAnimated();
         // tools
         // pickaxe - regular variant uses handle on frypans as a grip so generate those too
         buildTool("pickaxe").addBreakableHead("head").addHandle("handle").addBinding("binding");
