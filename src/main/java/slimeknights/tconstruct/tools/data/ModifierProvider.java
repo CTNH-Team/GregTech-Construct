@@ -375,7 +375,6 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
                         // knockback multiplier is a simple multiplier, though we skip if the knockback sync is disabled
                         .customVariable("knockback_multiplier", new EntityConditionalStatVariable(new AttributeEntityVariable(TinkerAttributes.KNOCKBACK_MULTIPLIER), 1))
                         .multiply()
-                        .multiply()
                         // finally, add to the base effect
                         .variable(VALUE).add().build())
                 // bonking does the same but without the attributes
