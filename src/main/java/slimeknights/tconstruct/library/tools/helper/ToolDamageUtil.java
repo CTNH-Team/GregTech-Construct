@@ -7,9 +7,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStack;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
+import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.behavior.PriorityToolDamageModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.behavior.ToolDamageModifierHook;
@@ -84,12 +84,21 @@ public class ToolDamageUtil {
     if (amount > 0) {
       // criteria updates
       int newDamage = damage + amount;
-      // TODO: needed?
       if (entity instanceof ServerPlayer player) {
+        // if not given the stack, find it on the player
         if (stack == null) {
-          stack = entity.getMainHandItem();
+          stack = ItemStack.EMPTY;
+          for (EquipmentSlot slot : EquipmentSlot.values()) {
+            ItemStack slotStack = player.getItemBySlot(slot);
+            if (tool.isSameStack(slotStack)) {
+              stack = slotStack;
+            }
+          }
         }
-        CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger(player, stack, newDamage);
+        // if we have a stack, update the criteria
+        if (!stack.isEmpty()) {
+          CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger(player, stack, newDamage);
+        }
       }
 
       tool.setDamage(newDamage);
@@ -105,7 +114,7 @@ public class ToolDamageUtil {
    * @param stack   Stack to use for criteria updates, if null uses main hand stack
    * @return true if the tool broke when damaging
    */
-  public static boolean damage(IToolStackView tool, int amount, @Nullable LivingEntity entity, @Nullable ItemStack stack) {
+  public static boolean damage(IToolStackView tool, int amount, @Nullable LivingEntity entity, @Nullable ItemStack stack, ModifierId cause) {
     if (amount <= 0 || tool.isBroken() || tool.isUnbreakable() || !tool.hasTag(TinkerTags.Items.DURABILITY)) {
       return false;
     }
@@ -120,6 +129,10 @@ public class ToolDamageUtil {
       return false;
     }
     return directDamage(tool, amount, entity, stack);
+  }
+
+  public static boolean damage(IToolStackView tool, int amount, @Nullable LivingEntity entity, @Nullable ItemStack stack) {
+    return damage(tool, amount, entity, stack, ModifierId.EMPTY);
   }
 
   public static int applyDamageHooks(IToolStackView tool, int amount, @Nullable LivingEntity entity, @Nullable ItemStack stack) {
@@ -204,13 +217,40 @@ public class ToolDamageUtil {
   }
 
   /**
+   * Damages the tool and sends the break animation if it broke, locating the stack among all equipment slots
+   * @param tool    Tool to damage
+   * @param amount  Amount of damage
+   * @param entity  Entity for animation. If null animation is skipped.
+   * @param cause   Modifier damaging the tool
+   * @return true if the tool broke when damaging
+   */
+  public static boolean damageAnimated(IToolStackView tool, int amount, @Nullable LivingEntity entity, ModifierId cause) {
+    // try to locate the passed stack among all equipment slots
+    if (entity != null) {
+      for (EquipmentSlot slot : EquipmentSlot.values()) {
+        ItemStack stack = entity.getItemBySlot(slot);
+        if (tool.isSameStack(stack)) {
+          if (damage(tool, amount, entity, stack, cause)) {
+            entity.broadcastBreakEvent(slot);
+            return true;
+          }
+          return false;
+        }
+      }
+    }
+    // did not find in any of the slots? just skip the animation/stack
+    return damage(tool, amount, entity, ItemStack.EMPTY);
+  }
+
+  /**
    * Damages the tool in the main hand and sends the break animation if it broke
    * @param tool    Tool to damage
    * @param amount  Amount of damage
    * @param entity  Entity for animation
+   * @return true if the tool broke when damaging
    */
-  public static boolean damageAnimated(IToolStackView tool, int amount, LivingEntity entity) {
-    return damageAnimated(tool, amount, entity, entity.isUsingItem() ? entity.getUsedItemHand() : InteractionHand.MAIN_HAND);
+  public static boolean damageAnimated(IToolStackView tool, int amount, @Nullable LivingEntity entity) {
+    return damageAnimated(tool, amount, entity, ModifierId.EMPTY);
   }
 
   /** Implements {@link net.minecraft.world.item.Item#damageItem(ItemStack, int, LivingEntity, Consumer)} for a modifiable item */
