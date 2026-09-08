@@ -1,5 +1,5 @@
 {
-  "tool": "tconstruct:slime_chestplate",
+  "tool": "tconstruct:slimy_chestplate",
   "text": [
     { "text": "スライムリトラは、最新の飛行技術です。" },
     { "text": "エリトラにエンダースライムを注ぐと作成でき、これもファントムの皮膜で修理できます。", "paragraph": true }
