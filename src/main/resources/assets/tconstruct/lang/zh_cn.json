@@ -197,6 +197,10 @@
   "item.tconstruct.cheese_ingot": "奶酪",
   "block.tconstruct.cheese_block": "奶酪块",
   "item.tconstruct.cheese.tooltip": "食用后随机移除身上的一种状态效果",
+  "material.tconstruct.cheese": "奶酪",
+  "material.tconstruct.cheese.flavor": "饱经岁月！",
+  "material.tconstruct.cheese.encyclopedia.ranged": "每级有15%概率可以食用工具。食用后，消耗耐久度并回复等同于等级数的饥饿值与固定0.6点饱和度，并移除一个随机效果。",
+  "material.tconstruct.cheese.encyclopedia.laces": "每级有15%概率可以食用盔甲。食用后，消耗耐久度并回复等同于等级数的饥饿值与固定0.6点饱和度，并移除一个随机效果。",
 
   "item.tconstruct.earth_slime_crystal": "大地黏液水晶",
   "block.tconstruct.earth_slime_crystal_block": "大地黏液水晶块",
@@ -2234,6 +2238,17 @@
   "material.tconstruct.prismarine": "海晶石",
   "material.tconstruct.prismarine.flavor": "海之兵器",
   "material.tconstruct.prismarine.ammo": "弹药类工具能自如地在水下运动，每级+1对水下目标的弹射物伤害。钓鱼竿改为获得1级饵钓",
+  "material.tconstruct.prismarine.flavor.shell": "海之护卫",
+  "material.tconstruct.prismarine.encyclopedia.shell": "反击时，每级增加15%概率造成1-4点伤害，成功格挡则改为每级增加30%概率。",
+
+  "material.tconstruct.turtle": "海龟",
+  "material.tconstruct.turtle.flavor": "小海龟游啊游。",
+  "material.tconstruct.turtle.encyclopedia.armor": "按等级最高的盔甲，每级使穿戴者在水下时获得+10%抗性，且每级使游泳速度增加5%。",
+  "material.tconstruct.turtle.encyclopedia.shell": "每级获得1水下呼吸和10%游泳速度。",
+
+  "material.tconstruct.nautilus": "鹦鹉螺",
+  "material.tconstruct.nautilus.flavor": "精通海味料理",
+  "material.tconstruct.nautilus.encyclopedia.shell": "免疫中毒 I、饥饿 II 和反胃 I；镶嵌甲壳纹饰时，各效果的最高等级提升。",
 
   "material.tconstruct.gunpowder": "火药",
   "material.tconstruct.gunpowder.flavor": "当心爆炸！",
@@ -2382,6 +2397,28 @@
 
   "material.tconstruct.soulsteel": "魂钢",
 
+  "material.tconstruct.jeweled_hide": "宝钻皮革",
+  "material.tconstruct.jeweled_hide.flavor": "用最纯粹的宝石鞣制的皮革。",
+  "material.tconstruct.jeweled_hide.encyclopedia.melee_harvest": "增加方块掉落物的掉落概率，与“幸运”效果叠加。",
+  "material.tconstruct.jeweled_hide.encyclopedia.ranged": "增加钓鱼的宝藏概率，与“幸运”效果叠加。",
+  "material.tconstruct.jeweled_hide.encyclopedia.armor": "最大生命值增加一颗心。加持在盾牌上后，举盾时立即回复生命值，但卸下时 会受到一颗心的伤害",
+  "material.tconstruct.jeweled_hide.encyclopedia.laces": "提升挖掘方块时的“幸运”等级；第二级对怪物掉落的“抢夺”也生效。",
+
+  "material.tconstruct.jadeite": "硬玉",
+  "material.tconstruct.jadeite.flavor": "结晶化的宝石",
+  "material.tconstruct.jadeite.encyclopedia.ribcage": "每次连续的空手攻击使伤害+0.5×等级；5次连续的空手攻击后，攻击伤害的加成达到上限为+2.5×等级。",
+
+  "material.tconstruct.horn": "山羊角",
+  "material.tconstruct.horn.minecraft.ponder_goat_horn": "沉思山羊角",
+  "material.tconstruct.horn.minecraft.sing_goat_horn": "歌颂山羊角",
+  "material.tconstruct.horn.minecraft.seek_goat_horn": "寻觅山羊角",
+  "material.tconstruct.horn.minecraft.feel_goat_horn": "感受山羊角",
+  "material.tconstruct.horn.minecraft.admire_goat_horn": "仰慕山羊角",
+  "material.tconstruct.horn.minecraft.call_goat_horn": "呼唤山羊角",
+  "material.tconstruct.horn.minecraft.yearn_goat_horn": "憧憬山羊角",
+  "material.tconstruct.horn.minecraft.dream_goat_horn": "想象山羊角",
+  "material.tconstruct.horn.flavor.shell": "蛮羊冲撞",
+  "material.tconstruct.horn.encyclopedia.shell": "疾跑时，每级使空手伤害+4。",
   "material.tconstruct.ancient_hide": "远古兽皮",
   "material.tconstruct.ancient_hide.flavor": "用最古老的石头鞣制的皮革",
   "material.tconstruct.ancient_hide.encyclopedia": "增加挖掘方块时掉落物的掉落概率，可与“幸运”同时存在",
@@ -2403,9 +2440,10 @@
   "material.tconstruct.knightmetal.ranged": "目标每穿戴一件盔甲，每级箭矢伤害+0.25（先于速度计算）",
   "material.tconstruct.knightmetal.armor": "目标每手持一件物品，每级提供的保护+5%",
 
-  "material.tconstruct.knightly": "骑士金属",
+  "material.tconstruct.knightly": "骑士",
   "material.tconstruct.knightly.flavor": "史莱姆旅途中得到的碎片，未打磨时尤为尖锐。",
-  "material.tconstruct.knightly.ammo": "目标每穿戴一件盔甲，每级箭矢伤害+0.25（先于速度计算）",
+  "material.tconstruct.knightly.encyclopedia.ammo": "目标每穿戴一件盔甲，每级令箭矢伤害+0.2（先于速度计算）。",
+  "material.tconstruct.knightly.encyclopedia.shell": "每个空盔甲槽位使自己增加10%×等级的抗性。",
 
   "material.tconstruct.end_rod": "末地烛",
   "material.tconstruct.end_rod.flavor": "没箭入石，箭“末”入石。",
@@ -2555,6 +2593,16 @@
 
 
   "_comment": "Tier 4 Integration Materials",
+
+  "material.tconstruct.kobold": "钴鳞",
+  "material.tconstruct.kobold.flavor": "像是从某种会发光的生物身上脱落的鳞片",
+  "material.tconstruct.kobold.encyclopedia.shell": "每级使攻击速度+5%，使用物品速度+10%，挖掘速度+15%。",
+
+  "material.tconstruct.nicrosil": "镍铬合金",
+  "material.tconstruct.nicrosil.flavor": "可以存储神能。",
+  "material.tconstruct.nicrosil.encyclopedia": "每次连续的攻击使攻击伤害+0.5×等级；5次连续攻击后，攻击伤害的加成达到上限为+2.5×等级。",
+  "material.tconstruct.nicrosil.encyclopedia.ranged": "每次箭矢命中后，令弹射物力量+0.25×等级，5次连续的箭矢命中后，弹射物力量加成上限为+1.25×等级。",
+  "material.tconstruct.nicrosil.encyclopedia.armor": "受到伤害后，近战伤害临时+1点；加成最多不超过此特性在所有部位盔甲上的等级总和。",
 
   "material.tconstruct.fiery": "炽铁",
   "material.tconstruct.fiery.flavor": "至热金属，热锻至臻。",
@@ -3469,6 +3517,16 @@
   "modifier.tconstruct.overwield.mining_speed": "黏液掌控速度",
   "modifier.tconstruct.overwield.velocity": "黏液掌控初速度",
   "modifier.tconstruct.overwield.draw_speed": "黏液掌控拉弓速度",
+  "modifier.tconstruct.loyal": "忠贞",
+  "modifier.tconstruct.loyal.flavor": "最轻便的盔甲是不穿任何盔甲",
+  "modifier.tconstruct.loyal.description": "自身穿戴的盔甲越少，减伤效果越强",
+  "modifier.tconstruct.loyal.resistance": "抗性",
+  "modifier.tconstruct.shell_gut": "贝肉",
+  "modifier.tconstruct.shell_gut.flavor": "像个鹦鹉螺，但不完全是",
+  "modifier.tconstruct.shell_gut.description": "免疫中毒 I、饥饿 II 和反胃 I",
+  "modifier.tconstruct.thorns_shell": "荆棘甲壳",
+  "modifier.tconstruct.thorns_shell.flavor": "可以说是非常金属了",
+  "modifier.tconstruct.thorns_shell.description": "利用守卫者的力量，使攻击者有概率受到伤害",
   "modifier.tconstruct.lacerating": "割裂",
   "modifier.tconstruct.lacerating.flavor": "小心割手！",
   "modifier.tconstruct.lacerating.description": "使攻击目标流血，造成更多伤害",
@@ -3876,6 +3934,8 @@
   "tool_stat.tconstruct.attack_speed.description": "近战攻击速度计算所依据的基准值\n大致为每秒满蓄力攻击的次数",
   "tool_stat.tconstruct.durability": "耐久度：",
   "tool_stat.tconstruct.durability.description": "耐久度计算所依据的基准值\n通常是工具整体耐久不可或缺的一部分",
+  "tool_stat.tconstruct.durability.repair": "修复值：",
+  "tool_stat.tconstruct.durability.repair.description": "此项决定使用材料修复部件时，单位数量材料可以修复的耐久度。",
   "tool_stat.tconstruct.use_item_speed": "使用时移速：",
   "tool_stat.tconstruct.use_item_speed.description": "使用物品（例如弓和盾牌）时移动速度的倍率",
 

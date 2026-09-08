@@ -2241,6 +2241,8 @@
   "material.tconstruct.prismarine": "Prismarine",
   "material.tconstruct.prismarine.flavor": "Weapon of the sea",
   "material.tconstruct.prismarine.ammo": "Lets the ammo move freely underwater and grants +1 projectile damage per level to underwater targets. Fishing rods instead gain a level of lure.",
+  "material.tconstruct.prismarine.flavor.shell": "Guarded by the guardian",
+  "material.tconstruct.prismarine.encyclopedia.shell": "Adds a 15% chance per level to deal 1-4 damage on counterattacks, or a 30% chance when blocking.",
 
   "material.tconstruct.gunpowder": "Gunpowder",
   "material.tconstruct.gunpowder.flavor": "Explosive!",
@@ -3010,6 +3012,9 @@
   "modifier.tconstruct.thorns.flavor": "Quite metal",
   "modifier.tconstruct.thorns.description": "Harness the power of the guardian, causing attackers to sometimes take damage",
   "modifier.tconstruct.thorns.attack_damage": "Pierce Damage",
+  "modifier.tconstruct.thorns_shell": "Thorns Shell",
+  "modifier.tconstruct.thorns_shell.flavor": "Quite metal",
+  "modifier.tconstruct.thorns_shell.description": "Harness the power of the guardian, causing attackers to sometimes take damage",
   "modifier.tconstruct.sticky": "Sticky",
   "modifier.tconstruct.sticky.flavor": "Like Halloween",
   "modifier.tconstruct.sticky.description": "Attackers may become stuck in place, or at least slowed",
@@ -3967,6 +3972,8 @@
   "tool_stat.tconstruct.attack_speed.description": "Base value for melee attack speed calculations.\nRoughly is number of full strength attacks per second.",
   "tool_stat.tconstruct.durability": "Durability: ",
   "tool_stat.tconstruct.durability.description": "The base-value for durability calculations.\nUsually an integral part to the overall durability of a tool.",
+  "tool_stat.tconstruct.durability.repair": "Repair Value: ",
+  "tool_stat.tconstruct.durability.repair.description": "Amount repaired per unit when repairing using this part.",
   "tool_stat.tconstruct.use_item_speed": "Use Item Speed: ",
   "tool_stat.tconstruct.use_item_speed.description": "Movement speed multiplier when using an item, such as a bow or a shield.",
 
