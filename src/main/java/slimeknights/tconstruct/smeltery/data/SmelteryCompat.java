@@ -55,7 +55,7 @@ public enum SmelteryCompat {
     REFINED_GLOWSTONE(TinkerFluids.moltenRefinedGlowstone, CompatType.ALLOY),
     REFINED_OBSIDIAN (TinkerFluids.moltenRefinedObsidian,  CompatType.ALLOY),
     // cosmere
-    NICROSIL (TinkerFluids.moltenNicrosil,   CompatType.ALLOY),
+    NICHROME (TinkerFluids.moltenNichrome,   CompatType.ALLOY),
     DURALUMIN(TinkerFluids.moltenDuralumin, CompatType.ALLOY),
     BENDALLOY(TinkerFluids.moltenBendalloy, CompatType.ALLOY),
     // twilight

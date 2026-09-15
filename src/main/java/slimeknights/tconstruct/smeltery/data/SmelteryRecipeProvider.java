@@ -2052,38 +2052,38 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
                 .addInput(TinkerFluids.moltenOsmium.ingredient(FluidValues.INGOT))
                 .save(wrapped, prefix(TinkerFluids.moltenRefinedObsidian, folder));
 
-        // nicrosil
-        wrapped = withCondition(consumer, tagCondition("ingots/nicrosil"));
+        // nichrome
+        wrapped = withCondition(consumer, tagCondition("ingots/nichrome"));
         ConditionalRecipe.builder()
                 // if we have both chromium and nickel, can do the proper recipe
                 .addCondition(new AndCondition(tagCondition("ingots/chromium"), tagCondition("ingots/nickel")))
-                .addRecipe(AlloyRecipeBuilder.alloy(TinkerFluids.moltenNicrosil, FluidValues.INGOT * 4)
+                .addRecipe(AlloyRecipeBuilder.alloy(TinkerFluids.moltenNichrome, FluidValues.INGOT * 4)
                         .addInput(TinkerFluids.moltenNickel.ingredient(FluidValues.INGOT * 2))
                         .addInput(TinkerFluids.moltenChromium.ingredient(FluidValues.INGOT))
                         .addInput(TinkerFluids.moltenQuartz.ingredient(FluidValues.GEM))::save)
 
                 // if chromium is missing, sub in tin per metalborn, can do the proper recipe
                 .addCondition(new AndCondition(tagCondition("ingots/tin"), tagCondition("ingots/nickel")))
-                .addRecipe(AlloyRecipeBuilder.alloy(TinkerFluids.moltenNicrosil, FluidValues.INGOT * 4)
+                .addRecipe(AlloyRecipeBuilder.alloy(TinkerFluids.moltenNichrome, FluidValues.INGOT * 4)
                         .addInput(TinkerFluids.moltenNickel.ingredient(FluidValues.INGOT * 2))
                         .addInput(TinkerFluids.moltenTin.ingredient(FluidValues.INGOT))
                         .addInput(TinkerFluids.moltenQuartz.ingredient(FluidValues.GEM))::save)
 
                 // nickel missing? use more chromium and sub in a bit of iron
                 .addCondition(tagCondition("ingots/chromium"))
-                .addRecipe(AlloyRecipeBuilder.alloy(TinkerFluids.moltenNicrosil, FluidValues.INGOT * 4)
+                .addRecipe(AlloyRecipeBuilder.alloy(TinkerFluids.moltenNichrome, FluidValues.INGOT * 4)
                         .addInput(TinkerFluids.moltenChromium.ingredient(FluidValues.INGOT * 2))
                         .addInput(TinkerFluids.moltenIron.ingredient(FluidValues.INGOT))
                         .addInput(TinkerFluids.moltenQuartz.ingredient(FluidValues.GEM))::save)
 
                 // no nickel or chromium? just use tin and iron per metalborn
                 .addCondition(tagCondition("ingots/tin"))
-                .addRecipe(AlloyRecipeBuilder.alloy(TinkerFluids.moltenNicrosil, FluidValues.INGOT * 4)
+                .addRecipe(AlloyRecipeBuilder.alloy(TinkerFluids.moltenNichrome, FluidValues.INGOT * 4)
                         .addInput(TinkerFluids.moltenTin.ingredient(FluidValues.INGOT * 2))
                         .addInput(TinkerFluids.moltenIron.ingredient(FluidValues.INGOT))
                         .addInput(TinkerFluids.moltenQuartz.ingredient(FluidValues.GEM))::save)
 
-                .build(wrapped, prefix(TinkerFluids.moltenNicrosil, folder));
+                .build(wrapped, prefix(TinkerFluids.moltenNichrome, folder));
 
         // duralumin
         wrapped = withCondition(consumer, tagCondition("ingots/duralumin"), tagCondition("ingots/aluminum"));
@@ -2318,7 +2318,7 @@ public class SmelteryRecipeProvider extends BaseRecipeProvider implements ISmelt
         metal(consumer, TinkerFluids.moltenInvar     ).optional().metal().dust().rod().plate().gear().coin().common(TOOLS_COMPLEMENT).common(ARMOR);
         metal(consumer, TinkerFluids.moltenConstantan).optional().metal().dust().rod().plate().gear().coin().common(TOOLS_COMPLEMENT).common(ARMOR).sheetmetal();
         metal(consumer, TinkerFluids.moltenPewter    ).optional().metal().dust().rod().common(FLAKES)/*.rawOre(Byproduct.TIN, Byproduct.LEAD, Byproduct.IRON)*/;
-        metal(consumer, TinkerFluids.moltenNicrosil  ).optional().metal().dust().rod().common(FLAKES)/*.rawOre(Byproduct.CHROMIUM)*/;
+        metal(consumer, TinkerFluids.moltenNichrome  ).optional().metal().dust().rod().common(FLAKES)/*.rawOre(Byproduct.CHROMIUM)*/;
         metal(consumer, TinkerFluids.moltenDuralumin ).optional().metal().dust().rod().common(FLAKES)/*.rawOre(Byproduct.ALUMINUM, Byproduct.COPPER)*/;
         metal(consumer, TinkerFluids.moltenBendalloy ).optional().metal().dust().rod().common(FLAKES)/*.rawOre(Byproduct.CADMIUM)*/;
         // specialty alloys

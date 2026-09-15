@@ -932,11 +932,11 @@
 
   "_comment": "Aleaciones cosmere",
 
-  "block.tconstruct.molten_nicrosil_fluid": "Nicrosil fundido",
-  "fluid.tconstruct.molten_nicrosil": "Nicrosil fundido",
-  "fluid.tconstruct.flowing_molten_nicrosil": "Nicrosil fundido fluyendo",
-  "item.tconstruct.molten_nicrosil_bucket": "Balde con Nicrosil fundido",
-  "fluid.tconstruct.molten_nicrosil.fluid_effect": "El Nicrosil fundido tiene una atracción innata sobre la magia, parece un gasto usarlo de esta manera.",
+  "block.tconstruct.molten_nichrome_fluid": "Nichrome fundido",
+  "fluid.tconstruct.molten_nichrome": "Nichrome fundido",
+  "fluid.tconstruct.flowing_molten_nichrome": "Nichrome fundido fluyendo",
+  "item.tconstruct.molten_nichrome_bucket": "Balde con Nichrome fundido",
+  "fluid.tconstruct.molten_nichrome.fluid_effect": "El Nichrome fundido tiene una atracción innata sobre la magia, parece un gasto usarlo de esta manera.",
 
   "block.tconstruct.molten_duralumin_fluid": "Duralumin fundido",
   "fluid.tconstruct.molten_duralumin": "Duralumin fundido",

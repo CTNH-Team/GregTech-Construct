@@ -109,7 +109,7 @@ public class FluidTextureProvider extends AbstractFluidTextureProvider {
         compatAlloy(TinkerFluids.moltenRefinedObsidian);
         compatAlloy(TinkerFluids.moltenRefinedGlowstone);
         // metalborn
-        compatAlloy(TinkerFluids.moltenNicrosil);
+        compatAlloy(TinkerFluids.moltenNichrome);
         compatAlloy(TinkerFluids.moltenDuralumin);
         tintedMolten(TinkerFluids.moltenBendalloy).color(0xFFD6D2C1);
         // twilight

@@ -123,7 +123,7 @@ public final class MaterialIds {
     public static final MaterialId necronium = id("necronium");
     public static final MaterialId electrum = id("electrum");
     public static final MaterialId pewter = id("pewter");
-    public static final MaterialId nicrosil = id("nicrosil");
+    public static final MaterialId nichrome = id("nichrome");
     public static final MaterialId platedSlimewood = id("plated_slimewood");
     public static final MaterialId wroughtIron = id("wrought_iron");
     // twilight forest

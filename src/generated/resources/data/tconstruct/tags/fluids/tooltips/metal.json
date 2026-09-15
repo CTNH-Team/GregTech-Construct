@@ -112,7 +112,10 @@
     "#forge:signalum",
     "#forge:refined_glowstone",
     "#forge:refined_obsidian",
-    "#forge:nicrosil",
+    {
+      "id": "#forge:nichrome",
+      "required": false
+    },
     "#forge:duralumin",
     "#forge:bendalloy",
     "#tconstruct:steeleaf",

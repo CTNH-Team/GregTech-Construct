@@ -1061,11 +1061,11 @@
 
   "_comment": "Cosmere Alloys",
 
-  "block.tconstruct.nicrosil_fluid": "熔融镍铬合金",
-  "fluid.tconstruct.nicrosil": "熔融镍铬合金",
-  "fluid.tconstruct.flowing_nicrosil": "流动的熔融镍铬合金",
-  "item.tconstruct.nicrosil_bucket": "熔融镍铬合金桶",
-  "fluid.tconstruct.nicrosil.fluid_effect": "镍铬合金对魔法有天然的亲和力，这么做实属有些浪费。",
+  "block.tconstruct.nichrome_fluid": "熔融镍铬合金",
+  "fluid.tconstruct.nichrome": "熔融镍铬合金",
+  "fluid.tconstruct.flowing_nichrome": "流动的熔融镍铬合金",
+  "item.tconstruct.nichrome_bucket": "熔融镍铬合金桶",
+  "fluid.tconstruct.nichrome.fluid_effect": "镍铬合金对魔法有天然的亲和力，这么做实属有些浪费。",
 
   "block.tconstruct.duralumin_fluid": "熔融硬铝",
   "fluid.tconstruct.duralumin": "熔融硬铝",
@@ -2598,11 +2598,11 @@
   "material.tconstruct.kobold.flavor": "像是从某种会发光的生物身上脱落的鳞片",
   "material.tconstruct.kobold.encyclopedia.shell": "每级使攻击速度+5%，使用物品速度+10%，挖掘速度+15%。",
 
-  "material.tconstruct.nicrosil": "镍铬合金",
-  "material.tconstruct.nicrosil.flavor": "可以存储神能。",
-  "material.tconstruct.nicrosil.encyclopedia": "每次连续的攻击使攻击伤害+0.5×等级；5次连续攻击后，攻击伤害的加成达到上限为+2.5×等级。",
-  "material.tconstruct.nicrosil.encyclopedia.ranged": "每次箭矢命中后，令弹射物力量+0.25×等级，5次连续的箭矢命中后，弹射物力量加成上限为+1.25×等级。",
-  "material.tconstruct.nicrosil.encyclopedia.armor": "受到伤害后，近战伤害临时+1点；加成最多不超过此特性在所有部位盔甲上的等级总和。",
+  "material.tconstruct.nichrome": "镍铬合金",
+  "material.tconstruct.nichrome.flavor": "可以存储神能。",
+  "material.tconstruct.nichrome.encyclopedia": "每次连续的攻击使攻击伤害+0.5×等级；5次连续攻击后，攻击伤害的加成达到上限为+2.5×等级。",
+  "material.tconstruct.nichrome.encyclopedia.ranged": "每次箭矢命中后，令弹射物力量+0.25×等级，5次连续的箭矢命中后，弹射物力量加成上限为+1.25×等级。",
+  "material.tconstruct.nichrome.encyclopedia.armor": "受到伤害后，近战伤害临时+1点；加成最多不超过此特性在所有部位盔甲上的等级总和。",
 
   "material.tconstruct.fiery": "炽铁",
   "material.tconstruct.fiery.flavor": "至热金属，热锻至臻。",

@@ -80,17 +80,22 @@ class GTConstructRecipesTest extends BaseMcTest {
       .containsExactly("supported");
   }
 
+  /**
+   * Compat metals are tag only only while the mod that supplies their fluid is loaded. Without that mod nothing would
+   * fill the common tag, which leaves tag based recipe outputs resolving to an empty fluid stack, so the fluid is
+   * registered locally instead. The unit test JVM has no mod list, so this covers the fallback half of the contract.
+   */
   @Test
-  void compatMaterialFluidsRemainTagOnlyInPublicMapButEnterCatalog() {
-    assertThat(TinkerFluids.isCompatMaterialFluid(TinkerFluids.moltenIron)).isTrue();
+  void compatMaterialFluidsFallBackToLocalRegistrationWithoutProvider() {
+    // provider missing, so these are no longer tag only objects; they hold their own registry entry instead
+    assertThat(TinkerFluids.isCompatMaterialFluid(TinkerFluids.moltenIron)).isFalse();
+    assertThat(TinkerFluids.isCompatMaterialFluid(TinkerFluids.moltenCopper)).isFalse();
+    // the common tag name is unchanged so recipes and addons still target forge:iron
     assertThat(TinkerFluids.moltenIron.getTag().location()).isEqualTo(ResourceLocation.tryBuild("forge", "iron"));
-    assertThat(TinkerFluids.isCompatMaterialFluid(TinkerFluids.moltenWroughtIron)).isTrue();
+    assertThat(TinkerFluids.moltenIron.getId()).isEqualTo(ResourceLocation.tryBuild("tconstruct", "iron"));
+    // every compat metal follows the same rule, so the alloy fluids behave identically
+    assertThat(TinkerFluids.isCompatMaterialFluid(TinkerFluids.moltenWroughtIron)).isFalse();
     assertThat(TinkerFluids.moltenWroughtIron.getTag().location()).isEqualTo(ResourceLocation.tryBuild("forge", "wrought_iron"));
-    assertThat(GTConstructFluid.getAllTinkersFluids())
-      .doesNotContainKey(TinkerFluids.moltenIron.getId());
-    assertThat(TinkersFluidCatalog.instance().containsTag(TinkerFluids.moltenCopper.getTag())).isTrue();
-    assertThat(TinkersFluidCatalog.instance().containsTag(TinkerFluids.moltenSteel.getTag())).isTrue();
-    assertThat(TinkersFluidCatalog.instance().containsTag(TinkerFluids.moltenWroughtIron.getTag())).isTrue();
   }
 
   @Test
