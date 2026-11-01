@@ -41,9 +41,15 @@ public class DamageTypeTagProvider extends DamageTypeTagsProvider {
 
         // modifiers
         tag(MODIFIER_WHITELIST).add(MOB_ATTACK, MOB_ATTACK_NO_AGGRO);
+        // loot modifiers come from the held tool, so limit them to melee damage the tool is responsible for
+        // projectiles are not needed here, they use the modifiers stored on the projectile instead
+        tag(LOOT_MODIFIER_WHITELIST).addTag(IS_MELEE).add(PIERCING, FLUID_FIRE.melee(), FLUID_COLD.melee(), FLUID_MAGIC.melee(), WATER.melee(), EXPLOSION.melee(), MOB_EXPLOSION.melee());
+        // damage caused by a melee attack, shared by the melee protection modifier and the loot modifier whitelist
+        tag(IS_MELEE).add(PLAYER_ATTACK, MOB_ATTACK, MOB_ATTACK_NO_AGGRO, STING, FLUID_IMPACT.melee(), FLUID_SPIKE.melee());
 
         // protection modifier tags
-        tag(MELEE_PROTECTION).add(PLAYER_ATTACK, MOB_ATTACK, MOB_ATTACK_NO_AGGRO, CRAMMING, STING);
+        // cramming is not an attack, so it gets protection without making the held tool responsible for the kill
+        tag(MELEE_PROTECTION).addTag(IS_MELEE).add(CRAMMING);
         tag(PROJECTILE_PROTECTION).addTag(IS_PROJECTILE).add(FALLING_ANVIL, FALLING_BLOCK, FALLING_STALACTITE);
         tag(FIRE_PROTECTION).addTags(IS_FIRE, IS_LIGHTNING).add(SHOCK);
         tag(BLAST_PROTECTION).addTag(IS_EXPLOSION);
@@ -59,7 +65,8 @@ public class DamageTypeTagProvider extends DamageTypeTagsProvider {
         // TF support
         String tf = "twilightforest";
         addOptional(MODIFIER_WHITELIST, tf, "axing", "slam", "ant");
-        addOptional(MELEE_PROTECTION, tf, "ghast_tear", "hydra_bite", "squish", "axing", "slam", "yeeted", "ant", "clamped", "spiked");
+        // all of these are attacks made by a TF mob, and mobs can use looting, so they belong on the shared melee tag
+        addOptional(IS_MELEE, tf, "ghast_tear", "hydra_bite", "squish", "axing", "slam", "yeeted", "ant", "clamped", "spiked");
         addOptional(MAGIC_PROTECTION, tf, "haunt", "ominous_fire", "twilight_scepter");
         addOptional(PROJECTILE_PROTECTION, tf, "falling_ice");
         // anything "magic" is good against lich shields, so tag our magic fluids

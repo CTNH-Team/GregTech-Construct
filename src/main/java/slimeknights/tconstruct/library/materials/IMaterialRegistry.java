@@ -37,14 +37,14 @@ public interface IMaterialRegistry {
   IMaterial getMaterial(MaterialId id);
 
   /**
-   * Gets all currently registered materials
-   * @return  Collection of all materials
+   * Gets all currently registered visible materials, excluding hidden.
+   * @return  Collection of all visible materials, excluding hidden.
    */
   Collection<IMaterial> getVisibleMaterials();
 
   /**
-   * Gets all currently registered materials
-   * @return  Collection of all materials
+   * Gets all currently registered materials, including hidden.
+   * @return  Collection of all materials, including hidden.
    */
   Collection<IMaterial> getAllMaterials();
 

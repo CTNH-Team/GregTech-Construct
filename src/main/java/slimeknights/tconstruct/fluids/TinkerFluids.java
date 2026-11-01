@@ -35,6 +35,7 @@ import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.RegistryObject;
+import slimeknights.mantle.datagen.MantleTags;
 import slimeknights.mantle.fluid.InvertedFluid;
 import slimeknights.mantle.fluid.UnplaceableFluid;
 import slimeknights.mantle.registration.RegistrationHelper;
@@ -198,7 +199,7 @@ public final class TinkerFluids extends TinkerModule {
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenRefinedGlowstone = FLUIDS.registerMetal("refined_glowstone").type(hot("refined_glowstone").temperature(1125).lightLevel(15)).block(createBurning(MapColor.COLOR_YELLOW, 15, 10, 7f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenRefinedObsidian  = FLUIDS.registerMetal("refined_obsidian").type(hot("refined_obsidian").temperature(1775).lightLevel(7)).block(createBurning(MapColor.TERRACOTTA_BLUE, 7, 10, 7f)).bucket().commonTag().flowing();
     // cosmere metals
-    public static final FlowingFluidObject<ForgeFlowingFluid> moltenNicrosil = FLUIDS.registerMetal("nicrosil").type(hot("nicrosil").temperature(1400).lightLevel(14)).block(createBurning(MapColor.SNOW, 12, 10, 6f)).bucket().commonTag().flowing();
+    public static final FlowingFluidObject<ForgeFlowingFluid> moltenNicrosil = FLUIDS.registerCompatMetal("nicrosil", hot("nicrosil").temperature(1400).lightLevel(14));
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenDuralumin = FLUIDS.registerMetal("duralumin").type(hot("duralumin").temperature(925).lightLevel(10)).block(createBurning(MapColor.COLOR_LIGHT_GREEN, 10, 10, 6f)).bucket().commonTag().flowing();
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenBendalloy = FLUIDS.registerMetal("bendalloy").type(hot("bendalloy").temperature(400).lightLevel(9)).block(createBurning(MapColor.SNOW, 9, 10, 6f)).bucket().commonTag().flowing();
     // twilight
@@ -276,7 +277,7 @@ public final class TinkerFluids extends TinkerModule {
             CauldronInteraction.EMPTY.put(Items.LINGERING_POTION, new EmptyBottleIntoEmpty(lingeringBottle, CauldronInteraction.EMPTY.get(Items.LINGERING_POTION)));
             // brew bottles into each other, bit weird but feels better than shapeless
             BrewingRecipeRegistry.addRecipe(new BottleBrewingRecipe(Ingredient.of(Items.GLASS_BOTTLE), Items.POTION, Items.SPLASH_POTION, new ItemStack(splashBottle)));
-            BrewingRecipeRegistry.addRecipe(new BottleBrewingRecipe(Ingredient.of(TinkerTags.Items.SPLASH_BOTTLE), Items.SPLASH_POTION, Items.LINGERING_POTION, new ItemStack(lingeringBottle)));
+            BrewingRecipeRegistry.addRecipe(new BottleBrewingRecipe(Ingredient.of(MantleTags.Items.SPLASH_BOTTLE), Items.SPLASH_POTION, Items.LINGERING_POTION, new ItemStack(lingeringBottle)));
         });
 
         // dispense buckets
@@ -447,8 +448,8 @@ public final class TinkerFluids extends TinkerModule {
         acceptRegistered(output, moltenHepatizon);
         acceptRegistered(output, moltenNetherite);
         acceptRegistered(output, moltenKnightmetal);
+        acceptRegistered(output, moltenKnightslime);
         // future: soulsteel
-        // future: knightslime
 
         // compat ores
         acceptMolten(output, moltenTin);
@@ -480,7 +481,7 @@ public final class TinkerFluids extends TinkerModule {
         acceptMolten(output, moltenSignalum);
         acceptMolten(output, moltenRefinedGlowstone);
         acceptMolten(output, moltenRefinedObsidian);
-        acceptMolten(output, moltenNicrosil);
+        acceptCompat(output, moltenNicrosil, MaterialIds.nicrosil);
         acceptMolten(output, moltenDuralumin);
         acceptMolten(output, moltenBendalloy);
         acceptCompat(output, moltenSteeleaf, MaterialIds.steeleaf);

@@ -1,8 +1,8 @@
 # PROJECT KNOWLEDGE BASE
 
-**Generated:** 2026-07-11
-**Commit:** bf5c7b3108
-**Branch:** dev
+**Generated:** 2026-11-02
+**Commit:** ba24305ead
+**Branch:** sync/general-3.12
 
 ## OVERVIEW
 Single-module Gradle Java 17 Minecraft mod. This fork keeps the upstream `tconstruct` mod id and `slimeknights.tconstruct` namespace while adding GregTech/GTCEU compatibility.
@@ -83,6 +83,9 @@ The domain guides live under `docs/` so they do not pollute source directories. 
 | `TiCDynamicResourcePack` | runtime resource pack | `src/main/java/slimeknights/tconstruct/data/pack/TiCDynamicResourcePack.java` | Holds client-side generated resources |
 | `TConstructMixinPlugin` | mixin plugin | `src/main/java/slimeknights/tconstruct/mixin/TConstructMixinPlugin.java` | Enables integration mixins only when their mods are present |
 | `BaseMcTest` | test harness | `src/test/java/slimeknights/tconstruct/test/BaseMcTest.java` | Boots registries and a Forge test container for most tests |
+| `ModifierModelMapManager` | client model map | `src/main/java/slimeknights/tconstruct/library/client/modifiers/ModifierModelMapManager.java` | First-stage reload listener registered in `ToolClientEvents`; keeps `LEGACY_BLACKLIST` (trim) |
+| `AbstractModifierModelMapProvider` | data base | `src/main/java/slimeknights/tconstruct/library/data/AbstractModifierModelMapProvider.java` | Base for modifier model map datagen; concrete tools-side provider deferred |
+| `FunctionProvider` | advancement mcfunctions | `src/main/java/slimeknights/tconstruct/common/data/advancement/FunctionProvider.java` | Emits `functions/grant_advancement/*.mcfunction`; registered in `TConstruct.gatherData()` |
 
 ## CONVENTIONS
 - Java packages are lowercase under `slimeknights.tconstruct`; domain boundaries are top-level packages.
@@ -121,3 +124,8 @@ Use Java 17. IntelliJ builds require the bundled JetBrains Runtime as the Gradle
 - `runData` writes static generated resources; runtime dynamic packs are assembled separately during Forge lifecycle events.
 - Forge event subscribers and reflective addon callbacks have few ordinary Java callers; trace them through annotations and registration sites.
 - Jenkins still references a Maven publication task that is not configured in the current `build.gradle`.
+- `TinkerNetwork` channel version is `"3"` (int-sized container stack sync). `HighStackCountSynchronizer` replaces only the server-to-client stack projection; the vanilla menu click packet is untouched because the server stays authoritative.
+- The recipe browser is EMI (`plugin/emi/EMIPlugin`); this branch still ships the upstream JEI integration alongside it.
+- Create integration adds blaze-burner heating to the melting furnace under `plugin/create/burner`.
+- The GTCEu side of the fork is split across `data/gtceu` (recipes, scanners), `mixin/gtceu`, and `library/tools/item/ModifiableGTToolItem.java`; it is not a separate addon module.
+- Upstream sync baseline `v3.12.0.220` (`e86e8b9522`). Mantle floor 1.11.113, `pack_format=15`; `FluidValues` stays 144/144 and network channel stays `3`.

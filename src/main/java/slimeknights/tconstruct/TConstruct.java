@@ -1,5 +1,6 @@
 package slimeknights.tconstruct;
 
+import slimeknights.tconstruct.common.data.advancement.FunctionProvider;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
@@ -245,6 +246,7 @@ public class TConstruct {
         generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
         generator.addProvider(server, new LootTableInjectionProvider(packOutput));
         generator.addProvider(server, new ConfigurationDataProvider(packOutput));
+        generator.addProvider(server, new FunctionProvider(packOutput));
     }
 
     @SubscribeEvent
@@ -301,6 +303,8 @@ public class TConstruct {
             case "round_plate_cast" -> TinkerSmeltery.adzeHeadCast.get();
             case "round_plate_sand_cast" -> TinkerSmeltery.adzeHeadCast.getSand();
             case "round_plate_red_sand_cast" -> TinkerSmeltery.adzeHeadCast.getRedSand();
+            // slime chestplate removed in favor of slime wings and other items
+            case "slime_chestplate" -> TinkerTools.slimeWings.get();
             default -> null;
         });
     }

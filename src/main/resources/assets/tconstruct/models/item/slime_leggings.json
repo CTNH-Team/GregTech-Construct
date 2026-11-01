@@ -2,10 +2,14 @@
   "loader": "tconstruct:tool",
   "parent": "forge:item/default",
   "textures": {
-    "tool": "tconstruct:item/tool/armor/slime/shell"
+    "slime": "tconstruct:item/tool/armor/slime/leggings/slime",
+    "shell": "tconstruct:item/tool/armor/slime/leggings/shell"
   },
-  "modifier_roots": [ "tconstruct:item/tool/armor/slime/shell_modifiers/" ],
-  "first_modifiers": [ "tconstruct:embellishment", "tconstruct:golden", "tconstruct:trim" ],
+  "modifier_maps": ["tconstruct:slime/leggings", "tconstruct:armor/leggings"],
+  "parts": [
+    { "name": "slime", "index": 1 },
+    { "name": "shell", "index": 0 }
+  ],
   "overrides": [
     {
       "predicate": { "tconstruct:broken": 1 },

@@ -56,6 +56,16 @@ public abstract class TableBlock extends InventoryBlock implements SimpleWaterlo
     return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, flag);
   }
 
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  @Override
+  public BlockState updateShape(BlockState state, Direction direction, BlockState neighbor, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+    if (state.getValue(WATERLOGGED)) {
+      level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+    }
+    return super.updateShape(state, direction, neighbor, level, pos, neighborPos);
+  }
+
   @Deprecated
   @Override
   public BlockState rotate(BlockState state, Rotation rot) {

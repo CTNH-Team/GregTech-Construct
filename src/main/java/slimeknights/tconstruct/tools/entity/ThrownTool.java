@@ -48,6 +48,7 @@ import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.library.utils.Schedule;
+import slimeknights.tconstruct.shared.TinkerEffects;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.TinkerTools;
 import slimeknights.tconstruct.tools.data.ModifierIds;
@@ -188,8 +189,11 @@ public class ThrownTool extends ThrownTrident implements ToolProjectile {
     // TODO: consider expiry time for loyalty
     if (!dealtDamage && inGroundTime > 4) {
       // we don't damage the tool on throw, so instead damage it when it hits a block or an entity
-      if (!tridentItem.isEmpty()) {
+      if (!tridentItem.isEmpty() && !level().isClientSide) {
         ToolDamageUtil.damage(getTool(), 1, getOwner() instanceof LivingEntity l ? l : null, tridentItem);
+        // update the stack so visual changes to the tool render (e.g. broken or fluid)
+        // need to force since its the same instance, just NBT changes
+        this.entityData.set(STACK, tridentItem, true);
       }
       dealtDamage = true;
     }
@@ -225,14 +229,8 @@ public class ThrownTool extends ThrownTrident implements ToolProjectile {
           owner.setItemInHand(InteractionHand.OFF_HAND, tridentItem);
         }
         // TODO: consider whether redundant sound is fine
-        if (ToolAttackUtil.performAttack(tool, ToolAttackContext.attacker(owner).target(target).hand(InteractionHand.OFF_HAND).baseDamage(tool.getStats().get(ToolStats.ATTACK_DAMAGE) * multiplier).cooldown(charge).projectile(this).build())) {
-          if (target.getType() == EntityType.ENDERMAN && tool.getModifiers().getLevel(TinkerModifiers.enderference.getId()) == 0) {
-            // restore held item
-            if (notSelf) {
-              owner.setItemInHand(InteractionHand.OFF_HAND, offhand);
-            }
-            return;
-          }
+        ToolAttackContext context = ToolAttackContext.attacker(owner).target(target).hand(InteractionHand.OFF_HAND).baseDamage(tool.getStats().get(ToolStats.ATTACK_DAMAGE) * multiplier).cooldown(charge).projectile(this).build();
+        if (ToolAttackUtil.performAttack(tool, context)) {
           if (target instanceof LivingEntity living) {
             this.doPostHurtEffects(living);
           }
@@ -242,13 +240,23 @@ public class ThrownTool extends ThrownTrident implements ToolProjectile {
         if (notSelf) {
           owner.setItemInHand(InteractionHand.OFF_HAND, offhand);
         }
-      }
 
+        // cancel post hit logic if it hit an enderman with no enderference
+        if (!TinkerEffects.canHitWithProjectile(context.getLivingTarget())) {
+          return;
+        }
+      }
       // back off from the target
       this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01, -0.1, -0.01));
       // play sound
-      if (!level().isClientSide && tool.getModifiers().getLevel(ModifierIds.channeling) == 0) {
-        this.playSound(tool.isBroken() ? SoundEvents.ITEM_BREAK : SoundEvents.TRIDENT_HIT, 1.0f, 1.0f);
+      if (!level().isClientSide) {
+        // play sound
+        if (tool.getModifiers().getLevel(ModifierIds.channeling) == 0) {
+          this.playSound(tool.isBroken() ? SoundEvents.ITEM_BREAK : SoundEvents.TRIDENT_HIT, 1.0f, 1.0f);
+        }
+        // update the stack so visual changes to the tool render (e.g. broken or fluid)
+        // need to force since its the same instance, just NBT changes
+        this.entityData.set(STACK, tridentItem, true);
       }
     }
   }
@@ -309,6 +317,11 @@ public class ThrownTool extends ThrownTrident implements ToolProjectile {
                 dealtDamage = true;
                 // backing off the block makes the tool easier to collect
                 this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01, -0.1, -0.01));
+                // update the stack so visual changes to the tool render (e.g. broken or fluid)
+                // need to force since its the same instance, just NBT changes
+                if (!level.isClientSide) {
+                  this.entityData.set(STACK, tridentItem, true);
+                }
                 return;
               }
             }

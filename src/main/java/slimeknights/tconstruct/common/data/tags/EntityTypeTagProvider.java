@@ -30,7 +30,8 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
     this.tag(TinkerTags.EntityTypes.BACON_PRODUCER).add(EntityType.PIG, EntityType.PIGLIN, EntityType.HOGLIN);
 
     this.tag(TinkerTags.EntityTypes.MELTING_SHOW).add(EntityType.IRON_GOLEM, EntityType.SNOW_GOLEM, EntityType.VILLAGER, EntityType.PLAYER);
-    this.tag(TinkerTags.EntityTypes.MELTING_HIDE).add(EntityType.GIANT);
+    this.tag(TinkerTags.EntityTypes.MELTING_HIDE).add(EntityType.GIANT).addTag(TinkerTags.EntityTypes.MELTING_BLACKLIST).addOptionalTag(TinkerTags.HIDDEN_FROM_EMI);
+    this.tag(TinkerTags.EntityTypes.MELTING_BLACKLIST);
     this.tag(TinkerTags.EntityTypes.PIGGYBACKPACK_BLACKLIST);
 
     // players use tool daamge util
@@ -45,13 +46,17 @@ public class EntityTypeTagProvider extends EntityTypeTagsProvider {
 
     this.tag(TinkerTags.EntityTypes.SMALL_ARMOR).addTag(TinkerTags.EntityTypes.SLIMES);
     this.tag(TinkerTags.EntityTypes.REUSABLE_AMMO).add(EntityType.TRIDENT, TinkerTools.thrownTool.get());
+    // in theory this could just be reusable ammo, but it seems better to keep separate
+    this.tag(TinkerTags.EntityTypes.ENDERFERENCE_ARROW_BLACKLIST).add(EntityType.TRIDENT, TinkerTools.thrownTool.get());
     this.tag(TinkerTags.EntityTypes.REFLECTING_BLACKLIST);
     this.tag(TinkerTags.EntityTypes.REFLECTING_PRESERVE_OWNER).add(EntityType.FISHING_BOBBER, TinkerTools.fishingHook.get());
+    this.tag(TinkerTags.EntityTypes.BOBBERS).add(TinkerTools.fishingHook.get());
     this.tag(TinkerTags.EntityTypes.COLLECTABLES).add(
       EntityType.TRIDENT, TinkerTools.thrownTool.get(),
       EntityType.ITEM, TinkerTools.indestructibleItem.get(),
       EntityType.EXPERIENCE_ORB).addTag(TinkerTags.EntityTypes.DISCARDABLE_COLLECTABLES);
     this.tag(TinkerTags.EntityTypes.DISCARDABLE_COLLECTABLES).add(EntityType.ARROW, EntityType.SPECTRAL_ARROW, TinkerTools.materialArrow.get());
+    this.tag(EntityTypeTags.ARROWS).add(TinkerTools.materialArrow.get());
     // prevent dummy from healing you with necrotic
     this.tag(TinkerTags.EntityTypes.NECROTIC_BLACKLIST).addOptional(ResourceLocation.tryBuild("dummmmmmy", "target_dummy"));
   }

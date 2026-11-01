@@ -25,7 +25,7 @@ Cross-side modules and shared registries used by common, client, and domain-spec
 - `TinkerMaterials` is a dependency for tools, world content, and runtime addon generation.
 - `TinkerClient` is the explicit client bootstrap; keep its reachability separate from shared classes.
 - Shared state changes usually require tests in more than one domain because many modules consume it.
-
+- `AchievementEvents` is a trimmed static grant utility (`grantAdvancement` only); the mcfunction system replaced its craft/damage event subscriptions.
 ## CHANGE IMPACT
 - Shared registry changes have broad fan-out and should be validated with a full test run.
 - Client bootstrap changes require a client launch in addition to Java tests.

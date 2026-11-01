@@ -97,6 +97,10 @@
       "required": false
     },
     {
+      "id": "tconstruct:knightslime",
+      "required": false
+    },
+    {
       "id": "tconstruct:fiery",
       "required": false
     },

@@ -618,7 +618,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                         .part(bowstring)
                         .part(arrowHead).build())
                 .module(new VolatileIntModule(FishingModule.HOOK_MATERIAL, 2)) // arrow head should be the bobber material
-                .module(defaultTwoParts)
+                .module(defaultThreeParts)
                 // stats - high attack speed so melee modifying it is not useless with its base 1 attack damage
                 .module(new SetStatsModule(StatsNBT.builder().set(ToolStats.ATTACK_SPEED, 2.0f).build()))
                 // give a bit more durability to make up for modifier costs, plus non-fishing uses are really durability hungry
@@ -861,7 +861,7 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 // traits
                 .module(ArmorItem.Type.CHESTPLATE, slimeTraits.copy().trait(ModifierIds.wings).build())
                 .module(ArmorItem.Type.LEGGINGS, slimeTraits.copy()
-                        .trait(ModifierIds.pockets, 1)
+                        .trait(ModifierIds.shellStorage, 1)
                         .trait(ModifierIds.shulking, 1).build())
                 .module(ArmorItem.Type.LEGGINGS, ToolTraitsModule.builder().trait(ModifierIds.shulking, 1).build(), ToolHooks.REBALANCED_TRAIT)
                 .module(ArmorItem.Type.BOOTS, slimeTraits.copy()
@@ -870,6 +870,20 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
                 .module(ArmorItem.Type.BOOTS, ToolTraitsModule.builder().trait(ModifierIds.leaping, 1).build(), ToolHooks.REBALANCED_TRAIT)
                 // display name - helmet displays a name for each material
                 .module(ArmorItem.Type.HELMET, UniqueMaterialToolName.FIRST);
+
+        // slime wings - chestplate slot item worn as a back accessory
+        define(ArmorDefinitions.SLIME_WINGS)
+                .module(MaterialStatsModule.stats().stat(SlimeStats.ID, 1).build())
+                .module(DefaultMaterialsModule.builder().material(RandomMaterial.fixed(MaterialIds.skyslime)).build())
+                .module(MaterialRepairModule.of(MaterialIds.phantom, ArmorItem.Type.CHESTPLATE, 42))
+                .module(new SetStatsModule(StatsNBT.builder()
+                        .set(ToolStats.DURABILITY, 222)
+                        .set(ToolStats.ATTACK_DAMAGE, 0.5f).build()))
+                .module(ToolSlotsModule.builder()
+                        .slots(SlotType.UPGRADE, 4)
+                        .slots(SlotType.ABILITY, 1).build())
+                .module(ToolTraitsModule.builder().trait(ModifierIds.wings).build())
+                .module(UniqueMaterialToolName.FIRST);
 
         defineArmorPartFamilies(tier1Material);
 

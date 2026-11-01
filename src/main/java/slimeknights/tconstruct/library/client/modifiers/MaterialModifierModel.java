@@ -1,7 +1,9 @@
 package slimeknights.tconstruct.library.client.modifiers;
 
 import com.mojang.math.Transformation;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
@@ -21,7 +23,13 @@ import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-/** Model for a modifier that has variants based on a material */
+/**
+ * Model for a modifier that has variants based on a material
+ * @deprecated use {@link slimeknights.tconstruct.library.client.modifiers.model.MaterialModifierModel}
+ */
+@Deprecated
+@Getter
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 public class MaterialModifierModel implements IBakedModifierModel {
   /** Fetches relevant material textures after checking if the texture exists */
@@ -42,7 +50,8 @@ public class MaterialModifierModel implements IBakedModifierModel {
     return baseTexture;
   }
 
-  /** Constant unbaked model instance, as they are all the same */
+  /** @deprecated legacy system, use {@link slimeknights.tconstruct.library.client.modifiers.model.MaterialModifierModel.PersistentData#LOADER} */
+  @Deprecated
   public static final IUnbakedModifierModel UNBAKED_INSTANCE = (smallGetter, largeGetter) -> {
     Material smallTexture = stitchMaterialTextures(smallGetter);
     Material largeTexture = stitchMaterialTextures(largeGetter);

@@ -52,7 +52,7 @@ import slimeknights.tconstruct.library.client.materials.MaterialRenderInfo;
 import slimeknights.tconstruct.library.client.materials.MaterialRenderInfo.TintedSprite;
 import slimeknights.tconstruct.library.client.materials.MaterialRenderInfoLoader;
 import slimeknights.tconstruct.library.client.model.ModelProperties;
-import slimeknights.tconstruct.library.materials.definition.IMaterial;
+import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.tools.nbt.MaterialIdNBT;
 import slimeknights.tconstruct.library.tools.part.IMaterialItem;
@@ -291,7 +291,7 @@ public class MaterialBlockModel implements IUnbakedGeometry<MaterialBlockModel> 
     /** Cache of texture name to baked model */
     private final Cache<MaterialIdNBT, BakedModel> cache = CacheBuilder
       .newBuilder()
-      // ensure we can display every single tool that shows in EMI, plus a couple extra
+      // ensure we can display every single tool that shows in JEI, plus a couple extra
       .maximumSize(MaterialRenderInfoLoader.INSTANCE.getAllRenderInfos().size() * 3L / 2)
       .build();
 
@@ -339,7 +339,7 @@ public class MaterialBlockModel implements IUnbakedGeometry<MaterialBlockModel> 
 
     /** Gets the model for the given material */
     public BakedModel getCachedModel(MaterialVariantId material) {
-      if (IMaterial.UNKNOWN_ID.equals(material)) {
+      if (MaterialId.UNKNOWN.equals(material)) {
         return originalModel;
       }
       return cache.computeIfAbsent(material, baker);

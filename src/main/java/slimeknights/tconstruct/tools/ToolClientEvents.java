@@ -90,6 +90,7 @@ public class ToolClientEvents extends ClientEventBase {
     @SubscribeEvent
     static void addResourceListener(RegisterClientReloadListenersEvent manager) {
         ModifierModelManager.init(manager);
+        manager.registerReloadListener(ModifierModelMapManager.INSTANCE);
         MaterialTooltipCache.init(manager);
         DynamicTextureLoader.init(manager);
         manager.registerReloadListener(MODIFIER_RELOAD_LISTENER);
@@ -97,6 +98,7 @@ public class ToolClientEvents extends ClientEventBase {
         manager.registerReloadListener(HarvestTiers.RELOAD_LISTENER);
         ArmorModelManager.init(manager);
         manager.registerReloadListener(TrimArmorTextureSupplier.CACHE_INVALIDATOR);
+        ShieldBannerModifierSpriteSource.register();
     }
 
     @SubscribeEvent
@@ -114,7 +116,9 @@ public class ToolClientEvents extends ClientEventBase {
         event.registerModel(getResource("tank"), TankModifierModel.UNBAKED_INSTANCE);
         event.registerModel(getResource("material"), MaterialModifierModel.UNBAKED_INSTANCE);
         event.registerModel(getResource("dyed"), DyedModifierModel.UNBAKED_INSTANCE);
+        // trim shows up as valid on every tool, skip to reduce memory overhead on tools using the new system - add it using the new system if you want it
         event.registerModel(getResource("trim"), TrimModifierModel.UNBAKED_INSTANCE);
+        ModifierModelMapManager.legacyBlacklist(TrimModifierModel.UNBAKED_INSTANCE);
         event.registerModel(getResource("potion"), PotionModifierModel.UNBAKED_INSTANCE);
         event.registerModel(getResource("smashing_fluid"), new FluidModifierModel.Unbaked(SmashingModule.TANK_HELPER));
     }

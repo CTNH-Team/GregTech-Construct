@@ -21,6 +21,8 @@ import slimeknights.tconstruct.library.materials.stats.MaterialStatType;
 import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
 import slimeknights.tconstruct.tools.stats.StatlessMaterialStats;
+import slimeknights.tconstruct.tools.stats.RepairStats;
+import slimeknights.tconstruct.tools.stats.SlimeStats;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.tools.data.sprite.TinkerPartSpriteProvider;
 import slimeknights.tconstruct.tools.stats.GripMaterialStats;
@@ -216,6 +218,26 @@ public abstract class AbstractMaterialSpriteProvider {
     public MaterialSpriteInfoBuilder maille() {
       statType(ArmorPartMaterialStats.MAILLE);
       return this;
+    }
+
+    /** Adds slime textures for the given material. */
+    public MaterialSpriteInfoBuilder slime() {
+      return statType(SlimeStats.ID, TinkerPartSpriteProvider.SLIMESUIT).repairKit();
+    }
+
+    /** Adds a slimesuit ribcage part for the given material. */
+    public MaterialSpriteInfoBuilder ribcage() {
+      return statType(RepairStats.RIBCAGE).statType(TinkerPartSpriteProvider.SLIMESUIT_OVERLAY).repairKit();
+    }
+
+    /** Adds a slimesuit shell part for the given material. */
+    public MaterialSpriteInfoBuilder shell() {
+      return statType(RepairStats.SHELL).repairKit();
+    }
+
+    /** Adds a slimesuit laces part for the given material. */
+    public MaterialSpriteInfoBuilder laces() {
+      return statType(RepairStats.LACES).statType(TinkerPartSpriteProvider.SLIMESUIT_OVERLAY).repairKit();
     }
 
     /** Adds stat types for maille */

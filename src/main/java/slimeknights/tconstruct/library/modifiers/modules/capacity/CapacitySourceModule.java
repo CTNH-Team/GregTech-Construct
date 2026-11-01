@@ -54,5 +54,12 @@ public interface CapacitySourceModule {
   class Builder<B extends Builder<B>> extends ModuleBuilder.Stack<B> {
     @Nullable
     protected ModifierId owner = null;
+
+    /** Sets the owner */
+    @SuppressWarnings("unchecked")
+    public B owner(ModifierId owner) {
+      this.owner = owner;
+      return (B) this;
+    }
   }
 }

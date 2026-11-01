@@ -35,7 +35,7 @@ Reusable mod API and core implementations for materials, modifiers, tools, recip
 - This is the highest-volume Java domain; prefer an existing subpackage over a new top-level library package.
 - `library/addon` is the boundary for reflection and Forge scan data; keep that mechanism localized.
 - Changes here often affect tools, tables, plugins, and tests even when callers are reflective.
-
+- New model system coexists with legacy: `client/modifiers/model/*` (`ModifierModel`) is current, `IUnbakedModifierModel` is deprecated; `ToolModel` reads `modifier_maps` with `LEGACY_BLACKLIST` (trim) fallback to `modifier_roots`.
 ## SCOPE
 Applies to `src/main/java/slimeknights/tconstruct/library`, including API contracts consumed by other domains and addons.
 
