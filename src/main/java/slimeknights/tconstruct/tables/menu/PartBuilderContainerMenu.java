@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import slimeknights.mantle.util.sync.LambdaDataSlot;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.tables.TinkerTables;
@@ -26,7 +27,19 @@ public class PartBuilderContainerMenu extends TabbedContainerMenu<PartBuilderBlo
   private final LazyResultSlot outputSlot;
 
   public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity) {
-    super(TinkerTables.partBuilderContainer.get(), windowIdIn, playerInventoryIn, partBuilderTileEntity);
+    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, -1, null, null);
+  }
+
+  public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity, int sideInventorySlotCount) {
+    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount, null, null);
+  }
+
+  public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile) {
+    this(windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount, sideInventoryTile, null);
+  }
+
+  public PartBuilderContainerMenu(int windowIdIn, Inventory playerInventoryIn, @Nullable PartBuilderBlockEntity partBuilderTileEntity, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile, @Nullable int[] sideInventoryLimits) {
+    super(TinkerTables.partBuilderContainer.get(), windowIdIn, playerInventoryIn, partBuilderTileEntity, sideInventorySlotCount, sideInventoryTile, sideInventoryLimits);
 
     // unfortunately, nothing works with no tile
     if (tile != null) {
@@ -55,7 +68,11 @@ public class PartBuilderContainerMenu extends TabbedContainerMenu<PartBuilderBlo
   }
 
   public PartBuilderContainerMenu(int id, Inventory inv, FriendlyByteBuf buf) {
-    this(id, inv, getTileEntityFromBuf(buf, PartBuilderBlockEntity.class));
+    this(id, inv, getTileEntityFromBuf(buf, PartBuilderBlockEntity.class), TabbedContainerMenu.SideInventoryClientData.read(buf));
+  }
+
+  public PartBuilderContainerMenu(int id, Inventory inv, @Nullable PartBuilderBlockEntity tile, TabbedContainerMenu.SideInventoryClientData data) {
+    this(id, inv, tile, data.slotCount(), data.tile(), data.limits());
   }
 
   @Override

@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tables.block.entity.table.CraftingStationBlockEntity;
 import slimeknights.tconstruct.tables.menu.slot.PlayerSensitiveLazyResultSlot;
@@ -44,7 +45,19 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
    * @param tile  Relevant tile entity
    */
   public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile) {
-    super(TinkerTables.craftingStationContainer.get(), id, inv, tile);
+    this(id, inv, tile, -1, null, null);
+  }
+
+  public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile, int sideInventorySlotCount) {
+    this(id, inv, tile, sideInventorySlotCount, null, null);
+  }
+
+  public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile) {
+    this(id, inv, tile, sideInventorySlotCount, sideInventoryTile, null);
+  }
+
+  public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile, int sideInventorySlotCount, @Nullable BlockEntity sideInventoryTile, @Nullable int[] sideInventoryLimits) {
+    super(TinkerTables.craftingStationContainer.get(), id, inv, tile, sideInventorySlotCount, sideInventoryTile, sideInventoryLimits);
 
     // unfortunately, nothing works with no tile
     if (tile != null) {
@@ -93,7 +106,11 @@ public class CraftingStationContainerMenu extends TabbedContainerMenu<CraftingSt
    * @param buf  Buffer for fetching tile
    */
   public CraftingStationContainerMenu(int id, Inventory inv, FriendlyByteBuf buf) {
-    this(id, inv, getTileEntityFromBuf(buf, CraftingStationBlockEntity.class));
+    this(id, inv, getTileEntityFromBuf(buf, CraftingStationBlockEntity.class), TabbedContainerMenu.SideInventoryClientData.read(buf));
+  }
+
+  public CraftingStationContainerMenu(int id, Inventory inv, @Nullable CraftingStationBlockEntity tile, TabbedContainerMenu.SideInventoryClientData data) {
+    this(id, inv, tile, data.slotCount(), data.tile(), data.limits());
   }
 
   @Override

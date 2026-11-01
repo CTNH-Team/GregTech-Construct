@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.p3pp3rf1y.sophisticatedcore.api.IStorageWrapper;
 import net.p3pp3rf1y.sophisticatedcore.controller.IControllableStorage;
 import net.p3pp3rf1y.sophisticatedcore.settings.memory.MemorySettingsCategory;
+import slimeknights.mantle.inventory.WrapperSlot;
 import slimeknights.tconstruct.tables.client.inventory.BaseTabbedScreen;
 import slimeknights.tconstruct.tables.menu.module.SideInventoryContainer;
 
@@ -43,6 +44,11 @@ public class SophisticatedLockedSlotRenderer implements BaseTabbedScreen.IStatio
     // like StorageScreenBase, the locked ghost only draws over empty slots
     if (wrapper == null || slot.hasItem()) {
       return;
+    }
+    // the overlay is invoked with the parent menu's wrapper slot, whose index is the menu-wide
+    // slot id; unwrap it so the storage memory is read by the side inventory's own slot index
+    if (slot instanceof WrapperSlot wrapperSlot) {
+      slot = wrapperSlot.parent;
     }
     Optional<ItemStack> lockedStack = wrapper.getSettingsHandler()
       .getTypeCategory(MemorySettingsCategory.class)
