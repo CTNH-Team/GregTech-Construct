@@ -150,11 +150,14 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
     float progress = Math.min((System.currentTimeMillis() - lastFocusChangeTime) / ANIMATION_TIME, 1.0f);
     float eased = easeInOutCubic(progress);
     boolean expanded = box.isFocused() || !box.getValue().isEmpty();
+    // small connected containers render fewer columns than the six the fixed width was tuned
+    // for, so cap the expansion at the actual panel width, leaving a 4px margin on the left
+    int expandedWidth = Math.min(EXPANDED_WIDTH, Math.max(COLLAPSED_WIDTH, area.getWidth() + OFFSET_X - 4));
     float width = expanded
-                  ? COLLAPSED_WIDTH + (EXPANDED_WIDTH - COLLAPSED_WIDTH) * eased
-                  : EXPANDED_WIDTH - (EXPANDED_WIDTH - COLLAPSED_WIDTH) * eased;
-    int maximizedX = area.getX() + area.getWidth() - EXPANDED_WIDTH;
-    int x = maximizedX + EXPANDED_WIDTH - (int)width + OFFSET_X;
+                  ? COLLAPSED_WIDTH + (expandedWidth - COLLAPSED_WIDTH) * eased
+                  : expandedWidth - (expandedWidth - COLLAPSED_WIDTH) * eased;
+    int maximizedX = area.getX() + area.getWidth() - expandedWidth;
+    int x = maximizedX + expandedWidth - (int)width + OFFSET_X;
     int y = area.getY() + 3 + OFFSET_Y;
     box.setX(x);
     box.setY(y);
