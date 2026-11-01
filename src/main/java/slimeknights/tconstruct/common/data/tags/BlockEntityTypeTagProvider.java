@@ -59,6 +59,11 @@ public class BlockEntityTypeTagProvider extends IntrinsicHolderTagsProvider<Bloc
     sideInventories.addOptional(ResourceLocation.tryBuild("sophisticatedstorage", "controller"));
     sideInventories.addOptional(ResourceLocation.tryBuild("sophisticatedbackpacks", "backpack"));
 
+    // Create: the Item Vault exposes a modifiable item handler, so it can serve as a workstation side container.
+    sideInventories.addOptional(ResourceLocation.tryBuild("create", "item_vault"));
+    // Create Connected: the Item Silo shares the Item Vault's storage and capability design.
+    sideInventories.addOptional(ResourceLocation.tryBuild("create_connected", "item_silo"));
+
     // these block entities don't fully sync the fluid to client, so show simplified information
     tag(MantleTags.BlockEntities.HIDES_GAUGE_AMOUNT).add(TinkerSmeltery.faucet.get(), TinkerSmeltery.channel.get());
   }
