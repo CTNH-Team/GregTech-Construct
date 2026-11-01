@@ -49,6 +49,15 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
   private static final int OFFSET_X = -6;
   private static final int OFFSET_Y = 2;
 
+  /** Optional item name matcher with CJK/pinyin support, installed by the JEC addon. */
+  @Nullable
+  public static INameMatcher nameMatcher;
+
+  /** Matches an item display name against the lowercased search phrase. */
+  public interface INameMatcher {
+    boolean matches(String name, String query);
+  }
+
   @Nullable
   private EditBox searchBox;
   @Nullable
@@ -250,12 +259,18 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
       };
     }
     else {
-      // item name filter: space separated words all have to match, same as Sophisticated Core
+      // item name filter: space separated words all have to match, same as Sophisticated Core;
+      // with JEC installed the words are matched through its pinyin aware matcher
       List<Predicate<ItemStack>> predicates = new ArrayList<>();
+      INameMatcher matcher = nameMatcher;
       for (String word : trimmed.split(" ")) {
         if (!word.isEmpty()) {
           String lower = word.toLowerCase(Locale.ROOT);
-          predicates.add(stack -> !stack.isEmpty() && stack.getHoverName().getString().toLowerCase(Locale.ROOT).contains(lower));
+          if (matcher != null) {
+            predicates.add(stack -> !stack.isEmpty() && matcher.matches(stack.getHoverName().getString(), lower));
+          } else {
+            predicates.add(stack -> !stack.isEmpty() && stack.getHoverName().getString().toLowerCase(Locale.ROOT).contains(lower));
+          }
         }
       }
       stackFilter = predicates.stream().reduce(Predicate::and).orElse(stack -> true);
