@@ -138,7 +138,7 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
 
         // tier 4 compat
         buildRenderInfo(MaterialIds.fiery).color(0x893D14).fallbacks("metal").luminosity(15);
-        buildRenderInfo(MaterialIds.nicrosil).color(0xD9E6DC);
+        buildRenderInfo(MaterialIds.nichrome).color(0xD9E6DC);
 
         // ammo
         buildRenderInfo(MaterialIds.amethyst);

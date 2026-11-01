@@ -100,7 +100,7 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
         ).addTag(TinkerTags.Materials.COMPATABILITY_BLOCKS);
         tag(TinkerTags.Materials.COMPATABILITY_BLOCKS).addTag(TinkerTags.Materials.COMPATABILITY_ALLOYS);
         tag(TinkerTags.Materials.COMPATABILITY_ALLOYS).addOptional(
-                MaterialIds.andesiteAlloy, MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter, MaterialIds.nicrosil);
+                MaterialIds.andesiteAlloy, MaterialIds.bronze, MaterialIds.constantan, MaterialIds.invar, MaterialIds.electrum, MaterialIds.pewter, MaterialIds.nichrome);
 
         tag(TinkerTags.Materials.METALS).addTag(TinkerTags.Materials.HARD_METALS).addOptional(
                 MaterialIds.gold, MaterialIds.roseGold

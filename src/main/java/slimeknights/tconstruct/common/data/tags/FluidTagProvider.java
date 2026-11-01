@@ -114,7 +114,7 @@ public class FluidTagProvider extends FluidTagsProvider {
         fluidTag(TinkerFluids.moltenRefinedGlowstone);
         fluidTag(TinkerFluids.moltenRefinedObsidian);
         // cosmere compat alloys
-        fluidTag(TinkerFluids.moltenNicrosil);
+        fluidTag(TinkerFluids.moltenNichrome);
         fluidTag(TinkerFluids.moltenDuralumin);
         fluidTag(TinkerFluids.moltenBendalloy);
         // twilight compat fluids
@@ -178,7 +178,7 @@ public class FluidTagProvider extends FluidTagsProvider {
                 // mekanism alloys
                 TinkerFluids.moltenRefinedGlowstone, TinkerFluids.moltenRefinedObsidian,
                 // cosmere alloys
-                TinkerFluids.moltenNicrosil, TinkerFluids.moltenDuralumin, TinkerFluids.moltenBendalloy
+                TinkerFluids.moltenNichrome, TinkerFluids.moltenDuralumin, TinkerFluids.moltenBendalloy
         );
         this.tag(TinkerTags.Fluids.CHEMTHROWER_ENTITY_EFFECTS)
                 .addTag(Tags.Fluids.MILK);
@@ -222,7 +222,7 @@ public class FluidTagProvider extends FluidTagsProvider {
                 // mekanism alloys
                 TinkerFluids.moltenRefinedGlowstone, TinkerFluids.moltenRefinedObsidian,
                 // cosmere alloys
-                TinkerFluids.moltenNicrosil, TinkerFluids.moltenDuralumin, TinkerFluids.moltenBendalloy,
+                TinkerFluids.moltenNichrome, TinkerFluids.moltenDuralumin, TinkerFluids.moltenBendalloy,
                 // Twilight alloys
                 TinkerFluids.moltenSteeleaf
         );

@@ -113,7 +113,7 @@
     "#forge:refined_glowstone",
     "#forge:refined_obsidian",
     {
-      "id": "#forge:nicrosil",
+      "id": "#forge:nichrome",
       "required": false
     },
     "#forge:duralumin",
