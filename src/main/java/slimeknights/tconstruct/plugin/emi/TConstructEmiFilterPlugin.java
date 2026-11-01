@@ -4,6 +4,7 @@ import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
+import dev.emi.emi.api.stack.Comparison;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -58,6 +59,7 @@ public final class TConstructEmiFilterPlugin implements EmiPlugin {
   @Override
   public void register(EmiRegistry registry) {
     hideContainerFillingRecipes(registry);
+    registerPartComparisons(registry);
     if (!Config.CLIENT.showFilledFluidTanks.get()) {
       hideFilledFluidTanks(registry);
     }
@@ -98,6 +100,18 @@ public final class TConstructEmiFilterPlugin implements EmiPlugin {
     }
     ResourceLocation sourceRecipeId = casting.getSourceRecipeId();
     return sourceRecipeId != null && containerFillingIds.contains(sourceRecipeId);
+  }
+
+  /**
+   * 部件按材料 NBT 区分。EMI 的配方来源/用途索引默认只按物品 id 匹配,
+   * 不注册比较会把这个部件的所有材料变体配方全部返回,故为 parts 标签下的
+   * 部件注册 NBT 严格比较。所有涉及部件的配方输入/输出都带材料 NBT
+   * (具体部件或 MaterialIngredient 展开的变体),不会误伤通配配方。
+   */
+  private static void registerPartComparisons(EmiRegistry registry) {
+    for (Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(TinkerTags.Items.TOOL_PARTS)) {
+      registry.setDefaultComparison(holder.get(), Comparison.compareNbt());
+    }
   }
 
   private static void hideModifierItems(EmiRegistry registry) {
