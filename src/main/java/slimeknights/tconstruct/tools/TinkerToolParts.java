@@ -90,6 +90,10 @@ public final class TinkerToolParts extends TinkerModule {
     public static final EnumObject<ArmorItem.Type,ToolPartItem> plating = ITEMS.registerEnum(ArmorItem.Type.values(), "plating", type -> new ToolPartItem(ITEM_PROPS, PlatingMaterialStats.TYPES.get(type.ordinal()).getId()));
     public static final ItemObject<ToolPartItem> maille = ITEMS.register("maille", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.MAILLE.getId()));
     public static final ItemObject<ToolPartItem> shieldCore = ITEMS.register("shield_core", () -> new ToolPartItem(ITEM_PROPS, StatlessMaterialStats.SHIELD_CORE.getIdentifier()));
+    // slimesuit
+    public static final ItemObject<ToolPartItem> ribcage = ITEMS.register("ribcage", () -> new ToolPartItem(ITEM_PROPS, RepairStats.RIBCAGE.getId()));
+    public static final ItemObject<ToolPartItem> shell = ITEMS.register("shell", () -> new ToolPartItem(ITEM_PROPS, RepairStats.SHELL.getId()));
+    public static final ItemObject<ToolPartItem> laces = ITEMS.register("laces", () -> new ToolPartItem(ITEM_PROPS, RepairStats.LACES.getId()));
     public static final ItemObject<ToolPartItem> armorPlate = ITEMS.register("armor_plate", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.ARMOR_PLATE.getId()));
     public static final ItemObject<ToolPartItem> armorMail = ITEMS.register("armor_mail", () -> new ToolPartItem(ITEM_PROPS, ArmorPartMaterialStats.ARMOR_MAIL.getId()));
     public static final EnumObject<ArmorItem.Type,ToolPartItem> armorCast = new EnumObject.Builder<ArmorItem.Type,ToolPartItem>(ArmorItem.Type.class)
@@ -169,6 +173,10 @@ public final class TinkerToolParts extends TinkerModule {
         }
         accept(output, maille);
         accept(output, shieldCore);
+        // slimesuit
+        accept(output, ribcage);
+        accept(output, shell);
+        accept(output, laces);
         accept(output, armorPlate);
         accept(output, armorMail);
         for (ArmorItem.Type type : ArmorItem.Type.values()) {

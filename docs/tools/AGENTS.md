@@ -33,7 +33,11 @@ Complete tools, tool parts, modifiers, modules, projectiles, tool logic, stats, 
 - `TinkerTools` initializes shared tool helpers such as slot types and random material support.
 - `TinkerModifiers` contains legacy compatibility surfaces; new behavior should use current modules.
 - Changes to tool definitions commonly require both Java tests and regenerated tinkering JSON.
+- `SlimeStats`/`RepairStats` live in `tools/stats`; new materials use fork `ArmorPartMaterialStats` values and 144-system melt/cast math, never upstream 90/100 numbers.
 
+## ANTI-PATTERNS (SYNC)
+- New tools must emit `modifier_maps` (`constant` style), not only legacy `modifier_roots`.
+- New material melt/cast values derive from the 144 system, never upstream 90/100 numbers.
 ## SCOPE
 Applies to `src/main/java/slimeknights/tconstruct/tools` and tool-specific consumers under `library/tools`.
 

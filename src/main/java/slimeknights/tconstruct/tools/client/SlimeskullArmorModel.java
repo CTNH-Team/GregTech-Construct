@@ -15,26 +15,29 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.WalkAnimationState;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Quaternionf;
 import slimeknights.mantle.data.listener.ISafeManagerReloadListener;
 import slimeknights.tconstruct.library.client.armor.ArmorModelManager.ArmorModel;
 import slimeknights.tconstruct.library.client.armor.MultilayerArmorModel;
 import slimeknights.tconstruct.library.client.materials.MaterialRenderInfo;
 import slimeknights.tconstruct.library.client.materials.MaterialRenderInfoLoader;
-import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
+import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
 import slimeknights.tconstruct.library.tools.nbt.MaterialIdNBT;
 import slimeknights.tconstruct.library.utils.SimpleCache;
 import slimeknights.tconstruct.tools.TinkerModifiers;
-import slimeknights.tconstruct.tools.data.material.MaterialIds;
+import slimeknights.tconstruct.world.client.BlockModelSkullRenderer;
+import slimeknights.tconstruct.world.client.PiglinSkullModel;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.Function;
 
 /** Model to render a slimeskull helmet with both the helmet and skull */
@@ -42,9 +45,8 @@ public class SlimeskullArmorModel extends MultilayerArmorModel {
   /** Singleton model instance, all data is passed in via setters */
   public static final SlimeskullArmorModel INSTANCE = new SlimeskullArmorModel();
   /** Cache of colors for materials */
-  private static final SimpleCache<String,Integer> MATERIAL_COLOR_CACHE = new SimpleCache<>(mat ->
-    Optional.ofNullable(MaterialVariantId.tryParse(mat))
-            .flatMap(MaterialRenderInfoLoader.INSTANCE::getRenderInfo)
+  static final SimpleCache<MaterialVariantId,Integer> MATERIAL_COLOR_CACHE = new SimpleCache<>(mat ->
+    MaterialRenderInfoLoader.INSTANCE.getRenderInfo(mat)
             .map(MaterialRenderInfo::vertexColor)
             .orElse(-1));
   /** Listener to clear caches */
@@ -61,6 +63,8 @@ public class SlimeskullArmorModel extends MultilayerArmorModel {
   /** Texture for the head */
   @Nullable
   private SkullModelBase headModel;
+  /** Current animation time for the skull */
+  private float walkAnimation = 0;
 
   private SlimeskullArmorModel() {}
 
@@ -68,37 +72,42 @@ public class SlimeskullArmorModel extends MultilayerArmorModel {
   public Model setup(LivingEntity living, ItemStack stack, HumanoidModel<?> base, ArmorModel model) {
     super.setup(living, stack, EquipmentSlot.HEAD, base, model);
     MaterialId materialId = MaterialIdNBT.from(stack).getMaterial(0).getId();
-    if (!materialId.equals(IMaterial.UNKNOWN_ID)) {
+    if (!materialId.equals(MaterialId.UNKNOWN)) {
       SkullModelBase skull = getHeadModel(materialId);
       ResourceLocation texture = HEAD_TEXTURES.get(materialId);
       if (skull != null && texture != null) {
         headModel = skull;
         headTexture = texture;
-        // determine the color to tint the helmet, fallback to enderslime if missing
-        String embellishmentMaterial = ModifierUtil.getPersistentString(stack, TinkerModifiers.embellishment.getId());
-        if (embellishmentMaterial.isEmpty()) {
-          embellishmentMaterial = MaterialIds.enderslime.toString();
+        // if dyed, color is the dye
+        ModifierId dyed = TinkerModifiers.dyed.getId();
+        if (ModifierUtil.getModifierLevel(stack, dyed) > 0) {
+          headColor = 0xFF000000 | ModifierUtil.getPersistentInt(stack, dyed, -1);
+        } else {
+          // if not dyed, color is the material, fallback to no tint if missing
+          MaterialVariantId material = MaterialIdNBT.from(stack).getMaterial(1);
+          if (MaterialId.UNKNOWN.equals(material)) {
+            headColor = -1;
+          } else {
+            headColor = MATERIAL_COLOR_CACHE.apply(material);
+          }
         }
-        headColor = MATERIAL_COLOR_CACHE.apply(embellishmentMaterial);
+
+        // setup walk animation
+        WalkAnimationState walkState = living.getVehicle() instanceof LivingEntity vehicle ? vehicle.walkAnimation : living.walkAnimation;
+        this.walkAnimation = walkState.position();
         return this;
       }
     }
     headTexture = null;
     headModel = null;
     headColor = -1;
+    walkAnimation = 0;
     return this;
   }
 
   @Override
   public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
     if (base != null && buffer != null) {
-      if (model != ArmorModel.EMPTY) {
-        matrixStackIn.pushPose();
-        matrixStackIn.translate(0.0D, base.young ? -0.015D : -0.02D, 0.0D);
-        matrixStackIn.scale(1.01f, 1.1f, 1.01f);
-        super.renderToBuffer(matrixStackIn, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        matrixStackIn.popPose();
-      }
       if (headModel != null && headTexture != null) {
         VertexConsumer heaadBuffer = ItemRenderer.getArmorFoilBuffer(buffer, RenderType.entityCutoutNoCullZOffset(headTexture), false, hasGlint);
         matrixStackIn.pushPose();
@@ -107,12 +116,24 @@ public class SlimeskullArmorModel extends MultilayerArmorModel {
         }
         if (base.young) {
           matrixStackIn.scale(0.85F, 0.85F, 0.85F);
-          matrixStackIn.translate(0.0D, 1.0D, 0.0D);
+          matrixStackIn.translate(0.0D, 0.9D, 0.0D);
         } else {
           matrixStackIn.scale(1.115f, 1.115f, 1.115f);
         }
-        headModel.setupAnim(0, base.head.yRot * 180f / (float)(Math.PI), base.head.xRot * 180f / (float)(Math.PI));
+        // handle head rotation directly as it fixes issues with dragon heads
+        // could fix it directly, but saves us some math to handle here
+        matrixStackIn.mulPose((new Quaternionf()).rotationZYX(0, base.head.yRot, base.head.xRot));
+        headModel.setupAnim(walkAnimation, 0, 0);
         renderColored(headModel, matrixStackIn, heaadBuffer, packedLightIn, packedOverlayIn, headColor, red, green, blue, alpha);
+        matrixStackIn.popPose();
+      }
+      if (model != ArmorModel.EMPTY) {
+        matrixStackIn.pushPose();
+        // apply rotation before translation
+        // offset and resize helmet to be around head
+        matrixStackIn.translate(0.0D, base.young ? -0.09D : -0.025D, 0.0D);
+        matrixStackIn.scale(1.1f, 1.1f, 1.1f);
+        super.renderToBuffer(matrixStackIn, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         matrixStackIn.popPose();
       }
     }
@@ -129,6 +150,16 @@ public class SlimeskullArmorModel extends MultilayerArmorModel {
   /** Registers a head model and texture, using the default skull model */
   public static void registerHeadModel(MaterialId materialId, ModelLayerLocation headModel, ResourceLocation texture) {
     registerHeadModel(materialId, modelSet -> new SkullModel(modelSet.bakeLayer(headModel)), texture);
+  }
+
+  /** Registers a head model and texture, using the piglin skull model */
+  public static void registerPiglinHeadModel(MaterialId materialId, ModelLayerLocation headModel, ResourceLocation texture) {
+    registerHeadModel(materialId, modelSet -> new PiglinSkullModel(modelSet.bakeLayer(headModel)), texture);
+  }
+
+  /** Registers a skull model using an item as the model */
+  public static void registerBlockModel(MaterialId materialId, ItemStack stack) {
+    registerHeadModel(materialId, modelSet -> new BlockModelSkullRenderer(Minecraft.getInstance().getItemRenderer(), stack), InventoryMenu.BLOCK_ATLAS);
   }
 
   /** Registers a head model and texture, using a custom skull model */

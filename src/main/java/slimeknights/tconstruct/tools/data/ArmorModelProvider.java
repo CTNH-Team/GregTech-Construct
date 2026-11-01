@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tools.data;
 
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.armor.texture.ArmorTextureSupplier;
 import slimeknights.tconstruct.library.client.armor.texture.DyedArmorTextureSupplier;
@@ -10,7 +11,9 @@ import slimeknights.tconstruct.library.client.armor.texture.MaterialArmorTexture
 import slimeknights.tconstruct.library.client.armor.texture.TrimArmorTextureSupplier;
 import slimeknights.tconstruct.library.client.data.AbstractArmorModelProvider;
 import slimeknights.tconstruct.tools.ArmorDefinitions;
+import slimeknights.tconstruct.tools.ArmorDefinitions;
 import slimeknights.tconstruct.tools.TinkerModifiers;
+import slimeknights.tconstruct.tools.TinkerTools;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
 
 public class ArmorModelProvider extends AbstractArmorModelProvider {
@@ -45,6 +48,12 @@ public class ArmorModelProvider extends AbstractArmorModelProvider {
       TrimArmorTextureSupplier.INSTANCE
     });
     addArmorPartModels();
+    // slime wings model reuses the slime material texture from the shared slime armor root
+    ResourceLocation slime = ArmorDefinitions.SLIMESUIT.getId();
+    addModel(TinkerTools.slimeWings, new ArmorTextureSupplier[] {
+      new MaterialArmorTextureSupplier.Material(slime, "/", 0),
+      TrimArmorTextureSupplier.INSTANCE
+    });
   }
 
   private void addArmorPartModels() {

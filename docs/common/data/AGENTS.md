@@ -26,7 +26,7 @@ Static Forge data generation for tags, loot, recipes, advancements, and related 
 - A provider can intentionally emit data for foreign namespaces used by compatibility.
 - Run the narrowest data-generation test before invoking the full `runData` task.
 - Changes to ids, tags, or provider ordering may require regenerating many tracked files.
-
+- `FunctionProvider` emits `functions/grant_advancement/*.mcfunction` plus 8 internal advancements; keep fork-owned `combat/*`, `full_set/knights`, `special/*`.
 ## CHANGE IMPACT
 - New registry objects usually need tags, loot, recipes, or advancements here.
 - Verify generated diffs before retaining them; unrelated resource churn usually indicates an input or ordering issue.

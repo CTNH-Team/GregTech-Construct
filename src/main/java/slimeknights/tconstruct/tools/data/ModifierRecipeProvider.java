@@ -1297,7 +1297,8 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .disallowCrystal() // would allow a cost cheese
                 .exactLevel(3)
                 .save(consumer, wrap(ModifierIds.luck, abilityFolder, "_level_3"));
-        // pants have just one level
+        // add recipe to salvage luck from pants
+        // TODO 1.21: remove this salvage recipe
         ModifierRecipeBuilder.modifier(ModifierIds.luck)
                 .setTools(TinkerTags.Items.LEGGINGS)
                 .addInput(SizedIngredient.fromItems(Items.CORNFLOWER, Items.BLUE_ORCHID))
@@ -1542,9 +1543,9 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
         Ingredient blockWhileCharging = IntersectionIngredient.of(Ingredient.of(TinkerTags.Items.DURABILITY), Ingredient.of(TinkerTags.Items.INTERACTABLE_CHARGE));
         ModifierRecipeBuilder.modifier(TinkerModifiers.flinging)
                 .setTools(blockWhileCharging)
-                .addInput(Tags.Items.STRING)
+                .addInput(Blocks.VINE)
                 .addInput(TinkerWorld.earthGeode.asItem())
-                .addInput(Tags.Items.STRING)
+                .addInput(Blocks.VINE)
                 .addInput(TinkerWorld.congealedSlime.get(SlimeType.EARTH))
                 .addInput(TinkerWorld.congealedSlime.get(SlimeType.EARTH))
                 .setMaxLevel(1).checkTraitLevel()
@@ -1553,9 +1554,9 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .save(consumer, prefix(TinkerModifiers.flinging, abilityFolder));
         ModifierRecipeBuilder.modifier(TinkerModifiers.springing)
                 .setTools(blockWhileCharging)
-                .addInput(Tags.Items.FEATHERS)
+                .addInput(TinkerWorld.skySlimeVine)
                 .addInput(TinkerWorld.skyGeode.asItem())
-                .addInput(Tags.Items.FEATHERS)
+                .addInput(TinkerWorld.skySlimeVine)
                 .addInput(TinkerWorld.congealedSlime.get(SlimeType.SKY))
                 .addInput(TinkerWorld.congealedSlime.get(SlimeType.SKY))
                 .setMaxLevel(1).checkTraitLevel()
@@ -1564,9 +1565,9 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .save(consumer, prefix(TinkerModifiers.springing, abilityFolder));
         ModifierRecipeBuilder.modifier(TinkerModifiers.bonking)
                 .setTools(blockWhileCharging)
-                .addInput(Tags.Items.INGOTS_IRON)
+                .addInput(Blocks.WEEPING_VINES)
                 .addInput(TinkerWorld.ichorGeode.asItem())
-                .addInput(Tags.Items.INGOTS_IRON)
+                .addInput(Blocks.WEEPING_VINES)
                 .addInput(TinkerWorld.congealedSlime.get(SlimeType.ICHOR))
                 .addInput(TinkerWorld.congealedSlime.get(SlimeType.ICHOR))
                 .setMaxLevel(1).checkTraitLevel()
@@ -1575,9 +1576,9 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                 .save(consumer, prefix(TinkerModifiers.bonking, abilityFolder));
         ModifierRecipeBuilder.modifier(TinkerModifiers.warping)
                 .setTools(blockWhileCharging)
-                .addInput(Tags.Items.ENDER_PEARLS)
+                .addInput(TinkerWorld.enderSlimeVine)
                 .addInput(TinkerWorld.enderGeode.asItem())
-                .addInput(Tags.Items.ENDER_PEARLS)
+                .addInput(TinkerWorld.enderSlimeVine)
                 .addInput(TinkerWorld.congealedSlime.get(SlimeType.ENDER))
                 .addInput(TinkerWorld.congealedSlime.get(SlimeType.ENDER))
                 .setMaxLevel(1).checkTraitLevel()

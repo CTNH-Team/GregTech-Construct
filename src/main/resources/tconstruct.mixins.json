@@ -26,6 +26,7 @@
     "tconstruct.create.TinyMultiblockControllerBlockMixin"
   ],
   "client": [
+    "client.GuiGraphicsMixin",
     "client.ModelManagerMixin"
   ],
   "injectors": {

@@ -12,6 +12,7 @@ import slimeknights.tconstruct.library.json.LevelingInt;
 import slimeknights.tconstruct.library.json.TinkerLoadables;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.entity.ReusableProjectile;
 import slimeknights.tconstruct.library.modifiers.hook.ranged.ScheduledProjectileTaskModifierHook;
 import slimeknights.tconstruct.library.modifiers.modules.ModifierModule;
 import slimeknights.tconstruct.library.module.HookProvider;
@@ -69,11 +70,11 @@ public record ProjectileFuseModule(SimpleParticleType particle, LevelingInt time
           level.sendParticles(particle, position.x, position.y, position.z, 10, 0.0D, 0.0D, 0.0D, 0.1f);
         }
 
-        // if its reusable, don't discard, but rather zero momentum
-        if (projectile.getType().is(TinkerTags.EntityTypes.REUSABLE_AMMO)) {
-          projectile.setDeltaMovement(Vec3.ZERO);
-        } else {
+        // if it's reusable, don't discard, but rather zero momentum
+        if (ReusableProjectile.isSingleUse(projectile)) {
           projectile.discard();
+        } else {
+          projectile.setDeltaMovement(Vec3.ZERO);
         }
       }
     }

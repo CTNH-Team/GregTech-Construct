@@ -235,9 +235,9 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
     addMetal(TinkerFluids.moltenGold).magicDamage(2).addEffect(FluidMobEffect.builder().effect(MobEffects.REGENERATION, 20 * 6, 2), TimeAction.SET);
     compatMetal(TinkerFluids.moltenElectrum, "silver").magicDamage(3).addEffect(FluidMobEffect.builder().effect(MobEffects.DIG_SPEED, 20 * 8, 1), TimeAction.SET);
     addMetal(TinkerFluids.moltenRoseGold).magicDamage(3).addEffect(FluidMobEffect.builder().effect(MobEffects.ABSORPTION, 20 * 15, 2), TimeAction.SET);
-    // chromium/nicrosil - luck/xp
+    // chromium/nichrome - luck/xp
     compatMetal(TinkerFluids.moltenChromium).magicDamage(2).addEffect(FluidMobEffect.builder().effect(MobEffects.LUCK, 20 * 5, 1), TimeAction.SET);
-    compatMetal(TinkerFluids.moltenNicrosil).magicDamage(3).addEffect(FluidMobEffect.builder().effect(TinkerEffects.experienced.get(), 20 * 5, 1), TimeAction.SET);
+    compatMetal(TinkerFluids.moltenNichrome).magicDamage(3).addEffect(FluidMobEffect.builder().effect(TinkerEffects.experienced.get(), 20 * 5, 1), TimeAction.SET);
     // cadmium/bendalloy - breath/energy
     compatMetal(TinkerFluids.moltenCadmium).fireDamage(2).addEntityEffect(new AddBreathFluidEffect(-90));
     compatMetal(TinkerFluids.moltenBendalloy).fireDamage(3).addEffect(FluidMobEffect.builder().effect(MobEffects.SATURATION, 20 * 5, 1), TimeAction.SET);
@@ -260,6 +260,7 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
     addFluid(TinkerFluids.moltenSlimesteel, slimeMetal).addEffect(ExplosionFluidEffect.radius(1, 0.5f).knockback(LevelingValue.eachLevel(1)).build());
     addFluid(TinkerFluids.moltenCinderslime, slimeMetal).addEffect(ExplosionFluidEffect.radius(1, 1).damage(LevelingValue.eachLevel(3)).knockback(LevelingValue.flat(-2)).build());
     addFluid(TinkerFluids.moltenQueensSlime, slimeMetal).addEffect(ExplosionFluidEffect.radius(1, 1).damage(LevelingValue.eachLevel(3)).placeFire().ignoreBlocks().build());
+    addFluid(TinkerFluids.moltenKnightslime, slimeMetal).addEffect(ExplosionFluidEffect.radius(1, 1).damage(LevelingValue.eachLevel(4)).knockback(LevelingValue.flat(0)).ignoreBlocks().build());
     // tinkers nether
     addMetal(TinkerFluids.moltenCobalt).fireDamage(3).addEffect(FluidMobEffect.builder().effect(MobEffects.DIG_SPEED, 20 * 7, 1).effect(MobEffects.MOVEMENT_SPEED, 20 * 7, 1), TimeAction.SET);
     addMetal(TinkerFluids.moltenManyullyn).fireDamage(4).addEffect(FluidMobEffect.builder().effect(TinkerEffects.bleeding.get(), 20 * 3, 1), TimeAction.SET);

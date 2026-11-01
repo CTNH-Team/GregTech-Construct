@@ -7,6 +7,7 @@ import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.data.loadable.field.LoadableField;
 import slimeknights.mantle.util.JsonHelper;
 import slimeknights.tconstruct.library.modifiers.Modifier;
+import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 
 import javax.annotation.Nullable;
 
@@ -19,6 +20,15 @@ public interface ModuleWithKey {
 
   /** Gets the key for the module */
   default ResourceLocation getKey(Modifier modifier) {
+    ResourceLocation key = key();
+    if (key != null) {
+      return key;
+    }
+    return modifier.getId();
+  }
+
+  /** Gets the key for the module */
+  default ResourceLocation getKey(ModifierEntry modifier) {
     ResourceLocation key = key();
     if (key != null) {
       return key;

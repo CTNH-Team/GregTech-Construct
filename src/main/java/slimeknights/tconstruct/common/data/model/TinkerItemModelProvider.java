@@ -75,6 +75,10 @@ public class TinkerItemModelProvider extends ItemModelProvider implements Runtim
         part(TinkerToolParts.shieldCore, "armor/plate/shield/core");
         part(TinkerToolParts.armorPlate);
         part(TinkerToolParts.armorMail);
+        // slimesuit
+        part(TinkerToolParts.ribcage, "armor/slime/chestplate/ribcage");
+        part(TinkerToolParts.shell, "armor/slime/leggings/shell").offset(0, -1);
+        part(TinkerToolParts.laces, "armor/slime/boots/laces").offset(0, -1);
         for (ArmorItem.Type slot : ArmorItem.Type.values()) {
             String name = slot.getName();
             part(getResource("cast_" + name), "parts/cast_" + name);

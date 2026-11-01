@@ -49,6 +49,15 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
   private static final int OFFSET_X = -6;
   private static final int OFFSET_Y = 2;
 
+  /** Optional item name matcher with CJK/pinyin support, installed by the JEC addon. */
+  @Nullable
+  public static INameMatcher nameMatcher;
+
+  /** Matches an item display name against the lowercased search phrase. */
+  public interface INameMatcher {
+    boolean matches(String name, String query);
+  }
+
   @Nullable
   private EditBox searchBox;
   @Nullable
@@ -150,11 +159,14 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
     float progress = Math.min((System.currentTimeMillis() - lastFocusChangeTime) / ANIMATION_TIME, 1.0f);
     float eased = easeInOutCubic(progress);
     boolean expanded = box.isFocused() || !box.getValue().isEmpty();
+    // small connected containers render fewer columns than the six the fixed width was tuned
+    // for, so cap the expansion at the actual panel width, leaving a 4px margin on the left
+    int expandedWidth = Math.min(EXPANDED_WIDTH, Math.max(COLLAPSED_WIDTH, area.getWidth() + OFFSET_X - 4));
     float width = expanded
-                  ? COLLAPSED_WIDTH + (EXPANDED_WIDTH - COLLAPSED_WIDTH) * eased
-                  : EXPANDED_WIDTH - (EXPANDED_WIDTH - COLLAPSED_WIDTH) * eased;
-    int maximizedX = area.getX() + area.getWidth() - EXPANDED_WIDTH;
-    int x = maximizedX + EXPANDED_WIDTH - (int)width + OFFSET_X;
+                  ? COLLAPSED_WIDTH + (expandedWidth - COLLAPSED_WIDTH) * eased
+                  : expandedWidth - (expandedWidth - COLLAPSED_WIDTH) * eased;
+    int maximizedX = area.getX() + area.getWidth() - expandedWidth;
+    int x = maximizedX + expandedWidth - (int)width + OFFSET_X;
     int y = area.getY() + 3 + OFFSET_Y;
     box.setX(x);
     box.setY(y);
@@ -247,12 +259,18 @@ public class SophisticatedSearch implements BaseTabbedScreen.IStationSearch {
       };
     }
     else {
-      // item name filter: space separated words all have to match, same as Sophisticated Core
+      // item name filter: space separated words all have to match, same as Sophisticated Core;
+      // with JEC installed the words are matched through its pinyin aware matcher
       List<Predicate<ItemStack>> predicates = new ArrayList<>();
+      INameMatcher matcher = nameMatcher;
       for (String word : trimmed.split(" ")) {
         if (!word.isEmpty()) {
           String lower = word.toLowerCase(Locale.ROOT);
-          predicates.add(stack -> !stack.isEmpty() && stack.getHoverName().getString().toLowerCase(Locale.ROOT).contains(lower));
+          if (matcher != null) {
+            predicates.add(stack -> !stack.isEmpty() && matcher.matches(stack.getHoverName().getString(), lower));
+          } else {
+            predicates.add(stack -> !stack.isEmpty() && stack.getHoverName().getString().toLowerCase(Locale.ROOT).contains(lower));
+          }
         }
       }
       stackFilter = predicates.stream().reduce(Predicate::and).orElse(stack -> true);

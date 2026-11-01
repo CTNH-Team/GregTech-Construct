@@ -82,6 +82,24 @@ public final class ModifierUtil {
   }
 
   /**
+   * Checks if the given entity pays the resource costs of using a tool, such as draining the tank or consuming ammo.
+   * @return  True if resources should be consumed.
+   */
+  public static boolean consumesResources(@Nullable LivingEntity entity) {
+    return !(entity instanceof Player player) || consumesResources(player);
+  }
+
+  /**
+   * Checks if the given player pays the resource costs of using a tool, such as draining the tank or consuming ammo.
+   * Creative players get their resources for free.
+   * @param player  Player using the tool. Null consumes, as only creative players get their resources for free.
+   * @return  True if resources should be consumed.
+   */
+  public static boolean consumesResources(@Nullable Player player) {
+    return player == null || !player.isCreative();
+  }
+
+  /**
    * Direct method to get the level of a modifier from a stack. If you need to get multiple modifier levels, using {@link ToolStack} is faster
    * @param stack     Stack to check
    * @param modifier  Modifier to search for
@@ -212,6 +230,20 @@ public final class ModifierUtil {
   @SuppressWarnings("UnusedReturnValue") // API
   @Nullable
   public static InteractionHand updateFishingRod(Projectile projectile, int damage, boolean applyCooldown) {
+    return updateFishingRod(projectile, damage, applyCooldown, ModifierId.EMPTY);
+  }
+
+  /**
+   * Called before you call {@link Projectile#discard()} to update the fishing rod stack on the player.
+   *
+   * @param projectile  Projectile, will check if its our fishing bobber.
+   * @param damage      Damage to deal to the rod.
+   * @param applyCooldown  If true, applies draw speed as an item cooldown.
+   * @param cause       Modifier causing the retraction.
+   * @return hand containing the fishing rod, or null if its in neither hand.
+   */
+  @Nullable
+  public static InteractionHand updateFishingRod(Projectile projectile, int damage, boolean applyCooldown, ModifierId cause) {
     if (projectile.getType() == TinkerTools.fishingHook.get() && projectile.getOwner() instanceof LivingEntity living) {
       ItemStack stack = living.getMainHandItem();
       InteractionHand hand = InteractionHand.MAIN_HAND;
@@ -234,7 +266,7 @@ public final class ModifierUtil {
           }
           // damage the rod
           if (damage > 0) {
-            ToolDamageUtil.damageAnimated(tool, damage, living, hand);
+            ToolDamageUtil.damageAnimated(tool, damage, living, hand); // TODO: pass cause for break event
           }
         }
         return hand;

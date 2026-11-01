@@ -11,6 +11,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -53,6 +54,8 @@ import java.util.stream.Stream;
 @Setter
 public class FluidEffectProjectile extends Projectile implements ProjectileWithKnockback, ProjectileWithPower {
   private static final EntityDataAccessor<FluidStack> FLUID = SynchedEntityData.defineId(FluidEffectProjectile.class, TinkerFluids.FLUID_DATA_SERIALIZER);
+  /** Movement speed in water */
+  private static final EntityDataAccessor<Float> WATER_INERTIA = SynchedEntityData.defineId(FluidEffectProjectile.class, EntityDataSerializers.FLOAT);
   /** Projectile power determining how much fluid is used at most */
   @Getter
   private float power = 1;
@@ -104,6 +107,10 @@ public class FluidEffectProjectile extends Projectile implements ProjectileWithK
     this.entityData.set(FLUID, fluid);
   }
 
+  /** Sets the water inertia for the projectile */
+  public void setWaterInertia(float waterInertia) {
+    this.entityData.set(WATER_INERTIA, Math.min(waterInertia, 0.99f));
+  }
   @Override
   public void addKnockback(float amount) {
     this.knockback += amount;
@@ -191,7 +198,8 @@ public class FluidEffectProjectile extends Projectile implements ProjectileWithK
       } else {
         newLocation = newLocation.add(velocity);
       }
-      velocity = velocity.scale(0.99f);
+      velocity = velocity.scale(this.isInWater() ? entityData.get(WATER_INERTIA) : 0.99f);
+      // TODO: reduce when underwater without fins
       if (!this.isNoGravity()) {
         FluidStack fluid = getFluid();
         velocity = velocity.add(0, fluid.getFluid().getFluidType().isLighterThanAir() ? 0.06 : -0.06, 0);
@@ -300,6 +308,7 @@ public class FluidEffectProjectile extends Projectile implements ProjectileWithK
   @Override
   protected void defineSynchedData() {
     this.entityData.define(FLUID, FluidStack.EMPTY);
+    this.entityData.define(WATER_INERTIA, 0.6f);
   }
 
   @Override
@@ -321,6 +330,7 @@ public class FluidEffectProjectile extends Projectile implements ProjectileWithK
     super.addAdditionalSaveData(nbt);
     nbt.putFloat("power", power);
     nbt.putFloat("knockback", knockback);
+    nbt.putFloat("water_inertia", this.entityData.get(WATER_INERTIA));
     if (cannon != null) {
       nbt.put("cannon", NbtUtils.writeBlockPos(cannon));
     }
@@ -335,6 +345,7 @@ public class FluidEffectProjectile extends Projectile implements ProjectileWithK
     super.readAdditionalSaveData(nbt);
     this.power = nbt.getFloat("power");
     this.knockback = nbt.getFloat("knockback");
+    this.entityData.set(WATER_INERTIA, nbt.getFloat("water_inertia"));
     if (nbt.contains("cannon")) {
       this.cannon = NbtUtils.readBlockPos(nbt.getCompound("cannon"));
     } else {

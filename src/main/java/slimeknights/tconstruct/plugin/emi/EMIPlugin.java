@@ -33,6 +33,8 @@ import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.materials.IMaterialRegistry;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
+import slimeknights.tconstruct.library.materials.definition.MaterialVariant;
+import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.materials.stats.MaterialStatsId;
 import slimeknights.tconstruct.library.recipe.modifiers.ModifierRecipeLookup;
 import slimeknights.tconstruct.library.recipe.melting.MeltingRecipe;
@@ -45,6 +47,7 @@ import slimeknights.tconstruct.library.recipe.worktable.IModifierWorktableRecipe
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
 import slimeknights.tconstruct.library.tools.definition.module.build.ToolTraitHook;
 import slimeknights.tconstruct.library.tools.item.IModifiableDisplay;
+import slimeknights.tconstruct.library.tools.part.IMaterialItem;
 import slimeknights.tconstruct.library.tools.layout.StationSlotLayoutLoader;
 import slimeknights.tconstruct.library.tools.nbt.MaterialNBT;
 import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
@@ -70,8 +73,11 @@ import slimeknights.tconstruct.smeltery.block.entity.module.EntityMeltingModule;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 
+import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Comparator;
 
@@ -79,6 +85,7 @@ import java.util.Comparator;
 public final class EMIPlugin implements EmiPlugin {
   @Override
   public void register(EmiRegistry registry) {
+    RECIPE_ID_COUNTS.clear();
     for (EMIConstants.TConstructEmiCategory category : EMIConstants.ALL) {
       registry.addCategory(category);
     }
@@ -114,9 +121,25 @@ public final class EMIPlugin implements EmiPlugin {
     List<IDisplayableCastingRecipe> recipes = RecipeHelper.getJEIRecipes(access, manager, (net.minecraft.world.item.crafting.RecipeType) type, IDisplayableCastingRecipe.class);
     for (int i = 0; i < recipes.size(); i++) {
       IDisplayableCastingRecipe recipe = recipes.get(i);
-      registry.addRecipe(new CastingEmiRecipe(recipeId(recipe.getRecipeId(), category, i), category, recipe,
+      registry.addRecipe(new CastingEmiRecipe(recipeId(recipe.getRecipeId(), outputMaterialPath(recipe)), category, recipe,
           category == EMIConstants.CASTING_BASIN));
     }
+  }
+
+  /**
+   * 铸造展开配方按输出材料区分 id。输出栈带材料 NBT 时返回材料 path(如 manyullyn);
+   * 非材料输出(如药水填充)返回 null,由 recipeId 退回数字序号。
+   */
+  @Nullable
+  private static String outputMaterialPath(IDisplayableCastingRecipe recipe) {
+    List<ItemStack> outputs = recipe.getOutputs();
+    if (!outputs.isEmpty()) {
+      MaterialVariantId material = IMaterialItem.getMaterialFromStack(outputs.get(0));
+      if (!material.equals(IMaterial.UNKNOWN_ID)) {
+        return material.getId().getPath();
+      }
+    }
+    return null;
   }
 
   private static void registerMolding(EmiRegistry registry, RegistryAccess access, RecipeManager manager) {
@@ -125,7 +148,7 @@ public final class EMIPlugin implements EmiPlugin {
     recipes.addAll(RecipeHelper.getJEIRecipes(access, manager, TinkerRecipeTypes.MOLDING_BASIN.get(), MoldingRecipe.class));
     for (int i = 0; i < recipes.size(); i++) {
       MoldingRecipe recipe = recipes.get(i);
-      registry.addRecipe(new MoldingEmiRecipe(recipeId(recipe.getId(), EMIConstants.MOLDING, i), recipe, access));
+      registry.addRecipe(new MoldingEmiRecipe(recipeId(recipe.getId()), recipe, access));
     }
   }
 
@@ -133,8 +156,8 @@ public final class EMIPlugin implements EmiPlugin {
     List<MeltingRecipe> recipes = RecipeHelper.getJEIRecipes(access, manager, TinkerRecipeTypes.MELTING.get(), MeltingRecipe.class);
     for (int i = 0; i < recipes.size(); i++) {
       MeltingRecipe recipe = recipes.get(i);
-      registry.addRecipe(new MeltingEmiRecipe(recipeId(recipe.getId(), EMIConstants.MELTING, i), recipe));
-      registry.addRecipe(new FoundryEmiRecipe(recipeId(recipe.getId(), EMIConstants.FOUNDRY, i), recipe));
+      registry.addRecipe(new MeltingEmiRecipe(recipeId(recipe.getId()), recipe));
+      registry.addRecipe(new FoundryEmiRecipe(recipeId(recipe.getId()), recipe));
     }
   }
 
@@ -142,7 +165,7 @@ public final class EMIPlugin implements EmiPlugin {
     List<AlloyRecipe> recipes = RecipeHelper.getJEIRecipes(access, manager, TinkerRecipeTypes.ALLOYING.get(), AlloyRecipe.class);
     for (int i = 0; i < recipes.size(); i++) {
       AlloyRecipe recipe = recipes.get(i);
-      registry.addRecipe(new AlloyEmiRecipe(recipeId(recipe.getId(), EMIConstants.ALLOY, i), recipe));
+      registry.addRecipe(new AlloyEmiRecipe(recipeId(recipe.getId()), recipe));
     }
   }
 
@@ -151,11 +174,11 @@ public final class EMIPlugin implements EmiPlugin {
     for (int i = 0; i < recipes.size(); i++) {
       EntityMeltingRecipe recipe = recipes.get(i);
       registry.addRecipe(new EntityMeltingEmiRecipe(
-          recipeId(recipe.getId(), EMIConstants.ENTITY_MELTING, i), recipe));
+          recipeId(recipe.getId()), recipe));
     }
     EntityIngredient defaultIngredient = getDefaultEntityIngredient(recipes);
     registry.addRecipe(new EntityMeltingEmiRecipe(
-        recipeId(TConstruct.getResource("__default"), EMIConstants.ENTITY_MELTING, recipes.size()),
+        recipeId(TConstruct.getResource("/__default")),
         defaultIngredient, EntityMeltingModule.getDefaultFluid(), 2));
   }
 
@@ -183,7 +206,7 @@ public final class EMIPlugin implements EmiPlugin {
     List<SeveringRecipe> recipes = RecipeHelper.getJEIRecipes(access, manager, TinkerRecipeTypes.SEVERING.get(), SeveringRecipe.class);
     for (int i = 0; i < recipes.size(); i++) {
       SeveringRecipe recipe = recipes.get(i);
-      registry.addRecipe(new SeveringEmiRecipe(recipeId(recipe.getId(), EMIConstants.SEVERING, i), recipe));
+      registry.addRecipe(new SeveringEmiRecipe(recipeId(recipe.getId()), recipe));
     }
   }
 
@@ -198,7 +221,7 @@ public final class EMIPlugin implements EmiPlugin {
         .toList();
     for (int i = 0; i < modifiers.size(); i++) {
       IDisplayModifierRecipe recipe = modifiers.get(i);
-      registry.addRecipe(new ModifierEmiRecipe(recipeId(recipe.getRecipeId(), EMIConstants.MODIFIERS, i), recipe));
+      registry.addRecipe(new ModifierEmiRecipe(recipeId(recipe.getRecipeId()), recipe));
     }
 
     List<ToolBuildingRecipe> tools = RecipeHelper.getJEIRecipes(
@@ -209,14 +232,21 @@ public final class EMIPlugin implements EmiPlugin {
         .toList();
     for (int i = 0; i < tools.size(); i++) {
       ToolBuildingRecipe recipe = tools.get(i);
-      registry.addRecipe(new ToolBuildingEmiRecipe(recipeId(recipe.getId(), EMIConstants.TOOL_BUILDING, i), recipe));
+      registry.addRecipe(new ToolBuildingEmiRecipe(recipeId(recipe.getId()), recipe));
     }
 
     List<IDisplayPartBuilderRecipe> parts = RecipeHelper.getJEIRecipes(access, manager, TinkerRecipeTypes.PART_BUILDER.get(), IDisplayPartBuilderRecipe.class);
     for (int i = 0; i < parts.size(); i++) {
       IDisplayPartBuilderRecipe recipe = parts.get(i);
-      registry.addRecipe(new PartBuilderEmiRecipe(recipeId(recipe.getId(), EMIConstants.PART_BUILDER, i), recipe));
+      registry.addRecipe(new PartBuilderEmiRecipe(recipeId(recipe.getId(), partBuilderMaterial(recipe)), recipe));
     }
+  }
+
+  /** 部件加工展开配方按输出材料区分 id;无材料(如无材料成本配方)返回 null,退回数字序号 */
+  @Nullable
+  private static String partBuilderMaterial(IDisplayPartBuilderRecipe recipe) {
+    MaterialVariant material = recipe.getMaterial();
+    return material.isEmpty() ? null : material.getVariant().getId().getPath();
   }
 
   private static void registerWorktable(EmiRegistry registry, RegistryAccess access, RecipeManager manager) {
@@ -224,7 +254,7 @@ public final class EMIPlugin implements EmiPlugin {
     for (int i = 0; i < recipes.size(); i++) {
       IModifierWorktableRecipe recipe = recipes.get(i);
       registry.addRecipe(new ModifierWorktableEmiRecipe(
-          recipeId(recipe.getId(), EMIConstants.MODIFIER_WORKTABLE, i), recipe));
+          recipeId(recipe.getId()), recipe));
     }
   }
 
@@ -349,9 +379,28 @@ public final class EMIPlugin implements EmiPlugin {
     registry.addWorkstation(category, EmiStack.of(stack));
   }
 
-  private static ResourceLocation recipeId(ResourceLocation id, EMIConstants.TConstructEmiCategory category,
-                                           int index) {
-    String source = id == null ? "generated" : id.getNamespace() + "/" + id.getPath();
-    return TConstruct.getResource("/emi/" + category.getId().getPath() + "/" + source + "/" + index);
+  /**
+   * 配方 id 保持玩家可读的数据包原始 id(与 JEI 时代显示一致)。同一原始 id 会由
+   * IMultiRecipe 展开出多条显示配方(如铸造、部件加工按材料展开)或注册到多个分类
+   * (如熔化/熔铸),而 EMI 的 byId 索引对重复 id 会互相覆盖并刷 "recipes loaded with
+   * the same id" 日志,且对非 / 开头的合成 id 做 RecipeManager 校验报错
+   * ("not present in recipe manager")。因此首个使用数据包原始 id,后续展开条目以
+   * / 开头(EMI 合成配方约定,跳过校验)并追加材料名(如 /manyullyn)保持可读与唯一;
+   * 无法提供材料时退回数字序号。每次 register 前清空计数,保证 reload 之间不串号。
+   */
+  /** 同包测试需要访问,故为包私有 */
+  static final Map<ResourceLocation, Integer> RECIPE_ID_COUNTS = new HashMap<>();
+
+  static ResourceLocation recipeId(ResourceLocation id) {
+    return recipeId(id, null);
+  }
+
+  static ResourceLocation recipeId(ResourceLocation id, @Nullable String discriminator) {
+    int count = RECIPE_ID_COUNTS.merge(id, 1, Integer::sum);
+    if (count == 1) {
+      return id;
+    }
+    String suffix = (discriminator == null || discriminator.isEmpty()) ? Integer.toString(count) : discriminator;
+    return new ResourceLocation(id.getNamespace(), "/" + id.getPath() + "/" + suffix);
   }
 }

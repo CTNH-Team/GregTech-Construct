@@ -1,25 +1,22 @@
 package slimeknights.tconstruct.plugin.botania.smeltery;
 
-import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fml.loading.LoadingModList;
-import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialIds;
-
 import net.minecraftforge.fluids.ForgeFlowingFluid;
-
 import slimeknights.mantle.registration.object.FlowingFluidObject;
 import slimeknights.tconstruct.common.TinkerModule;
 import slimeknights.tconstruct.library.addon.AddonSmelteryCompat;
+import slimeknights.tconstruct.plugin.botania.material.BotaniaMaterialIds;
 
 import java.util.List;
 
-import static slimeknights.tconstruct.fluids.block.BurningLiquidBlock.createBurning;
 import static slimeknights.tconstruct.library.addon.AddonSmelteryCompat.hot;
 
 /**
  * Botania-owned smeltery and molten-fluid compat.
  */
 public final class BotaniaSmelteryCompat extends TinkerModule implements AddonSmelteryCompat {
+    /** Mod that supplies mana metals through the common tag. */
+    private static final String MANA_PROVIDER = "ctnhmana";
 
     public static final FlowingFluidObject<ForgeFlowingFluid> moltenManaSteel =
             registerBotaniaMetal("mana_steel", hot("mana_steel").temperature(1100).lightLevel(12));
@@ -35,20 +32,7 @@ public final class BotaniaSmelteryCompat extends TinkerModule implements AddonSm
     private BotaniaSmelteryCompat() {}
 
     private static FlowingFluidObject<ForgeFlowingFluid> registerBotaniaMetal(String name, FluidType.Properties properties) {
-        if (ctnhManaLoaded()) {
-            return FLUIDS.registerCompatMetal(name, properties);
-        }
-        return FLUIDS.registerMetal(name)
-                .type(properties)
-                .block(createBurning(MapColor.METAL, 12, 10, 5f))
-                .bucket()
-                .commonTag()
-                .flowing();
-    }
-
-    private static boolean ctnhManaLoaded() {
-        LoadingModList loadingModList = LoadingModList.get();
-        return loadingModList != null && loadingModList.getModFileById("ctnhmana") != null;
+        return FLUIDS.registerCompatMetal(name, properties, MANA_PROVIDER);
     }
 
     @Override

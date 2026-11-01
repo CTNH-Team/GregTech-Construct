@@ -5,6 +5,7 @@ import net.minecraft.data.PackOutput;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialStatsDataProvider;
 import slimeknights.tconstruct.tools.stats.ArmorPartMaterialStats;
+import slimeknights.tconstruct.tools.stats.ArmorPartStatsBuilder;
 import slimeknights.tconstruct.tools.stats.GripMaterialStats;
 import slimeknights.tconstruct.tools.stats.HandleMaterialStats;
 import slimeknights.tconstruct.tools.stats.HeadMaterialStats;
@@ -56,9 +57,26 @@ public class BotaniaMaterialStatsDataProvider extends AbstractMaterialStatsDataP
         addMaterialStats(BotaniaMaterialIds.terraSteel,
                 new LimbMaterialStats(750, 0.2f, 0.3f, 0.3f),
                 new GripMaterialStats(0.35f, 0.3f, 3.5f));
-        addArmorShieldStats(BotaniaMaterialIds.terraSteel,
-                PlatingMaterialStats.builder().durabilityFactor(50).armor(3, 6, 8, 4).toughness(3)
-                        .knockbackResistance(0.15f),
-                ArmorPartMaterialStats.maille(0f, 0f, 0f, 0f));
+        addMaterialStats(BotaniaMaterialIds.terraSteel,
+                ArmorPartStatsBuilder.builder()
+                        .platingDurability(50f)
+                        .platingArmor(4f, 8f, 6f, 3f)
+                        .platingToughness(3f)
+                        .platingKnockbackResistance(0.15f)
+                        .maille(0f, 0f, 0f, 0f)
+                        .partDurability(40f)
+                        .armor(2.5f, 7.0f, 5.5f, 2.0f)
+                        .armorStrength(2.0f)
+                        .armorToughness(1.5f)
+                        .reduction(0.4f)
+                        .protection(0.045f)
+                        .knockbackResistance(0.1f)
+                        .durabilityMultiplier(0.15f)
+                        .armorMultiplier(0.03f)
+                        .armorStrengthMultiplier(0.08f)
+                        .armorToughnessMultiplier(0.05f)
+                        .smallReductionFactor(0.5f)
+                        .smallProtectionFactor(0.5f)
+                        .build());
     }
 }

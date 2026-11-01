@@ -114,7 +114,7 @@ public class FluidTagProvider extends FluidTagsProvider {
         fluidTag(TinkerFluids.moltenRefinedGlowstone);
         fluidTag(TinkerFluids.moltenRefinedObsidian);
         // cosmere compat alloys
-        fluidTag(TinkerFluids.moltenNicrosil);
+        fluidTag(TinkerFluids.moltenNichrome);
         fluidTag(TinkerFluids.moltenDuralumin);
         fluidTag(TinkerFluids.moltenBendalloy);
         // twilight compat fluids
@@ -178,7 +178,7 @@ public class FluidTagProvider extends FluidTagsProvider {
                 // mekanism alloys
                 TinkerFluids.moltenRefinedGlowstone, TinkerFluids.moltenRefinedObsidian,
                 // cosmere alloys
-                TinkerFluids.moltenNicrosil, TinkerFluids.moltenDuralumin, TinkerFluids.moltenBendalloy
+                TinkerFluids.moltenNichrome, TinkerFluids.moltenDuralumin, TinkerFluids.moltenBendalloy
         );
         this.tag(TinkerTags.Fluids.CHEMTHROWER_ENTITY_EFFECTS)
                 .addTag(Tags.Fluids.MILK);
@@ -188,7 +188,7 @@ public class FluidTagProvider extends FluidTagsProvider {
                 // slime
                 TinkerFluids.earthSlime, TinkerFluids.skySlime, TinkerFluids.magma, TinkerFluids.moltenEnder,
                 // slime metal
-                TinkerFluids.moltenSlimesteel, TinkerFluids.moltenQueensSlime, TinkerFluids.moltenCinderslime,
+                TinkerFluids.moltenSlimesteel, TinkerFluids.moltenQueensSlime, TinkerFluids.moltenCinderslime, TinkerFluids.moltenKnightslime,
                 // thermal alloys
                 TinkerFluids.moltenSignalum
         );
@@ -222,7 +222,7 @@ public class FluidTagProvider extends FluidTagsProvider {
                 // mekanism alloys
                 TinkerFluids.moltenRefinedGlowstone, TinkerFluids.moltenRefinedObsidian,
                 // cosmere alloys
-                TinkerFluids.moltenNicrosil, TinkerFluids.moltenDuralumin, TinkerFluids.moltenBendalloy,
+                TinkerFluids.moltenNichrome, TinkerFluids.moltenDuralumin, TinkerFluids.moltenBendalloy,
                 // Twilight alloys
                 TinkerFluids.moltenSteeleaf
         );
@@ -233,7 +233,7 @@ public class FluidTagProvider extends FluidTagsProvider {
         this.tag(MantleTags.Fluids.SOUP).addTag(TinkerFluids.meatSoup.getTag()).addOptionalTag(TinkerTags.Fluids.SOUP_TOOLTIPS.location());
 
         // hide upcoming fluids
-        tag(TinkerTags.Fluids.HIDDEN_IN_EMI).add(TinkerFluids.moltenKnightslime.get(), TinkerFluids.moltenSoulsteel.get());
+        tag(TinkerTags.Fluids.HIDDEN_IN_EMI).add(TinkerFluids.moltenSoulsteel.get());
         // hide upcoming fluids that require NBT. Can expand this list if other mods report problems
         tag(TinkerTags.Fluids.HIDE_IN_CREATIVE_TANKS).add(TinkerFluids.potion.get()).addTag(TinkerTags.Fluids.HIDDEN_IN_EMI);
 
