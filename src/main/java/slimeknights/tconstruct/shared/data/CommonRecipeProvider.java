@@ -243,6 +243,7 @@ public class CommonRecipeProvider extends BaseRecipeProvider implements ICommonR
                             location("common/flint"));
 
     // allow crafting the blast furnace in the nether
+    /*Removed By CTNH
     ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, Blocks.BLAST_FURNACE)
                        .define('#', Blocks.SMOOTH_BASALT)
                        .define('X', Blocks.FURNACE)
@@ -252,6 +253,8 @@ public class CommonRecipeProvider extends BaseRecipeProvider implements ICommonR
                        .pattern("###")
                        .unlockedBy("has_smooth_stone", has(Blocks.SMOOTH_BASALT))
                        .save(consumer, location("common/basalt_blast_furnace"));
+                       
+     */
 
     // cheese
     ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, TinkerCommons.cheeseBlock)
