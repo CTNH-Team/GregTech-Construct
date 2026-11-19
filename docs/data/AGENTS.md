@@ -15,14 +15,20 @@ Runtime generation of addon, material, recipe, tinkering, and resource-pack cont
 
 ## CONVENTIONS
 - Generators register with the dynamic registrars and emit in-memory pack files during Forge lifecycle events.
-- `TiCAddonRegistry` is the callback boundary for optional addon data.
+- `TiCAddonRegistry` is the callback boundary for in-repo addon data.
 - Runtime generation is separate from `runData`; do not expect dynamic pack files in `src/generated/resources`.
 - Keep generator state resettable because pack registration can occur more than once across reload/test lifecycles.
+
+## API BOUNDARY
+- `ITiCAddon`, the `*Registrar` types, `TiCAddonFinder`, `TiCAddonRegistry`, `data/pack/*`, and `TiCDynamicRecipeGenerator` are marked `@ApiStatus.Internal`. They are an in-repo plugin SPI, not a published contract.
+- Downstream mods that want to contribute Tinkers' recipes should emit them through their own provider: a GT addon's `IGTAddon#addRecipes` consumer (writes into GT's dynamic data pack) or ordinary datagen. No GTC-specific entry point is required.
+- Stable, thin recipe facades for downstream mods live in `slimeknights.tconstruct.library.recipe.compat` (`TinkersMeltingRecipes`, `TinkersCastingRecipes`).
 
 ## ANTI-PATTERNS
 - Do not write runtime-generated content directly to the repository.
 - Do not treat `src/generated/resources` as the output of these classes.
 - Do not discover addons through a second scanner; use `TiCAddonFinder` and `TiCAddonRegistry`.
+- Do not advertise the internal SPI as an addon API; it may change with any refactor.
 
 ## NOTES
 - `TConstruct.registerPackFinders()` installs the dynamic pack sources.

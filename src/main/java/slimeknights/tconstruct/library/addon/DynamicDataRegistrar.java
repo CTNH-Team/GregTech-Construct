@@ -9,7 +9,9 @@ import slimeknights.mantle.util.JsonHelper;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
+@Internal
 public interface DynamicDataRegistrar {
   void addData(ResourceLocation location, byte[] bytes);
 

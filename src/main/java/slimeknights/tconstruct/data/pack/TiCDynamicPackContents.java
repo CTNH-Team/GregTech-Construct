@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 /**
  * Stores contents of a dynamic resource pack in a tree-style format for efficient traversal.
@@ -21,6 +22,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author embeddedt (original GTM implementation)
  */
+@Internal
 public class TiCDynamicPackContents {
 
     private static class Node {

@@ -16,10 +16,17 @@ import java.util.function.Supplier;
 
 import static com.gregtechceu.gtceu.api.GTValues.LV;
 
-public class GTConstructRecipes {
+/**
+ * Internal batch generator that turns every castable Tinkers' material into GTM solidifier
+ * recipes. This is not an addon API: the public surface is the wrapper classes under
+ * {@code slimeknights.tconstruct.library.recipe.compat}.
+ */
+final class GTConstructSolidifierRecipes {
   private static final Logger LOGGER = Util.getLogger("GTRecipes");
 
-  public static void register(Consumer<FinishedRecipe> provider) {
+  private GTConstructSolidifierRecipes() {}
+
+  static void register(Consumer<FinishedRecipe> provider) {
     List<SolidifierPart> parts = GTConstructSolidifierParts.create();
     List<TinkersMaterialFluidCatalog.MaterialFluidSpec> recipes = TinkersMaterialFluidCatalog.discover(parts);
     LOGGER.info("Registering {} GTM recipes from Tinkers' Construct material fluids.", recipes.size());

@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 /**
  * Registrar for static tag providers used in datagen (runData command).
  * <p>Tags registered here are written to files during static datagen, NOT dynamically at runtime.
  */
+@Internal
 public final class DatagenTagProviderRegistrar {
   private final List<Consumer<BlockTagRegistrar>> blockTagHooks = new ArrayList<>();
   private final List<Consumer<ItemTagRegistrar>> itemTagHooks = new ArrayList<>();

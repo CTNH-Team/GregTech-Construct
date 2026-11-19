@@ -6,19 +6,10 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.util.Map;
 
-public class GTConstructFluid {
-
+/** Tag selection shared by the fluid scanner and catalog; internal to the GTM generator package. */
+final class GTConstructFluid {
   private GTConstructFluid() {}
-
-  public static Map<ResourceLocation, Fluid> getAllTinkersFluids() {
-    return TinkersFluidCatalog.instance().fluids();
-  }
-
-  public static TagKey<Fluid> getAutoTag(Fluid fluid) {
-    return TinkersFluidCatalog.instance().recipeTag(fluid);
-  }
 
   static TagKey<Fluid> selectRecipeTag(@Nullable TagKey<Fluid> commonTag, @Nullable TagKey<Fluid> localTag,
                                        ResourceLocation fluidId) {
@@ -32,9 +23,5 @@ public class GTConstructFluid {
       ForgeRegistries.FLUIDS.getRegistryKey(),
       ResourceLocation.tryBuild("forge", fluidId.getPath())
     );
-  }
-
-  public static String extractMaterialName(String path) {
-    return path;
   }
 }

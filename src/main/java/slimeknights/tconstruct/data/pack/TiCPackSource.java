@@ -9,10 +9,12 @@ import net.minecraft.server.packs.repository.RepositorySource;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 /**
  * TiC 动态包源，用于将动态数据包/资源包注入 Minecraft 的包系统
  */
+@Internal
 public class TiCPackSource implements RepositorySource {
     private final String name;
     private final PackType type;

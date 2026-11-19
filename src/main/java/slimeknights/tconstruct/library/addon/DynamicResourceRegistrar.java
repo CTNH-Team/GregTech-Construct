@@ -4,7 +4,9 @@ import com.google.gson.JsonElement;
 import net.minecraft.resources.ResourceLocation;
 
 import java.nio.charset.StandardCharsets;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
+@Internal
 public interface DynamicResourceRegistrar {
   void addResource(ResourceLocation location, byte[] bytes);
 

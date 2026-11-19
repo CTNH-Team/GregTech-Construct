@@ -36,7 +36,7 @@ final class TinkersMaterialFluidCatalog {
 
   private TinkersMaterialFluidCatalog() {}
 
-  static List<MaterialFluidSpec> discover(List<GTConstructRecipes.SolidifierPart> parts) {
+  static List<MaterialFluidSpec> discover(List<GTConstructSolidifierRecipes.SolidifierPart> parts) {
     return discover(
       TinkersFluidCatalog.instance(),
       MaterialCastingLookup.getAllCastingFluids(),
@@ -49,7 +49,7 @@ final class TinkersMaterialFluidCatalog {
   static List<MaterialFluidSpec> discover(TinkersFluidCatalog fluidCatalog,
                                           Collection<MaterialFluidRecipe> castingRecipes,
                                           Collection<MaterialFluidRecipe> compositeRecipes,
-                                          List<GTConstructRecipes.SolidifierPart> parts) {
+                                          List<GTConstructSolidifierRecipes.SolidifierPart> parts) {
     return discover(
       fluidCatalog,
       castingRecipes,
@@ -62,7 +62,7 @@ final class TinkersMaterialFluidCatalog {
   static List<MaterialFluidSpec> discover(TinkersFluidCatalog fluidCatalog,
                                           Collection<MaterialFluidRecipe> castingRecipes,
                                           Collection<MaterialFluidRecipe> compositeRecipes,
-                                          List<GTConstructRecipes.SolidifierPart> parts,
+                                          List<GTConstructSolidifierRecipes.SolidifierPart> parts,
                                           Predicate<MaterialId> materialAvailability) {
     Map<InputKey, List<Candidate>> selected = new LinkedHashMap<>();
     addCandidates(selected, fluidCatalog, castingRecipes, parts, materialAvailability);
@@ -79,7 +79,7 @@ final class TinkersMaterialFluidCatalog {
   private static void addCandidates(Map<InputKey, List<Candidate>> selected,
                                     TinkersFluidCatalog fluidCatalog,
                                     Collection<MaterialFluidRecipe> recipes,
-                                    List<GTConstructRecipes.SolidifierPart> parts,
+                                    List<GTConstructSolidifierRecipes.SolidifierPart> parts,
                                     Predicate<MaterialId> materialAvailability) {
     Objects.requireNonNull(recipes, "recipes").stream()
       .sorted(Comparator.comparing(recipe -> recipe.getId().toString()))
@@ -95,7 +95,7 @@ final class TinkersMaterialFluidCatalog {
 
   private static Optional<Candidate> createCandidate(TinkersFluidCatalog fluidCatalog,
                                                       MaterialFluidRecipe recipe,
-                                                      List<GTConstructRecipes.SolidifierPart> parts,
+                                                      List<GTConstructSolidifierRecipes.SolidifierPart> parts,
                                                       Predicate<MaterialId> materialAvailability) {
     if (recipe == MaterialFluidRecipe.EMPTY) {
       return Optional.empty();
@@ -113,7 +113,7 @@ final class TinkersMaterialFluidCatalog {
       return Optional.empty();
     }
 
-    if (GTConstructRecipes.getSupportedParts(outputMaterial.getId(), parts).isEmpty()) {
+    if (GTConstructSolidifierRecipes.getSupportedParts(outputMaterial.getId(), parts).isEmpty()) {
       return Optional.empty();
     }
 

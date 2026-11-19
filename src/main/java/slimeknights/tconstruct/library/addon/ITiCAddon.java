@@ -1,9 +1,12 @@
 package slimeknights.tconstruct.library.addon;
 
+import org.jetbrains.annotations.ApiStatus.Internal;
+
 /**
  * Addon hooks for Tinkers' Construct dynamic data.
  */
 @SuppressWarnings("unused")
+@Internal
 public interface ITiCAddon {
   /**
    * @return mod ID used for bookkeeping and diagnostics.

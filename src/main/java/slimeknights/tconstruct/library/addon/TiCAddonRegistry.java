@@ -1,10 +1,12 @@
 package slimeknights.tconstruct.library.addon;
 
 import net.minecraft.world.item.CreativeModeTab;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 /**
  * Internal helper for wiring addon callbacks into dynamic generators.
  */
+@Internal
 public final class TiCAddonRegistry {
   private TiCAddonRegistry() {}
 

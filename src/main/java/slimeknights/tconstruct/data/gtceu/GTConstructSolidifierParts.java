@@ -5,7 +5,7 @@ import java.util.List;
 final class GTConstructSolidifierParts {
   private GTConstructSolidifierParts() {}
 
-  static List<GTConstructRecipes.SolidifierPart> create() {
+  static List<GTConstructSolidifierRecipes.SolidifierPart> create() {
     return TinkersPartScanner.scan(GTConstructMaterialSupport.INSTANCE);
   }
 }

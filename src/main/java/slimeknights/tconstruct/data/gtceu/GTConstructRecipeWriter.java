@@ -23,19 +23,19 @@ final class GTConstructRecipeWriter {
   private GTConstructRecipeWriter() {}
 
   static void write(Consumer<FinishedRecipe> provider, GTConstructRecipePlan plan,
-                    List<GTConstructRecipes.SolidifierPart> parts) {
+                    List<GTConstructSolidifierRecipes.SolidifierPart> parts) {
     if (parts.isEmpty()) {
       return;
     }
 
     String recipeTypeName = plan.useVacuum() ? "vacuum_freeze" : "solidify";
-    for (GTConstructRecipes.SolidifierPart part : parts) {
+    for (GTConstructSolidifierRecipes.SolidifierPart part : parts) {
       writePart(provider, plan, part, recipeTypeName);
     }
   }
 
   private static void writePart(Consumer<FinishedRecipe> provider, GTConstructRecipePlan plan,
-                                GTConstructRecipes.SolidifierPart part, String recipeTypeName) {
+                                GTConstructSolidifierRecipes.SolidifierPart part, String recipeTypeName) {
     if (part == null) {
       throw new IllegalStateException("Solidifier part cannot be null");
     }
@@ -84,7 +84,7 @@ final class GTConstructRecipeWriter {
   }
 
   private static int multiplyExact(int left, int right, String valueName,
-                                   GTConstructRecipes.SolidifierPart part) {
+                                   GTConstructSolidifierRecipes.SolidifierPart part) {
     try {
       return Math.multiplyExact(left, right);
     } catch (ArithmeticException exception) {
@@ -95,7 +95,7 @@ final class GTConstructRecipeWriter {
     }
   }
 
-  private static Item getRegisteredPartItem(GTConstructRecipes.SolidifierPart part) {
+  private static Item getRegisteredPartItem(GTConstructSolidifierRecipes.SolidifierPart part) {
     Item item = Objects.requireNonNull(
       Objects.requireNonNull(part.part(), "Solidifier part '" + part.path() + "' has no item supplier").get(),
       "Solidifier part '" + part.path() + "' has no item"
@@ -110,7 +110,7 @@ final class GTConstructRecipeWriter {
     return item;
   }
 
-  private static void validateRegisteredCast(CastItemObject cast, GTConstructRecipes.SolidifierPart part) {
+  private static void validateRegisteredCast(CastItemObject cast, GTConstructSolidifierRecipes.SolidifierPart part) {
     Item castItem = Objects.requireNonNull(cast.get(), "Solidifier part '" + part.path() + "' has an empty cast");
     try {
       if (ForgeRegistries.ITEMS.getDelegate(castItem).isEmpty()) {

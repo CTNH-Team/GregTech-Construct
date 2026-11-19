@@ -8,10 +8,12 @@ import slimeknights.tconstruct.data.pack.DynamicPackOutput;
 import slimeknights.tconstruct.data.resource.TiCDynamicResourceGenerator;
 
 import java.util.Objects;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 /**
  * Shared resource-provider state for addon fluid textures and their camera textures.
  */
+@Internal
 public final class AddonFluidTextureProviderSet<T extends AbstractFluidTextureProvider> {
   private final FluidTextureProviderFactory<T> fluidTextureProviderFactory;
   private ExistingFileHelper existingFileHelper;

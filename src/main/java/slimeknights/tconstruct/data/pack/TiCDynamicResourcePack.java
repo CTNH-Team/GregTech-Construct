@@ -33,6 +33,7 @@ import slimeknights.tconstruct.library.addon.TiCAddonFinder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 /**
  * Dynamic resource pack for client-side resources (models, blockstates, textures, etc.).
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
  * @author based on GTDynamicResourcePack by GTCEu
  */
 @ParametersAreNonnullByDefault
+@Internal
 public class TiCDynamicResourcePack implements PackResources {
 
     /** Set of resource domains that are considered client-side resources */

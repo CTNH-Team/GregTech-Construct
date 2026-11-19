@@ -39,6 +39,7 @@ import slimeknights.tconstruct.library.addon.TiCAddonFinder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 /**
  * Dynamic data pack for server-side data (recipes, advancements, etc.).
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
  * @author based on GTDynamicDataPack by GTCEu
  */
 @ParametersAreNonnullByDefault
+@Internal
 public class TiCDynamicDataPack implements PackResources {
 
     /** Set of resource domains that are considered server-side data */

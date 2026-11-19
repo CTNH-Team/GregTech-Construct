@@ -105,7 +105,7 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
       ForgeRegistries.FLUIDS.getRegistryKey(),
       ResourceLocation.tryBuild("forge", "water")
     );
-    GTConstructRecipes.SolidifierPart part = part("pick_head", 2);
+    GTConstructSolidifierRecipes.SolidifierPart part = part("pick_head", 2);
     List<FinishedRecipe> recipes = new ArrayList<>();
 
     GTConstructRecipeType.builder()
@@ -130,7 +130,7 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
       ForgeRegistries.FLUIDS.getRegistryKey(),
       ResourceLocation.tryBuild("forge", "water")
     );
-    GTConstructRecipes.SolidifierPart part = part("pick_head", 1);
+    GTConstructSolidifierRecipes.SolidifierPart part = part("pick_head", 1);
     List<FinishedRecipe> recipes = new ArrayList<>();
 
     GTConstructRecipeType.builder()
@@ -157,7 +157,7 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
 
   @Test
   void exactFluidInputUsesFluidStackAndExplicitVacuumMode() {
-    GTConstructRecipes.SolidifierPart part = part("pick_head", 2);
+    GTConstructSolidifierRecipes.SolidifierPart part = part("pick_head", 2);
     List<FinishedRecipe> recipes = new ArrayList<>();
 
     GTConstructRecipeType.builder()
@@ -177,7 +177,7 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
 
   @Test
   void variantBaseMaterialIsPreservedInMaterialNbt() {
-    GTConstructRecipes.SolidifierPart part = part("pick_head", 2);
+    GTConstructSolidifierRecipes.SolidifierPart part = part("pick_head", 2);
     List<FinishedRecipe> recipes = new ArrayList<>();
 
     GTConstructRecipeType.builder()
@@ -191,7 +191,7 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
 
   @Test
   void higherVoltageSelectsVacuumAndSolidifierOverrideRestoresSolidifier() {
-    GTConstructRecipes.SolidifierPart part = part("pick_head", 1);
+    GTConstructSolidifierRecipes.SolidifierPart part = part("pick_head", 1);
     List<FinishedRecipe> recipes = new ArrayList<>();
 
     GTConstructRecipeType.builder()
@@ -263,7 +263,7 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
       .hasMessageContaining("Input fluid is not registered");
 
     Item unregisteredPart = mock(Item.class);
-    GTConstructRecipes.SolidifierPart customPart = new GTConstructRecipes.SolidifierPart(
+    GTConstructSolidifierRecipes.SolidifierPart customPart = new GTConstructSolidifierRecipes.SolidifierPart(
       "custom",
       () -> unregisteredPart,
       1,
@@ -284,7 +284,7 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
     Item unregisteredCastItem = mock(Item.class);
     CastItemObject unregisteredCast = mock(CastItemObject.class);
     when(unregisteredCast.get()).thenReturn(unregisteredCastItem);
-    GTConstructRecipes.SolidifierPart customPart = new GTConstructRecipes.SolidifierPart(
+    GTConstructSolidifierRecipes.SolidifierPart customPart = new GTConstructSolidifierRecipes.SolidifierPart(
       "custom",
       () -> Items.STICK,
       1,
@@ -300,8 +300,8 @@ class GTConstructRecipeTypeTest extends BaseMcTest {
       .hasMessageContaining("unregistered cast");
   }
 
-  private static GTConstructRecipes.SolidifierPart part(String path, int materialCost) {
-    return new GTConstructRecipes.SolidifierPart(path, () -> Items.STICK, materialCost, null, material -> true);
+  private static GTConstructSolidifierRecipes.SolidifierPart part(String path, int materialCost) {
+    return new GTConstructSolidifierRecipes.SolidifierPart(path, () -> Items.STICK, materialCost, null, material -> true);
   }
 
   private static JsonObject serialize(FinishedRecipe recipe) {

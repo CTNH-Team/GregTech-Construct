@@ -28,10 +28,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static slimeknights.mantle.Mantle.commonResource;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 /**
  * Shared contract for addon-owned smeltery and molten-fluid compat.
  */
+@Internal
 public interface AddonSmelteryCompat {
   /** Forces static initialization before TiC deferred registers are attached to the mod bus. */
   default void init() {}

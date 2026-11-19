@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class GTConstructRecipesTest extends BaseMcTest {
+class GTConstructSolidifierRecipesTest extends BaseMcTest {
   @Test
   void recipeTagFallsBackToLocalTagWhenCommonTagMissing() {
     ResourceLocation steeleafId = ResourceLocation.tryBuild("tconstruct", "steeleaf");
@@ -60,14 +60,14 @@ class GTConstructRecipesTest extends BaseMcTest {
   void supportedPartsAreFilteredByMaterialCompatibility() {
     MaterialId material = new MaterialId("test", "material");
 
-    GTConstructRecipes.SolidifierPart supported = new GTConstructRecipes.SolidifierPart(
+    GTConstructSolidifierRecipes.SolidifierPart supported = new GTConstructSolidifierRecipes.SolidifierPart(
       "supported",
       () -> mock(Item.class),
       2,
       null,
       checked -> checked.equals(material)
     );
-    GTConstructRecipes.SolidifierPart unsupported = new GTConstructRecipes.SolidifierPart(
+    GTConstructSolidifierRecipes.SolidifierPart unsupported = new GTConstructSolidifierRecipes.SolidifierPart(
       "unsupported",
       () -> mock(Item.class),
       2,
@@ -75,8 +75,8 @@ class GTConstructRecipesTest extends BaseMcTest {
       checked -> false
     );
 
-    assertThat(GTConstructRecipes.getSupportedParts(material, List.of(supported, unsupported)))
-      .extracting(GTConstructRecipes.SolidifierPart::path)
+    assertThat(GTConstructSolidifierRecipes.getSupportedParts(material, List.of(supported, unsupported)))
+      .extracting(GTConstructSolidifierRecipes.SolidifierPart::path)
       .containsExactly("supported");
   }
 
@@ -105,7 +105,7 @@ class GTConstructRecipesTest extends BaseMcTest {
     CastItemObject cast = mock(CastItemObject.class);
     when(cast.getName()).thenReturn(ResourceLocation.tryBuild("tconstruct", "pick_head"));
 
-    List<GTConstructRecipes.SolidifierPart> parts = TinkersPartScanner.build(
+    List<GTConstructSolidifierRecipes.SolidifierPart> parts = TinkersPartScanner.build(
       List.of(new TinkersPartScanner.PartItem("pick_head", item, cast, HeadMaterialStats.ID)),
       Map.of(item, 7),
       GTConstructMaterialSupport.INSTANCE
@@ -125,7 +125,7 @@ class GTConstructRecipesTest extends BaseMcTest {
     CastItemObject cast = mock(CastItemObject.class);
     when(cast.getName()).thenReturn(ResourceLocation.tryBuild("tconstruct", "screwdriver_head"));
 
-    List<GTConstructRecipes.SolidifierPart> parts = TinkersPartScanner.build(
+    List<GTConstructSolidifierRecipes.SolidifierPart> parts = TinkersPartScanner.build(
       List.of(new TinkersPartScanner.PartItem(
         "screwdriver_head",
         item,
@@ -326,8 +326,8 @@ class GTConstructRecipesTest extends BaseMcTest {
     }
   }
 
-  private static GTConstructRecipes.SolidifierPart solidifierPart(String path) {
-    return new GTConstructRecipes.SolidifierPart(path, () -> mock(Item.class), 1, null, material -> true);
+  private static GTConstructSolidifierRecipes.SolidifierPart solidifierPart(String path) {
+    return new GTConstructSolidifierRecipes.SolidifierPart(path, () -> mock(Item.class), 1, null, material -> true);
   }
 
 }

@@ -46,11 +46,11 @@ final class TinkersPartScanner {
 
   private TinkersPartScanner() {}
 
-  static List<GTConstructRecipes.SolidifierPart> scan(GTConstructMaterialSupport support) {
+  static List<GTConstructSolidifierRecipes.SolidifierPart> scan(GTConstructMaterialSupport support) {
     return build(discoverPartItems(), discoverCosts(), support);
   }
 
-  static List<GTConstructRecipes.SolidifierPart> build(
+  static List<GTConstructSolidifierRecipes.SolidifierPart> build(
     List<PartItem> parts,
     Map<Item, Integer> costs,
     GTConstructMaterialSupport support
@@ -179,7 +179,7 @@ final class TinkersPartScanner {
     return costs;
   }
 
-  private static Optional<GTConstructRecipes.SolidifierPart> createSolidifierPart(
+  private static Optional<GTConstructSolidifierRecipes.SolidifierPart> createSolidifierPart(
     PartItem part,
     Map<Item, Integer> costs,
     GTConstructMaterialSupport support
@@ -203,7 +203,7 @@ final class TinkersPartScanner {
       materialSupport = material -> statSupport.test(material) && support.hasTag(material, part.materialTag());
     }
 
-    return Optional.of(new GTConstructRecipes.SolidifierPart(
+    return Optional.of(new GTConstructSolidifierRecipes.SolidifierPart(
       part.path(),
       () -> part.item(),
       cost,

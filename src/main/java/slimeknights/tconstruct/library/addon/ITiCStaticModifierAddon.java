@@ -7,11 +7,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.function.Supplier;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 /**
  * Addon hook for static modifiers.
  */
 @SuppressWarnings("unused")
+@Internal
 public interface ITiCStaticModifierAddon {
   void registerStaticModifiers(StaticModifierRegistrar registrar);
 

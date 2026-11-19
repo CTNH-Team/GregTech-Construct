@@ -15,10 +15,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 /**
  * Finds addon entrypoints annotated with {@link TiCAddon}.
  */
+@Internal
 public final class TiCAddonFinder {
   private static final Logger LOGGER = LogManager.getLogger();
   private static final ITiCAddon BUILTIN_ADDON = new TConstructBuiltinAddon();

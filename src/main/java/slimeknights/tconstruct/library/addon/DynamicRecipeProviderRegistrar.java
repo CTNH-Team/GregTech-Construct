@@ -5,8 +5,10 @@ import slimeknights.tconstruct.data.pack.DynamicPackOutput;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 @FunctionalInterface
+@Internal
 public interface DynamicRecipeProviderRegistrar {
   void addProvider(String name, Consumer<DynamicDataRegistrar> writer);
 
